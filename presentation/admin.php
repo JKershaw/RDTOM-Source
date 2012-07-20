@@ -8,7 +8,7 @@
 
 define("NUMBER_OF_ANSWERS" , 10);
 
-// if the user isn;t an admin, show an error message
+// if the user isn't an admin, show an error message
 if (!is_admin())
 {
 	// show error page if not admin
