@@ -1,0 +1,15 @@
+AddHandler php5-script .php
+
+RewriteEngine on
+
+RewriteRule ajax.php(.+)? ajax.php$1 [L]
+RewriteRule presentation/style.css(.+)? presentation/style.css$1 [L]
+
+RewriteRule stats.php(.+)? index.php$1 [L]
+RewriteRule poll.php(.+)? index.php$1 [L]
+RewriteRule allquestions.php(.+)? index.php$1 [L]
+
+RewriteRule ^([^\.]+)?$ index.php [L]
+
+ErrorDocument 404 /404
+
