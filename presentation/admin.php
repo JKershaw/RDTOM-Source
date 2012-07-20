@@ -5,44 +5,16 @@
  * 
  * Built to help Roller Derby players learn the rules
  */
-define("SUPER_SECRET_PASSWORD" , "sdvo9587bJFGYiguvrbn");
-define("SUPER_SECRET_COOKIE_PASSWORD" , "kjvh36RECJ");
-
 
 define("NUMBER_OF_ANSWERS" , 10);
 
-if ($_COOKIE["rdtom"] != SUPER_SECRET_COOKIE_PASSWORD)
+// if the user isn;t an admin, show an error message
+if (!is_admin())
 {
-	// have they tried to log in?
-	if ($_POST['password'])
-	{
-		if ($_POST['password'] != SUPER_SECRET_PASSWORD)
-		{
-			// wrong
-			echo "Nope.<br />";
-		}
-		else
-		{
-			// correct
-			setcookie("rdtom", SUPER_SECRET_COOKIE_PASSWORD, time()+3600000);
-			header("Location: http://rollerderbytestomatic.com/admin");
-		}
-	}
-	
-	// show log in page
+	// show error page if not admin
 	?>
-	<form method="post" action="http://rollerderbytestomatic.com/admin">
-		Password: <input type="password" id="password" name ="password"><br />
-		<input type="submit" value="Submit" />
-	</form>
+	Sorry, you must be logged in to view this page.
 	<?php 
-	exit;
-}
-
-if ($_GET['action'] == "logout")
-{
-	setcookie("rdtom", "nope", time()+3600000);
-	header("Location: http://rollerderbytestomatic.com/admin");
 	exit;
 }
 
