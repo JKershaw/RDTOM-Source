@@ -48,8 +48,8 @@ $responses_needed_for_section_breakdown = 50;
 $password_reset_token_expire = 86400;
 
 // recaptcha stuff
-$recaptcha_publickey = "6LcELNMSAAAAAAbNjzEmve-lLbxQ0S-L3JmpAeHE";
-$recaptcha_privatekey = "6LcELNMSAAAAAA97Bkp4V4AGxQpjPDfScugl3Ncj";
+$recaptcha_publickey = $ini_array["recaptcha_publickey"];
+$recaptcha_privatekey = $ini_array["recaptcha_privatekey"];
 
 
 // the competition value
