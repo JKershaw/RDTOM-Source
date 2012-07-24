@@ -1,7 +1,7 @@
 <?php 
 /*
  * Roller Derby Test O'Matic
- * Created by John Kershaw
+ * Created by John Kershaw (a.k.a. Sausage Roller)
  * 
  * Built to help Roller Derby players learn the rules
  */
