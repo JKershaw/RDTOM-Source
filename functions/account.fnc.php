@@ -209,7 +209,7 @@ function set_up_reset_token($forgetful_user)
 	$email_subject = "Roller Derby Test O'Matic password reset";
 	$email_body = "Hello, <br />
 	<br />
-	To reset your Roller Derby Test O'Matic account password, go to the following URL:<br />
+	To reset your Roller Derby Test O'Matic account (your log-in name is " . $forgetful_user->get_Name() . ") password, go to the following URL:<br />
 	<br />
 	<a href='$reset_link'>" . $reset_link ."</a> <br />
 	<br />
