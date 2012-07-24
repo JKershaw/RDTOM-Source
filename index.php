@@ -1,7 +1,7 @@
 <?php 
 /*
  * Roller Derby Test O'Matic
- * Created by John Kershaw (Skate name: Sausage Roller, GitHub user: Wardrox)
+ * Created by John Kershaw (Skate name: Sausage Roller, GitHub user: JKershaw)
  * 
  * Built to help Roller Derby players learn the rules
  */
