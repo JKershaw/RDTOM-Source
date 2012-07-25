@@ -126,7 +126,7 @@ include("header.php");
 	<ul>
 		<li>Answer a whole bunch of questions* and get <span style="color:<?php echo get_colour_from_percentage(100); ?>"><i>at least</i> 80&#37;</span> of them correct</li>
 		<li>Be <a href="http://rollerderbytestomatic.com/profile">logged into the site</a> when you answer questions**</li>
-		<li>Two weeks after the millionth question is answered there'll be a prize draw to pick the winners.</li>
+		<li>Two weeks after the millionth question is answered (in <strong><?php echo time_string_to_competition_end(); ?></strong>) there'll be a prize draw to pick the winners.</li>
 	</ul>
 	
 	<p class="small_p">
