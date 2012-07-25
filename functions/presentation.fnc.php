@@ -297,8 +297,9 @@ function get_recent_questions()
 // have one million questions been answered?
 function is_one_million()
 {
-	global $mydb, $competition_value;
-	return ($mydb->get_response_count() >= $competition_value);
+	return true;
+	// global $mydb, $competition_value;
+	// return ($mydb->get_response_count() >= $competition_value);
 }
 
 function time_string_to_million()

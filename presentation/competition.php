@@ -12,24 +12,9 @@ include("header.php");
 <p class="competition_number_wrap"><span class="competition_number" id="count_responses_string">Loading ...</span> <br /> &nbsp;<span id="count_responses_difference_string"></span></p>
 
 
-<?php if (is_one_million())
-{
-	?>
 	<h3 style="text-align: center;">Over One Million!</h3>	
 	<p style="text-align: center;">Since the site went live a few months ago, you guys have answered more than ONE MILLION questions! Whaaa! To celebrate we're going to have a little competition.</p>
-	
-	<?php
 
-}
-else
-{	
-	?>	
-	
-	<p style="text-align:center; font-weight:bold">The competition starts at 1,000,000!</p>
-	<!-- <p>See that number above? That's the total number of questions you guys have answered. Pretty epic right? We're almost at the amazing milestone of <strong>ONE MILLION</strong>. To celebrate we're going to have a little competition.</p>-->
-	<?php 
-}
-?>
 	
 	<p><strong>The Grand Prize</strong></p>
 	
@@ -43,109 +28,97 @@ else
 	</ul>
 	
 	<p>There's a $25 gift certificate from <a href="http://wickedskatewear.com/">Wicked Skatewear</a> for two runner-ups.</p>
-	<?php if (!is_one_million())
+	
+	<!-- <p>If you would like to supply something to add to the prize fund, <a href="mailto:contact@rollerderbytestomatic.com ?Subject=Roller%20Derby%20Test%20O'Matic">get in touch</a>!</p> -->
+
+	<div class="layout_box" style="	margin: 40px 0;">
+
+	<p><strong>Your eligibility:</strong></p>
+	
+	<?php
+	if (!is_logged_in()) 
 	{
 		?>
-		<p>If you would like to supply something to add to the prize fund, <a href="mailto:contact@rollerderbytestomatic.com ?Subject=Roller%20Derby%20Test%20O'Matic">get in touch</a>!</p>
-		<?php 
-	}
-	?>
-	
-	
-	
-	<?php if (is_one_million())
-	{
-		?>
-		<div class="layout_box" style="	margin: 40px 0;">
-	
-		<p><strong>Your eligibility:</strong></p>
 		
-		<?php
-		if (!is_logged_in()) 
+		<p style="width: 100%;">
+			<span style="color:red;">Not eligibile:</span> You need to be <a href="http://rollerderbytestomatic.com/profile">logged in</a> to take part. 
+		</p>	
+		<p style="width: 100%;">
+			If you don't have an account yet they're <a href="http://rollerderbytestomatic.com/profile#signup">easy to set up</a>.
+		</p>	
+		<?php 
+	} 
+	else 
+	{
+		$timestamp_millionth = $mydb->get_timestamp_of_millionth();
+		
+		$responses_since_million = $mydb->get_responses_from_User_ID($user->get_ID(), $timestamp_millionth);
+		
+		$total_count = 0;
+		$correct_count = 0;
+		
+		if ($responses_since_million)
 		{
-			?>
-			
-			<p style="width: 100%;">
-				<span style="color:red;">Not eligibile:</span> You need to be <a href="http://rollerderbytestomatic.com/profile">logged in</a> to take part. 
-			</p>	
-			<p style="width: 100%;">
-				If you don't have an account yet they're <a href="http://rollerderbytestomatic.com/profile#signup">easy to set up</a>.
-			</p>	
-			<?php 
-		} 
-		else 
-		{
-			$timestamp_millionth = $mydb->get_timestamp_of_millionth();
-			
-			$responses_since_million = $mydb->get_responses_from_User_ID($user->get_ID(), $timestamp_millionth);
-			
-			$total_count = 0;
-			$correct_count = 0;
-			
-			if ($responses_since_million)
+			foreach ($responses_since_million as $response)
 			{
-				foreach ($responses_since_million as $response)
+				$total_count++;
+				if ($response->is_correct())
 				{
-					$total_count++;
-					if ($response->is_correct())
-					{
-						$correct_count++;
-					}
+					$correct_count++;
 				}
 			}
-			
-			if ($total_count > 0)
-			{
-				$perc_value = round ((($correct_count / $total_count) * 100), 2);
-			}
-			$perc_colour = get_colour_from_percentage($perc_value);
-			
-			
-			// have they answered enough questions
-			// have they gotten enough correct
-			if ($total_count < $competition_min_questions)
-			{
-				?>		
-				<p style="width: 100%;">
-					<span style="color:red;">Not eligibile:</span> You need to <a href="http://rollerderbytestomatic.com">answer more questions</a> to be entered into the prize draw. Only questions you've answered since the competition began will count.
-				</p>
-				<?php 
-			}
-			elseif ($perc_value < $competition_min_perc)
-			{
-				?>		
-				<p style="width: 100%;">
-					<span style="color:red;">Not eligibile:</span> You need to <a href="http://rollerderbytestomatic.com">answer more questions correctly</a> to be entered into the prize draw. You need to get at least <span style="color:<?php echo get_colour_from_percentage(100); ?>"><i>at least</i> 80&#37;</span> of the questions correct since the competition began to qualify.
-				</p>
-				<?php
-			}
-			else
-			{
-				?>		
-				<p style="width: 100%;">
-					<span style="color:green;">Eligibile:</span> You've answered enough questions and got enough correct! Yey! 
-				</p>
-				<p style="width: 100%;">
-					What now? Well, I guess you should probably <a href="http://rollerderbytestomatic.com">answer more questions</a>, because it's fun!
-				</p>
-				<?php 
-			}
-			
-			// what are they currently on
-			if ($total_count > 0)
-			{
+		}
+		
+		if ($total_count > 0)
+		{
+			$perc_value = round ((($correct_count / $total_count) * 100), 2);
+		}
+		$perc_colour = get_colour_from_percentage($perc_value);
+		
+		
+		// have they answered enough questions
+		// have they gotten enough correct
+		if ($total_count < $competition_min_questions)
+		{
 			?>		
 			<p style="width: 100%;">
-				Since the competition started you've answered <strong><?php echo $total_count; ?></strong> question<?php if ($total_count != 1) echo "s"; ?> and have a success rate of <?php echo "<span style=\"font-weight:bold; color:" . $perc_colour . "\">" . $perc_value . "%</span>"?>.
+				<span style="color:red;">Not eligibile:</span> You need to <a href="http://rollerderbytestomatic.com">answer more questions</a> to be entered into the prize draw. Only questions you've answered since the competition began will count.
 			</p>
 			<?php 
-			}
 		}
-		?>
-		</div>
+		elseif ($perc_value < $competition_min_perc)
+		{
+			?>		
+			<p style="width: 100%;">
+				<span style="color:red;">Not eligibile:</span> You need to <a href="http://rollerderbytestomatic.com">answer more questions correctly</a> to be entered into the prize draw. You need to get at least <span style="color:<?php echo get_colour_from_percentage(100); ?>"><i>at least</i> 80&#37;</span> of the questions correct since the competition began to qualify.
+			</p>
+			<?php
+		}
+		else
+		{
+			?>		
+			<p style="width: 100%;">
+				<span style="color:green;">Eligibile:</span> You've answered enough questions and got enough correct! Yey! 
+			</p>
+			<p style="width: 100%;">
+				What now? Well, I guess you should probably <a href="http://rollerderbytestomatic.com">answer more questions</a>, because it's fun!
+			</p>
+			<?php 
+		}
+		
+		// what are they currently on
+		if ($total_count > 0)
+		{
+		?>		
+		<p style="width: 100%;">
+			Since the competition started you've answered <strong><?php echo $total_count; ?></strong> question<?php if ($total_count != 1) echo "s"; ?> and have a success rate of <?php echo "<span style=\"font-weight:bold; color:" . $perc_colour . "\">" . $perc_value . "%</span>"?>.
+		</p>
 		<?php 
+		}
 	}
 	?>
+	</div>
+
 	
 	
 	<p><strong>How to win</strong></p>
@@ -210,19 +183,6 @@ else
 
 					current[req_field_name] = data;					
 					setTimeout("ajax_update_value('" + req_field_name + "')", check_frequency[req_field_name] * 1000);
-
-					<?php 
-							// if we're not at a million, force a page reload when we cross the mark.
-							if (!is_one_million())
-							{
-								?>
-								if (data >= <?php echo $competition_value; ?>)
-								{
-									window.location = "http://rollerderbytestomatic.com/competition";
-								}
-								<?php 
-							}
-							?>
 							
 				}
 			);

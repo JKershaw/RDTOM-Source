@@ -81,30 +81,11 @@
 				The site will only remember information as long as necessary, and won't disclose personal information to outside sources without your explicit permission. The site will only collect personal information by lawful and fair means. Personal data collected will be relevant to the purposes for which it is to be used, and, to the extent necessary for those purposes, should be accurate, complete, and up-to-date. The site will protect your personal information by reasonable security safeguards against loss or theft, as well as unauthorized access, disclosure, copying, use or modification.  <a onclick="$('#p_disclaimer_link').fadeIn();$('#p_disclaimer').hide();">Hide</a> 
 			</p>
 
-
-	<?php 
-	//if (is_admin()) {
-	?>
 	
 			<p class="competition_string">
-			<?php 
-			if (is_one_million()) 
-			{?>
 				<a href="http://rollerderbytestomatic.com/competition"><span style="font-weight:bold; color:yellow; background-color: #333; padding: 1px 3px 2px;">Competition!</span> Click here for details on how to win t-shirts, toe-stops and gift certificates by answering questions!</a>
-			<?php 
-			} 
-			else 
-			{
-			?>
-				<a href="http://rollerderbytestomatic.com/competition"><span style="font-weight:bold; color:yellow; background-color: #333; padding: 1px 3px 2px;">Competition!</span> Almost 1,000,000 questions answered! To celebrate we're having a competition. Click here for details on how to win!</a>
-			<?php 
-			}
-			?>
 			</p>
-	
-	<?php 
-	//} 
-	?>
+
 			<!-- <p class="vote_string">
 				<a href="http://rollerderbytestomatic.com/poll">What features should be added next to the Test O'Matic?</a>
 			</p> -->
