@@ -87,14 +87,7 @@ if ($_POST)
 	}
 }
 
-// is a question being edited
-if ($url_array[1] == "edit")
-{
-	$question = $mydb->get_question_from_ID($url_array[2]);
-	$answers = $question->get_all_Answers();
-}
-
-//
+//update reports when needed
 if ($_GET['update_report'])
 {
 	$report = $mydb->get_report_from_ID($_GET['update_report']);
@@ -120,10 +113,17 @@ if ($_GET['update_report'])
 		$report->set_Status(REPORT_NOACTION);
 	}
 	
-	
 	$mydb->set_report($report);
 	
 	$message .= "Report updated!";
+}
+
+
+// is a question being edited
+if ($url_array[1] == "edit")
+{
+	$question = $mydb->get_question_from_ID($url_array[2]);
+	$answers = $question->get_all_Answers();
 }
 
 // get the open reports (nned the value for the menu
@@ -132,6 +132,12 @@ $reports_open = $mydb->get_reports(REPORT_OPEN);
 if ($reports_open && count($reports_open) > 0)
 {
 	$reports_menu_string = " (" . count($reports_open) . ")";
+}
+
+// get the reports if there's a given question
+if ($question)
+{
+	$reports_question = $mydb->get_reports_from_question_ID($question->get_ID(), REPORT_OPEN);
 }
 
 // display the page
@@ -168,7 +174,17 @@ include("header.php");
 			}
 			?>:</h3>
 
-		<form id="editquestionform" method="post" action="http://rollerderbytestomatic.com/admin/">
+		<form id="editquestionform" method="post" action="<?php 
+			if ($question)
+			{
+				echo "http://rollerderbytestomatic.com/admin/edit/" . $question->get_ID();
+			}
+			else
+			{
+				echo "http://rollerderbytestomatic.com/admin/";
+			}
+		
+			?>">
 		
 			<input type="hidden" name="question_id" value = "<?php 
 			if ($question)
@@ -296,6 +312,34 @@ include("header.php");
 			</table>
 		</form>
 		
+		<?php 
+		
+		if ($reports_question)
+		{
+			?>
+			<h3>Reports:</h3>
+			<p>
+			<?php 
+			foreach ($reports_question as $report)
+			{
+				if (($_POST['question_id'] == $report->get_Question_ID()) || ($url_array[2] == $report->get_Question_ID()))
+				{
+					echo "<strong>";
+				}
+				
+				echo get_formatted_admin_report($report);
+				
+				if (($_POST['question_id'] == $report->get_Question_ID()) || ($url_array[2] == $report->get_Question_ID()))
+				{
+					echo "</strong>";
+				}
+			}
+			?>
+			</p>
+			<?php 
+		}
+		?>
+		
 
 		
 	</div>
@@ -314,16 +358,9 @@ include("header.php");
 				{
 					echo "<strong>";
 				}
-				?>
-				<a href="http://rollerderbytestomatic.com/admin/edit/<?php echo $report->get_Question_ID();?>">
-					<?php echo $report->get_Question_ID();?>
-				</a>
-				(<a href="http://rollerderbytestomatic.com/admin/?update_report=<?php echo $report->get_ID();?>&new_status=fixed">fixed</a>, 
-				<a href="http://rollerderbytestomatic.com/admin/?update_report=<?php echo $report->get_ID();?>&new_status=incorrect">incorrect</a>, 
-				<a href="http://rollerderbytestomatic.com/admin/?update_report=<?php echo $report->get_ID();?>&new_status=clarified">clarified</a>, 
-				<a href="http://rollerderbytestomatic.com/admin/?update_report=<?php echo $report->get_ID();?>&new_status=noaction">no action taken</a>): 
-					<?php echo htmlentities(stripslashes($report->get_Text())); ?><br />
-				<?php 
+				
+				echo get_formatted_admin_report($report);
+				
 				if (($_POST['question_id'] == $report->get_Question_ID()) || ($url_array[2] == $report->get_Question_ID()))
 				{
 					echo "</strong>";
