@@ -514,7 +514,14 @@ class database_derbytest extends database
 
 	public function set_report($req_report)
 	{
+		
 		$req_ID = $req_report->get_ID();
+		
+		if (!$req_ID)
+		{
+			throw new exception ("Report not found");
+		}
+		
 		$req_IP = $req_report->get_IP();
 		$req_Timestamp = $req_report->get_Timestamp();
 		$req_Question_ID = $req_report->get_Question_ID();
@@ -583,6 +590,31 @@ class database_derbytest extends database
 		{
 			settype($status, "integer");
 			$clause = "WHERE Status = '$status'";
+		}
+		
+		$query = "SELECT * FROM rdtom_reports $clause ORDER BY Timestamp ASC";
+		
+		$results = $this->get_results($query);
+		
+		if ($results)
+		{
+			foreach ($results as $result)
+			{
+				$out[] = $this->get_report_from_array($result);
+			}
+		}
+		return $out;
+	}
+
+	public function get_reports_from_question_ID($question_ID, $status = false)
+	{
+		settype($question_ID, "integer");
+		$clause = "WHERE Question_ID = '$question_ID'";
+		
+		if ($status !== false)
+		{
+			settype($status, "integer");
+			$clause .= "AND Status = '$status'";
 		}
 		
 		$query = "SELECT * FROM rdtom_reports $clause ORDER BY Timestamp ASC";

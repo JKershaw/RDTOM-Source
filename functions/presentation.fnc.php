@@ -358,4 +358,70 @@ function time_string_to_million()
 	
 	return $out;
 }
+
+
+function time_string_to_competition_end()
+{
+	//$timestamp_of_millionth = 1343197039;
+	
+	$timestamp_end_of_competition = 1344406639 - gmmktime();
+	
+	if ($timestamp_end_of_competition > 0)
+	{
+		$hours_remaining = round($timestamp_end_of_competition / (60*60));
+		
+		if ($hours_remaining < 1)
+		{
+			$out .= "Less than 1 hour";
+		}
+		else
+		{
+			if ($hours_remaining > 24)
+			{
+				// more than 1 day
+				$days_remaining = floor($timestamp_end_of_competition / (60*60*24));
+				
+				if ($days_remaining == 1)
+				{
+					$out .= "1 day, ";
+				}
+				else
+				{
+					$out .= $days_remaining . " days, ";
+				}
+				
+				$hours_remaining = $hours_remaining - ($days_remaining*24);
+			}
+				
+			if ($hours_remaining == 1)
+			{
+				$out .= "1 hour";
+			}
+			else
+			{
+				$out .= $hours_remaining . " hours";
+			}	
+		}	
+	}
+	else
+	{
+		$out .= "No time remaining.";
+	}
+	
+	//echo "$questions_remaining, $per_day_rate, $hours_remaining";
+	
+	return $out;
+}
+
+function get_formatted_admin_report($report)
+{
+	$out .= '<br />
+		<a href="http://rollerderbytestomatic.com/admin/edit/' . $report->get_Question_ID() . '">' . $report->get_Question_ID() . '</a>
+		(<a href="http://rollerderbytestomatic.com/admin/?update_report=' . $report->get_ID() . '&new_status=fixed">fixed</a>, 
+		<a href="http://rollerderbytestomatic.com/admin/?update_report=' . $report->get_ID() . '&new_status=incorrect">incorrect</a>, 
+		<a href="http://rollerderbytestomatic.com/admin/?update_report=' . $report->get_ID() . '&new_status=clarified">clarified</a>, 
+		<a href="http://rollerderbytestomatic.com/admin/?update_report=' . $report->get_ID() . '&new_status=noaction">no action taken</a>):' . htmlentities(stripslashes($report->get_Text())) . '<br />';
+	
+	return $out;
+}
 ?>
