@@ -412,4 +412,16 @@ function time_string_to_competition_end()
 	
 	return $out;
 }
+
+function get_formatted_admin_report($report)
+{
+	$out .= '<br />
+		<a href="http://rollerderbytestomatic.com/admin/edit/' . $report->get_Question_ID() . '">' . $report->get_Question_ID() . '</a>
+		(<a href="http://rollerderbytestomatic.com/admin/?update_report=' . $report->get_ID() . '&new_status=fixed">fixed</a>, 
+		<a href="http://rollerderbytestomatic.com/admin/?update_report=' . $report->get_ID() . '&new_status=incorrect">incorrect</a>, 
+		<a href="http://rollerderbytestomatic.com/admin/?update_report=' . $report->get_ID() . '&new_status=clarified">clarified</a>, 
+		<a href="http://rollerderbytestomatic.com/admin/?update_report=' . $report->get_ID() . '&new_status=noaction">no action taken</a>):' . htmlentities(stripslashes($report->get_Text())) . '<br />';
+	
+	return $out;
+}
 ?>
