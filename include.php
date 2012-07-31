@@ -2,6 +2,10 @@
 /*
  * All files we need to include
  */
+
+// Exception handling
+include('functions/exceptions.php');
+
 // include needed files
 include('config.php');
 

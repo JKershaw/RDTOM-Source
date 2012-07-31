@@ -6,8 +6,10 @@
  * Built to help Roller Derby players learn the rules
  */
 
+/*
 try 
 {
+*/
 	// include needed files
 	include('include.php');
 	
@@ -70,6 +72,7 @@ try
 			break;
 			
 	}
+/*
 } 
 catch (Exception $e) 
 {
@@ -83,4 +86,5 @@ catch (Exception $e)
 	$error_string =  $e->getMessage();
 	include("presentation/error.php");
 }
+*/
 ?>
