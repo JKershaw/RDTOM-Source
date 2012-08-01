@@ -1,7 +1,7 @@
 <?php
 function sent_auto_email($to_email, $subject, $body)
 {
-	global $smtp_username, $smtp_userpassword, $smtp_host;
+	global $smtp_username, $smtp_userpassword, $smtp_host, $email_from_address, $email_from_name;
 
 	//echo  $smtp_username, $smtp_userpassword, $smtp_host;
 	
@@ -14,8 +14,8 @@ function sent_auto_email($to_email, $subject, $body)
 	$mail->Username = $smtp_username;  // SMTP username
 	$mail->Password = $smtp_userpassword; // SMTP password
 	
-	$mail->From = "auto@rollerderbytestomatic.com";
-	$mail->FromName = "Roller Derby Test O'Matic";
+	$mail->From = $email_from_address;
+	$mail->FromName = $email_from_name;
 	
 	$mail->AddAddress($to_email);                  // name is optional
 	

@@ -66,6 +66,14 @@ try
 		case "get_admin_questions_list":
 			$out = ajax_get_admin_questions_list();	
 		break;
+		case "get_competition_string":
+			$out = ajax_competition_string();	
+		break;
+		case "get_competition_list":
+			$out = ajax_get_admin_competition_list();	
+		break;
+		
+		
 		
 	}
 	
@@ -376,7 +384,7 @@ function ajax_get_admin_questions_list()
 	$questions = $mydb->get_questions();
 	foreach ($questions as $question)
 	{
-		$out .= $question->get_Section() . " <a href=\"http://rollerderbytestomatic.com/admin/edit/" . $question->get_ID() . "#edit_question\">" . htmlentities(stripslashes($question->get_Text())) . "</a><br />";
+		$out .= $question->get_Section() . " <a href=\"" . get_site_URL() . "admin/edit/" . $question->get_ID() . "#edit_question\">" . htmlentities(stripslashes($question->get_Text())) . "</a><br />";
 	}
 	
 	return $out;
@@ -385,5 +393,68 @@ function ajax_get_admin_questions_list()
 function ajax_string_to_one_million()
 {
 	return time_string_to_million();
+}
+
+function ajax_competition_string()
+{
+	return get_competition_footer_string();
+}
+
+function ajax_get_admin_competition_list()
+{
+	global $mydb;
+	// return a list of people entered into the prize draw competition
+	
+	// get all the responses
+	$all_responses = $mydb->get_responses_since(1343197039);
+	
+	// get all the users
+	$all_users = $mydb->get_users();
+	
+	// get stats from the results
+	// $user_data_array[USER_ID][0] = wrong, [1] = correct
+	foreach ($all_responses as $response)
+	{
+		if ($response->is_correct())
+		{
+			$user_data_array[$response->get_User_ID()][1]++;
+		}
+		else
+		{
+			$user_data_array[$response->get_User_ID()][0]++;
+		}
+	}
+	
+	// find all the users with 50 or more questions answered
+	
+	foreach ($user_data_array as $user_ID => $user_data)
+	{
+		if ($all_users[$user_ID])
+		{
+			if (($user_data[0] + $user_data[1]) >= 50)
+			{
+				$perc_value = round ((($user_data[1] / ($user_data[0] + $user_data[1])) * 100), 2);
+				$perc_colour = get_colour_from_percentage($perc_value);
+				if ($perc_value >= 80)
+				{
+					$out .= "<br />" . htmlentities(stripslashes($all_users[$user_ID]->get_Name())) . " [" . ($user_data[0] + $user_data[1]) . " <span style=\"font-weight:bold; color:" . $perc_colour . "\">" . $perc_value . "%</span>]";
+					$entry_counter ++;
+				}
+				else
+				{
+					$out_2 .= "<br />" . htmlentities(stripslashes($all_users[$user_ID]->get_Name())) . " [" . ($user_data[0] + $user_data[1]) . " <span style=\"font-weight:bold; color:" . $perc_colour . "\">" . $perc_value . "%</span>]";
+					$entry_almost_counter ++;
+				}
+			}
+		}
+		else
+		{
+			$perc_value = round ((($user_data[0] / ($user_data[0] + $user_data[1])) * 100), 2);
+			$perc_colour = get_colour_from_percentage($perc_value);
+			$out_3 .= "<br /> UNKNOWN [" . ($user_data[0] + $user_data[1]) . " <span style=\"font-weight:bold; color:" . $perc_colour . "\">" . $perc_value . "%</span>]";
+		}
+	}
+	
+	return $entry_counter . " qualified users. " . $entry_almost_counter . " with 50+ responses but not 80%<hr>" . $out . "<hr>" . $out_2 . "<hr>" . $out_3;
 }
 ?>
