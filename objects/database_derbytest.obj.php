@@ -1271,12 +1271,15 @@ class database_derbytest extends database
 	
 	public function get_timestamp_of_millionth()
 	{
+		return 1343197039;
+		/*
 		global $competition_value;
 		settype($competition_value, "integer");
 		$competition_value = $competition_value -1;
 		
 		$query = "SELECT Timestamp FROM rdtom_responses LIMIT $competition_value, 1";
 		return $this->get_var($query);
+		*/
 	}
 } // class database
 ?>
