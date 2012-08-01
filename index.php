@@ -6,6 +6,9 @@
  * Built to help Roller Derby players learn the rules
  */
 
+// start the output buffer
+ob_start ();
+
 // include needed files
 include('include.php');
 
@@ -68,4 +71,7 @@ switch ($url_array[0])
 		break;
 		
 }
+
+//Output the buffer
+while (@ob_end_flush());
 ?>

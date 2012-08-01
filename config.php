@@ -59,6 +59,14 @@ $competition_min_questions = 50;
 // minimum correct percentage
 $competition_min_perc = 80;
 
+
+// the current site URL (different on development & test servers so goes in the config file
+$site_URL = $ini_array["site_URL"];
+
+// when emailing, this is the from account
+$email_from_address = "auto@rollerderbytestomatic.com";
+$email_from_name = "Roller Derby Test O'Matic";
+
 /*
  * DEFINITIONS - THESE NEVER CHANGE
  */

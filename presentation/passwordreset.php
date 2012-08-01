@@ -114,7 +114,7 @@ if (!$url_array[1])
 
 		<h3>To have your password reset, please enter your email address. You'll be emailed details on what to do next.</h3>
 		
-		<form method="post" action="http://rollerderbytestomatic.com/passwordreset" name="formforgottenemail">
+		<form method="post" action="<?php echo get_site_URL(); ?>passwordreset" name="formforgottenemail">
 			<input type="hidden"  name="forgottenemailform" id="forgottenemailform" value="yes"></input>
 			<p>
 				Email:<br />
@@ -147,7 +147,7 @@ else
 		?>
 		<h3>Please enter your new password:</h3>
 		
-		<form method="post" action="http://rollerderbytestomatic.com/passwordreset/<?php echo $url_array[1]; ?>" name="formforgottenemailnewpassword">
+		<form method="post" action="<?php echo get_site_URL(); ?>passwordreset/<?php echo $url_array[1]; ?>" name="formforgottenemailnewpassword">
 			<input type="hidden" name="forgottenemailnewpasswordform" id="forgottenemailnewpasswordform" value="yes"></input>
 			<input type="hidden" name="token" id="token" value="<?php echo $url_array[1]; ?>"></input>
 			<p>
@@ -171,7 +171,7 @@ else
 		?>
 		<h3>Your password has been reset!</h3>
 
-		<p>Hurray! You can <a href="http://rollerderbytestomatic.com/profile">now log in</a> with your new password.</p>
+		<p>Hurray! You can <a href="<?php echo get_site_URL(); ?>profile">now log in</a> with your new password.</p>
 		<?php 
 	}
 }

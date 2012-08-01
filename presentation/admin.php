@@ -177,11 +177,11 @@ include("header.php");
 		<form id="editquestionform" method="post" action="<?php 
 			if ($question)
 			{
-				echo "http://rollerderbytestomatic.com/admin/edit/" . $question->get_ID();
+				echo get_site_URL() . "admin/edit/" . $question->get_ID();
 			}
 			else
 			{
-				echo "http://rollerderbytestomatic.com/admin/";
+				echo get_site_URL() . "admin/";
 			}
 		
 			?>">
@@ -383,14 +383,14 @@ include("header.php");
 				foreach ($reports as $report)
 				{
 					?>
-					<a href="http://rollerderbytestomatic.com/admin/?edit=<?php echo $report->get_Question_ID();?>">
+					<a href="<?php echo get_site_URL() ?>admin/?edit=<?php echo $report->get_Question_ID();?>">
 						<?php echo $report->get_Question_ID();?>
 					</a>
-					(<a href="http://rollerderbytestomatic.com/admin/?update_report=<?php echo $report->get_ID();?>&new_status=open">open</a>, 
-					<a href="http://rollerderbytestomatic.com/admin/?update_report=<?php echo $report->get_ID();?>&new_status=fixed">fixed</a>, 
-					<a href="http://rollerderbytestomatic.com/admin/?update_report=<?php echo $report->get_ID();?>&new_status=incorrect">incorrect</a>, 
-					<a href="http://rollerderbytestomatic.com/admin/?update_report=<?php echo $report->get_ID();?>&new_status=clarified">clarified</a>, 
-					<a href="http://rollerderbytestomatic.com/admin/?update_report=<?php echo $report->get_ID();?>&new_status=noaction">no action taken</a>): 
+					(<a href="<?php echo get_site_URL() ?>admin/?update_report=<?php echo $report->get_ID();?>&new_status=open">open</a>, 
+					<a href="<?php echo get_site_URL() ?>admin/?update_report=<?php echo $report->get_ID();?>&new_status=fixed">fixed</a>, 
+					<a href="<?php echo get_site_URL() ?>admin/?update_report=<?php echo $report->get_ID();?>&new_status=incorrect">incorrect</a>, 
+					<a href="<?php echo get_site_URL() ?>admin/?update_report=<?php echo $report->get_ID();?>&new_status=clarified">clarified</a>, 
+					<a href="<?php echo get_site_URL() ?>admin/?update_report=<?php echo $report->get_ID();?>&new_status=noaction">no action taken</a>): 
 					<?php echo htmlentities(stripslashes($report->get_Text())); ?><br />
 					<?php 
 				}
@@ -424,22 +424,25 @@ include("header.php");
 		// create a handler for the directory
 		$handler = opendir("logs");
 
-		// open directory and walk through the filenames
-		while ($file = readdir($handler)) 
+		if ($handler)
 		{
-			// if file isn't this directory or its parent, add it to the results
-			if ($file != "." && $file != "..") 
+			// open directory and walk through the filenames
+			while ($file = readdir($handler)) 
 			{
-				// show the link to the log file
-				$file_string_array[$file] = "<a href=\"http://rollerderbytestomatic.com/logs/" . $file . "\">" . $file . "</a>";
+				// if file isn't this directory or its parent, add it to the results
+				if ($file != "." && $file != "..") 
+				{
+					// show the link to the log file
+					$file_string_array[$file] = "<a href=\"" . get_site_URL() . "logs/" . $file . "\">" . $file . "</a>";
+				}
 			}
+			
+			sort($file_string_array);
+			echo implode("<br />", $file_string_array);
+	
+			 // tidy up: close the handler
+			closedir($handler);		
 		}
-		
-		sort($file_string_array);
-		echo implode("<br />", $file_string_array);
-
-		 // tidy up: close the handler
-		closedir($handler);		
 		?>
 		</p>
 		

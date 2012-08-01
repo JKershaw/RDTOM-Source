@@ -376,7 +376,7 @@ function ajax_get_admin_questions_list()
 	$questions = $mydb->get_questions();
 	foreach ($questions as $question)
 	{
-		$out .= $question->get_Section() . " <a href=\"http://rollerderbytestomatic.com/admin/edit/" . $question->get_ID() . "#edit_question\">" . htmlentities(stripslashes($question->get_Text())) . "</a><br />";
+		$out .= $question->get_Section() . " <a href=\"" . get_site_URL() . "admin/edit/" . $question->get_ID() . "#edit_question\">" . htmlentities(stripslashes($question->get_Text())) . "</a><br />";
 	}
 	
 	return $out;

@@ -26,7 +26,7 @@
 		{
 			?>		
 			<p>
-				<a href="http://rollerderbytestomatic.com">Answer more questions</a> 
+				<a href="<?php echo get_site_URL(); ?>">Answer more questions</a> 
 			</p>
 			<?php 
 		} 
@@ -35,7 +35,7 @@
 		{
 			?>		
 			<p>
-				You are logged in as <strong><?php echo htmlentities($user->get_Name())?></strong>, <a href="http://rollerderbytestomatic.com/profile">view your profile</a>.
+				You are logged in as <strong><?php echo htmlentities($user->get_Name())?></strong>, <a href="<?php echo get_site_URL(); ?>profile">view your profile</a>.
 			</p>
 			<?php 
 		} 
@@ -43,7 +43,7 @@
 		{
 			?>
 			<p>
-				<a href="http://rollerderbytestomatic.com/profile">Log in or sign up</a>. When logged in the site will track which sections of the rules you're good at, and which you need to brush up on.
+				<a href="<?php echo get_site_URL(); ?>profile">Log in or sign up</a>. When logged in the site will track which sections of the rules you're good at, and which you need to brush up on.
 			</p>	
 			<?php 
 		}
@@ -62,9 +62,9 @@
 			<p id="p_about_link"><a onclick="$('#p_about_link').hide();$('#p_about').fadeIn();">About</a></p>
 			<p id="p_about" style="display:none">
 	<?php if (is_question()) {?>
-				For reference, this is question <a href="http://rollerderbytestomatic.com/question/<?php echo $question->get_ID(); ?>"><strong>#<?php echo $question->get_ID(); ?></strong></a>. 
+				For reference, this is question <a href="<?php echo get_site_URL(); ?>question/<?php echo $question->get_ID(); ?>"><strong>#<?php echo $question->get_ID(); ?></strong></a>. 
 	<?php } ?>	
-				The database currently has <strong><?php echo number_format($mydb->get_question_count()); ?></strong> questions in it. <a href="http://rollerderbytestomatic.com/questions">View them all</a>. 
+				The database currently has <strong><?php echo number_format($mydb->get_question_count()); ?></strong> questions in it. <a href="<?php echo get_site_URL(); ?>questions">View them all</a>. 
 				<br /><br />
 				This site is made and maintained by me, Sausage Roller. I skate with New Wheeled Order, the Manchester Roller Derby league mens team. I'll be adding more features as I go (things like individual score tracking, difficulty, tests and what-not) so you should check back every so often. 
 				Feel free to send me requests and feedback via <a href="mailto:contact@rollerderbytestomatic.com ?Subject=Roller%20Derby%20Test%20O'Matic">email</a>, <a href="http://www.facebook.com/RollerDerbyTestOMatic">Facebook</a>, <a href="http://twitter.com/#!/wardrox">Twitter</a>, <a href="http://wardrox.tumblr.com/ask">Tumblr</a> or <a href="https://plus.google.com/108172735871267076610/posts">Google+</a>. <a onclick="$('#p_about_link').fadeIn();$('#p_about').hide();">Hide</a>
@@ -94,10 +94,10 @@
 		{
 			?>		
 				<p>
-					<a href="http://rollerderbytestomatic.com/admin/">Admin</a>, <a href="http://rollerderbytestomatic.com/stats/">Stats</a><?php 
+					<a href="<?php echo get_site_URL(); ?>admin/">Admin</a>, <a href="<?php echo get_site_URL(); ?>stats/">Stats</a><?php 
 					if (is_question()) 
 					{
-						?>, <a href="http://rollerderbytestomatic.com/admin/edit/<?php echo $question->get_ID(); ?>#edit_question">Edit question</a>
+						?>, <a href="<?php echo get_site_URL(); ?>admin/edit/<?php echo $question->get_ID(); ?>#edit_question">Edit question</a>
 						<?php 
 					}
 					?>

@@ -28,7 +28,7 @@
 	<?php if (is_competition_page())
 	{
 		?>
-		<meta property="og:image" content="http://rollerderbytestomatic.com/images/sponsors.png" />
+		<meta property="og:image" content="<?php echo get_site_URL() ?>images/sponsors.png" />
 		<?php 
 	}
 	?>
