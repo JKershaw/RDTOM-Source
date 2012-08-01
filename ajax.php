@@ -66,6 +66,11 @@ try
 		case "get_admin_questions_list":
 			$out = ajax_get_admin_questions_list();	
 		break;
+		case "get_competition_string":
+			$out = ajax_competition_string();	
+		break;
+		
+		
 		
 	}
 	
@@ -386,4 +391,10 @@ function ajax_string_to_one_million()
 {
 	return time_string_to_million();
 }
+
+function ajax_competition_string()
+{
+	return get_competition_footer_string();
+}
+
 ?>

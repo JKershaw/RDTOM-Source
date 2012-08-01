@@ -13,6 +13,20 @@
 ?>	
 		<div class="footer">
 		
+		
+	<div class="layout_box" style="	margin: 20px 0; box-shadow: 3px 3px 5px #888; border: 1px solid red; min-height: 150px;">
+
+		<img style="width:400px; max-width:90%; margin-right:20px; margin-bottom:20px; float:left;" src="http://rollerderbytestomatic.com/images/sponsors3.png" title="Thanks to our awsome sponsors: Wicked Skatewear, 5th Blocker Skates, Roller Derby City .com and Fast Girl Skates"/>
+
+		<div id="competition_string">
+		<?php
+		echo get_competition_footer_string();
+		?>
+		</div>
+
+	</div>
+		
+		
 		<?php 
 		if (is_question()) 
 		{
@@ -82,9 +96,9 @@
 			</p>
 
 	
-			<p class="competition_string">
+			<!-- <p class="competition_string">
 				<a href="http://rollerderbytestomatic.com/competition"><span style="font-weight:bold; color:yellow; background-color: #333; padding: 1px 3px 2px;">Competition!</span> Click here for details on how to win t-shirts, toe-stops and gift certificates by answering questions!</a>
-			</p>
+			</p> -->
 
 			<!-- <p class="vote_string">
 				<a href="http://rollerderbytestomatic.com/poll">What features should be added next to the Test O'Matic?</a>
