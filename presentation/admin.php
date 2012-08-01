@@ -422,7 +422,7 @@ include("header.php");
 		$results = array();
 
 		// create a handler for the directory
-		$handler = opendir("logs");
+		$handler = @opendir("logs");
 
 		if ($handler)
 		{
