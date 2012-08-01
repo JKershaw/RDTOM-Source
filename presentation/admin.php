@@ -154,6 +154,7 @@ include("header.php");
 		<a class="button" onclick="show_page('reports');">Reports<?php echo $reports_menu_string; ?></a>
 		<a class="button" onClick="show_page('all_questions');">All Questions</a>
 		<a class="button" onClick="show_page('logs');">Logs</a>
+		<a class="button" onClick="show_page('competition');">Competition</a>
 		<a class="button" onClick="show_page('admin');">Admin</a>
 	</p>
 		
@@ -449,6 +450,14 @@ include("header.php");
 
 	</div>
 	
+	<div class="layout_box" id="layout_box_competition" style="display:none;">
+	
+		<p id="viewcompetitionlink"><a onclick="$('#viewcompetitionlink').hide(); $('#viewcompetition').show(); get_competition_list();">Load competition results</a></p>
+		<p id="viewcompetition" style="display:none">
+		</p>
+
+	</div>
+	
 	<div class="layout_box" id="layout_box_admin" style="display:none;">
 	
 		<p>
@@ -475,6 +484,22 @@ include("header.php");
 			);	
 		}
 
+		function get_competition_list()
+		{
+			$("#viewcompetition").html("<p>Loading...</p>");
+
+			$.post("ajax.php", { 
+				call: "get_competition_list" 
+				},
+				
+				function(data) {
+
+					$("#viewcompetition").html(data);
+					
+				}
+			);	
+		}
+		
 		function newquestionvalidation(formname)
 		{
 			var error_string;
@@ -559,6 +584,15 @@ include("header.php");
 			else
 			{
 	    		$('#layout_box_logs').hide();
+			}
+			
+			if (page_name == "competition")
+			{
+	    		$('#layout_box_competition').fadeIn();
+			}
+			else
+			{
+	    		$('#layout_box_competition').hide();
 			}
 			
 			if (page_name == "admin")

@@ -16,7 +16,7 @@
 		
 	<div class="layout_box" style="	margin: 20px 0; box-shadow: 3px 3px 5px #888; border: 1px solid red; min-height: 150px;">
 
-		<img style="width:400px; max-width:90%; margin-right:20px; margin-bottom:20px; float:left;" src="http://rollerderbytestomatic.com/images/sponsors3.png" title="Thanks to our awsome sponsors: Wicked Skatewear, 5th Blocker Skates, Roller Derby City .com and Fast Girl Skates"/>
+		<img style="width:400px; max-width:90%; margin-right:20px; margin-bottom:20px; float:left;" src="http://rollerderbytestomatic.com/images/sponsors3_400.png" title="Thanks to our awsome sponsors: Wicked Skatewear, 5th Blocker Skates, Roller Derby City .com and Fast Girl Skates"/>
 
 		<div id="competition_string">
 		<?php
@@ -49,7 +49,7 @@
 		{
 			?>		
 			<p>
-				You are logged in as <strong><?php echo htmlentities($user->get_Name())?></strong>, <a href="<?php echo get_site_URL(); ?>profile">view your profile</a>.
+				You are logged in as <strong><?php echo htmlentities(stripslashes($user->get_Name()))?></strong>, <a href="<?php echo get_site_URL(); ?>profile">view your profile</a>.
 			</p>
 			<?php 
 		} 
