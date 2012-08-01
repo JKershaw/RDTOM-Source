@@ -6,32 +6,14 @@ set_page_subtitle("Turn left and win some stuff.");
 include("header.php"); 
 ?>
 
-<p style="text-align:center; "><img style="max-width:90%" src="<? echo get_site_URL() ?>images/sponsors3.png" title="Thanks to our awsome sponsors: Wicked Skatewear, 5th Blocker Skates, Roller Derby City .com and Fast Girl Skates"/></p>
+<p style="text-align:center; "><img style="max-width:90%" src="http://rollerderbytestomatic.com/images/sponsors3.png" title="Thanks to our awsome sponsors: Wicked Skatewear, 5th Blocker Skates, Roller Derby City .com and Fast Girl Skates"/></p>
 
 <p style="text-align:center; font-size:14px; margin-bottom:1px;">Total questions answered:</p>
 <p class="competition_number_wrap"><span class="competition_number" id="count_responses_string">Loading ...</span> <br /> &nbsp;<span id="count_responses_difference_string"></span></p>
 
 
-	<h3 style="text-align: center;">Over One Million!</h3>	
-	<p style="text-align: center;">Since the site went live a few months ago, you guys have answered more than ONE MILLION questions! Whaaa! To celebrate we're going to have a little competition.</p>
 
-	
-	<p><strong>The Grand Prize</strong></p>
-	
-	<ul>
-		<li>$50 gift certificate from <a href="http://wickedskatewear.com/">Wicked Skatewear</a></li>
-		<li>$25 online gift certificate from <a href="http://www.fastgirlskates.com/">Fast Girl Skates</a> </li>
-		<li>A pair of Powerdyne electric yellow Moonwalker toe stops, from <a href="http://www.5thblockerskates.co.uk/">5th Blocker Skates</a></li>
-		<li>A t-shirt of your choice from <a href="http://www.rollerderbycity.com/">Roller Derby City</a></li>
-		<li>A month of training, supplements and support to <a href="http://lucyindaskywithdiamonds.com/derbalife/">DerbaLife</a> provided by <a href="http://lucyindaskywithdiamonds.com/">The Life and Times of Lucy In Da Sky With Diamonds</a></li>
-		<li>A <a href="http://www.facebook.com/ManchesterRollerDerby">Manchester Roller Derby</a> t-shirt, from me (Sausage Roller), as that's my league</li>
-	</ul>
-	
-	<p>There's a $25 gift certificate from <a href="http://wickedskatewear.com/">Wicked Skatewear</a> for two runner-ups.</p>
-	
-	<!-- <p>If you would like to supply something to add to the prize fund, <a href="mailto:contact@rollerderbytestomatic.com ?Subject=Roller%20Derby%20Test%20O'Matic">get in touch</a>!</p> -->
-
-	<div class="layout_box" style="	margin: 40px 0;">
+<div class="layout_box" style="	margin: 40px 0;">
 
 	<p><strong>Your eligibility:</strong></p>
 	
@@ -50,7 +32,7 @@ include("header.php");
 	} 
 	else 
 	{
-		$timestamp_millionth = $mydb->get_timestamp_of_millionth();
+		$timestamp_millionth = 1343197039;
 		
 		$responses_since_million = $mydb->get_responses_from_User_ID($user->get_ID(), $timestamp_millionth);
 		
@@ -119,8 +101,32 @@ include("header.php");
 	?>
 	</div>
 
+
+
+	<h3 style="text-align: center;">Over One Million!</h3>	
+	<p style="text-align: center;">Since the site went live a few months ago, you guys have answered more than ONE MILLION questions! Whaaa! To celebrate we're going to have a little competition.</p>
+
+
+
 	
+	<p><strong>The Grand Prize</strong></p>
 	
+	<ul>
+		<li>$50 gift certificate from <a href="http://wickedskatewear.com/">Wicked Skatewear</a></li>
+		<li>$25 online gift certificate from <a href="http://www.fastgirlskates.com/">Fast Girl Skates</a> </li>
+		<li>A pair of Powerdyne electric yellow Moonwalker toe stops, from <a href="http://www.5thblockerskates.co.uk/">5th Blocker Skates</a></li>
+		<li>A t-shirt of your choice from <a href="http://www.rollerderbycity.com/">Roller Derby City</a></li>
+		<li>A month of training, supplements and support to <a href="http://lucyindaskywithdiamonds.com/derbalife/">DerbaLife</a> provided by <a href="http://lucyindaskywithdiamonds.com/">The Life and Times of Lucy In Da Sky With Diamonds</a></li>
+		<li>A <a href="http://www.facebook.com/ManchesterRollerDerby">Manchester Roller Derby</a> t-shirt, from me (Sausage Roller), as that's my league</li>
+	</ul>
+	
+	<p>There's a $25 gift certificate from <a href="http://wickedskatewear.com/">Wicked Skatewear</a> for two runner-ups.</p>
+	
+	<p>If you would like to supply something to add to the prize fund, <a href="mailto:contact@rollerderbytestomatic.com ?Subject=Roller%20Derby%20Test%20O'Matic">get in touch</a>!</p>
+
+	
+
+
 	<p><strong>How to win</strong></p>
 	
 	<ul>

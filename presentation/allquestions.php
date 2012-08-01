@@ -73,7 +73,7 @@ if ($url_array[1] == "easy")
 				}
 				echo htmlentities(stripslashes($question->get_Section())) . "
 					</strong> 
-					<a href=\"http://rollerderbytestomatic.com/?question=" . $question->get_ID() . "\">" . htmlentities(stripslashes($question->get_Text())) . "</a>
+					<a href=\"" . get_site_URL() . "question/" . $question->get_ID() . "\">" . htmlentities(stripslashes($question->get_Text())) . "</a>
 				";
 				
 				echo "<ol type=\"A\">";

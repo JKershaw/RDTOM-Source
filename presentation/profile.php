@@ -99,7 +99,7 @@ if (is_logged_in())
 		<a class="button" onClick="document.formlogout.submit()">Log out</a>
 	</p>
 	
-	<form method="post" action="http://rollerderbytestomatic.com/profile" name="formlogout">
+	<form method="post" action="<?php echo get_site_URL(); ?>profile" name="formlogout">
 		<input type="hidden" name="logoutform" id="logoutform" value="yes" ></input>
 	</form>
 	
@@ -115,7 +115,7 @@ if (is_logged_in())
 	
 	<div class="layout_box" id="layout_box_profile" style="display:none;">
 		<h3>Update your password</h3>
-		<form method="post" action="http://rollerderbytestomatic.com/profile#update" name="formpasswordupdate">
+		<form method="post" action="<?php echo get_site_URL(); ?>profile#update" name="formpasswordupdate">
 			<input type="hidden" name="formpasswordupdate" id="formpasswordupdate" value="yes" ></input>
 			<p>
 				Old password: <br />
@@ -132,7 +132,7 @@ if (is_logged_in())
 		
 		<h3>Update your email</h3>
 		
-		<form method="post" action="http://rollerderbytestomatic.com/profile#update" name="formemailupdate">
+		<form method="post" action="<?php echo get_site_URL(); ?>profile#update" name="formemailupdate">
 			<input type="hidden" name="formemailupdate" id="formemailupdate" value="yes" ></input>
 			<p>
 				New email address: <br />
@@ -145,7 +145,7 @@ if (is_logged_in())
 		
 		<h3>Update your name</h3>
 		
-		<form method="post" action="http://rollerderbytestomatic.com/profile#update" name="formnameupdate">
+		<form method="post" action="<?php echo get_site_URL(); ?>profile#update" name="formnameupdate">
 			<input type="hidden" name="formnameupdate" id="formnameupdate" value="yes" ></input>
 			<p>
 				New name: <br />
@@ -159,7 +159,7 @@ if (is_logged_in())
 		<h3>Disassociate questions</h3>
 		<p>To disassociate yourself from all the questions you have currently answered, click this button. This is not reversable and is only to be done in dire situations. Every single question you have answered will be forgotten and you will have to start all over again. Think about that for a second.</p>
 		
-		<form method="post" action="http://rollerderbytestomatic.com/profile#update" name="disassociateform">
+		<form method="post" action="<?php echo get_site_URL(); ?>profile#update" name="disassociateform">
 			<p>
 				<input type="hidden" name="disassociateform"  id="disassociateform" value="yes" ></input>
 				<a class="button" onClick="if (confirm('Are you sure you want the site to forget every answer you have given? This CAN NOT be undone.')){ document.disassociateform.submit() };">Disassociate Answers</a>
@@ -208,7 +208,7 @@ else
 	<div id="form_login" <?php if ($sign_up_error) { echo "style=\"display: none;\""; }?>>
 		<h3>Login to your account</h3>
 		
-		<form method="post" action="http://rollerderbytestomatic.com/profile" name="formlogin">
+		<form method="post" action="<?php echo get_site_URL(); ?>profile" name="formlogin">
 		<input type="hidden"  name="loginform" id="loginform" value="yes"></input>
 		<p>
 			Name:<br />
@@ -233,7 +233,7 @@ else
 	
 	<div id="form_signup" <?php if (!$sign_up_error) { echo "style=\"display: none;\""; }?>>
 		<h3>Sign up</h3>
-		<form method="post" action="http://rollerderbytestomatic.com/profile" name="formsignup">
+		<form method="post" action="<?php echo get_site_URL(); ?>profile" name="formsignup">
 			<input type="hidden" id="signupform" name="signupform"  value="yes"></input>
 		<p>		
 			Name: <br />
@@ -255,7 +255,7 @@ else
 			If you already have an account <a onclick="$('#form_signup').hide();$('#form_login').fadeIn();">click here to login</a>.
 		</p>
 	</div>
-	<p><a href="http://rollerderbytestomatic.com/passwordreset">Forgotten your password?</a></p>
+	<p><a href="<?php echo get_site_URL(); ?>passwordreset">Forgotten your password?</a></p>
 	
 	<script type="text/javascript">
 	    if (location.href.indexOf("#") != -1) {

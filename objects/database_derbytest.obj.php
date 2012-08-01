@@ -763,6 +763,28 @@ class database_derbytest extends database
 		return $out;
 	}
 	
+	public function get_responses_since($req_timestamp)
+	{
+		settype($req_timestamp, "integer");
+	
+		$query = "SELECT * FROM rdtom_responses WHERE Timestamp > '$req_timestamp'";
+		$results = $this->get_results($query);
+		
+		if ($results)
+		{
+			foreach ($results as $result)
+			{
+				$out[] = $this->get_response_from_array($result);
+			}
+		}
+		else
+		{
+			return false;
+		}
+		
+		return $out;
+	}
+	
 	public function get_response_count_since($req_timestamp)
 	{
 		settype($req_timestamp, "integer");
@@ -983,6 +1005,31 @@ class database_derbytest extends database
 		$query = "SELECT COUNT(*) FROM rdtom_users";
 		$result = $this->get_var($query);
 		return $result;
+	}
+	
+
+	public function get_users()
+	{
+		settype($req_ID, "integer");
+		
+		$query="SELECT * FROM rdtom_users";
+		$results = $this->get_results($query);
+		
+		if ($results)
+		{
+			foreach ($results as $result)
+			{
+				$tmp_user = $this->get_user_from_array($result);
+				$out[$tmp_user->get_ID()] = $tmp_user;
+			}
+		}
+		else
+		{
+			throw new exception("No users found. Oh dear");
+		}
+		
+		return $out;
+		
 	}
 	
 	public function add_user($req_name, $req_password, $req_email)
@@ -1271,12 +1318,15 @@ class database_derbytest extends database
 	
 	public function get_timestamp_of_millionth()
 	{
+		return 1343197039;
+		/*
 		global $competition_value;
 		settype($competition_value, "integer");
 		$competition_value = $competition_value -1;
 		
 		$query = "SELECT Timestamp FROM rdtom_responses LIMIT $competition_value, 1";
 		return $this->get_var($query);
+		*/
 	}
 } // class database
 ?>

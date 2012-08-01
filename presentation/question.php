@@ -105,8 +105,22 @@ else
 					$("#remebered_string").hide();
 					$("#remebered_string").html(data);
 					$("#remebered_string").fadeIn();
+
+					// get the competition string
+					$.post("ajax.php", { 
+						call: "get_competition_string"},
+						function(data) {
+							$("#competition_string").hide();
+							$("#competition_string").html(data);
+							$("#competition_string").fadeIn();
+						}
+					);
 				}
 			);
+
+			
+
+			
 		}
 	}
 	
@@ -136,7 +150,7 @@ else
 
 
 <p>
-	<a class="button" href="http://rollerderbytestomatic.com/">New Question</a>
+	<a class="button" href="<?php echo get_site_URL(); ?>">New Question</a>
 </p>
 
 
@@ -146,7 +160,7 @@ else
 	<p>You should report a question if you think it's incorrect or if it's poorly written (including spelling mistakes or bad grammar). If you think the question is wrong be sure to double check the wording of the question <i>and</i> the specific rule it references, which in this case is <strong><?php if ($question) { echo htmlentities(stripslashes($question->get_Section())); } ?></strong>. Until the great robot uprising, we're only human so mistakes happen. Thanks for helping!</p>
 	<p>In the text box below please let me know what it is which made you report this question.</p>
 	
-	<form name="formreport" method="post" action="http://rollerderbytestomatic.com/report">	
+	<form name="formreport" method="post" action="<?php echo get_site_URL(); ?>report">	
 	<p>
 		<input type="hidden" id="report_question_ID" name="report_question_ID" value="<?php if ($question) echo $question->get_ID(); ?>" />
 		<textarea name="report_text"  id="report_text" rows="10"><?php 
