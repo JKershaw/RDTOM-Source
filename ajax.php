@@ -406,22 +406,22 @@ function ajax_get_admin_competition_list()
 	// return a list of people entered into the prize draw competition
 	
 	// get all the responses
-	$all_responses = $mydb->get_responses_since(1343197039);
+	$all_raw_responses = $mydb->get_responses_raw_since(1343197039);
 	
 	// get all the users
 	$all_users = $mydb->get_users();
 	
 	// get stats from the results
 	// $user_data_array[USER_ID][0] = wrong, [1] = correct
-	foreach ($all_responses as $response)
+	foreach ($all_raw_responses as $raw_response)
 	{
-		if ($response->is_correct())
+		if ($raw_response["Correct"] == 1)
 		{
-			$user_data_array[$response->get_User_ID()][1]++;
+			$user_data_array[$raw_response["User_ID"]][1]++;
 		}
 		else
 		{
-			$user_data_array[$response->get_User_ID()][0]++;
+			$user_data_array[$raw_response["User_ID"]][0]++;
 		}
 	}
 	
