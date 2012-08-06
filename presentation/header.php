@@ -23,15 +23,15 @@
 		
 		<meta name="viewport" content="width=device-width" />
 		<meta property="og:title" content="Roller Derby Test O'Matic" />
-		<meta property="og:description" content="<?php if (is_question()) { echo htmlspecialchars(stripslashes($question->get_Text())); } elseif (is_competition_page()) { echo "Answer Roller Derby questions to win t-shirts, toe-stops and online gift vouchers!"; } else { echo "An online, free, Roller Derby rules test with hundreds of questions. Turn left and learn the rules."; } ?>" />
-		<meta name="Description" content="<?php if (is_question()) { echo htmlspecialchars(stripslashes($question->get_Text())); } elseif (is_competition_page()) { echo "Answer Roller Derby questions to win t-shirts, toe-stops and online gift vouchers!"; } else { echo "An online, free, Roller Derby rules test with hundreds of questions."; } ?>">
-	<?php if (is_competition_page())
-	{
+		<meta property="og:description" content="<?php echo get_page_description(); ?>" />
+		<meta name="Description" content="<?php echo get_page_description(); ?>">
+		<?php if (is_competition_page())
+		{
 		?>
 		<meta property="og:image" content="<?php echo get_site_URL() ?>images/sponsors.png" />
 		<?php 
-	}
-	?>
+		}
+		?>
 	
 	<?php 
 	if (!is_admin_page())

@@ -680,7 +680,7 @@ class database_derbytest extends database
 		return $result;
 	}
 	
-	public function get_responses_from_User_ID($User_ID, $since_timestamp = false)
+	public function get_responses_from_User_ID($User_ID, $since_timestamp = false, $until_timestamp = false)
 	{
 		settype($User_ID, "integer");
 	
@@ -693,7 +693,8 @@ class database_derbytest extends database
 		if ($since_timestamp)
 		{
 			settype($since_timestamp, "integer");
-			$query = "SELECT * FROM rdtom_responses WHERE User_ID = '" . $User_ID . "' AND Timestamp > '$since_timestamp'";
+			settype($until_timestamp, "integer");
+			$query = "SELECT * FROM rdtom_responses WHERE User_ID = '" . $User_ID . "' AND Timestamp > '$since_timestamp' AND Timestamp <= '$until_timestamp'";
 		}
 		else
 		{
@@ -775,6 +776,51 @@ class database_derbytest extends database
 			foreach ($results as $result)
 			{
 				$out[] = $this->get_response_from_array($result);
+			}
+		}
+		else
+		{
+			return false;
+		}
+		
+		return $out;
+	}
+	
+	public function get_responses_raw_since($req_timestamp)
+	{
+		settype($req_timestamp, "integer");
+	
+		$query = "SELECT Correct, User_ID FROM rdtom_responses WHERE Timestamp > '$req_timestamp'";
+		$results = $this->get_results($query);
+		
+		if ($results)
+		{
+			foreach ($results as $result)
+			{
+				$out[] = $result;
+			}
+		}
+		else
+		{
+			return false;
+		}
+		
+		return $out;
+	}
+	
+	public function get_responses_raw_between($req_timestamp, $req_untiltimestamp)
+	{
+		settype($req_timestamp, "integer");
+		settype($req_untiltimestamp, "integer");
+	
+		$query = "SELECT Correct, User_ID FROM rdtom_responses WHERE Timestamp > '$req_timestamp' AND Timestamp <= '$req_untiltimestamp'";
+		$results = $this->get_results($query);
+		
+		if ($results)
+		{
+			foreach ($results as $result)
+			{
+				$out[] = $result;
 			}
 		}
 		else
