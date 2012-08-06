@@ -532,4 +532,25 @@ function get_competition_footer_string()
 		";
 	return $out;
 }
+
+function get_page_description()
+{
+	if (is_random_question())
+	{
+		$out = "An online, free, Roller Derby rules test with hundreds of questions. Turn left and learn the rules.";
+	}
+	elseif (is_question()) 
+	{ 
+		$out = htmlspecialchars(stripslashes($question->get_Text())); 
+	} 
+	elseif (is_competition_page()) 
+	{ 
+		$out = "Answer Roller Derby questions to win t-shirts, toe-stops and online gift vouchers!"; 
+	}
+	else 
+	{ 
+		$out = "An online, free, Roller Derby rules test with hundreds of questions. Turn left and learn the rules.";
+	}
+	return $out;
+}
 ?>
