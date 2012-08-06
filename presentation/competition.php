@@ -37,7 +37,7 @@ if (is_competiton_on())
 	{
 		$timestamp_millionth = 1343197039;
 		
-		$responses_since_million = $mydb->get_responses_from_User_ID($user->get_ID(), $timestamp_millionth);
+		$responses_since_million = $mydb->get_responses_from_User_ID($user->get_ID(), $timestamp_millionth, 1344406639);
 		
 		$total_count = 0;
 		$correct_count = 0;
@@ -124,7 +124,7 @@ else
 	{
 		$timestamp_millionth = 1343197039;
 		
-		$responses_since_million = $mydb->get_responses_from_User_ID($user->get_ID(), $timestamp_millionth);
+		$responses_since_million = $mydb->get_responses_from_User_ID($user->get_ID(), $timestamp_millionth, 1344406639);
 		
 		$total_count = 0;
 		$correct_count = 0;

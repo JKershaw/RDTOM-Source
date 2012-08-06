@@ -680,7 +680,7 @@ class database_derbytest extends database
 		return $result;
 	}
 	
-	public function get_responses_from_User_ID($User_ID, $since_timestamp = false)
+	public function get_responses_from_User_ID($User_ID, $since_timestamp = false, $until_timestamp = false)
 	{
 		settype($User_ID, "integer");
 	
@@ -693,7 +693,8 @@ class database_derbytest extends database
 		if ($since_timestamp)
 		{
 			settype($since_timestamp, "integer");
-			$query = "SELECT * FROM rdtom_responses WHERE User_ID = '" . $User_ID . "' AND Timestamp > '$since_timestamp'";
+			settype($until_timestamp, "integer");
+			$query = "SELECT * FROM rdtom_responses WHERE User_ID = '" . $User_ID . "' AND Timestamp > '$since_timestamp' AND Timestamp <= '$until_timestamp'";
 		}
 		else
 		{
