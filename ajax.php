@@ -406,7 +406,7 @@ function ajax_get_admin_competition_list()
 	// return a list of people entered into the prize draw competition
 	
 	// get all the responses
-	$all_raw_responses = $mydb->get_responses_raw_since(1343197039);
+	$all_raw_responses = $mydb->get_responses_raw_between(1343197039, 1344406639);
 	
 	// get all the users
 	$all_users = $mydb->get_users();

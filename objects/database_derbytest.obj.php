@@ -808,6 +808,29 @@ class database_derbytest extends database
 		return $out;
 	}
 	
+	public function get_responses_raw_between($req_timestamp, $req_untiltimestamp)
+	{
+		settype($req_timestamp, "integer");
+		settype($req_untiltimestamp, "integer");
+	
+		$query = "SELECT Correct, User_ID FROM rdtom_responses WHERE Timestamp > '$req_timestamp' AND Timestamp <= '$req_untiltimestamp'";
+		$results = $this->get_results($query);
+		
+		if ($results)
+		{
+			foreach ($results as $result)
+			{
+				$out[] = $result;
+			}
+		}
+		else
+		{
+			return false;
+		}
+		
+		return $out;
+	}
+	
 	public function get_response_count_since($req_timestamp)
 	{
 		settype($req_timestamp, "integer");
