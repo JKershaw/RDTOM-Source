@@ -360,7 +360,21 @@ function time_string_to_million()
 	return $out;
 }
 
-
+function is_competiton_on()
+{
+	// end of competition timestamp = 1344406639
+	//return false;
+	
+	if ((1344406639 - gmmktime()) > 0)
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+	
+}
 function time_string_to_competition_end()
 {
 	//$timestamp_of_millionth = 1343197039;
@@ -409,7 +423,6 @@ function time_string_to_competition_end()
 		$out .= "No time remaining.";
 	}
 	
-	//echo "$questions_remaining, $per_day_rate, $hours_remaining";
 	
 	return $out;
 }
@@ -434,6 +447,8 @@ function get_competition_footer_string()
 		<p style=\"font-size:14px;\"><strong>Competition!</strong></p>
 	";
 	
+	if (is_competiton_on())
+	{
 	if (!is_logged_in()) 
 		{
 		$out .= "
@@ -530,6 +545,15 @@ function get_competition_footer_string()
 			The competition ends in <strong>" . time_string_to_competition_end() . "</strong>.
 		</p>
 		";
+	}
+	else
+	{
+		$out .= "
+		<p style=\"width: 100%;\">
+			The competition has now closed and the prizes will be drawn shortly. To find out if you've been entered into the prize draw, go to the <a href=\"http://rollerderbytestomatic.com/competition\">competition details page here</a>.
+		</p> 
+	";
+	}
 	return $out;
 }
 

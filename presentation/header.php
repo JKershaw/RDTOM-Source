@@ -25,13 +25,13 @@
 		<meta property="og:title" content="Roller Derby Test O'Matic" />
 		<meta property="og:description" content="<?php echo get_page_description(); ?>" />
 		<meta name="Description" content="<?php echo get_page_description(); ?>">
-	<?php if (is_competition_page())
-	{
+		<?php if (is_competition_page())
+		{
 		?>
 		<meta property="og:image" content="<?php echo get_site_URL() ?>images/sponsors.png" />
 		<?php 
-	}
-	?>
+		}
+		?>
 	
 	<?php 
 	if (!is_admin_page())
