@@ -126,12 +126,12 @@ if ($url_array[1] == "edit")
 	$answers = $question->get_all_Answers();
 }
 
-// get the open reports (nned the value for the menu
+// get the open reports (and the value for the menu)
 $reports_open = $mydb->get_reports(REPORT_OPEN);
 		
 if ($reports_open && count($reports_open) > 0)
 {
-	$reports_menu_string = " (" . count($reports_open) . ")";
+	$reports_menu_string = " (" . get_open_report_count($reports_open) . ")";
 }
 
 // get the reports if there's a given question

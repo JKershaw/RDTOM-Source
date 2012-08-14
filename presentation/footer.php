@@ -108,7 +108,8 @@
 		{
 			?>		
 				<p>
-					<a href="<?php echo get_site_URL(); ?>admin/">Admin</a>, <a href="<?php echo get_site_URL(); ?>stats/">Stats</a><?php 
+					<a href="<?php echo get_site_URL(); ?>admin/">Admin<?php echo get_open_report_count_string(); ?></a>, 
+					<a href="<?php echo get_site_URL(); ?>stats/">Stats</a><?php 
 					if (is_question()) 
 					{
 						?>, <a href="<?php echo get_site_URL(); ?>admin/edit/<?php echo $question->get_ID(); ?>#edit_question">Edit question</a>

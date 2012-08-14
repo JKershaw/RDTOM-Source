@@ -475,4 +475,48 @@ function get_page_description()
 	}
 	return $out;
 }
+
+function get_open_report_count($reports_open = false)
+{
+	global $mydb, $global_reports_open_count;
+	
+	// have we been given the open reports array?
+	if ($reports_open)
+	{
+		$global_reports_open_count = count($reports_open);
+		return $global_reports_open_count;
+	}
+	
+	//need to see if we've already worked it out
+	if (isset($global_reports_open_count))
+	{
+		return $global_reports_open_count;
+	}
+	
+	// need to work it out and remeber it
+	$reports_open = $mydb->get_reports(REPORT_OPEN);
+		
+	if ($reports_open && count($reports_open) > 0)
+	{
+		$global_reports_open_count = count($reports_open);
+	}
+	else
+	{
+		$global_reports_open_count = 0;
+	}
+	
+	return $global_reports_open_count;	
+}
+
+function get_open_report_count_string()
+{
+	if (get_open_report_count() > 0)
+	{
+		return " (" . get_open_report_count() . ")";
+	}
+	else
+	{
+		return "";
+	}
+}
 ?>
