@@ -14,87 +14,11 @@ include("header.php");
 
 <div class="layout_box" style="	margin: 40px 0;">
 
-	<p><strong>The competition has ended!</strong></p>
-	
-	<?php
-	if (!is_logged_in()) 
-	{
-		?>
-		<p style="width: 100%;">
-			To see if you're eligable to win you need to be <a href="http://rollerderbytestomatic.com/profile">logged in</a>. 
-		</p>	
-		<?php 
-	} 
-	else 
-	{
-		$timestamp_millionth = 1343197039;
-		
-		$responses_since_million = $mydb->get_responses_from_User_ID($user->get_ID(), $timestamp_millionth, 1344406639);
-		
-		$total_count = 0;
-		$correct_count = 0;
-		
-		if ($responses_since_million)
-		{
-			foreach ($responses_since_million as $response)
-			{
-				$total_count++;
-				if ($response->is_correct())
-				{
-					$correct_count++;
-				}
-			}
-		}
-		
-		if ($total_count > 0)
-		{
-			$perc_value = round ((($correct_count / $total_count) * 100), 2);
-		}
-		$perc_colour = get_colour_from_percentage($perc_value);
-		
-		
-		// have they answered enough questions
-		// have they gotten enough correct
-		if ($total_count < $competition_min_questions)
-		{
-			?>		
-			<p style="width: 100%;">
-				Alas, you were <span style="color:red;">not eligibile</span> to win. You needed to <a href="http://rollerderbytestomatic.com">answer more questions</a> to be entered into the prize draw.
-			</p>
-			<?php 
-		}
-		elseif ($perc_value < $competition_min_perc)
-		{
-			?>		
-			<p style="width: 100%;">
-				Alas, you were <span style="color:red;">not eligibile</span> to win. You needed to <a href="http://rollerderbytestomatic.com">answer more questions correctly</a> to be entered into the prize draw. You needed to get at least <span style="color:<?php echo get_colour_from_percentage(100); ?>"><i>at least</i> 80&#37;</span> of the questions correct since the competition began to qualify.
-			</p>
-			<?php
-		}
-		else
-		{
-			?>		
-			<p style="width: 100%;">
-				Ooh! You've been <span style="color:green;">entered into the prize draw</span>! Details will be coming soon. Yey!
-			</p>
-			<p style="width: 100%;">
-				What now? Well, I guess you should probably <a href="http://rollerderbytestomatic.com">answer more questions</a>, because it's fun!
-			</p>
-			<?php 
-		}
-		
-		// what are they currently on
-		if ($total_count > 0)
-		{
-		?>		
-		<p style="width: 100%;">
-			During the two weeks of the competition, you answered <strong><?php echo $total_count; ?></strong> question<?php if ($total_count != 1) echo "s"; ?> and had a success rate of <?php echo "<span style=\"font-weight:bold; color:" . $perc_colour . "\">" . $perc_value . "%</span>"?>.
-		</p>
-		<?php 
-		}
-	}
-	?>
-	</div>
+	<p><strong>The Prize Draw</strong></p>
+	<p style="text-align:center"><iframe width="853" height="480" src="http://www.youtube.com/embed/mG3iwKmS1zw?rel=0" frameborder="0" allowfullscreen></iframe></p>
+
+	<p>The Grand Prize was won by <strong>Brazen Hussy</strong>, the two runner's-up are <strong>therev71</strong> and <strong>Olivia</strong>.</p>
+</div>
 
 
 	<p><strong>The Grand Prize</strong></p>
@@ -109,8 +33,6 @@ include("header.php");
 	</ul>
 	
 	<p>There's a $25 gift certificate from <a href="http://wickedskatewear.com/">Wicked Skatewear</a> for two runner-ups.</p>
-
-	<p style="text-align:center; font-weight: bold; color: red;">The competition has now closed. The prize draw will happen shortly.</p>
 
 	<script type="text/javascript">
 

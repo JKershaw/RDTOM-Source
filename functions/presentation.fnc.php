@@ -448,7 +448,7 @@ function get_competition_footer_string()
 			<strong>Competition!</strong>
 		</p>
 		<p style=\"width: 100%;\">
-			The competition has now closed and the prizes will be drawn in the next few days. To find out if you've been entered into the prize draw, go to the <a href=\"http://rollerderbytestomatic.com/competition\">competition details page here</a>.
+			The competition has now closed and the prizes have been drawn! Congratulations to <strong>Brazen Hussy</strong> who won the Grand Prize, the two runner's-up; <strong>therev71</strong> and <strong>Olivia</strong>. A video of the draw can be found on the <a href=\"http://rollerderbytestomatic.com/competition\">competition details page</a>.
 		</p> 
 	";
 
