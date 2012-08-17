@@ -154,7 +154,7 @@ include("header.php");
 		<a class="button" onclick="show_page('reports');">Reports<?php echo $reports_menu_string; ?></a>
 		<a class="button" onClick="show_page('all_questions');">All Questions</a>
 		<a class="button" onClick="show_page('logs');">Logs</a>
-		<a class="button" onClick="show_page('competition');">Competition</a>
+		<!-- <a class="button" onClick="show_page('competition');">Competition</a> -->
 		<a class="button" onClick="show_page('admin');">Admin</a>
 	</p>
 		
