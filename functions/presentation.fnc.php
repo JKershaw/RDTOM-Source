@@ -457,6 +457,7 @@ function get_competition_footer_string()
 
 function get_page_description()
 {
+	global $question;
 	if (is_random_question())
 	{
 		$out = "An online, free, Roller Derby rules test with hundreds of questions. Turn left and learn the rules.";
