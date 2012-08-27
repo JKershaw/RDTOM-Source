@@ -918,8 +918,11 @@ class database_derbytest extends database
 		$this->run_multi_query($query);
 	}
 	
-	public function get_stats_hourly_posts($hour_count)
+	public function get_stats_hourly_posts($hour_count, $hour_format = "%Y %j %H")
 	{
+		
+		$hour_format = $this->mysql_res($hour_format);
+		
 		$time_ago = gmmktime() - (60*60*$hour_count);
 		$time_now = gmmktime();
 		// round
@@ -929,7 +932,7 @@ class database_derbytest extends database
 		$query = "
 			SELECT 
 			count(*) AS responses,
-			FROM_UNIXTIME(Timestamp, '%Y %D %M %H') AS hour 
+			FROM_UNIXTIME(Timestamp, '$hour_format') AS hour 
 			FROM rdtom_responses 
 			WHERE Timestamp > '$time_ago' 
 			AND Timestamp < '$time_now'  

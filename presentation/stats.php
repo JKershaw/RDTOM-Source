@@ -29,7 +29,6 @@ include("header.php");
 		<p>When somebody selects an answer to a question, their response is saved.</p>
 		<p>
 			Total: <span id="count_responses_string">Loading ...</span> <span id="count_responses_difference_string"></span><br />
-			1 Million ETA: <span id="string_to_one_million_string">Loading ...</span> <span id="string_to_one_million_difference_string"></span><br />
 			Individuals: <span id="count_unique_IPs_string">Loading ...</span> <span id="count_unique_IPs_difference_string"></span><br />
 			Current per-hour rate: <span id="count_hourly_responses_string">Loading ...</span> <span id="count_hourly_responses_difference_string"></span><br />
 			Current per-minute rate: <span id="count_minutly_responses_string">Loading ...</span> <span id="count_minutly_responses_difference_string"></span><br />
@@ -168,7 +167,6 @@ include("header.php");
 			check_frequency["count_questions"] 			= 41;
 			check_frequency["count_answers"] 			= 43;
 			check_frequency["count_users"] 				= 47;
-			check_frequency["string_to_one_million"] 	= 153;
 			
 
 			// values to define which values need to be updated

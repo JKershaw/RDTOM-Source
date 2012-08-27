@@ -108,6 +108,8 @@ if (is_logged_in())
 		
 		<?php echo return_stats_user_section_totals() ?>
 		
+		<?php echo return_stats_user_progress() ?>
+		
 		<?php echo get_recent_wrong_questions() ?>
 		
 		<?php echo get_recent_questions() ?>

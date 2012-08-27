@@ -359,7 +359,7 @@ function time_string_to_million()
 	
 	return $out;
 }
-
+/*
 function is_competiton_on()
 {
 	// end of competition timestamp = 1344406639
@@ -374,7 +374,8 @@ function is_competiton_on()
 		return false;
 	}
 	
-}
+	
+}*/
 function time_string_to_competition_end()
 {
 	//$timestamp_of_millionth = 1343197039;
@@ -441,124 +442,22 @@ function get_formatted_admin_report($report)
 
 function get_competition_footer_string()
 {
-	global $mydb, $user, $competition_min_questions, $competition_min_perc;
 	
 	$out .= "
-		<p style=\"font-size:14px;\"><strong>Competition!</strong></p>
-	";
-	
-	if (is_competiton_on())
-	{
-	if (!is_logged_in()) 
-		{
-		$out .= "
-			<p style=\"width: 100%;\">
-				In celebration of the millionth question being answered we're having a prize draw. 
-				If you want to be entered into the draw to win gift certificates, t-shirts, toe-stops 
-				and supplements simply <a href=\"http://rollerderbytestomatic.com/profile\"><strong>log in</strong></a> and answer questions. <a href=\"http://rollerderbytestomatic.com/competition\">Full competition details here</a>.</p>
-	
-			<p style=\"width: 100%;\">
-				If you don't have an account yet they're <a href=\"http://rollerderbytestomatic.com/profile#signup\">easy to set up</a>.
-			</p>	
-			";
-		} 
-		else 
-		{
-			$out .= "
-			<p style=\"width: 100%;\">
-				In celebration of the millionth question being answered we're having a prize draw to win gift certificates, t-shirts, toe-stops and supplements. 
-				<a href=\"http://rollerderbytestomatic.com/competition\">Full competition details here</a>.
-			</p>
-			";
-			
-			$timestamp_millionth = 1343197039;
-			
-			$responses_since_million = $mydb->get_responses_from_User_ID($user->get_ID(), $timestamp_millionth, 1344406639);
-			
-			$total_count = 0;
-			$correct_count = 0;
-			
-			if ($responses_since_million)
-			{
-				foreach ($responses_since_million as $response)
-				{
-					$total_count++;
-					if ($response->is_correct())
-					{
-						$correct_count++;
-					}
-				}
-			}
-			
-			if ($total_count > 0)
-			{
-				$perc_value = round ((($correct_count / $total_count) * 100), 2);
-			}
-			$perc_colour = get_colour_from_percentage($perc_value);
-			
-			
-			// have they answered enough questions
-			// have they gotten enough correct
-			if ($total_count < $competition_min_questions)
-			{
-				$out .= "	
-				<p style=\"width: 100%;\">
-					<span style=\"color:red; font-weight: bold;\">You need to <a href=\"http://rollerderbytestomatic.com\"><strong>answer more questions</strong></a> to be entered into the prize draw.</span> Only questions you've answered since the competition began will count.
-				</p>
-				";
-			}
-			elseif ($perc_value < $competition_min_perc)
-			{
-				$out .= "		
-				<p style=\"width: 100%;\">
-					<span style=\"color:red; font-weight: bold;\">You need to <a href=\"http://rollerderbytestomatic.com\"><strong>answer more questions correctly</strong></a> to be entered into the prize draw.</span> You need to get at least <span style=\"color:" . get_colour_from_percentage(100) . "><i>at least</i> 80&#37;</span> of the questions correct since the competition began to qualify.
-				</p>
-				";
-			}
-			else
-			{
-				$out .= "			
-				<p style=\"width: 100%;\">
-					<span style=\"color:green; font-weight: bold;\">You've answered enough questions and got enough correct! Yey!</span>
-				</p>
-				<p style=\"width: 100%;\">
-					What now? Well, I guess you should probably <a href=\"http://rollerderbytestomatic.com\">answer more questions</a>, because it's fun!
-				</p>
-				";
-			}
-			
-			// what are they currently on
-			if ($total_count > 0)
-			{
-				$out .= "		
-				<p style=\"width: 100%;\">
-					Since the competition started you've answered <strong>" . $total_count . "</strong> question";
-					if ($total_count != 1) 
-						$out .= "s";
-				$out .= " and have a success rate of <span style=\"font-weight:bold; color:" . $perc_colour . "\">" . $perc_value . "%</span>.
-				</p>
-				";
-			}
-		}
-		$out .= "
-		<p style=\"width: 100%;  text-align: right;\">
-			The competition ends in <strong>" . time_string_to_competition_end() . "</strong>.
+		<p style=\"font-size:14px;\">
+			<strong>Competition!</strong>
 		</p>
-		";
-	}
-	else
-	{
-		$out .= "
 		<p style=\"width: 100%;\">
-			The competition has now closed and the prizes will be drawn shortly. To find out if you've been entered into the prize draw, go to the <a href=\"http://rollerderbytestomatic.com/competition\">competition details page here</a>.
+			The competition has now closed and the prizes have been drawn! Congratulations to <strong>Brazen Hussy</strong> who won the Grand Prize, the two runner's-up; <strong>therev71</strong> and <strong>Olivia</strong>. A video of the draw can be found on the <a href=\"http://rollerderbytestomatic.com/competition\">competition details page</a>.
 		</p> 
 	";
-	}
+
 	return $out;
 }
 
 function get_page_description()
 {
+	global $question;
 	if (is_random_question())
 	{
 		$out = "An online, free, Roller Derby rules test with hundreds of questions. Turn left and learn the rules.";
@@ -576,5 +475,49 @@ function get_page_description()
 		$out = "An online, free, Roller Derby rules test with hundreds of questions. Turn left and learn the rules.";
 	}
 	return $out;
+}
+
+function get_open_report_count($reports_open = false)
+{
+	global $mydb, $global_reports_open_count;
+	
+	// have we been given the open reports array?
+	if ($reports_open)
+	{
+		$global_reports_open_count = count($reports_open);
+		return $global_reports_open_count;
+	}
+	
+	//need to see if we've already worked it out
+	if (isset($global_reports_open_count))
+	{
+		return $global_reports_open_count;
+	}
+	
+	// need to work it out and remeber it
+	$reports_open = $mydb->get_reports(REPORT_OPEN);
+		
+	if ($reports_open && count($reports_open) > 0)
+	{
+		$global_reports_open_count = count($reports_open);
+	}
+	else
+	{
+		$global_reports_open_count = 0;
+	}
+	
+	return $global_reports_open_count;	
+}
+
+function get_open_report_count_string()
+{
+	if (get_open_report_count() > 0)
+	{
+		return " (" . get_open_report_count() . ")";
+	}
+	else
+	{
+		return "";
+	}
 }
 ?>
