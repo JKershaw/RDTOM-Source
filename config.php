@@ -78,8 +78,4 @@ define("REPORT_FIXED", 2);
 define("REPORT_CLARIFIED", 3);
 define("REPORT_NOACTION", 4);
 
-// Rule sets
-define("RULESET_NONE", 0);
-define("RULESET_WFTDA2010", 1);
-define("RULESET_WFTDA2012", 2);
 ?>

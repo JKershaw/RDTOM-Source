@@ -858,6 +858,10 @@ class database_derbytest extends database
 		// delete answers
 		$query = "DELETE FROM rdtom_answers WHERE Question_ID = '" .$req_question_ID . "'";
 		$this->run_query($query);
+		
+		// delete relationships
+		$query = "DELETE FROM rdtom_relationships WHERE Question_ID = '" .$req_question_ID . "'";
+		$this->run_query($query);
 	}
 	
 	public function remove_answers_given_questionID($req_question_ID)
@@ -1363,6 +1367,67 @@ class database_derbytest extends database
 				User_ID = '$User_ID'";
 		
 		$this->run_query($query);
+	}
+	
+	public function get_all_terms($req_taxonomy)
+	{
+		$req_taxonomy = $this->mysql_res($req_taxonomy);
+		
+		$query = "SELECT * FROM rdtom_terms WHERE taxonomy = '$req_taxonomy' ";
+		
+		$results = $this->get_results($query);
+		
+		if ($results)
+		{
+			foreach($results as $result)
+			{
+				$out[$result['ID']] = $this->get_term_from_array($result);
+			}
+			
+			return $out;
+		}
+		else
+		{
+			return true;
+		}
+	}
+	
+	public function get_all_terms_from_QuestionID($req_Question_ID, $req_taxonomy)
+	{
+		$req_taxonomy = $this->mysql_res($req_taxonomy);
+		settype($req_Question_ID, "integer");
+		
+		$query = "SELECT rdtom_terms.* 
+			FROM rdtom_terms
+			JOIN rdtom_relationships ON rdtom_relationships.Term_ID = rdtom_terms.ID
+			WHERE taxonomy =  '$req_taxonomy'
+			AND rdtom_relationships.Question_ID =  '$req_Question_ID'";
+		
+		$results = $this->get_results($query);
+		
+		if ($results)
+		{
+			foreach($results as $result)
+			{
+				$out[$result['ID']] = $this->get_term_from_array($result);
+			}
+			
+			return $out;
+		}
+		else
+		{
+			return true;
+		}
+	}
+	
+	public function get_term_from_array($req_array)
+	{
+		
+		return new term(
+			$req_array['ID'],
+			$req_array['name'],
+			$req_array['description'],
+			$req_array['taxonomy']);
 	}
 	
 	public function get_timestamp_of_millionth()

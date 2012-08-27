@@ -251,4 +251,18 @@ class question
 	{
 		return get_site_URL() . "question/" . $this->ID;
 	}
+	
+	public function get_terms($req_taxonomy)
+	{
+		global $mydb;
+		$terms = $mydb->get_all_terms_from_QuestionID($this->ID, $req_taxonomy);
+		if ($terms)
+		{
+			return $terms;
+		}
+		else
+		{
+			return array();
+		}
+	}
 }

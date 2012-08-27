@@ -141,7 +141,7 @@ if ($question)
 }
 
 // display the page
-set_page_subtitle("Turn left and administer all the questions.");
+set_page_subtitle("Turn left and administer all the things.");
 include("header.php"); 
 ?>
 		<?php 
@@ -176,7 +176,7 @@ include("header.php");
 			}
 			?>:</h3>
 
-		<form id="editquestionform" method="post" action="<?php 
+		<form id="editquestionform" name="editquestionform" method="post" action="<?php 
 			if ($question)
 			{
 				echo get_site_URL() . "admin/edit/" . $question->get_ID();
@@ -304,12 +304,63 @@ include("header.php");
 					</td>
 				</tr>
 				<tr>
-					<td>Remember answers:</td>
-					<td><input <?php if ($_POST['remeberanswers']) { echo " checked"; }?> type="checkbox" value="yes" name="remeberanswers"/></td>
+					<td style="width:200px">Applicable Rule Set:</td>
+					<td>
+						<?php 
+							$ruleset_terms = $mydb->get_all_terms("rule-set");
+							
+							if ($ruleset_terms)
+							{
+								if ($question)
+								{
+									$question_rulesets = $question->get_terms("rule-set");
+								}
+								
+								foreach($ruleset_terms as $ruleset_term)
+								{
+									$selected_string = "";
+									if ($question_rulesets)
+									{
+										// is this rule set already chosen for this question?
+										foreach ($question_rulesets as $question_ruleset)
+										{
+											if ($question_ruleset->get_ID() == $ruleset_term->get_ID())
+											{
+												$selected_string = "checked";
+											}
+										}
+									}
+									
+									echo "<input $selected_string type=\"checkbox\" id=\"question_rule-set[" . $ruleset_term->get_ID() . "]\" name=\"question_rule-set[" . $ruleset_term->get_ID() . "]\">" . htmlentities(stripslashes($ruleset_term->get_Name())) . "<br />";
+								}
+								
+							}
+							else
+							{
+								echo "No rule sets found";
+							}
+						?>
+						
+						
+					</td>
 				</tr>
 				<tr>
 					<td></td>
-					<td><input type="submit" value="Save" onclick="newquestionvalidation('editquestionform');return false;"/></td>
+					<td><a class="button" onclick="newquestionvalidation('editquestionform');return false;"/><?php 
+						if ($question)
+						{
+							echo "Edit";
+						}
+						else 
+						{
+							echo "Add";
+						}
+						?> Question</a>
+					</td>
+				</tr>
+				<tr>
+					<td>Remember answers:</td>
+					<td><input <?php if ($_POST['remeberanswers']) { echo " checked"; }?> type="checkbox" value="yes" name="remeberanswers"/></td>
 				</tr>
 			</table>
 		</form>
@@ -538,7 +589,7 @@ include("header.php");
 			}
 			else
 			{
-				formname.submit();
+				document.editquestionform.submit();
 			}
 		}
 
