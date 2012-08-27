@@ -106,15 +106,6 @@ else
 					$("#remebered_string").html(data);
 					$("#remebered_string").fadeIn();
 
-					// get the competition string
-					$.post("ajax.php", { 
-						call: "get_competition_string"},
-						function(data) {
-							$("#competition_string").hide();
-							$("#competition_string").html(data);
-							$("#competition_string").fadeIn();
-						}
-					);
 				}
 			);
 

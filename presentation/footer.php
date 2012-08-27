@@ -13,19 +13,21 @@
 ?>	
 		<div class="footer">
 		
-		
-	<div class="layout_box" style="	margin: 20px 0; box-shadow: 3px 3px 5px #888; border: 1px solid red; min-height: 150px;">
-
-		<img style="width:400px; max-width:90%; margin-right:20px; margin-bottom:20px; float:left;" src="http://rollerderbytestomatic.com/images/sponsors3_400.png" title="Thanks to our awsome sponsors: Wicked Skatewear, 5th Blocker Skates, Roller Derby City .com and Fast Girl Skates"/>
-
-		<div id="competition_string">
-		<?php
-		echo get_competition_footer_string();
-		?>
+		<?php 
+		/*
+		<div class="layout_box" style="	margin: 20px 0; box-shadow: 3px 3px 5px #888; border: 1px solid red; min-height: 150px;">
+	
+			<img style="width:400px; max-width:90%; margin-right:20px; margin-bottom:20px; float:left;" src="http://rollerderbytestomatic.com/images/sponsors3_400.png" title="Thanks to our awsome sponsors: Wicked Skatewear, 5th Blocker Skates, Roller Derby City .com and Fast Girl Skates"/>
+	
+			<div id="competition_string">
+			<?php
+			echo get_competition_footer_string();
+			?>
+			</div>
+	
 		</div>
-
-	</div>
-		
+		*/
+		?>
 		
 		<?php 
 		if (is_question()) 
@@ -95,24 +97,19 @@
 				The site will only remember information as long as necessary, and won't disclose personal information to outside sources without your explicit permission. The site will only collect personal information by lawful and fair means. Personal data collected will be relevant to the purposes for which it is to be used, and, to the extent necessary for those purposes, should be accurate, complete, and up-to-date. The site will protect your personal information by reasonable security safeguards against loss or theft, as well as unauthorized access, disclosure, copying, use or modification.  <a onclick="$('#p_disclaimer_link').fadeIn();$('#p_disclaimer').hide();">Hide</a> 
 			</p>
 
-	
-			<!-- <p class="competition_string">
-				<a href="http://rollerderbytestomatic.com/competition"><span style="font-weight:bold; color:yellow; background-color: #333; padding: 1px 3px 2px;">Competition!</span> Click here for details on how to win t-shirts, toe-stops and gift certificates by answering questions!</a>
-			</p> -->
-
 			<!-- <p class="vote_string">
-				<a href="http://rollerderbytestomatic.com/poll">What features should be added next to the Test O'Matic?</a>
+				<a href="<?php echo get_site_URL(); ?>poll">What features should be added next to the Test O'Matic?</a>
 			</p> -->
 			
-	<?php if (is_admin()) 
+		<?php if (is_admin()) 
 		{
 			?>		
 				<p>
-					<a href="<?php echo get_site_URL(); ?>admin/">Admin</a>, <a href="<?php echo get_site_URL(); ?>stats/">Stats</a><?php 
+					<a href="<?php echo get_site_URL(); ?>admin/">Admin<?php echo get_open_report_count_string(); ?></a>, 
+					<a href="<?php echo get_site_URL(); ?>stats/">Stats</a><?php 
 					if (is_question()) 
 					{
-						?>, <a href="<?php echo get_site_URL(); ?>admin/edit/<?php echo $question->get_ID(); ?>#edit_question">Edit question</a>
-						<?php 
+						?>, <a href="<?php echo get_site_URL(); ?>admin/edit/<?php echo $question->get_ID(); ?>#edit_question">Edit question</a><?php 
 					}
 					?>
 				</p>
@@ -126,10 +123,8 @@
 			<div class="facebook_wrap_narrow">
 				<div class="fb-like" data-href="http://rollerderbytestomatic.com/" data-send="false" data-layout="button_count" data-width="100" data-show-faces="false"></div>
 			</div>
-			
 
-					
 		</div>
-	<?php echo get_google_chart_script(); ?>
+		<?php echo get_google_chart_script(); ?>
 	</body>
 </html>
