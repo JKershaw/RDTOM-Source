@@ -155,6 +155,7 @@ include("header.php");
 		<a class="button" onClick="show_page('all_questions');">All Questions</a>
 		<a class="button" onClick="show_page('logs');">Logs</a>
 		<!-- <a class="button" onClick="show_page('competition');">Competition</a> -->
+		<a class="button" onClick="show_page('test');">Test</a>
 		<a class="button" onClick="show_page('admin');">Admin</a>
 	</p>
 		
@@ -414,6 +415,22 @@ include("header.php");
 
 	</div>
 	
+	<div class="layout_box" id="layout_box_test" style="display:none;">
+	
+		<?php 
+		/*
+		$all_users = $mydb->get_users();
+		
+		for ($i = 0; $i < 1000; $i++)
+		{
+			$tmp_user = array_pop($all_users);
+			echo "<br />" . $tmp_user->get_Name() . "<br />" .  return_stats_user_progress($tmp_user);
+		}
+		*/
+		?>
+
+	</div>
+	
 	<div class="layout_box" id="layout_box_logs" style="display:none;">
 	
 		<p>
@@ -602,6 +619,15 @@ include("header.php");
 			else
 			{
 	    		$('#layout_box_admin').hide();
+			}
+			
+			if (page_name == "test")
+			{
+	    		$('#layout_box_test').fadeIn();
+			}
+			else
+			{
+	    		$('#layout_box_test').hide();
 			}
 			
 	    	window.location.hash='#'+page_name;

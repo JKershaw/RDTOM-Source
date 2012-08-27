@@ -24,8 +24,16 @@ function get_ip()
 }
 
 
-function get_average_of_array($raw_data, $float_width)
+function get_average_of_array($tmp_raw_data, $float_width)
 {
+	
+	reset($tmp_raw_data);
+	$raw_data_first_key = key($tmp_raw_data);
+	// make the index start at 0
+	foreach ($tmp_raw_data as $tmp_raw_id => $data)
+	{
+		$raw_data[] = $data;
+	}
 	
 	// add start value to make it all align
 	for ($i = 0; $i < $float_width; $i++)

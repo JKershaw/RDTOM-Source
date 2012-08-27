@@ -106,14 +106,14 @@ function return_chart_section_percentages($section_array, $response_array)
 	
 	$drawChart_string = '
 		var data = google.visualization.arrayToDataTable([
-          [\'Section\', \'Correct Percentage\'],
+          [\'Section\', \'Percentage Correct\'],
           ' . $data_string . '
         ]);
 
         var options = {
           titlePosition: \'none\',
           hAxis: {titlePosition: \'none\',},
-          chartArea: {width: \'90%\', height: \'80%\', top: 10},
+          chartArea: {left:30, width: \'90%\', height: \'80%\', top: 10},
           legend: {position: \'none\'},
           vAxis: {minValue: 0, maxValue: 100, gridlines: {count: 11}}
         };
@@ -123,9 +123,153 @@ function return_chart_section_percentages($section_array, $response_array)
 	
    	add_google_chart_drawChart($drawChart_string);
    	
-   	//$out .= "<p>Section breakdown:</p>";
 	
-	$out .= '<div id="chart_section_breakdown" style="width: 100%; height: 400px;"></div>';
+	$out .= '<p>Section breakdown:</p><div id="chart_section_breakdown" style="width: 100%; height: 400px;"></div>';
+	
+	return $out;
+}
+
+function return_stats_user_progress($user = false)
+{
+	global $mydb, $responses_needed_for_section_breakdown;
+	
+	if ($user)
+	{
+		$user_responses = $mydb->get_responses_from_User_ID($user->get_ID());
+		$user_ID = $user->get_ID();
+	}
+	else
+	{
+		$user_responses = return_user_responses();
+	}
+	
+	if (!$user_responses || (count($user_responses) < $responses_needed_for_section_breakdown))
+	{
+		return "<!-- not enough questions answered to get progress report -->";
+	}
+	
+	// split data into groups of weeks [YEAR.WEEKNUMBER]
+	
+	foreach ($user_responses as $response)
+	{
+		if ($response->is_correct())
+		{
+			$data[date("oW",$response->get_Timestamp())]["correct"]++;
+		}
+		else
+		{
+			$data[date("oW",$response->get_Timestamp())]["wrong"]++;
+		}
+		
+		if (!$lowest_week_value || (date("oW",$response->get_Timestamp()) < $lowest_week_value))
+		{
+			$lowest_week_value = date("oW",$response->get_Timestamp());
+		}
+	}
+	
+	if (count($data) < 3)
+	{
+		return "<!-- not enough weeks -->";
+	}
+	
+	// get the total & percentages
+	foreach ($data as $week_key => $data_point)
+	{
+		$data[$week_key]["total"] = $data[$week_key]["correct"] + $data[$week_key]["wrong"];
+		if ($data[$week_key]["total"] > 0)
+		{
+			$data[$week_key]["perc"] = number_format(($data[$week_key]["correct"] / $data[$week_key]["total"]) * 100, 2);
+		}
+	}
+	
+
+	// fill in the blank weeks between the lowest week count, and now
+	$current_week_value = date("oW");
+	for($i = $lowest_week_value; $i <= $current_week_value; $i++)
+	{
+		if (!$data[$i])
+		{
+			$data[$i]["total"] = 0;
+			$data[$i]["perc"] = 0;
+			$data[$i]["correct"] = 0;
+			$data[$i]["wrong"] = 0;
+		}
+		
+		settype($data[$i]["total"], "integer");
+		settype($data[$i]["perc"], "integer");
+		settype($data[$i]["correct"], "integer");
+		settype($data[$i]["wrong"], "integer");
+		
+	}
+	
+	// TEST DATA
+	/*
+	$data_array = array();
+	
+	for($week_key = $lowest_week_value; $week_key <= $current_week_value; $week_key++)
+	{
+		$correct = rand(-2, 100);
+		$wrong = rand(-2, 40);
+		$perc = number_format(($correct / ($correct+$wrong)) * 100, 2);
+		
+		$data[$week_key]["total"] = $correct + $wrong;
+		$data[$week_key]["perc"] = $perc;
+		$data[$week_key]["correct"] = $correct;
+		$data[$week_key]["wrong"] = $wrong;
+	}
+	*/
+	// End of test data
+	
+	// sort the data
+	ksort($data);
+	
+	foreach ($data as $week_key => $data_point)
+	{
+		if ($week_key == $current_week_value)
+		{
+			$week_string = "This week";
+		}
+		if ($week_key == ($current_week_value-1))
+		{
+			$week_string = "Last week";
+		}
+		if ($week_key < ($current_week_value-1))
+		{
+			$week_string = ($current_week_value - $week_key) . " weeks ago";
+		}
+		
+		$data_array[] = "
+		['" . $week_string . "', " . $data[$week_key]["wrong"] . ", " . $data[$week_key]["correct"] . ", " . $data[$week_key]["perc"] . "]";
+	}
+	
+	$data_string = implode(", ", $data_array);
+	
+
+	// create the chart
+	$drawChart_string = '
+	var data' . $user_ID . ' = google.visualization.arrayToDataTable([
+          [\'Week\', \'Wrong\', \'Correct\', \'Percentage Correct\'],
+          ' . $data_string . '
+        ]);
+
+        var options' . $user_ID . ' = {
+          titlePosition: \'none\',
+          isStacked: true,
+          hAxis: {textPosition: "none"},
+          colors: [\'' . get_colour_from_percentage(0) . '\', \'' . get_colour_from_percentage(100) . '\', \'#0000FF\', \'#0000FF\'],
+          seriesType: "bars",
+          focusTarget: "category",
+          series: {2: {type: "line"}},
+          chartArea:{left:30,top:10,width:"80%", height:"90%"},
+        };
+
+        var chart' . $user_ID . ' = new google.visualization.ComboChart(document.getElementById(\'chart_progress' . $user_ID . '\'));
+        chart' . $user_ID . '.draw(data' . $user_ID . ', options' . $user_ID . ');';
+
+	add_google_chart_drawChart($drawChart_string);
+   	
+	$out .= '<p>Weekly progress:</p><div id="chart_progress' . $user_ID . '" style="width: 100%; height: 300px;"></div>';
+	
 	
 	return $out;
 }
@@ -136,22 +280,69 @@ function return_chart_24hour_responses()
 
 	// get the raw values
 	$stats = $mydb->get_stats_hourly_posts(24);
+	
+	$current_day = -1;
+	$day_offset = 0;
+	
 	foreach ($stats as $id => $stat)
 	{
-		$raw_data[] = $stat['responses'];
+		// break the hour string down into its three parts
+
+		preg_match_all('/\d+/', $stat['hour'], $numbers);
+
+		// are we on a new day?
+		if ($current_day != $numbers[0][1])
+		{
+			// ignore if this is the first time
+			if ($current_day != -1)
+			{
+				// we're onto a new day, so add the 24 hour offset
+				$day_offset = 1;
+			}
+			$current_day = $numbers[0][1];
+		}
+		
+		$hour = $numbers[0][2] + (24 * $day_offset);
+		
+		$raw_data[$hour] = $stat['responses'];
+	}
+	
+	// add any 0 data points
+	// get the hour 24 hours ago
+	$hour_ago = date("G", (gmmktime() - 86400));
+	
+	for ($i = $hour_ago; $i <= $hour_ago; $i++)
+	{
+		if (!$raw_data[$i])
+		{
+			$raw_data[$i] = 0;
+		}
 	}
 	
 	// make the final data point the current per hour rate
 	array_pop($raw_data);
-	$raw_data[] = $mydb->get_response_count_since(gmmktime() - 3600);
+	$raw_data[$hour] = $mydb->get_response_count_since(gmmktime() - 3600);
+	
 	
 	// get the floating average
-	$average_data = get_average_of_array($raw_data, 2);
+	$tmp_average_data = get_average_of_array($raw_data, 2);
+	// make the average_data index start at the same place as the raw_data and add 0 at the start
+	reset($raw_data);
+	$raw_data_first_key = key($raw_data);
+	
+	foreach ($tmp_average_data as $average_index => $data)
+	{
+		if (!$data)
+		{
+			$data = 0;
+		}
+		$average_data[$raw_data_first_key + $average_index] = $data;
+	}
 	
 	// merge it all into one array
 	foreach($raw_data as $id => $response_count)
 	{
-		$hour_count = 24-$id;
+		$hour_count = $hour-$id;
 		if ($hour_count > 1)
 		{
 			$hour_string = $hour_count . " hours ago";
@@ -164,7 +355,8 @@ function return_chart_24hour_responses()
 		{
 			$hour_string = "This hour";
 		}
-		$data_string_array[] = "['". $hour_string . "',  " .$raw_data[$id] . ",      " .$average_data[$id] . "]";
+		$data_string_array[] = "
+		['". $hour_string . "',  " .$raw_data[$id] . ",      " .$average_data[$id] . "]";
 	}
 	
 	$data_string = implode(", ", $data_string_array);
