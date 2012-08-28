@@ -262,7 +262,7 @@ class question
 		}
 		else
 		{
-			return array();
+			return false;
 		}
 	}
 }

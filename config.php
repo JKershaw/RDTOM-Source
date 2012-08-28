@@ -78,4 +78,7 @@ define("REPORT_FIXED", 2);
 define("REPORT_CLARIFIED", 3);
 define("REPORT_NOACTION", 4);
 
+// number of answers listed on the admin page
+define("NUMBER_OF_ANSWERS" , 10);
+
 ?>

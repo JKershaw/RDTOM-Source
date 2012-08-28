@@ -1416,7 +1416,7 @@ class database_derbytest extends database
 		}
 		else
 		{
-			return true;
+			return false;
 		}
 	}
 	
@@ -1428,6 +1428,30 @@ class database_derbytest extends database
 			$req_array['name'],
 			$req_array['description'],
 			$req_array['taxonomy']);
+	}
+	
+	public function remove_relationship_given_Question_ID($req_question_ID)
+	{
+		settype($req_question_ID, "integer");
+		
+		$query = "DELETE FROM rdtom_relationships WHERE Question_ID = '" .$req_question_ID . "'";
+		$this->run_query($query);
+	}
+	
+	public function add_relationship($req_question_ID, $req_term_ID)
+	{
+		// TODO check if valid $req_term_ID
+		settype($req_question_ID, "integer");
+		settype($req_term_ID, "integer");
+		
+		$query = "INSERT INTO rdtom_relationships (
+			Question_ID ,
+			Term_ID
+			)
+			VALUES (
+			'$req_question_ID',  '$req_term_ID')";
+		
+		$this->run_query($query);
 	}
 	
 	public function get_timestamp_of_millionth()

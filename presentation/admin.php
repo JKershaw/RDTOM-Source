@@ -6,7 +6,6 @@
  * Built to help Roller Derby players learn the rules
  */
 
-define("NUMBER_OF_ANSWERS" , 10);
 
 // if the user isn't an admin, show an error message
 if (!is_admin())
@@ -43,7 +42,7 @@ if ($_POST)
 		{
 			
 			// delete existing post & questions
-			$mydb->remove_answers_given_questionID($_POST['question_id']);
+			$mydb->remove_answers_given_questionID($tmp_question->get_ID());
 			$message = "Answers deleted! ";
 			
 			// save all the answers
@@ -52,21 +51,34 @@ if ($_POST)
 				if (trim($answer))
 				{
 					$is_correct = $_POST['correct'][$id] == 1;
-					$mydb->add_answer($_POST['question_id'], trim($answer), $is_correct);
+					$mydb->add_answer($tmp_question->get_ID(), trim($answer), $is_correct);
 				}
 			}
 			$message .= "Answers saved! ";	
 		}
 		else
 		{
-			$message = "Answers unchanged! ";
+			$message .= "Answers unchanged! ";
 		}
 		
 		// edit the question
-		$mydb->edit_question($_POST['question_id'], $_POST['question_text'], $_POST['question_section'], trim($_POST['question_notes']), trim($_POST['question_source']));
+		$mydb->edit_question($tmp_question->get_ID(), $_POST['question_text'], $_POST['question_section'], trim($_POST['question_notes']), trim($_POST['question_source']));
 		$message .= "Question edited! ";	
-
 		
+		// check the applicable rule set
+		// remove all relationships
+		$mydb->remove_relationship_given_Question_ID($tmp_question->get_ID());
+		$message .= "Relationships Removed! ";	
+		
+		// build new ones
+		if ($_POST['question_ruleset'])
+		{
+			foreach ($_POST['question_ruleset'] as $term_ID => $data)
+			{
+				$mydb->add_relationship($tmp_question->get_ID(), $term_ID);
+			}
+			$message .= "Relationships Rebuilt! ";	
+		}
 	}
 	else 
 	{
@@ -84,6 +96,16 @@ if ($_POST)
 			}
 		}
 		$message .= "Question saved!";
+		
+		// build new relationships
+		if ($_POST['question_ruleset'])
+		{
+			foreach ($_POST['question_ruleset'] as $term_ID => $data)
+			{
+				$mydb->add_relationship($tmp_question->get_ID(), $term_ID);
+			}
+			$message .= "Relationships Built! ";	
+		}
 	}
 }
 
@@ -124,6 +146,8 @@ if ($url_array[1] == "edit")
 {
 	$question = $mydb->get_question_from_ID($url_array[2]);
 	$answers = $question->get_all_Answers();
+	// get the reports for this question
+	$reports_question = $mydb->get_reports_from_question_ID($question->get_ID(), REPORT_OPEN);
 }
 
 // get the open reports (and the value for the menu)
@@ -134,11 +158,7 @@ if ($reports_open && count($reports_open) > 0)
 	$reports_menu_string = " (" . get_open_report_count($reports_open) . ")";
 }
 
-// get the reports if there's a given question
-if ($question)
-{
-	$reports_question = $mydb->get_reports_from_question_ID($question->get_ID(), REPORT_OPEN);
-}
+
 
 // display the page
 set_page_subtitle("Turn left and administer all the things.");
@@ -331,7 +351,7 @@ include("header.php");
 										}
 									}
 									
-									echo "<input $selected_string type=\"checkbox\" id=\"question_rule-set[" . $ruleset_term->get_ID() . "]\" name=\"question_rule-set[" . $ruleset_term->get_ID() . "]\">" . htmlentities(stripslashes($ruleset_term->get_Name())) . "<br />";
+									echo "<input $selected_string type=\"checkbox\" id=\"question_ruleset[" . $ruleset_term->get_ID() . "]\" name=\"question_ruleset[" . $ruleset_term->get_ID() . "]\">" . htmlentities(stripslashes($ruleset_term->get_Name())) . "<br />";
 								}
 								
 							}

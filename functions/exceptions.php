@@ -33,14 +33,17 @@ function error_handler($errno, $errstr, $errfile, $errline)
 
     case E_USER_WARNING:
         $error_string .= "WARNING [$errno] $errstr<br />\n";
+        $error_string .= "Line $errline in file $errfile";
         break;
 
     case E_USER_NOTICE:
         $error_string .= "NOTICE [$errno] $errstr<br />\n";
+        $error_string .= "Line $errline in file $errfile";
         break;
 
     default:
         $error_string .= "Unknown error type: [$errno] $errstr<br />\n";
+        $error_string .= "Line $errline in file $errfile";
         break;
     }
 
