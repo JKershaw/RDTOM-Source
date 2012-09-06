@@ -16,7 +16,7 @@ class database_derbytest extends database
 		$this->dbName = $database_name;
 		$this->dbHost = $database_host;
 	}
-	
+	/*
 	public function get_question_random()
 	{
 		global $random_questions_to_remeber, $remeber_in_session, $random_question_find_attempts;
@@ -113,12 +113,11 @@ class database_derbytest extends database
 		// get an associate array of the results
 		$result = $statement->fetch(PDO::FETCH_ASSOC);
 		
-		/*
-		settype($req_ID, "integer");
-		$query = "SELECT * FROM rdtom_questions WHERE ID = '" . $req_ID . "' LIMIT 1";
 		
-		$result = $this->get_row($query);
-		*/
+		//settype($req_ID, "integer");
+		//$query = "SELECT * FROM rdtom_questions WHERE ID = '" . $req_ID . "' LIMIT 1";
+		//$result = $this->get_row($query);
+		
 		
 		if ($result)
 		{
@@ -132,6 +131,76 @@ class database_derbytest extends database
 	}
 	
 	
+	public function get_questions()
+	{
+		
+		$query = "SELECT * FROM rdtom_questions ORDER BY Section ASC";
+		
+		$results = $this->get_results($query);
+		
+		if ($results)
+		{
+			foreach ($results as $result)
+			{
+				$out[] = $this->get_question_from_array($result);
+			}
+			
+			// sort questions, naturally, by section 
+			usort($out, 'compare_questions');
+			
+			return $out;
+		}
+		else
+		{
+			throw new exception("Whoops, no questions found in the database");
+		}
+	}
+	
+	public function get_questions_from_User_ID($req_User_ID, $limit = false, $timelimit = false, $opt_only_wrong = false)
+	{
+		
+		settype($req_User_ID, "integer");
+		
+		if ($opt_only_wrong)
+		{
+			$clause = " AND rdtom_responses.Correct = false";
+		}
+		
+		if ($timelimit)
+		{
+			settype($timelimit, "integer");
+			$clause .= " AND rdtom_responses.Timestamp >= '" . (gmmktime() - $timelimit) . "' ";
+			$order = " ORDER BY rdtom_responses.Timestamp Desc";
+		}
+		
+		if ($limit)
+		{
+			settype($limit, "integer");
+			$limit = " LIMIT 0, " . $limit;
+		}
+		
+		$query = "
+			SELECT rdtom_questions . * 
+			FROM rdtom_questions
+			JOIN rdtom_responses ON rdtom_responses.Question_ID = rdtom_questions.ID
+			WHERE rdtom_responses.User_ID = '" . $req_User_ID . "'" . $clause . $order . $limit;
+		
+		$results = $this->get_results($query);
+		
+		if ($results)
+		{
+			foreach ($results as $result)
+			{
+				$out[] = $this->get_question_from_array($result);
+			}
+			return $out;
+		}
+		else
+		{
+			return false;
+		}
+	}
+	
 	public function get_question_from_array($req_array)
 	{
 		return new question(
@@ -142,7 +211,7 @@ class database_derbytest extends database
 			$req_array['Notes'],
 			$req_array['Source']);
 	}
-	
+	*/
 	public function get_answer_from_array($req_array)
 	{
 		return new answer(
@@ -246,75 +315,7 @@ class database_derbytest extends database
 		}
 	}
 	
-	public function get_questions()
-	{
-		
-		$query = "SELECT * FROM rdtom_questions ORDER BY Section ASC";
-		
-		$results = $this->get_results($query);
-		
-		if ($results)
-		{
-			foreach ($results as $result)
-			{
-				$out[] = $this->get_question_from_array($result);
-			}
-			
-			// sort questions, naturally, by section 
-			usort($out, 'compare_questions');
-			
-			return $out;
-		}
-		else
-		{
-			throw new exception("Whoops, no questions found in the database");
-		}
-	}
 	
-	public function get_questions_from_User_ID($req_User_ID, $limit = false, $timelimit = false, $opt_only_wrong = false)
-	{
-		
-		settype($req_User_ID, "integer");
-		
-		if ($opt_only_wrong)
-		{
-			$clause = " AND rdtom_responses.Correct = false";
-		}
-		
-		if ($timelimit)
-		{
-			settype($timelimit, "integer");
-			$clause .= " AND rdtom_responses.Timestamp >= '" . (gmmktime() - $timelimit) . "' ";
-			$order = " ORDER BY rdtom_responses.Timestamp Desc";
-		}
-		
-		if ($limit)
-		{
-			settype($limit, "integer");
-			$limit = " LIMIT 0, " . $limit;
-		}
-		
-		$query = "
-			SELECT rdtom_questions . * 
-			FROM rdtom_questions
-			JOIN rdtom_responses ON rdtom_responses.Question_ID = rdtom_questions.ID
-			WHERE rdtom_responses.User_ID = '" . $req_User_ID . "'" . $clause . $order . $limit;
-		
-		$results = $this->get_results($query);
-		
-		if ($results)
-		{
-			foreach ($results as $result)
-			{
-				$out[] = $this->get_question_from_array($result);
-			}
-			return $out;
-		}
-		else
-		{
-			return false;
-		}
-	}
 	
 
 	public function get_sections_array_from_User_ID($req_User_ID)
@@ -652,14 +653,14 @@ class database_derbytest extends database
 		
 		return $this->get_report_from_array($result);
 	}
-	
+	/*
 	public function get_question_count()
 	{
 		$query = "SELECT COUNT(*) FROM rdtom_questions";
 		$result = $this->get_var($query);
 		return $result;
 	}
-	
+	*/
 	public function get_answer_count()
 	{
 		$query = "SELECT COUNT(*) FROM rdtom_answers";
@@ -730,7 +731,7 @@ class database_derbytest extends database
 		return $out;
 	}
 
-	public function disassociate_responses($User_ID)
+	public function responses_disassociate($User_ID)
 	{
 		settype($User_ID, "integer");
 		
@@ -738,7 +739,7 @@ class database_derbytest extends database
 		
 		if (!$user)
 		{
-			throw new exception ("No User given to disassociate_responses");
+			throw new exception ("No User given to responses_disassociate");
 		}
 		
 		$query = "
@@ -1237,7 +1238,7 @@ class database_derbytest extends database
 		return false;
 	}
 	
-	public function delete_token($req_User_ID, $req_IP)
+	public function remove_token($req_User_ID, $req_IP)
 	{
 		$req_IP = $this->mysql_res($req_IP);
 		settype($req_User_ID, "integer");
@@ -1381,11 +1382,24 @@ class database_derbytest extends database
 		$this->run_query($query);
 	}
 	
-	public function get_all_terms($req_taxonomy)
+	public function get_terms($req_taxonomy, $req_Question_ID = false)
 	{
 		$req_taxonomy = $this->mysql_res($req_taxonomy);
 		
-		$query = "SELECT * FROM rdtom_terms WHERE taxonomy = '$req_taxonomy' ";
+		if ($req_Question_ID)
+		{
+			settype($req_Question_ID, "integer");
+		
+			$query = "SELECT rdtom_terms.* 
+				FROM rdtom_terms
+				JOIN rdtom_relationships ON rdtom_relationships.Term_ID = rdtom_terms.ID
+				WHERE taxonomy =  '$req_taxonomy'
+				AND rdtom_relationships.Question_ID =  '$req_Question_ID'";
+		}
+		else
+		{
+			$query = "SELECT * FROM rdtom_terms WHERE taxonomy = '$req_taxonomy' ";
+		}
 		
 		$results = $this->get_results($query);
 		
@@ -1404,31 +1418,21 @@ class database_derbytest extends database
 		}
 	}
 	
-	public function get_all_terms_from_QuestionID($req_Question_ID, $req_taxonomy)
+	public function get_term_from_ID($req_ID)
 	{
-		$req_taxonomy = $this->mysql_res($req_taxonomy);
-		settype($req_Question_ID, "integer");
+		settype($req_ID, "integer");
 		
-		$query = "SELECT rdtom_terms.* 
-			FROM rdtom_terms
-			JOIN rdtom_relationships ON rdtom_relationships.Term_ID = rdtom_terms.ID
-			WHERE taxonomy =  '$req_taxonomy'
-			AND rdtom_relationships.Question_ID =  '$req_Question_ID'";
+		$query = "SELECT * FROM rdtom_terms WHERE ID = '$req_ID'";
+
+		$result = $this->get_row($query);
 		
-		$results = $this->get_results($query);
-		
-		if ($results)
+		if ($result)
 		{
-			foreach($results as $result)
-			{
-				$out[$result['ID']] = $this->get_term_from_array($result);
-			}
-			
-			return $out;
+			return $this->get_term_from_array($result);
 		}
 		else
 		{
-			return false;
+			return true;
 		}
 	}
 	
@@ -1452,31 +1456,24 @@ class database_derbytest extends database
 	
 	public function add_relationship($req_question_ID, $req_term_ID)
 	{
-		// TODO check if valid $req_term_ID
 		settype($req_question_ID, "integer");
 		settype($req_term_ID, "integer");
 		
-		$query = "INSERT INTO rdtom_relationships (
-			Question_ID ,
-			Term_ID
-			)
-			VALUES (
-			'$req_question_ID',  '$req_term_ID')";
-		
-		$this->run_query($query);
-	}
-	
-	public function get_timestamp_of_millionth()
-	{
-		return 1343197039;
-		/*
-		global $competition_value;
-		settype($competition_value, "integer");
-		$competition_value = $competition_value -1;
-		
-		$query = "SELECT Timestamp FROM rdtom_responses LIMIT $competition_value, 1";
-		return $this->get_var($query);
-		*/
+		if ($this->get_term_from_ID($req_term_ID))
+		{
+			$query = "INSERT INTO rdtom_relationships (
+				Question_ID ,
+				Term_ID
+				)
+				VALUES (
+				'$req_question_ID',  '$req_term_ID')";
+			
+			$this->run_query($query);
+		}
+		else
+		{
+			throw new exception ("Term not found with ID " . $req_term_ID);
+		}
 	}
 } // class database
 ?>

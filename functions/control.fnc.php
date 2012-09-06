@@ -11,12 +11,12 @@ function set_up_question($question_ID)
 	if ($question_ID == "random")
 	{
 		$is_random_question = true;
-		$question = $mydb->get_question_random();
+		$question = get_question_random();
 	}
 	else
 	{
 		$is_random_question = false;
-		$question = $mydb->get_question_from_ID($question_ID);
+		$question = get_question_from_ID($question_ID);
 
 	}
 	

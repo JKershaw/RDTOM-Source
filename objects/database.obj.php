@@ -1,7 +1,6 @@
 <?php
 /*
  * A generic object for dealing with a mySQL databse
- * Version 0.2 (Watchtime added)
  */
 class database
 {

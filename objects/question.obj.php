@@ -255,7 +255,7 @@ class question
 	public function get_terms($req_taxonomy)
 	{
 		global $mydb;
-		$terms = $mydb->get_all_terms_from_QuestionID($this->ID, $req_taxonomy);
+		$terms = $mydb->get_terms($req_taxonomy, $this->ID);
 		if ($terms)
 		{
 			return $terms;

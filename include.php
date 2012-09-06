@@ -18,6 +18,9 @@ include('functions/account.fnc.php');
 include('functions/stats.fnc.php');
 include('functions/email.fnc.php');
 
+// Database (function) files
+include('functions/database/questions.db.fnc.php');
+
 // Model (object) files
 include('objects/database_derbytest.obj.php');
 include('objects/question.obj.php');

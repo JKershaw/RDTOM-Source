@@ -35,7 +35,7 @@ if ($_POST)
 			}
 		}
 		
-		$tmp_question = $mydb->get_question_from_ID($_POST['question_id']);
+		$tmp_question = get_question_from_ID($_POST['question_id']);
 		
 		// have the answers changed?
 		if ($tmp_question->is_answers_different($temp_answer_array))
@@ -144,7 +144,7 @@ if ($_GET['update_report'])
 // is a question being edited
 if ($url_array[1] == "edit")
 {
-	$question = $mydb->get_question_from_ID($url_array[2]);
+	$question = get_question_from_ID($url_array[2]);
 	$answers = $question->get_all_Answers();
 	// get the reports for this question
 	$reports_question = $mydb->get_reports_from_question_ID($question->get_ID(), REPORT_OPEN);
@@ -327,7 +327,7 @@ include("header.php");
 					<td style="width:200px">Applicable Rule Set:</td>
 					<td>
 						<?php 
-							$ruleset_terms = $mydb->get_all_terms("rule-set");
+							$ruleset_terms = $mydb->get_terms("rule-set");
 							
 							if ($ruleset_terms)
 							{

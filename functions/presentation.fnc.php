@@ -241,7 +241,7 @@ function get_recent_wrong_questions()
 	global $user, $mydb;
 	// get all the incorrect responses from the past 2 weeks
 	
-	$questions = $mydb->get_questions_from_User_ID($user->get_ID(), 20, 1209600, true);
+	$questions = get_questions_from_User_ID($user->get_ID(), 20, 1209600, true);
 	
 	if ($questions)
 	{
@@ -268,7 +268,7 @@ function get_recent_questions()
 	global $user, $mydb;
 	// get all the  responses from the past 24 hours
 	
-	$questions = $mydb->get_questions_from_User_ID($user->get_ID(), 20, 86400, false);
+	$questions = get_questions_from_User_ID($user->get_ID(), 20, 86400, false);
 	
 	$out .= "<h3>All the questions you've answered in the past 24 hours</h3>";
 	

@@ -39,7 +39,7 @@ if ($url_array[1] == "easy")
 			}
 			else
 			{
-				$questions = $mydb->get_questions();
+				$questions = get_questions();
 			}
 			
 			foreach ($questions as $question)
