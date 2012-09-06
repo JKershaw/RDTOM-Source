@@ -103,7 +103,7 @@ function echo_error_page($error_string)
 	
 		<p>For some reason the site has generated an error. It's been logged and will be delt with accordingly (Being a broken website, Major!). You can try doing what you just did again and see if it's only a temporary bug.<p>
 		<p>The error was:</p>
-		<pre><?php echo $error_string; ?></pre>
+		<p><?php echo $error_string; ?></p>
 		</body>
 	</html>
 	<?php 

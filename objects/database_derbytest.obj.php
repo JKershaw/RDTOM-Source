@@ -1,6 +1,6 @@
 <?php 
 /*
- * A database object for dealing specifically with the Roller Derby Test-O-Matic database
+ * A database object for dealing specifically with the Roller Derby Test O'Matic database
  */
 include_once('database.obj.php');
 
@@ -17,14 +17,14 @@ class database_derbytest extends database
 		$this->dbHost = $database_host;
 	}
 	
-	public function get_random_question()
+	public function get_question_random()
 	{
 		global $random_questions_to_remeber, $remeber_in_session, $random_question_find_attempts;
 	
 		// if the holes table is being rebuilt, cheat
 		if (!$this->does_table_exist("rdtom_questions_holes_map"))
 		{
-			return $this->get_random_question_simple();
+			return $this->get_question_random_simple();
 		}
 	
 		// at most try to find a new unique question 5 times
@@ -64,10 +64,10 @@ class database_derbytest extends database
 		//echo "*";
 		
 		// we tried 5 times to find a unique question, and failed, so resort back to the old random question getter
-		return $this->get_random_question_simple();
+		return $this->get_question_random_simple();
 	}
 	
-	public function get_random_question_simple()
+	public function get_question_random_simple()
 	{
 		global $random_questions_to_remeber, $remeber_in_session;
 		
@@ -104,10 +104,21 @@ class database_derbytest extends database
 	
 	public function get_question_from_ID($req_ID)
 	{
+		global $myPDO;
+		
+		// prep the statement
+		$statement = $myPDO->prepare('SELECT * FROM rdtom_questions WHERE ID = :ID LIMIT 1');
+		// add the data
+		$statement->execute(array(':ID' => $req_ID));
+		// get an associate array of the results
+		$result = $statement->fetch(PDO::FETCH_ASSOC);
+		
+		/*
 		settype($req_ID, "integer");
 		$query = "SELECT * FROM rdtom_questions WHERE ID = '" . $req_ID . "' LIMIT 1";
 		
 		$result = $this->get_row($query);
+		*/
 		
 		if ($result)
 		{
@@ -117,6 +128,7 @@ class database_derbytest extends database
 		{
 			throw new exception("Whoops, no question found with the ID of " . $req_ID);
 		}
+		
 	}
 	
 	
