@@ -23,68 +23,78 @@ if ($_POST)
 	// are we editing a question or adding a new one?
 	if ($_POST['question_id'] > 0)
 	{
-		// editing a post
-		
-		// save all the answers submitted into an array
-		foreach ($_POST['answer'] as $id => $answer)
+		if ($_POST['question_text'] == "delete")
 		{
-			if (trim($answer))
-			{
-				$is_correct = $_POST['correct'][$id] == 1;
-				$temp_answer_array[] = new answer(-1, $_POST['question_id'], trim($answer), $is_correct);
-			}
+			$mydb->remove_question_and_answers($_POST['question_id']);
+			$message .= "Deleted. ";
+			$question_deleted = true;
+			
 		}
-		
-		$tmp_question = get_question_from_ID($_POST['question_id']);
-		
-		// have the answers changed?
-		if ($tmp_question->is_answers_different($temp_answer_array))
+		else
 		{
+			// editing a post
 			
-			// delete existing post & questions
-			$mydb->remove_answers_given_questionID($tmp_question->get_ID());
-			$message = "Answers deleted! ";
-			
-			// save all the answers
+			// save all the answers submitted into an array
 			foreach ($_POST['answer'] as $id => $answer)
 			{
 				if (trim($answer))
 				{
 					$is_correct = $_POST['correct'][$id] == 1;
-					$mydb->add_answer($tmp_question->get_ID(), trim($answer), $is_correct);
+					$temp_answer_array[] = new answer(-1, $_POST['question_id'], trim($answer), $is_correct);
 				}
 			}
-			$message .= "Answers saved! ";	
-		}
-		else
-		{
-			$message .= "Answers unchanged! ";
-		}
-		
-		// edit the question
-		$mydb->edit_question($tmp_question->get_ID(), $_POST['question_text'], $_POST['question_section'], trim($_POST['question_notes']), trim($_POST['question_source']));
-		$message .= "Question edited! ";	
-		
-		// check the applicable rule set
-		// remove all relationships
-		$mydb->remove_relationship_given_Question_ID($tmp_question->get_ID());
-		$message .= "Relationships Removed! ";	
-		
-		// build new ones
-		if ($_POST['question_ruleset'])
-		{
-			foreach ($_POST['question_ruleset'] as $term_ID => $data)
+			
+			$tmp_question = get_question_from_ID($_POST['question_id']);
+			
+			// have the answers changed?
+			if ($tmp_question->is_answers_different($temp_answer_array))
 			{
-				$mydb->add_relationship($tmp_question->get_ID(), $term_ID);
+				
+				// delete existing post & questions
+				$mydb->remove_answers_given_questionID($tmp_question->get_ID());
+				$message = "Answers deleted! ";
+				
+				// save all the answers
+				foreach ($_POST['answer'] as $id => $answer)
+				{
+					if (trim($answer))
+					{
+						$is_correct = $_POST['correct'][$id] == 1;
+						$mydb->add_answer($tmp_question->get_ID(), trim($answer), $is_correct);
+					}
+				}
+				$message .= "Answers saved! ";	
 			}
-			$message .= "Relationships Rebuilt! ";	
+			else
+			{
+				$message .= "Answers unchanged! ";
+			}
+			
+			// edit the question
+			$mydb->edit_question($tmp_question->get_ID(), $_POST['question_text'], $_POST['question_section'], trim($_POST['question_notes']), trim($_POST['question_source']));
+			$message .= "Question edited! ";	
+			
+			// check the applicable rule set
+			// remove all relationships
+			$mydb->remove_relationship_given_Question_ID($tmp_question->get_ID());
+			$message .= "Relationships Removed! ";	
+			
+			// build new ones
+			if ($_POST['question_ruleset'])
+			{
+				foreach ($_POST['question_ruleset'] as $term_ID => $data)
+				{
+					$mydb->add_relationship($tmp_question->get_ID(), $term_ID);
+				}
+				$message .= "Relationships Rebuilt! ";	
+			}
 		}
 	}
 	else 
 	{
 		// Adding a new question
 		// try to save the question
-		$question_id = $mydb->add_question($_POST['question_text'], $_POST['question_section'], trim($_POST['question_notes']), trim($_POST['question_source']));
+		$question_id = add_question($_POST['question_text'], $_POST['question_section'], trim($_POST['question_notes']), trim($_POST['question_source']));
 		
 		// save all the answers
 		foreach ($_POST['answer'] as $id => $answer)
@@ -102,7 +112,7 @@ if ($_POST)
 		{
 			foreach ($_POST['question_ruleset'] as $term_ID => $data)
 			{
-				$mydb->add_relationship($tmp_question->get_ID(), $term_ID);
+				$mydb->add_relationship($question_id, $term_ID);
 			}
 			$message .= "Relationships Built! ";	
 		}
@@ -142,10 +152,17 @@ if ($_GET['update_report'])
 
 
 // is a question being edited
-if ($url_array[1] == "edit")
+if (($url_array[1] == "edit") && !$question_deleted)
 {
 	$question = get_question_from_ID($url_array[2]);
-	$answers = $question->get_all_Answers();
+	try {	
+		$answers = $question->get_all_Answers();
+	} 
+		catch (Exception $e) 
+	{
+		$message .= $e->getMessage();
+	}
+	
 	// get the reports for this question
 	$reports_question = $mydb->get_reports_from_question_ID($question->get_ID(), REPORT_OPEN);
 }
@@ -342,6 +359,7 @@ include("header.php");
 									if ($question_rulesets)
 									{
 										// is this rule set already chosen for this question?
+										
 										foreach ($question_rulesets as $question_ruleset)
 										{
 											if ($question_ruleset->get_ID() == $ruleset_term->get_ID())

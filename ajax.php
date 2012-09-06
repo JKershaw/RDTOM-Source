@@ -96,17 +96,12 @@ function ajax_save_response()
 	settype($question_ID, "integer");
 	settype($response_ID, "integer");
 	
-	// get the question ID
-	if (!$mydb->is_question_ID_valid($question_ID))
-	{
-		throw new exception("ajax.php error, no question found with ID " . $_POST['question_ID']);
-		return "error";
-	}
+	// get the question from the ID (tests if ID is valid)
+	$question = get_question_from_ID($question_ID);
 	
 	// get if the answer is correct (will throw exception is invalid ID)
-	$response_is_correct = $mydb->is_answer_correct_from_ID($response_ID);
+	$response_is_correct = is_answer_correct_from_ID($response_ID);
 	
-	//$answer = $mydb->get_answer_from_ID($_POST['response_ID']);
 	if (is_logged_in())
 	{
 		global $user;

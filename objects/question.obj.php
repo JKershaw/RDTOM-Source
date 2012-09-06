@@ -88,7 +88,7 @@ class question
 	public function get_Answers($max_num_answers = 4)
 	{
 		global $mydb;
-		$answers = $mydb->get_answers_from_question_ID($this->ID);
+		$answers = get_answers_from_question_ID($this->ID);
 		
 		
 		// now we have all the answers, split them into correct and wrong arrays.
@@ -177,11 +177,11 @@ class question
 	public function get_all_Answers($max_num_answers = 4, $get_ResponseRate = false)
 	{
 		global $mydb;
-		$answers_array = $mydb->get_answers_from_question_ID($this->ID);
+		$answers_array = get_answers_from_question_ID($this->ID);
 		
 		if ($get_ResponseRate)
 		{
-			$Responseperc_array = $mydb->get_answer_response_perc($this->ID);
+			$Responseperc_array = get_answer_response_perc($this->ID);
 			
 			$sum_count = 0;
 			if ($Responseperc_array)

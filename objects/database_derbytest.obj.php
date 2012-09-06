@@ -16,417 +16,6 @@ class database_derbytest extends database
 		$this->dbName = $database_name;
 		$this->dbHost = $database_host;
 	}
-	/*
-	public function get_question_random()
-	{
-		global $random_questions_to_remeber, $remeber_in_session, $random_question_find_attempts;
-	
-		// if the holes table is being rebuilt, cheat
-		if (!$this->does_table_exist("rdtom_questions_holes_map"))
-		{
-			return $this->get_question_random_simple();
-		}
-	
-		// at most try to find a new unique question 5 times
-		for($i=0;$i<$random_question_find_attempts;$i++)
-		{
-			//echo "*";
-			// code from http://jan.kneschke.de/projects/mysql/order-by-rand/
-			$query = "
-			SELECT * FROM rdtom_questions
-			  JOIN (SELECT r1.Question_ID
-			         FROM rdtom_questions_holes_map AS r1
-			         JOIN (SELECT (RAND() *
-			                      (SELECT MAX(row_id)
-			                         FROM rdtom_questions_holes_map)) AS row_id)
-			               AS r2
-			        WHERE r1.row_id >= r2.row_id
-			        ORDER BY r1.row_id ASC
-			        LIMIT 1) as rows ON (id = Question_ID);";	
-				
-			$result = $this->get_row($query);
-			
-			if ($result)
-			{
-				$question = $this->get_question_from_array($result);
-				
-				// if the question hasn't already been asked recently OR we're not remebering things in the session, return it
-				if (!$remeber_in_session || ($_SESSION['random_questions_asked'] && !in_array($question->get_ID(), $_SESSION['random_questions_asked'])))
-				{
-					return $question;
-				}
-			}
-			else
-			{
-				throw new exception("Woah, either the site ran out of questions, or the database is being updated. Try reloading the page.");
-			}
-		}
-		//echo "*";
-		
-		// we tried 5 times to find a unique question, and failed, so resort back to the old random question getter
-		return $this->get_question_random_simple();
-	}
-	
-	public function get_question_random_simple()
-	{
-		global $random_questions_to_remeber, $remeber_in_session;
-		
-		$clause = "";
-		
-		// exclude remebered questions
-		if ($remeber_in_session)
-		{
-			if (count($_SESSION['random_questions_asked']) > 0)
-			{
-				foreach ($_SESSION['random_questions_asked'] as $ID_to_ignore)
-				{
-					$where_array[$ID_to_ignore] = "ID != '$ID_to_ignore'";
-				}
-				$clause = " WHERE " . implode(" AND ", $where_array);
-			}
-		}
-		
-		$query = "SELECT * FROM rdtom_questions" . $clause . " ORDER BY RAND() LIMIT 1";
-		
-		$result = $this->get_row($query);
-		
-		if ($result)
-		{
-			$question = $this->get_question_from_array($result);
-		}
-		else
-		{
-			throw new exception("Woah, either the site ran out of questions, or the database is being updated. Try reloading the page.");
-		}	
-
-		return $question;
-	}
-	
-	public function get_question_from_ID($req_ID)
-	{
-		global $myPDO;
-		
-		// prep the statement
-		$statement = $myPDO->prepare('SELECT * FROM rdtom_questions WHERE ID = :ID LIMIT 1');
-		// add the data
-		$statement->execute(array(':ID' => $req_ID));
-		// get an associate array of the results
-		$result = $statement->fetch(PDO::FETCH_ASSOC);
-		
-		
-		//settype($req_ID, "integer");
-		//$query = "SELECT * FROM rdtom_questions WHERE ID = '" . $req_ID . "' LIMIT 1";
-		//$result = $this->get_row($query);
-		
-		
-		if ($result)
-		{
-			return $this->get_question_from_array($result);
-		}
-		else
-		{
-			throw new exception("Whoops, no question found with the ID of " . $req_ID);
-		}
-		
-	}
-	
-	
-	public function get_questions()
-	{
-		
-		$query = "SELECT * FROM rdtom_questions ORDER BY Section ASC";
-		
-		$results = $this->get_results($query);
-		
-		if ($results)
-		{
-			foreach ($results as $result)
-			{
-				$out[] = $this->get_question_from_array($result);
-			}
-			
-			// sort questions, naturally, by section 
-			usort($out, 'compare_questions');
-			
-			return $out;
-		}
-		else
-		{
-			throw new exception("Whoops, no questions found in the database");
-		}
-	}
-	
-	public function get_questions_from_User_ID($req_User_ID, $limit = false, $timelimit = false, $opt_only_wrong = false)
-	{
-		
-		settype($req_User_ID, "integer");
-		
-		if ($opt_only_wrong)
-		{
-			$clause = " AND rdtom_responses.Correct = false";
-		}
-		
-		if ($timelimit)
-		{
-			settype($timelimit, "integer");
-			$clause .= " AND rdtom_responses.Timestamp >= '" . (gmmktime() - $timelimit) . "' ";
-			$order = " ORDER BY rdtom_responses.Timestamp Desc";
-		}
-		
-		if ($limit)
-		{
-			settype($limit, "integer");
-			$limit = " LIMIT 0, " . $limit;
-		}
-		
-		$query = "
-			SELECT rdtom_questions . * 
-			FROM rdtom_questions
-			JOIN rdtom_responses ON rdtom_responses.Question_ID = rdtom_questions.ID
-			WHERE rdtom_responses.User_ID = '" . $req_User_ID . "'" . $clause . $order . $limit;
-		
-		$results = $this->get_results($query);
-		
-		if ($results)
-		{
-			foreach ($results as $result)
-			{
-				$out[] = $this->get_question_from_array($result);
-			}
-			return $out;
-		}
-		else
-		{
-			return false;
-		}
-	}
-	
-	public function get_question_from_array($req_array)
-	{
-		return new question(
-			$req_array['ID'],
-			$req_array['Text'],
-			$req_array['Section'],
-			$req_array['Added'],
-			$req_array['Notes'],
-			$req_array['Source']);
-	}
-	
-	
-
-	public function get_sections_array_from_User_ID($req_User_ID)
-	{
-		
-		settype($req_User_ID, "integer");
-		
-		$query = "
-			SELECT rdtom_questions.ID, rdtom_questions.Section
-			FROM rdtom_questions
-			JOIN rdtom_responses ON rdtom_responses.Question_ID = rdtom_questions.ID
-			WHERE rdtom_responses.User_ID = '" . $req_User_ID . "'";
-		
-		$results = $this->get_results($query);
-		
-		if ($results)
-		{
-			foreach ($results as $result)
-			{
-				$out[$result['ID']] = $result['Section'];
-			}
-			return $out;
-		}
-		else
-		{
-			return false;
-		}
-	}
-	
-	public function get_sections_array()
-	{
-
-		$query = "SELECT ID, Section FROM rdtom_questions";
-		
-		$results = $this->get_results($query);
-		
-		if ($results)
-		{
-			foreach ($results as $result)
-			{
-				$out[$result['ID']] = $result['Section'];
-			}
-			return $out;
-		}
-		else
-		{
-			return false;
-		}
-	}*/
-	
-	
-	public function get_answer_from_array($req_array)
-	{
-		return new answer(
-			$req_array['ID'],
-			$req_array['Question_ID'],
-			$req_array['Text'],
-			$req_array['Correct']);
-	}
-	
-	public function is_question_ID_valid($req_ID)
-	{
-		settype($req_ID, "integer");
-		$query = "SELECT ID FROM rdtom_questions WHERE ID = '" . $req_ID . "' LIMIT 1";
-		
-		$result = $this->get_var($query);
-		
-		
-		if ($result == $req_ID)
-		{
-			return true;
-		}
-		else
-		{
-			return false;
-		}
-	}
-	
-	public function get_report_from_array($req_array)
-	{
-		return new report(
-			$req_array['ID'],
-			$req_array['IP'],
-			$req_array['Timestamp'],
-			$req_array['Question_ID'],
-			$req_array['User_ID'],
-			$req_array['Text'],
-			$req_array['Status']);
-	}
-	
-	
-	public function get_answers_from_question_ID($req_ID)
-	{
-		settype($req_ID, "integer");
-		
-		$query = "SELECT * FROM rdtom_answers WHERE Question_ID = '$req_ID'";
-		$results = $this->get_results($query);
-		
-		if ($results)
-		{
-			foreach ($results as $result)
-			{
-				$out[] = $this->get_answer_from_array($result);
-			}
-				
-			return $out;
-		}
-		else
-		{
-			throw new exception("Whoops, no answers found in the database for question (ID: " . $req_ID . ")");
-		}
-	}
-	
-
-	
-	public function get_answer_from_ID($req_ID)
-	{
-		settype($req_ID, "integer");
-		$query = "SELECT * FROM rdtom_answers WHERE ID = '" . $req_ID . "' LIMIT 1";
-		
-		$result = $this->get_row($query);
-		
-		if ($result)
-		{
-			return $this->get_answer_from_array($result);
-		}
-		else
-		{
-			throw new exception("Whoops, no question found with the ID of " . $req_ID);
-		}
-	}
-	
-	public function is_answer_correct_from_ID($req_ID)
-	{
-		settype($req_ID, "integer");
-		$query = "SELECT Correct FROM rdtom_answers WHERE ID = '" . $req_ID . "' LIMIT 1";
-		
-		$result = $this->get_var($query);
-		
-		if ($result === false)
-		{
-			throw new Exception("database object error: no answer found with the ID " . $req_ID);
-		}
-		
-		if ($result == 1)
-		{
-			return true;
-		}
-		else
-		{
-			return false;
-		}
-	}
-	
-	
-	
-
-	
-	public function get_answer_response_perc($req_QuestionID)
-	{
-		settype($req_QuestionID, "integer");
-		
-		$query = "
-		SELECT Answer_ID, COUNT( * ) AS count
-		FROM  `rdtom_responses` 
-		JOIN rdtom_answers ON rdtom_answers.ID = rdtom_responses.Answer_ID
-		WHERE rdtom_responses.Question_ID =$req_QuestionID
-		GROUP BY  `Answer_ID` ";
-		
-		$results = $this->get_results($query);
-		if ($results)
-		{
-			foreach ($results as $result)
-			{
-				$out[$result['Answer_ID']] = $result['count'];
-			}
-			return $out;
-		}
-	}
-	
-	
-	public function add_question($req_text, $req_section, $req_notes, $req_source)
-	{
-		$req_text = $this->mysql_res($req_text);
-		$req_section = $this->mysql_res($req_section);
-		$req_notes = $this->mysql_res($req_notes);
-		$req_source = $this->mysql_res($req_source);
-		
-		$query = "
-		INSERT 
-			INTO rdtom_questions 
-			(
-				Text,
-				Section,
-				Added,
-				Notes,
-				Source
-			)
-			VALUES 
-			(
-				'" . $req_text . "',  
-				'" . $req_section . "',
-				'" . gmmktime() . "',
-				'" . $req_notes . "',
-				'" . $req_source . "'
-			);";
-		
-		$this->run_query($query);
-		
-		$this->rebuild_questions_holes_map();
-		
-		return $this->get_inserted_id();
-		
-	}
-	
 
 	
 	public function edit_question($req_ID, $req_text, $req_section, $req_notes, $req_source)
@@ -451,7 +40,7 @@ class database_derbytest extends database
 		
 		$this->run_query($query);
 		
-		$this->rebuild_questions_holes_map();
+		rebuild_questions_holes_map();
 	}
 	
 	public function add_answer($req_Question_ID, $req_Text, $req_Correct)
@@ -572,7 +161,7 @@ class database_derbytest extends database
 		{
 			foreach ($results as $result)
 			{
-				$out[] = $this->get_report_from_array($result);
+				$out[] = get_report_from_array($result);
 			}
 		}
 		return $out;
@@ -597,7 +186,7 @@ class database_derbytest extends database
 		{
 			foreach ($results as $result)
 			{
-				$out[] = $this->get_report_from_array($result);
+				$out[] = get_report_from_array($result);
 			}
 		}
 		return $out;
@@ -610,16 +199,9 @@ class database_derbytest extends database
 		$query = "SELECT * FROM rdtom_reports WHERE ID = '$req_ID'";
 		$result = $this->get_row($query);
 		
-		return $this->get_report_from_array($result);
+		return get_report_from_array($result);
 	}
-	/*
-	public function get_question_count()
-	{
-		$query = "SELECT COUNT(*) FROM rdtom_questions";
-		$result = $this->get_var($query);
-		return $result;
-	}
-	*/
+	
 	public function get_answer_count()
 	{
 		$query = "SELECT COUNT(*) FROM rdtom_answers";
@@ -825,7 +407,7 @@ class database_derbytest extends database
 		$query = "DELETE FROM rdtom_questions WHERE ID = '" .$req_question_ID . "' LIMIT 1;";
 		$this->run_query($query);
 		
-		$this->rebuild_questions_holes_map();
+		rebuild_questions_holes_map();
 		
 		// delete answers
 		$query = "DELETE FROM rdtom_answers WHERE Question_ID = '" .$req_question_ID . "'";
@@ -883,16 +465,7 @@ class database_derbytest extends database
 		$this->run_query($query);
 	}
 	
-	public function rebuild_questions_holes_map()
-	{
-		// delete then remake the holes map table
-		$query = "
-		DROP TABLE IF EXISTS rdtom_questions_holes_map;
-		CREATE TABLE rdtom_questions_holes_map ( row_id int not NULL primary key, Question_ID int not null);
-		SET @id = 0;
-		INSERT INTO rdtom_questions_holes_map SELECT @id := @id + 1, ID FROM rdtom_questions;";
-		$this->run_multi_query($query);
-	}
+	
 	
 	public function get_stats_hourly_posts($hour_count, $hour_format = "%Y %j %H")
 	{
@@ -1373,7 +946,7 @@ class database_derbytest extends database
 		}
 		else
 		{
-			return true;
+			return false;
 		}
 	}
 	
@@ -1391,7 +964,7 @@ class database_derbytest extends database
 		}
 		else
 		{
-			return true;
+			return false;
 		}
 	}
 	

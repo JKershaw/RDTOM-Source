@@ -20,6 +20,8 @@ include('functions/email.fnc.php');
 
 // Database (function) files
 include('functions/database/questions.db.fnc.php');
+include('functions/database/answers.db.fnc.php');
+include('functions/database/reports.db.fnc.php');
 
 // Model (object) files
 include('objects/database_derbytest.obj.php');

@@ -290,4 +290,52 @@ function get_questions_hard($limit = 30, $easy = false)
 		throw new exception("Whoops, no hard questions found in the database");
 	}
 }
+
+function add_question($req_text, $req_section, $req_notes, $req_source)
+{
+	global $myPDO;
+	
+	$statement = $myPDO->prepare("
+	INSERT 
+		INTO rdtom_questions 
+		(
+			Text,
+			Section,
+			Added,
+			Notes,
+			Source
+		)
+		VALUES 
+		(
+			:Text,
+			:Section,
+			" . gmmktime() . ",
+			:Notes,
+			:Source
+		);");
+	
+	$statement->execute(array(
+			':Text'=>$req_text,
+			':Section'=>$req_section,
+			':Notes'=>$req_notes,
+			':Source'=>$req_source));
+
+	$lastInsertedID = $myPDO->lastInsertId();
+	
+	rebuild_questions_holes_map();
+	
+	return $lastInsertedID;
+}
+
+function rebuild_questions_holes_map()
+{
+	global $mydb;
+	// delete then remake the holes map table
+	$query = "
+	DROP TABLE IF EXISTS rdtom_questions_holes_map;
+	CREATE TABLE rdtom_questions_holes_map ( row_id int not NULL primary key, Question_ID int not null);
+	SET @id = 0;
+	INSERT INTO rdtom_questions_holes_map SELECT @id := @id + 1, ID FROM rdtom_questions;";
+	$mydb->run_multi_query($query);
+}
 ?>
