@@ -413,7 +413,7 @@ function return_user_questions_sections($user_ID = false)
 	}
 	else
 	{
-		$user_questions_sections = $mydb->get_sections_array_from_User_ID($user->get_ID());
+		$user_questions_sections = get_sections_array_from_User_ID($user->get_ID());
 		$fetched_user_questions_sections = true;
 	}
 	

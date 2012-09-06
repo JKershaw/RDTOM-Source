@@ -211,7 +211,58 @@ class database_derbytest extends database
 			$req_array['Notes'],
 			$req_array['Source']);
 	}
-	*/
+	
+	
+
+	public function get_sections_array_from_User_ID($req_User_ID)
+	{
+		
+		settype($req_User_ID, "integer");
+		
+		$query = "
+			SELECT rdtom_questions.ID, rdtom_questions.Section
+			FROM rdtom_questions
+			JOIN rdtom_responses ON rdtom_responses.Question_ID = rdtom_questions.ID
+			WHERE rdtom_responses.User_ID = '" . $req_User_ID . "'";
+		
+		$results = $this->get_results($query);
+		
+		if ($results)
+		{
+			foreach ($results as $result)
+			{
+				$out[$result['ID']] = $result['Section'];
+			}
+			return $out;
+		}
+		else
+		{
+			return false;
+		}
+	}
+	
+	public function get_sections_array()
+	{
+
+		$query = "SELECT ID, Section FROM rdtom_questions";
+		
+		$results = $this->get_results($query);
+		
+		if ($results)
+		{
+			foreach ($results as $result)
+			{
+				$out[$result['ID']] = $result['Section'];
+			}
+			return $out;
+		}
+		else
+		{
+			return false;
+		}
+	}*/
+	
+	
 	public function get_answer_from_array($req_array)
 	{
 		return new answer(
@@ -318,98 +369,6 @@ class database_derbytest extends database
 	
 	
 
-	public function get_sections_array_from_User_ID($req_User_ID)
-	{
-		
-		settype($req_User_ID, "integer");
-		
-		$query = "
-			SELECT rdtom_questions.ID, rdtom_questions.Section
-			FROM rdtom_questions
-			JOIN rdtom_responses ON rdtom_responses.Question_ID = rdtom_questions.ID
-			WHERE rdtom_responses.User_ID = '" . $req_User_ID . "'";
-		
-		$results = $this->get_results($query);
-		
-		if ($results)
-		{
-			foreach ($results as $result)
-			{
-				$out[$result['ID']] = $result['Section'];
-			}
-			return $out;
-		}
-		else
-		{
-			return false;
-		}
-	}
-	
-	public function get_sections_array()
-	{
-
-		$query = "SELECT ID, Section FROM rdtom_questions";
-		
-		$results = $this->get_results($query);
-		
-		if ($results)
-		{
-			foreach ($results as $result)
-			{
-				$out[$result['ID']] = $result['Section'];
-			}
-			return $out;
-		}
-		else
-		{
-			return false;
-		}
-	}
-	
-	public function get_hard_questions($limit = 30, $easy = false)
-	{
-
-		settype($limit, "integer");
-		
-		if ($easy)
-		{
-			$order = "DESC";
-		}
-		else
-		{
-			$order = "ASC";
-		}
-		
-		// The query to get the IDs of hard questions
-		$query = "
-		SELECT 
-			Question_ID, 
-			(COUNT( CASE  `Correct` WHEN 1 THEN  `Correct` END ) / COUNT( * )) *100 AS  'correct_perc'
-		FROM  
-			`rdtom_responses` 
-		GROUP BY 
-			`Question_ID` 
-		ORDER BY 
-			`correct_perc` $order 
-		LIMIT 0 , $limit";
-
-		$result_IDs = $this->get_results($query);
-		
-		if ($result_IDs)
-		{
-			foreach ($result_IDs as $result_array)
-			{
-				$question_tmp = $this->get_question_from_ID($result_array['Question_ID']);
-				$question_tmp->set_SuccessRate($result_array['correct_perc']);
-				$out[] = $question_tmp;
-			}
-			return $out;
-		}
-		else
-		{
-			throw new exception("Whoops, no hard questions found in the database");
-		}
-	}
 	
 	public function get_answer_response_perc($req_QuestionID)
 	{

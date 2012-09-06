@@ -17,7 +17,6 @@ function get_question_from_ID($req_ID)
 	// prep the statement
 	$statement = $myPDO->prepare('SELECT * FROM rdtom_questions WHERE ID = :ID LIMIT 1');
 	$statement->execute(array(':ID' => $req_ID));
-	// get an associate array of the results
 	$result = $statement->fetch(PDO::FETCH_ASSOC);
 	
 	if ($result)
@@ -91,7 +90,7 @@ function get_question_random()
 
 function get_question_random_simple()
 {
-	global $mydb, $myPDO, $remeber_in_session;
+	global $myPDO, $remeber_in_session;
 	
 	$clause = "";
 	
@@ -152,7 +151,7 @@ function get_questions()
 
 function get_questions_from_User_ID($req_User_ID, $opt_limit = false, $opt_timelimit = false, $opt_only_wrong = false)
 {
-	global $myPDO, $mydb;
+	global $myPDO;
 	
 	if ($opt_only_wrong)
 	{
@@ -192,6 +191,103 @@ function get_questions_from_User_ID($req_User_ID, $opt_limit = false, $opt_timel
 	else
 	{
 		return false;
+	}
+}
+
+function get_sections_array_from_User_ID($req_User_ID)
+{
+	global $myPDO;
+	
+	$statement = $myPDO->prepare("
+		SELECT rdtom_questions.ID, rdtom_questions.Section
+		FROM rdtom_questions
+		JOIN rdtom_responses ON rdtom_responses.Question_ID = rdtom_questions.ID
+		WHERE rdtom_responses.User_ID = :ID");
+
+	$statement->bindValue(':ID', $req_User_ID, PDO::PARAM_INT);
+	$statement->execute();
+	
+	$results = $statement->fetchAll();
+	
+	if ($results)
+	{
+		foreach ($results as $result)
+		{
+			$out[$result['ID']] = $result['Section'];
+		}
+		return $out;
+	}
+	else
+	{
+		return false;
+	}
+}
+
+function get_sections_array()
+{
+	global $myPDO;
+	$statement = $myPDO->prepare("SELECT ID, Section FROM rdtom_questions");
+	$statement->execute();
+	$results = $statement->fetchAll();
+	
+	if ($results)
+	{
+		foreach ($results as $result)
+		{
+			$out[$result['ID']] = $result['Section'];
+		}
+		return $out;
+	}
+	else
+	{
+		return false;
+	}
+}
+
+
+function get_questions_hard($limit = 30, $easy = false)
+{
+	global $myPDO;
+
+	if ($easy)
+	{
+		$order = "DESC";
+	}
+	else
+	{
+		$order = "ASC";
+	}
+	
+	// The query to get the IDs of hard questions
+	$statement = $myPDO->prepare("
+	SELECT 
+		Question_ID, 
+		(COUNT( CASE  `Correct` WHEN 1 THEN  `Correct` END ) / COUNT( * )) *100 AS  'correct_perc'
+	FROM  
+		`rdtom_responses` 
+	GROUP BY 
+		`Question_ID` 
+	ORDER BY 
+		`correct_perc` $order 
+	LIMIT 0 , :limit");
+
+	$statement->bindValue(':limit', $limit, PDO::PARAM_INT);
+	$statement->execute();
+	$results = $statement->fetchAll();
+	
+	if ($results)
+	{
+		foreach ($results as $result_array)
+		{
+			$question_tmp = get_question_from_ID($result_array['Question_ID']);
+			$question_tmp->set_SuccessRate($result_array['correct_perc']);
+			$out[] = $question_tmp;
+		}
+		return $out;
+	}
+	else
+	{
+		throw new exception("Whoops, no hard questions found in the database");
 	}
 }
 ?>

@@ -35,7 +35,7 @@ if ($url_array[1] == "easy")
 		<?php 
 			if (($_GET['hard'] == "yes") || ($_GET['easy'] == "yes"))
 			{
-				$questions = $mydb->get_hard_questions(50, ($_GET['easy'] == "yes"));
+				$questions = get_questions_hard(50, ($_GET['easy'] == "yes"));
 			}
 			else
 			{
