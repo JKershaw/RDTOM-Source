@@ -71,7 +71,7 @@ if ($_POST)
 			}
 			
 			// edit the question
-			$mydb->edit_question($tmp_question->get_ID(), $_POST['question_text'], $_POST['question_section'], trim($_POST['question_notes']), trim($_POST['question_source']));
+			edit_question($tmp_question->get_ID(), $_POST['question_text'], $_POST['question_section'], trim($_POST['question_notes']), trim($_POST['question_source']));
 			$message .= "Question edited! ";	
 			
 			// check the applicable rule set

@@ -18,31 +18,6 @@ class database_derbytest extends database
 	}
 
 	
-	public function edit_question($req_ID, $req_text, $req_section, $req_notes, $req_source)
-	{
-		settype($req_ID, "integer");
-		$req_text = $this->mysql_res($req_text);
-		$req_section = $this->mysql_res($req_section);
-		$req_notes = $this->mysql_res($req_notes);
-		$req_source = $this->mysql_res($req_source);
-		
-		$query = "
-		UPDATE 
-			rdtom_questions 
-		SET 
-			Text = '" . $req_text . "', 
-			Section = '" . $req_section . "', 
-			Notes = '" . $req_notes . "' , 
-			Source = '" . $req_source . "' 
-		WHERE 
-			ID = '" . $req_ID . "'
-			";
-		
-		$this->run_query($query);
-		
-		rebuild_questions_holes_map();
-	}
-	
 	public function add_answer($req_Question_ID, $req_Text, $req_Correct)
 	{
 		settype($req_Question_ID, "integer");

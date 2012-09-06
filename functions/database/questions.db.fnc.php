@@ -338,4 +338,30 @@ function rebuild_questions_holes_map()
 	INSERT INTO rdtom_questions_holes_map SELECT @id := @id + 1, ID FROM rdtom_questions;";
 	$mydb->run_multi_query($query);
 }
+
+function edit_question($req_ID, $req_text, $req_section, $req_notes, $req_source)
+{
+	global $myPDO;
+	
+	$statement = $myPDO->prepare("
+	UPDATE 
+		rdtom_questions 
+	SET 
+		Text = :Text, 
+		Section = :Section, 
+		Notes = :Notes, 
+		Source = :Source 
+	WHERE 
+		ID = :ID
+		");
+	
+	$statement->execute(array(
+			':Text'=>$req_text,
+			':Section'=>$req_section,
+			':Notes'=>$req_notes,
+			':Source'=>$req_source,
+			':ID'=>$req_ID));
+	
+	rebuild_questions_holes_map();
+}
 ?>
