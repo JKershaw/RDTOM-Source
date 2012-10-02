@@ -12,7 +12,9 @@ function exception_handler($exception)
 	save_log("exception", $log_error_string);
 	
 	// display an error page for the user
-	echo_error_page($exception->getMessage());
+	$error_string .= $exception->getMessage() . "<br />\n";
+	$error_string .= "Line " . $exception->getLine() . " in file " . $exception->getFile() . " (Trace: " . $exception->getTraceAsString() . ")";
+	echo_error_page($error_string);
 }
 
 // error handler function

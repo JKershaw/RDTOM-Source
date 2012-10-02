@@ -77,4 +77,33 @@ function get_answer_response_perc($req_QuestionID)
 		return $out;
 	}
 }
+
+function add_answer($req_Question_ID, $req_Text, $req_Correct)
+{
+	global $myPDO;
+
+	if ($req_Text == "")
+	{
+		throw new exception ("No text given for answer;");
+	}
+	
+	$statement = $myPDO->prepare("
+	INSERT 
+		INTO rdtom_answers 
+		(
+			`Question_ID` ,
+			`Text` ,
+			`Correct`
+		)
+		VALUES 
+		(
+			:Question_ID , 
+			:Text ,  
+			:Correct
+		);
+	");
+	
+	$statement->execute(array(':Question_ID' => $req_Question_ID, ':Text' => $req_Text, ':Correct' => $req_Correct));
+
+}
 ?>

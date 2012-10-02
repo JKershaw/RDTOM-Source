@@ -16,36 +16,6 @@ class database_derbytest extends database
 		$this->dbName = $database_name;
 		$this->dbHost = $database_host;
 	}
-
-	
-	public function add_answer($req_Question_ID, $req_Text, $req_Correct)
-	{
-		settype($req_Question_ID, "integer");
-		$req_Text = $this->mysql_res($req_Text);
-		settype($req_Correct, "integer");
-		
-		if ($req_Text == "")
-		{
-			throw new exception ("No text given for answer;");
-		}
-		
-		$query = "
-		INSERT 
-			INTO rdtom_answers 
-			(
-				`Question_ID` ,
-				`Text` ,
-				`Correct`
-			)
-			VALUES 
-			(
-				'$req_Question_ID', 
-				'$req_Text',  
-				'$req_Correct'
-			);
-		";
-		$this->run_query($query);
-	}
 	
 
 	public function set_report($req_report)

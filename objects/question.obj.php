@@ -216,7 +216,22 @@ class question
 	
 	public function is_answers_different($req_new_answers)
 	{
-		$existing_answers = $this->get_all_Answers();
+		// There may be no answers in the database
+		try {
+			$existing_answers = $this->get_all_Answers();
+		} 
+		catch (Exception $e) 
+		{
+			if ($req_new_answers)
+			{
+				return true;
+			} 
+			else 
+			{
+				return false;
+			}
+		}
+		
 
 		// are the numbers different?
 		if (count($existing_answers) != count($req_new_answers))

@@ -33,7 +33,7 @@ if ($_POST)
 		else
 		{
 			// editing a post
-			
+
 			// save all the answers submitted into an array
 			foreach ($_POST['answer'] as $id => $answer)
 			{
@@ -46,8 +46,8 @@ if ($_POST)
 			
 			$tmp_question = get_question_from_ID($_POST['question_id']);
 			
-			// have the answers changed?
-			if ($tmp_question->is_answers_different($temp_answer_array))
+			// have the answers changed? There may not be any answers.
+			if ($temp_answer_array && ($tmp_question->is_answers_different($temp_answer_array)))
 			{
 				
 				// delete existing post & questions
@@ -60,7 +60,7 @@ if ($_POST)
 					if (trim($answer))
 					{
 						$is_correct = $_POST['correct'][$id] == 1;
-						$mydb->add_answer($tmp_question->get_ID(), trim($answer), $is_correct);
+						add_answer($tmp_question->get_ID(), trim($answer), $is_correct);
 					}
 				}
 				$message .= "Answers saved! ";	
@@ -102,7 +102,7 @@ if ($_POST)
 			if (trim($answer))
 			{
 				$is_correct = $_POST['correct'][$id] == 1;
-				$mydb->add_answer($question_id, $answer, $is_correct);
+				add_answer($question_id, $answer, $is_correct);
 			}
 		}
 		$message .= "Question saved!";
