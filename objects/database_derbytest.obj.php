@@ -515,7 +515,6 @@ class database_derbytest extends database
 			return false;
 		}
 		// an error has occured
-		
 	}
 	
 	public function get_user_from_ID($req_ID)
@@ -553,6 +552,28 @@ class database_derbytest extends database
 		else
 		{
 			throw new exception("User not found with email " . $req_email);
+		} 
+	}
+	
+	public function get_user_from_name($req_name)
+	{
+		
+		if (!trim($req_name))
+		{
+			throw new exception("No name give.");
+		}
+		
+		$req_name = $this->mysql_res($req_name);
+		
+		$query="SELECT * FROM rdtom_users WHERE UPPER(name)=\"" . strtoupper($req_name) . "\"";
+		$result = $this->get_row($query);
+		if ($result)
+		{
+			return $this->get_user_from_array($result);
+		}
+		else
+		{
+			throw new exception("User not found with name " . $req_name);
 		} 
 	}
 
