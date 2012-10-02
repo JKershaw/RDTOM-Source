@@ -9,6 +9,7 @@ class question
 	private $Source;
 	
 	private $SuccessRate;
+	private $ResponseCount;
 	private $answers_array;
 	
 	function __construct(
@@ -167,7 +168,6 @@ class question
 				{
 					return "http://wftda.com/rules/20100526/section/" . $section_array[0] . "." . $section_array[1] . "." . $section_array[2];
 				}
-				
 			}
 		}
 		
@@ -211,7 +211,30 @@ class question
 	
 	public function get_SuccessRate()
 	{
+		if (!$this->SuccessRate)
+		{
+			$correct_perc = (integer)get_question_correct_perc($this->get_ID());
+			$this->set_SuccessRate($correct_perc);
+
+		}
 		return $this->SuccessRate;
+	}
+	
+	public function set_ResponseCount($req_ResponseCount)
+	{
+		settype($req_ResponseCount, "integer");
+		$this->ResponseCount = $req_ResponseCount;
+	}
+	
+	public function get_ResponseCount()
+	{
+		global $mydb;
+		if (!$this->ResponseCount)
+		{
+			$ResponseCount = (integer)$mydb->get_response_count_from_Question_ID($this->get_ID());
+			$this->set_ResponseCount($ResponseCount);
+		}
+		return $this->ResponseCount;
 	}
 	
 	public function is_answers_different($req_new_answers)

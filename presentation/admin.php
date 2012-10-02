@@ -400,6 +400,11 @@ include("header.php");
 					<td>Remember answers:</td>
 					<td><input <?php if ($_POST['remeberanswers']) { echo " checked"; }?> type="checkbox" value="yes" name="remeberanswers"/></td>
 				</tr>
+				<tr>
+					<td>Success rate:</td>
+					<td><?php echo "<span style=\"color: " . get_colour_from_percentage($question->get_SuccessRate()) . "\">" . $question->get_SuccessRate() . "%</span> (" . number_format($question->get_ResponseCount()) . " responses)"; ?></td>
+				</tr>
+				
 			</table>
 		</form>
 		

@@ -179,6 +179,14 @@ class database_derbytest extends database
 		return $result;
 	}
 	
+	public function get_response_count_from_Question_ID($req_ID)
+	{
+		settype($req_ID, "integer");
+		$query = "SELECT COUNT(*) FROM rdtom_responses WHERE Question_ID = " . $req_ID;
+		$result = $this->get_var($query);
+		return $result;
+	}
+	
 	public function get_responses_from_User_ID($User_ID, $since_timestamp = false, $until_timestamp = false)
 	{
 		settype($User_ID, "integer");

@@ -124,12 +124,29 @@ function get_question_random_simple()
 	return $question;
 }
 
-function get_questions()
+function get_questions($taxonomy_array = false)
 {
 	global $myPDO;
 	
-	$statement = $myPDO->query("SELECT * FROM rdtom_questions ORDER BY Section ASC");
-	$results = $statement->fetchAll(PDO::FETCH_ASSOC);
+	if ($taxonomy_array)
+	{
+		// TODO the array holds a list of taxonomys and values to use in the search for questions
+		/*
+		 * for example:
+		 * (
+		 * 		"tag" => "Test Question"
+		 * 		"rule-set" => "WFTDA6"
+		 * )
+		 * 
+		 * would return every question in the WFTDA6 rule set which is suitable for being a test question
+		 */
+	}
+	else
+	{
+		$statement = $myPDO->query("SELECT * FROM rdtom_questions ORDER BY Section ASC");
+		$results = $statement->fetchAll(PDO::FETCH_ASSOC);
+	}
+	
 	
 	if ($results)
 	{
@@ -289,6 +306,29 @@ function get_questions_hard($limit = 30, $easy = false)
 	{
 		throw new exception("Whoops, no hard questions found in the database");
 	}
+}
+
+function get_question_correct_perc($req_ID)
+{
+	global $myPDO;
+
+	
+	// The query to get the IDs of hard questions
+	$statement = $myPDO->prepare("
+	SELECT 
+		(COUNT( CASE  `Correct` WHEN 1 THEN  `Correct` END ) / COUNT( * )) *100 AS  'correct_perc'
+	FROM  
+		`rdtom_responses` 
+	WHERE
+		`Question_ID` = :Question_ID
+	");
+
+	$statement->bindValue(':Question_ID', $req_ID);
+	$statement->execute();
+	$result = $statement->fetch(PDO::FETCH_ASSOC);
+	
+	return $result['correct_perc'];
+
 }
 
 function add_question($req_text, $req_section, $req_notes, $req_source)

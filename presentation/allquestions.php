@@ -58,18 +58,7 @@ if ($url_array[1] == "easy")
 					<strong>";
 				if (($_GET['hard'] == "yes") || ($_GET['easy'] == "yes"))
 				{
-					if ($question->get_SuccessRate() > 75)
-					{
-						echo "<span style=\"color: #008000\">" . $question->get_SuccessRate() . "%</span> ";
-					}
-					elseif ($question->get_SuccessRate() > 50)
-					{
-						echo "<span style=\"color: #CC6600\">" . $question->get_SuccessRate() . "%</span> ";
-					}
-					else
-					{
-						echo "<span style=\"color: #FF0000\">" . $question->get_SuccessRate() . "%</span> ";
-					}
+					echo "<span style=\"color: " . get_colour_from_percentage($question->get_SuccessRate()) . "\">" . $question->get_SuccessRate() . "%</span> ";
 				}
 				echo htmlentities(stripslashes($question->get_Section())) . "
 					</strong> 
