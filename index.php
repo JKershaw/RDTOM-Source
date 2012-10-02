@@ -31,6 +31,11 @@ switch ($url_array[0])
 		break;	
 	
 	case "report":
+		if (!$_POST)
+		{
+			header( 'Location: ' . get_site_URL()) ;
+			exit;
+		}
 		report_question();
 		break;		
 }
