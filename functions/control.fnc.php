@@ -11,12 +11,12 @@ function set_up_question($question_ID)
 	if ($question_ID == "random")
 	{
 		$is_random_question = true;
-		$question = $mydb->get_random_question();
+		$question = get_question_random();
 	}
 	else
 	{
 		$is_random_question = false;
-		$question = $mydb->get_question_from_ID($question_ID);
+		$question = get_question_from_ID($question_ID);
 
 	}
 	
@@ -62,8 +62,23 @@ function set_up_logged_in_user()
 
 function set_up_database()
 {
+	// set up the mysql Object
 	global $mydb;
 	$mydb = new database_derbytest();
+	
+	// set up the PDO object
+	global $myPDO;
+	global $database_username, $database_userpassword, $database_name, $database_host;
+	
+	/* Connect to an ODBC database using driver invocation */
+	try 
+	{
+	    $myPDO = new PDO("mysql:dbname=$database_name;host=$database_host", $database_username, $database_userpassword);
+	} 
+	catch (PDOException $e) 
+	{
+	    die('Connection failed: ' . $e->getMessage());
+	}
 }
 
 function set_up_url_array()
@@ -125,7 +140,7 @@ function set_up_url_array()
 		$url_array[0] = "question";
 	}
 	
-	// if there isa  request for a question, but no number is given, make the request for a random question
+	// if there is a request for a question, but no number is given, make the request for a random question
 	if ($url_array[0] == "question" && !($url_array[1] > 0))
 	{
 		$url_array[0] = "";

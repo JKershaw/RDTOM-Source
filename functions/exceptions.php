@@ -12,7 +12,9 @@ function exception_handler($exception)
 	save_log("exception", $log_error_string);
 	
 	// display an error page for the user
-	echo_error_page($exception->getMessage());
+	$error_string .= $exception->getMessage() . "<br />\n";
+	$error_string .= "Line " . $exception->getLine() . " in file " . $exception->getFile() . " (Trace: " . $exception->getTraceAsString() . ")";
+	echo_error_page($error_string);
 }
 
 // error handler function
@@ -33,14 +35,17 @@ function error_handler($errno, $errstr, $errfile, $errline)
 
     case E_USER_WARNING:
         $error_string .= "WARNING [$errno] $errstr<br />\n";
+        $error_string .= "Line $errline in file $errfile";
         break;
 
     case E_USER_NOTICE:
         $error_string .= "NOTICE [$errno] $errstr<br />\n";
+        $error_string .= "Line $errline in file $errfile";
         break;
 
     default:
         $error_string .= "Unknown error type: [$errno] $errstr<br />\n";
+        $error_string .= "Line $errline in file $errfile";
         break;
     }
 
@@ -100,7 +105,7 @@ function echo_error_page($error_string)
 	
 		<p>For some reason the site has generated an error. It's been logged and will be delt with accordingly (Being a broken website, Major!). You can try doing what you just did again and see if it's only a temporary bug.<p>
 		<p>The error was:</p>
-		<pre><?php echo $error_string; ?></pre>
+		<p><?php echo $error_string; ?></p>
 		</body>
 	</html>
 	<?php 

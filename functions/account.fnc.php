@@ -37,7 +37,7 @@ function user_log_out()
 	// delete token if one exists
 	if ($user)
 	{
-		$mydb->delete_token($user->get_ID(), get_ip());
+		$mydb->remove_token($user->get_ID(), get_ip());
 	}
 	setcookie("token", "", gmmktime()-2678400);
 	

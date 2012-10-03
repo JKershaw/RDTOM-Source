@@ -39,7 +39,17 @@ if (!$error_string && ($_POST['forgottenemailform'] == "yes"))
 			// step 2
 			
 			// fetch the forgetful user, will throw error if user not found
-			$forgetful_user = $mydb->get_user_from_email($_POST['email']);
+			
+			// is the thing used an email address?
+			if (filter_var($_POST['email'], FILTER_VALIDATE_EMAIL ))
+			{
+				$forgetful_user = $mydb->get_user_from_email($_POST['email']);
+			}
+			else
+			{
+				$forgetful_user = $mydb->get_user_from_name($_POST['email']);
+			}
+			
 			
 			// function to save the reset token in the database & email the user
 			set_up_reset_token($forgetful_user);
@@ -47,7 +57,7 @@ if (!$error_string && ($_POST['forgottenemailform'] == "yes"))
 		}
 		catch (Exception $e) 
 		{
-			$error_string = "Sorry, that email address is not associated with any account. Please try again.";
+			$error_string = "Sorry, that email address or username is not associated with any account. Please try again.";
 		}
 	}
 }
@@ -117,7 +127,7 @@ if (!$url_array[1])
 		<form method="post" action="<?php echo get_site_URL(); ?>passwordreset" name="formforgottenemail">
 			<input type="hidden"  name="forgottenemailform" id="forgottenemailform" value="yes"></input>
 			<p>
-				Email:<br />
+				Email or Name:<br />
 				<input class="input_text" type="text" id="email" name = "email">
 			</p>
 			

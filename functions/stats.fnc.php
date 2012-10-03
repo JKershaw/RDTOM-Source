@@ -176,10 +176,10 @@ function return_stats_user_progress($user = false)
 	foreach ($data as $week_key => $data_point)
 	{
 		$data[$week_key]["total"] = $data[$week_key]["correct"] + $data[$week_key]["wrong"];
-		if ($data[$week_key]["total"] > 0)
-		{
-			$data[$week_key]["perc"] = number_format(($data[$week_key]["correct"] / $data[$week_key]["total"]) * 100, 2);
-		}
+		//if ($data[$week_key]["total"] > 0)
+		//{
+		//	$data[$week_key]["perc"] = number_format(($data[$week_key]["correct"] / $data[$week_key]["total"]) * 100, 2);
+		//}
 	}
 	
 
@@ -190,13 +190,13 @@ function return_stats_user_progress($user = false)
 		if (!$data[$i])
 		{
 			$data[$i]["total"] = 0;
-			$data[$i]["perc"] = 0;
+			//$data[$i]["perc"] = 0;
 			$data[$i]["correct"] = 0;
 			$data[$i]["wrong"] = 0;
 		}
 		
 		settype($data[$i]["total"], "integer");
-		settype($data[$i]["perc"], "integer");
+		//settype($data[$i]["perc"], "integer");
 		settype($data[$i]["correct"], "integer");
 		settype($data[$i]["wrong"], "integer");
 		
@@ -238,8 +238,10 @@ function return_stats_user_progress($user = false)
 			$week_string = ($current_week_value - $week_key) . " weeks ago";
 		}
 		
+		//$data_array[] = "
+		//['" . $week_string . "', " . $data[$week_key]["wrong"] . ", " . $data[$week_key]["correct"] . ", " . $data[$week_key]["perc"] . "]";
 		$data_array[] = "
-		['" . $week_string . "', " . $data[$week_key]["wrong"] . ", " . $data[$week_key]["correct"] . ", " . $data[$week_key]["perc"] . "]";
+		['" . $week_string . "', " . $data[$week_key]["wrong"] . ", " . $data[$week_key]["correct"] . "]";
 	}
 	
 	$data_string = implode(", ", $data_array);
@@ -248,7 +250,7 @@ function return_stats_user_progress($user = false)
 	// create the chart
 	$drawChart_string = '
 	var data' . $user_ID . ' = google.visualization.arrayToDataTable([
-          [\'Week\', \'Wrong\', \'Correct\', \'Percentage Correct\'],
+          [\'Week\', \'Wrong\', \'Correct\'],
           ' . $data_string . '
         ]);
 
@@ -413,7 +415,7 @@ function return_user_questions_sections($user_ID = false)
 	}
 	else
 	{
-		$user_questions_sections = $mydb->get_sections_array_from_User_ID($user->get_ID());
+		$user_questions_sections = get_sections_array_from_User_ID($user->get_ID());
 		$fetched_user_questions_sections = true;
 	}
 	

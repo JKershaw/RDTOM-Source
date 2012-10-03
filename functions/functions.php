@@ -16,7 +16,7 @@ function save_log($log_name, $request_string, $question_ID = null)
 	if ($log_name == "report")
 	{
 		$report = new report(-1, get_ip(), gmmktime(), $question_ID, 0, $request_string, REPORT_OPEN);
-		$mydb->set_report($report);
+		set_report($report);
 	}
 
 }
