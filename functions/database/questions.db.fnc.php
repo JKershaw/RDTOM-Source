@@ -444,7 +444,7 @@ function get_question_correct_perc($req_ID)
 
 }
 
-function add_question($req_text, $req_section, $req_notes, $req_source)
+function add_question($req_text, $req_section, $req_notes)
 {
 	global $myPDO;
 	
@@ -489,7 +489,7 @@ function rebuild_questions_holes_map()
 	$mydb->run_multi_query($query);
 }
 
-function edit_question($req_ID, $req_text, $req_section, $req_notes, $req_source)
+function edit_question($req_ID, $req_text, $req_section, $req_notes)
 {
 	global $myPDO;
 	

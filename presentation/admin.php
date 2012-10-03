@@ -328,21 +328,6 @@ include("header.php");
 				<tr>
 					<td style="width:200px">Source:</td>
 					<td>
-						<input type="text"  id="question_source" name="question_source" style="width:500px" value="<?php 
-						if ($question)
-						{
-							echo htmlentities(stripslashes($question->get_Source()));
-						}
-						else
-						{
-							echo htmlentities(addslashes($_POST['question_source']));
-						}
-						?>"></input>
-					</td>
-				</tr>
-				<tr>
-					<td style="width:200px">Source:</td>
-					<td>
 						<?php 
 							echo get_admin_terms_checkboxes("source", $question);
 						?>
@@ -355,6 +340,14 @@ include("header.php");
 					<td>
 						<?php 
 							echo get_admin_terms_checkboxes("rule-set", $question);
+						?>
+					</td>
+				</tr>			
+				<tr>
+					<td style="width:200px">Tags:</td>
+					<td>
+						<?php 
+							echo get_admin_terms_checkboxes("tag", $question);
 						?>
 					</td>
 				</tr>
