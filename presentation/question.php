@@ -33,7 +33,7 @@ else
 		$quick_answer[] = $answer->get_ID();
 		
 		echo "<li>";
-		echo "<a onclick=\"select_answer(" . $answer->get_ID() . ");\">" . htmlentities(stripslashes($answer->get_Text())) . "</a>";
+		echo "<a  class=\"mobilebutton\"  onclick=\"select_answer(" . $answer->get_ID() . ");\">" . htmlentities(stripslashes($answer->get_Text())) . "</a>";
 		if ($answer->is_correct())
 		{
 			$section_string = "";
@@ -141,7 +141,7 @@ else
 
 
 <p>
-	<a class="button" href="<?php echo get_site_URL(); ?>">New Question</a>
+	<a class="button mobilebutton" href="<?php echo get_site_URL(); ?>">New Question</a>
 </p>
 
 

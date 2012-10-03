@@ -96,17 +96,12 @@ function ajax_save_response()
 	settype($question_ID, "integer");
 	settype($response_ID, "integer");
 	
-	// get the question ID
-	if (!$mydb->is_question_ID_valid($question_ID))
-	{
-		throw new exception("ajax.php error, no question found with ID " . $_POST['question_ID']);
-		return "error";
-	}
+	// get the question from the ID (tests if ID is valid)
+	$question = get_question_from_ID($question_ID);
 	
 	// get if the answer is correct (will throw exception is invalid ID)
-	$response_is_correct = $mydb->is_answer_correct_from_ID($response_ID);
+	$response_is_correct = is_answer_correct_from_ID($response_ID);
 	
-	//$answer = $mydb->get_answer_from_ID($_POST['response_ID']);
 	if (is_logged_in())
 	{
 		global $user;
@@ -216,8 +211,7 @@ function ajax_count_minutly_responses()
 
 function ajax_count_questions()
 {
-	global $mydb;
-	return $mydb->get_question_count();
+	return get_question_count();
 }
 
 function ajax_count_answers()
@@ -381,7 +375,7 @@ function ajax_get_poll_results()
 function ajax_get_admin_questions_list()
 {
 	global $mydb;
-	$questions = $mydb->get_questions();
+	$questions = get_questions();
 	foreach ($questions as $question)
 	{
 		$out .= $question->get_Section() . " <a href=\"" . get_site_URL() . "admin/edit/" . $question->get_ID() . "#edit_question\">" . htmlentities(stripslashes($question->get_Text())) . "</a><br />";

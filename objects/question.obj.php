@@ -9,6 +9,7 @@ class question
 	private $Source;
 	
 	private $SuccessRate;
+	private $ResponseCount;
 	private $answers_array;
 	
 	function __construct(
@@ -16,15 +17,13 @@ class question
 		$req_Text,
 		$req_Section,
 		$req_Added,
-		$req_Notes,
-		$req_Source)
+		$req_Notes)
 	{
 		$this->ID = $req_ID;
 		$this->Text = $req_Text;
 		$this->Section = $req_Section;
 		$this->Added = $req_Added;
 		$this->Notes = $req_Notes;
-		$this->Source = $req_Source;
 	}
 	
 	public function get_Text()
@@ -39,7 +38,15 @@ class question
 
 	public function get_Source()
 	{
-		return $this->Source;
+		$source_terms = $this->get_terms("source");
+		if ($source_terms)
+		{
+			foreach($source_terms as $source_term)
+			{
+				return $source_term->get_Name();
+			}
+		}
+		return false;
 	}
 
 	public function get_Section()
@@ -88,7 +95,7 @@ class question
 	public function get_Answers($max_num_answers = 4)
 	{
 		global $mydb;
-		$answers = $mydb->get_answers_from_question_ID($this->ID);
+		$answers = get_answers_from_question_ID($this->ID);
 		
 		
 		// now we have all the answers, split them into correct and wrong arrays.
@@ -167,7 +174,6 @@ class question
 				{
 					return "http://wftda.com/rules/20100526/section/" . $section_array[0] . "." . $section_array[1] . "." . $section_array[2];
 				}
-				
 			}
 		}
 		
@@ -177,11 +183,11 @@ class question
 	public function get_all_Answers($max_num_answers = 4, $get_ResponseRate = false)
 	{
 		global $mydb;
-		$answers_array = $mydb->get_answers_from_question_ID($this->ID);
+		$answers_array = get_answers_from_question_ID($this->ID);
 		
 		if ($get_ResponseRate)
 		{
-			$Responseperc_array = $mydb->get_answer_response_perc($this->ID);
+			$Responseperc_array = get_answer_response_perc($this->ID);
 			
 			$sum_count = 0;
 			if ($Responseperc_array)
@@ -211,12 +217,50 @@ class question
 	
 	public function get_SuccessRate()
 	{
+		if (!$this->SuccessRate)
+		{
+			$correct_perc = (integer)get_question_correct_perc($this->get_ID());
+			$this->set_SuccessRate($correct_perc);
+
+		}
 		return $this->SuccessRate;
+	}
+	
+	public function set_ResponseCount($req_ResponseCount)
+	{
+		settype($req_ResponseCount, "integer");
+		$this->ResponseCount = $req_ResponseCount;
+	}
+	
+	public function get_ResponseCount()
+	{
+		global $mydb;
+		if (!$this->ResponseCount)
+		{
+			$ResponseCount = (integer)$mydb->get_response_count_from_Question_ID($this->get_ID());
+			$this->set_ResponseCount($ResponseCount);
+		}
+		return $this->ResponseCount;
 	}
 	
 	public function is_answers_different($req_new_answers)
 	{
-		$existing_answers = $this->get_all_Answers();
+		// There may be no answers in the database
+		try {
+			$existing_answers = $this->get_all_Answers();
+		} 
+		catch (Exception $e) 
+		{
+			if ($req_new_answers)
+			{
+				return true;
+			} 
+			else 
+			{
+				return false;
+			}
+		}
+		
 
 		// are the numbers different?
 		if (count($existing_answers) != count($req_new_answers))
@@ -250,5 +294,19 @@ class question
 	public function get_URL()
 	{
 		return get_site_URL() . "question/" . $this->ID;
+	}
+	
+	public function get_terms($req_taxonomy)
+	{
+		global $mydb;
+		$terms = $mydb->get_terms($req_taxonomy, $this->ID);
+		if ($terms)
+		{
+			return $terms;
+		}
+		else
+		{
+			return false;
+		}
 	}
 }

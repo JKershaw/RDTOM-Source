@@ -6,7 +6,6 @@
  * Built to help Roller Derby players learn the rules
  */
 
-define("NUMBER_OF_ANSWERS" , 10);
 
 // if the user isn't an admin, show an error message
 if (!is_admin())
@@ -24,55 +23,78 @@ if ($_POST)
 	// are we editing a question or adding a new one?
 	if ($_POST['question_id'] > 0)
 	{
-		// editing a post
-		
-		// save all the answers submitted into an array
-		foreach ($_POST['answer'] as $id => $answer)
+		if ($_POST['question_text'] == "delete")
 		{
-			if (trim($answer))
-			{
-				$is_correct = $_POST['correct'][$id] == 1;
-				$temp_answer_array[] = new answer(-1, $_POST['question_id'], trim($answer), $is_correct);
-			}
+			$mydb->remove_question_and_answers($_POST['question_id']);
+			$message .= "Deleted. ";
+			$question_deleted = true;
+			
 		}
-		
-		$tmp_question = $mydb->get_question_from_ID($_POST['question_id']);
-		
-		// have the answers changed?
-		if ($tmp_question->is_answers_different($temp_answer_array))
+		else
 		{
-			
-			// delete existing post & questions
-			$mydb->remove_answers_given_questionID($_POST['question_id']);
-			$message = "Answers deleted! ";
-			
-			// save all the answers
+			// editing a post
+
+			// save all the answers submitted into an array
 			foreach ($_POST['answer'] as $id => $answer)
 			{
 				if (trim($answer))
 				{
 					$is_correct = $_POST['correct'][$id] == 1;
-					$mydb->add_answer($_POST['question_id'], trim($answer), $is_correct);
+					$temp_answer_array[] = new answer(-1, $_POST['question_id'], trim($answer), $is_correct);
 				}
 			}
-			$message .= "Answers saved! ";	
+			
+			$tmp_question = get_question_from_ID($_POST['question_id']);
+			
+			// have the answers changed? There may not be any answers.
+			if ($temp_answer_array && ($tmp_question->is_answers_different($temp_answer_array)))
+			{
+				
+				// delete existing post & questions
+				$mydb->remove_answers_given_questionID($tmp_question->get_ID());
+				$message = "Answers deleted! ";
+				
+				// save all the answers
+				foreach ($_POST['answer'] as $id => $answer)
+				{
+					if (trim($answer))
+					{
+						$is_correct = $_POST['correct'][$id] == 1;
+						add_answer($tmp_question->get_ID(), trim($answer), $is_correct);
+					}
+				}
+				$message .= "Answers saved! ";	
+			}
+			else
+			{
+				$message .= "Answers unchanged! ";
+			}
+			
+			// edit the question
+			edit_question($tmp_question->get_ID(), $_POST['question_text'], $_POST['question_section'], trim($_POST['question_notes']));
+			$message .= "Question edited! ";	
+			
+			// check the applicable rule set
+			// remove all relationships
+			$mydb->remove_relationship_given_Question_ID($tmp_question->get_ID());
+			$message .= "Relationships Removed! ";	
+			
+			// build new ones
+			if ($_POST['term_checkbox'])
+			{
+				foreach ($_POST['term_checkbox'] as $term_ID => $data)
+				{
+					$mydb->add_relationship($tmp_question->get_ID(), $term_ID);
+				}
+				$message .= "Relationships Rebuilt! ";	
+			}
 		}
-		else
-		{
-			$message = "Answers unchanged! ";
-		}
-		
-		// edit the question
-		$mydb->edit_question($_POST['question_id'], $_POST['question_text'], $_POST['question_section'], trim($_POST['question_notes']), trim($_POST['question_source']));
-		$message .= "Question edited! ";	
-
-		
 	}
 	else 
 	{
 		// Adding a new question
 		// try to save the question
-		$question_id = $mydb->add_question($_POST['question_text'], $_POST['question_section'], trim($_POST['question_notes']), trim($_POST['question_source']));
+		$question_id = add_question($_POST['question_text'], $_POST['question_section'], trim($_POST['question_notes']));
 		
 		// save all the answers
 		foreach ($_POST['answer'] as $id => $answer)
@@ -80,10 +102,20 @@ if ($_POST)
 			if (trim($answer))
 			{
 				$is_correct = $_POST['correct'][$id] == 1;
-				$mydb->add_answer($question_id, $answer, $is_correct);
+				add_answer($question_id, $answer, $is_correct);
 			}
 		}
 		$message .= "Question saved!";
+		
+		// build new relationships
+		if ($_POST['term_checkbox'])
+		{
+			foreach ($_POST['term_checkbox'] as $term_ID => $data)
+			{
+				$mydb->add_relationship($question_id, $term_ID);
+			}
+			$message .= "Relationships Built! ";	
+		}
 	}
 }
 
@@ -113,17 +145,26 @@ if ($_GET['update_report'])
 		$report->set_Status(REPORT_NOACTION);
 	}
 	
-	$mydb->set_report($report);
+	set_report($report);
 	
 	$message .= "Report updated!";
 }
 
 
 // is a question being edited
-if ($url_array[1] == "edit")
+if (($url_array[1] == "edit") && !$question_deleted)
 {
-	$question = $mydb->get_question_from_ID($url_array[2]);
-	$answers = $question->get_all_Answers();
+	$question = get_question_from_ID($url_array[2]);
+	try {	
+		$answers = $question->get_all_Answers();
+	} 
+		catch (Exception $e) 
+	{
+		$message .= $e->getMessage();
+	}
+	
+	// get the reports for this question
+	$reports_question = $mydb->get_reports_from_question_ID($question->get_ID(), REPORT_OPEN);
 }
 
 // get the open reports (and the value for the menu)
@@ -134,14 +175,10 @@ if ($reports_open && count($reports_open) > 0)
 	$reports_menu_string = " (" . get_open_report_count($reports_open) . ")";
 }
 
-// get the reports if there's a given question
-if ($question)
-{
-	$reports_question = $mydb->get_reports_from_question_ID($question->get_ID(), REPORT_OPEN);
-}
+
 
 // display the page
-set_page_subtitle("Turn left and administer all the questions.");
+set_page_subtitle("Turn left and administer all the things.");
 include("header.php"); 
 ?>
 		<?php 
@@ -176,7 +213,7 @@ include("header.php");
 			}
 			?>:</h3>
 
-		<form id="editquestionform" method="post" action="<?php 
+		<form id="editquestionform" name="editquestionform" method="post" action="<?php 
 			if ($question)
 			{
 				echo get_site_URL() . "admin/edit/" . $question->get_ID();
@@ -291,26 +328,54 @@ include("header.php");
 				<tr>
 					<td style="width:200px">Source:</td>
 					<td>
-						<input type="text"  id="question_source" name="question_source" style="width:500px" value="<?php 
+						<?php 
+							echo get_admin_terms_checkboxes("source", $question);
+						?>
+						
+						
+					</td>
+				</tr>				
+				<tr>
+					<td style="width:200px">Applicable Rule Set:</td>
+					<td>
+						<?php 
+							echo get_admin_terms_checkboxes("rule-set", $question);
+						?>
+					</td>
+				</tr>			
+				<tr>
+					<td style="width:200px">Tags:</td>
+					<td>
+						<?php 
+							echo get_admin_terms_checkboxes("tag", $question);
+						?>
+					</td>
+				</tr>
+				<tr>
+					<td></td>
+					<td><a class="button" onclick="newquestionvalidation('editquestionform');return false;"/><?php 
 						if ($question)
 						{
-							echo htmlentities(stripslashes($question->get_Source()));
+							echo "Edit";
 						}
-						else
+						else 
 						{
-							echo htmlentities(addslashes($_POST['question_source']));
+							echo "Add";
 						}
-						?>"></input>
+						?> Question</a>
 					</td>
 				</tr>
 				<tr>
 					<td>Remember answers:</td>
 					<td><input <?php if ($_POST['remeberanswers']) { echo " checked"; }?> type="checkbox" value="yes" name="remeberanswers"/></td>
 				</tr>
+				<?php  if($question)
+				{?>
 				<tr>
-					<td></td>
-					<td><input type="submit" value="Save" onclick="newquestionvalidation('editquestionform');return false;"/></td>
+					<td>Success rate:</td>
+					<td><?php echo "<span style=\"color: " . get_colour_from_percentage($question->get_SuccessRate()) . "\">" . $question->get_SuccessRate() . "%</span> (" . number_format($question->get_ResponseCount()) . " responses)"; ?></td>
 				</tr>
+				<?php  } ?>
 			</table>
 		</form>
 		
@@ -427,6 +492,66 @@ include("header.php");
 			echo "<br />" . $tmp_user->get_Name() . "<br />" .  return_stats_user_progress($tmp_user);
 		}
 		*/
+		
+		
+		$params = array(
+				"tag" => "Test Question",
+				"rule-set" => "WFTDA6"
+		);
+		
+		print_r($params);
+		echo "<br />";
+		try {
+			
+			$questions = get_questions($params);
+		
+			foreach ($questions as $question)
+			{
+				echo " " . $question->get_ID();
+			}
+		} catch (Exception $e) {
+			echo "No questions found";
+		}
+		echo "<br />";
+		
+		$params = array(
+				"tag" => "Test Question"
+		);
+		
+		print_r($params);
+		echo "<br />";
+		try {
+			
+			$questions = get_questions($params);
+		
+			foreach ($questions as $question)
+			{
+				echo " " . $question->get_ID();
+			}
+		} catch (Exception $e) {
+			echo "No questions found";
+		}
+		echo "<br />";
+		
+		$params = array(
+				"rule-set" => "WFTDA6"
+		);
+		
+		print_r($params);
+		echo "<br />";
+		try {
+			
+			$questions = get_questions($params);
+		
+			foreach ($questions as $question)
+			{
+				echo " " . $question->get_ID();
+			}
+		} catch (Exception $e) {
+			echo "No questions found";
+		}
+		echo "<br />";
+		
 		?>
 
 	</div>
@@ -538,7 +663,7 @@ include("header.php");
 			}
 			else
 			{
-				formname.submit();
+				document.editquestionform.submit();
 			}
 		}
 

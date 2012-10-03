@@ -32,7 +32,7 @@ elseif ($_POST['signupform'] == "yes")
 }
 elseif ($_POST['disassociateform'] == "yes")
 {
-	$mydb->disassociate_responses($user->get_ID());
+	$mydb->responses_disassociate($user->get_ID());
 	$profile_message = "Answers disassociated!";
 	
 }

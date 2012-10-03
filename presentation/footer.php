@@ -80,7 +80,7 @@
 	<?php if (is_question()) {?>
 				For reference, this is question <a href="<?php echo get_site_URL(); ?>question/<?php echo $question->get_ID(); ?>"><strong>#<?php echo $question->get_ID(); ?></strong></a>. 
 	<?php } ?>	
-				The database currently has <strong><?php echo number_format($mydb->get_question_count()); ?></strong> questions in it. <a href="<?php echo get_site_URL(); ?>questions">View them all</a>. 
+				The database currently has <strong><?php echo number_format(get_question_count()); ?></strong> questions in it. <a href="<?php echo get_site_URL(); ?>questions">View them all</a>. 
 				<br /><br />
 				This site is made and maintained by me, Sausage Roller. I skate with New Wheeled Order, the Manchester Roller Derby league mens team. I'll be adding more features as I go (things like individual score tracking, difficulty, tests and what-not) so you should check back every so often. 
 				Feel free to send me requests and feedback via <a href="mailto:contact@rollerderbytestomatic.com ?Subject=Roller%20Derby%20Test%20O'Matic">email</a>, <a href="http://www.facebook.com/RollerDerbyTestOMatic">Facebook</a>, <a href="http://twitter.com/#!/wardrox">Twitter</a>, <a href="http://wardrox.tumblr.com/ask">Tumblr</a> or <a href="https://plus.google.com/108172735871267076610/posts">Google+</a>. <a onclick="$('#p_about_link').fadeIn();$('#p_about').hide();">Hide</a>

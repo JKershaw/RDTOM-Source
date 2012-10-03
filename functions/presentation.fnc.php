@@ -241,7 +241,7 @@ function get_recent_wrong_questions()
 	global $user, $mydb;
 	// get all the incorrect responses from the past 2 weeks
 	
-	$questions = $mydb->get_questions_from_User_ID($user->get_ID(), 20, 1209600, true);
+	$questions = get_questions_from_User_ID($user->get_ID(), 20, 1209600, true);
 	
 	if ($questions)
 	{
@@ -268,7 +268,7 @@ function get_recent_questions()
 	global $user, $mydb;
 	// get all the  responses from the past 24 hours
 	
-	$questions = $mydb->get_questions_from_User_ID($user->get_ID(), 20, 86400, false);
+	$questions = get_questions_from_User_ID($user->get_ID(), 20, 86400, false);
 	
 	$out .= "<h3>All the questions you've answered in the past 24 hours</h3>";
 	
@@ -519,5 +519,46 @@ function get_open_report_count_string()
 	{
 		return "";
 	}
+}
+
+function get_admin_terms_checkboxes($term, $question = false)
+{
+	global $mydb;
+	
+	$terms = $mydb->get_terms($term);
+	
+	if ($terms)
+	{
+		if ($question)
+		{
+			$question_terms = $question->get_terms($term);
+		}
+		
+		foreach($terms as $term)
+		{
+			$selected_string = "";
+			if ($question_terms)
+			{
+				// is this rule set already chosen for this question?
+				
+				foreach ($question_terms as $question_term)
+				{
+					if ($question_term->get_ID() == $term->get_ID())
+					{
+						$selected_string = "checked";
+					}
+				}
+			}
+			
+			$out .= "<input $selected_string type=\"checkbox\" id=\"term_checkbox[" . $term->get_ID() . "]\" name=\"term_checkbox[" . $term->get_ID() . "]\">" . htmlentities(stripslashes($term->get_Name())) . "<br />";
+		}
+		
+	}
+	else
+	{
+		$out .= "No terms found";
+	}	
+	
+	return $out;
 }
 ?>
