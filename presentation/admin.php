@@ -71,7 +71,7 @@ if ($_POST)
 			}
 			
 			// edit the question
-			edit_question($tmp_question->get_ID(), $_POST['question_text'], $_POST['question_section'], trim($_POST['question_notes']), trim($_POST['question_source']));
+			edit_question($tmp_question->get_ID(), $_POST['question_text'], $_POST['question_section'], trim($_POST['question_notes']));
 			$message .= "Question edited! ";	
 			
 			// check the applicable rule set
@@ -80,9 +80,9 @@ if ($_POST)
 			$message .= "Relationships Removed! ";	
 			
 			// build new ones
-			if ($_POST['question_ruleset'])
+			if ($_POST['term_checkbox'])
 			{
-				foreach ($_POST['question_ruleset'] as $term_ID => $data)
+				foreach ($_POST['term_checkbox'] as $term_ID => $data)
 				{
 					$mydb->add_relationship($tmp_question->get_ID(), $term_ID);
 				}
@@ -94,7 +94,7 @@ if ($_POST)
 	{
 		// Adding a new question
 		// try to save the question
-		$question_id = add_question($_POST['question_text'], $_POST['question_section'], trim($_POST['question_notes']), trim($_POST['question_source']));
+		$question_id = add_question($_POST['question_text'], $_POST['question_section'], trim($_POST['question_notes']));
 		
 		// save all the answers
 		foreach ($_POST['answer'] as $id => $answer)
@@ -108,9 +108,9 @@ if ($_POST)
 		$message .= "Question saved!";
 		
 		// build new relationships
-		if ($_POST['question_ruleset'])
+		if ($_POST['term_checkbox'])
 		{
-			foreach ($_POST['question_ruleset'] as $term_ID => $data)
+			foreach ($_POST['term_checkbox'] as $term_ID => $data)
 			{
 				$mydb->add_relationship($question_id, $term_ID);
 			}
@@ -145,7 +145,7 @@ if ($_GET['update_report'])
 		$report->set_Status(REPORT_NOACTION);
 	}
 	
-	$mydb->set_report($report);
+	set_report($report);
 	
 	$message .= "Report updated!";
 }
@@ -341,45 +341,21 @@ include("header.php");
 					</td>
 				</tr>
 				<tr>
-					<td style="width:200px">Applicable Rule Set:</td>
+					<td style="width:200px">Source:</td>
 					<td>
 						<?php 
-							$ruleset_terms = $mydb->get_terms("rule-set");
-							
-							if ($ruleset_terms)
-							{
-								if ($question)
-								{
-									$question_rulesets = $question->get_terms("rule-set");
-								}
-								
-								foreach($ruleset_terms as $ruleset_term)
-								{
-									$selected_string = "";
-									if ($question_rulesets)
-									{
-										// is this rule set already chosen for this question?
-										
-										foreach ($question_rulesets as $question_ruleset)
-										{
-											if ($question_ruleset->get_ID() == $ruleset_term->get_ID())
-											{
-												$selected_string = "checked";
-											}
-										}
-									}
-									
-									echo "<input $selected_string type=\"checkbox\" id=\"question_ruleset[" . $ruleset_term->get_ID() . "]\" name=\"question_ruleset[" . $ruleset_term->get_ID() . "]\">" . htmlentities(stripslashes($ruleset_term->get_Name())) . "<br />";
-								}
-								
-							}
-							else
-							{
-								echo "No rule sets found";
-							}
+							echo get_admin_terms_checkboxes("source", $question);
 						?>
 						
 						
+					</td>
+				</tr>				
+				<tr>
+					<td style="width:200px">Applicable Rule Set:</td>
+					<td>
+						<?php 
+							echo get_admin_terms_checkboxes("rule-set", $question);
+						?>
 					</td>
 				</tr>
 				<tr>
@@ -400,11 +376,13 @@ include("header.php");
 					<td>Remember answers:</td>
 					<td><input <?php if ($_POST['remeberanswers']) { echo " checked"; }?> type="checkbox" value="yes" name="remeberanswers"/></td>
 				</tr>
+				<?php  if($question)
+				{?>
 				<tr>
 					<td>Success rate:</td>
 					<td><?php echo "<span style=\"color: " . get_colour_from_percentage($question->get_SuccessRate()) . "\">" . $question->get_SuccessRate() . "%</span> (" . number_format($question->get_ResponseCount()) . " responses)"; ?></td>
 				</tr>
-				
+				<?php  } ?>
 			</table>
 		</form>
 		
@@ -521,6 +499,66 @@ include("header.php");
 			echo "<br />" . $tmp_user->get_Name() . "<br />" .  return_stats_user_progress($tmp_user);
 		}
 		*/
+		
+		
+		$params = array(
+				"tag" => "Test Question",
+				"rule-set" => "WFTDA6"
+		);
+		
+		print_r($params);
+		echo "<br />";
+		try {
+			
+			$questions = get_questions($params);
+		
+			foreach ($questions as $question)
+			{
+				echo " " . $question->get_ID();
+			}
+		} catch (Exception $e) {
+			echo "No questions found";
+		}
+		echo "<br />";
+		
+		$params = array(
+				"tag" => "Test Question"
+		);
+		
+		print_r($params);
+		echo "<br />";
+		try {
+			
+			$questions = get_questions($params);
+		
+			foreach ($questions as $question)
+			{
+				echo " " . $question->get_ID();
+			}
+		} catch (Exception $e) {
+			echo "No questions found";
+		}
+		echo "<br />";
+		
+		$params = array(
+				"rule-set" => "WFTDA6"
+		);
+		
+		print_r($params);
+		echo "<br />";
+		try {
+			
+			$questions = get_questions($params);
+		
+			foreach ($questions as $question)
+			{
+				echo " " . $question->get_ID();
+			}
+		} catch (Exception $e) {
+			echo "No questions found";
+		}
+		echo "<br />";
+		
 		?>
 
 	</div>

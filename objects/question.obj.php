@@ -17,15 +17,13 @@ class question
 		$req_Text,
 		$req_Section,
 		$req_Added,
-		$req_Notes,
-		$req_Source)
+		$req_Notes)
 	{
 		$this->ID = $req_ID;
 		$this->Text = $req_Text;
 		$this->Section = $req_Section;
 		$this->Added = $req_Added;
 		$this->Notes = $req_Notes;
-		$this->Source = $req_Source;
 	}
 	
 	public function get_Text()
@@ -40,7 +38,15 @@ class question
 
 	public function get_Source()
 	{
-		return $this->Source;
+		$source_terms = $this->get_terms("source");
+		if ($source_terms)
+		{
+			foreach($source_terms as $source_term)
+			{
+				return $source_term->get_Name();
+			}
+		}
+		return false;
 	}
 
 	public function get_Section()

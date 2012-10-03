@@ -6,8 +6,7 @@ function get_question_from_array($req_array)
 		$req_array['Text'],
 		$req_array['Section'],
 		$req_array['Added'],
-		$req_array['Notes'],
-		$req_array['Source']);
+		$req_array['Notes']);
 }
 	
 function get_question_from_ID($req_ID)
@@ -124,13 +123,13 @@ function get_question_random_simple()
 	return $question;
 }
 
-function get_questions($taxonomy_array = false)
+function get_questions($terms_array = false)
 {
 	global $myPDO;
 	
-	if ($taxonomy_array)
+	if ($terms_array)
 	{
-		// TODO the array holds a list of taxonomys and values to use in the search for questions
+		// the array holds a list of taxonomys and values to use in the search for questions
 		/*
 		 * for example:
 		 * (
@@ -140,13 +139,127 @@ function get_questions($taxonomy_array = false)
 		 * 
 		 * would return every question in the WFTDA6 rule set which is suitable for being a test question
 		 */
+	
+		/*
+		Successful multiple taxonomies OR situation
+		
+		SELECT 
+			* 
+		FROM 
+			rdtom_questions
+		JOIN
+		(
+			SELECT 
+				Question_ID
+			FROM 
+				rdtom_relationships
+			JOIN
+			(
+				SELECT 
+				ID as term_ID 
+				FROM 
+					rdtom_terms 
+				WHERE 
+					(taxonomy = "rule-set" AND name = "WFTDA5") OR 
+					(taxonomy = "tag" AND name = "Test Question")
+			) T 
+			ON 
+				T.term_ID = rdtom_relationships.Term_ID
+		) R 
+		ON 
+			R.Question_ID = rdtom_questions.ID
+		
+		
+		 */
+		
+		/*
+		Successful multiple taxonomies AND situation
+		SELECT 
+			* 
+		FROM 
+			rdtom_questions
+		JOIN
+		(
+			SELECT
+			*
+			FROM
+			(
+				SELECT 
+					Question_ID, count(*) as count
+				FROM 
+					rdtom_relationships
+				JOIN
+				(
+					SELECT 
+					ID as term_ID 
+					FROM 
+						rdtom_terms 
+					WHERE 
+						(taxonomy = "rule-set" AND name = "WFTDA5") OR 
+						(taxonomy = "tag" AND name = "Test Question")
+				) T 
+				ON 
+					T.term_ID = rdtom_relationships.Term_ID
+				
+				GROUP BY Question_ID
+			) C
+			WHERE C.count = 2
+		) R 
+		ON 
+			R.Question_ID = rdtom_questions.ID
+		
+		
+		 */
+		
+		foreach ($terms_array as $taxonomy => $taxonomy_name)
+		{
+			$taxonomy_query_string[] = "(rdtom_terms.taxonomy = '$taxonomy' AND rdtom_terms.name = '$taxonomy_name')";
+		}
+		
+		$taxonomy_query_string = implode( " OR ", $taxonomy_query_string);
+		
+		$query_string = ("
+			SELECT 
+			* 
+			FROM 
+				rdtom_questions
+			JOIN
+			(
+				SELECT
+				*
+				FROM
+				(
+					SELECT 
+						Question_ID, count(*) as count
+					FROM 
+						rdtom_relationships
+					JOIN
+					(
+						SELECT 
+						ID as term_ID 
+						FROM 
+							rdtom_terms 
+						WHERE 
+							" . $taxonomy_query_string . "
+					) T 
+					ON 
+						T.term_ID = rdtom_relationships.Term_ID
+					
+					GROUP BY Question_ID
+				) C
+				WHERE C.count = " . count($terms_array) . "
+			) R 
+			ON 
+				R.Question_ID = rdtom_questions.ID");
+		
+		$statement = $myPDO->query($query_string);
 	}
 	else
 	{
 		$statement = $myPDO->query("SELECT * FROM rdtom_questions ORDER BY Section ASC");
-		$results = $statement->fetchAll(PDO::FETCH_ASSOC);
 	}
 	
+	$results = $statement->fetchAll(PDO::FETCH_ASSOC);
 	
 	if ($results)
 	{
@@ -342,23 +455,20 @@ function add_question($req_text, $req_section, $req_notes, $req_source)
 			Text,
 			Section,
 			Added,
-			Notes,
-			Source
+			Notes
 		)
 		VALUES 
 		(
 			:Text,
 			:Section,
 			" . gmmktime() . ",
-			:Notes,
-			:Source
+			:Notes
 		);");
 	
 	$statement->execute(array(
 			':Text'=>$req_text,
 			':Section'=>$req_section,
-			':Notes'=>$req_notes,
-			':Source'=>$req_source));
+			':Notes'=>$req_notes));
 
 	$lastInsertedID = $myPDO->lastInsertId();
 	
@@ -389,8 +499,7 @@ function edit_question($req_ID, $req_text, $req_section, $req_notes, $req_source
 	SET 
 		Text = :Text, 
 		Section = :Section, 
-		Notes = :Notes, 
-		Source = :Source 
+		Notes = :Notes
 	WHERE 
 		ID = :ID
 		");
@@ -399,7 +508,6 @@ function edit_question($req_ID, $req_text, $req_section, $req_notes, $req_source
 			':Text'=>$req_text,
 			':Section'=>$req_section,
 			':Notes'=>$req_notes,
-			':Source'=>$req_source,
 			':ID'=>$req_ID));
 	
 	rebuild_questions_holes_map();
