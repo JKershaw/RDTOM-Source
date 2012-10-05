@@ -421,6 +421,82 @@ function get_questions_hard($limit = 30, $easy = false)
 	}
 }
 
+
+function get_questions_difficulty_limit($lower_limit, $upper_limit)
+{
+	global $myPDO;
+
+	
+	// The query to get the IDs of hard questions
+	$statement = $myPDO->prepare("
+	SELECT 
+		* ,
+		correct_perc
+	FROM 
+		rdtom_questions
+	JOIN
+	(
+		SELECT
+	        Question_ID,
+			correct_perc
+	        
+	   FROM
+	        (
+	        SELECT 
+				Question_ID, 
+				ROUND((COUNT( CASE  `Correct` WHEN 1 THEN  `Correct` END ) / COUNT( * )) *10) *10 AS  'correct_perc'
+			FROM  
+				`rdtom_responses` 
+			GROUP BY 
+				`Question_ID` 
+			ORDER BY 
+				`correct_perc` ASC 
+			) O
+		WHERE 
+			O.correct_perc <= :upper_limit
+		AND 
+			O.correct_perc >= :lower_limit
+	) R
+	ON 
+		R.Question_ID = rdtom_questions.ID
+	");
+
+	$statement->bindValue(':lower_limit', $lower_limit, PDO::PARAM_INT);
+	$statement->bindValue(':upper_limit', $upper_limit, PDO::PARAM_INT);
+	$statement->execute();
+	$results = $statement->fetchAll();
+	
+	if ($results)
+	{
+		foreach ($results as $result)
+		{
+			$out[] = get_question_from_array($result);
+		}
+		return $out;
+	}
+	else
+	{
+		return false;
+	}
+}
+/*
+ * Query to fetch frequency of each percentage
+	SELECT
+        COUNT(Question_ID),
+        correct_perc
+        FROM
+        (SELECT 
+		Question_ID, 
+		ROUND((COUNT( CASE  `Correct` WHEN 1 THEN  `Correct` END ) / COUNT( * )) *100) AS  'correct_perc'
+	FROM  
+		`rdtom_responses` 
+	GROUP BY 
+		`Question_ID` 
+	ORDER BY 
+		`correct_perc` ASC 
+	) O
+        GROUP BY correct_perc
+ */
 function get_question_correct_perc($req_ID)
 {
 	global $myPDO;

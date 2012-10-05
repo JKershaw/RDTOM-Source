@@ -211,6 +211,22 @@ ol
 	top:1px;
 }
 
+.test_table
+{
+	border-collapse: collapse;
+	margin: 0 0 1em;
+}
+
+.test_table td
+{
+	border: 1px solid grey;
+}
+
+.test_table ol
+{
+	margin-left: 50px;
+}
+
 @media screen and (max-width: 800px) {
 	body 
 	{

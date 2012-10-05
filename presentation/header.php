@@ -17,7 +17,7 @@
 		
 		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script>
    		
-		<link rel="stylesheet" href="<?echo get_CSS_URL(); ?>?v=30April" type="text/css" />
+		<link rel="stylesheet" href="<?echo get_CSS_URL(); ?>" type="text/css" />
         <link rel="icon" href="<?echo get_theme_directory(); ?>favicon.gif" type="image/gif"/>
         <link rel="apple-touch-icon-precomposed" href="<?echo get_theme_directory(); ?>RDTOM_touch_icon.png"/>		
 		
