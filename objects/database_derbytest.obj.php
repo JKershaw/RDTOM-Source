@@ -869,6 +869,25 @@ class database_derbytest extends database
 		}
 	}
 	
+	public function get_term_from_taxonomy_and_name($req_taxonomy, $req_name)
+	{
+		$req_taxonomy = $this->mysql_res($req_taxonomy);
+		$req_name = $this->mysql_res($req_name);
+		
+		$query = "SELECT * FROM rdtom_terms WHERE taxonomy = '$req_taxonomy' AND name = '$req_name'";
+
+		$result = $this->get_row($query);
+		
+		if ($result)
+		{
+			return $this->get_term_from_array($result);
+		}
+		else
+		{
+			return false;
+		}
+	}
+	
 	public function get_term_from_array($req_array)
 	{
 		
@@ -884,6 +903,14 @@ class database_derbytest extends database
 		settype($req_question_ID, "integer");
 		
 		$query = "DELETE FROM rdtom_relationships WHERE Question_ID = '" .$req_question_ID . "'";
+		$this->run_query($query);
+	}
+	
+	public function remove_relationship_given_Term_ID($req_term_ID)
+	{
+		settype($req_term_ID, "integer");
+		
+		$query = "DELETE FROM rdtom_relationships WHERE Term_ID = '" .$req_term_ID . "'";
 		$this->run_query($query);
 	}
 	

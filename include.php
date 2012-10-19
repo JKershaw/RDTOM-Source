@@ -31,6 +31,7 @@ include('objects/response.obj.php');
 include('objects/report.obj.php');
 include('objects/user.obj.php');
 include('objects/term.obj.php');
+include('objects/test.obj.php');
 
 // Extra files
 include("functions/phpmailer/class.phpmailer.php");

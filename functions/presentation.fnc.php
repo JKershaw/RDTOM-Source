@@ -175,8 +175,15 @@ function get_site_URL()
 	return $site_URL;
 }
 
-function get_CSS_URL()
+function get_CSS_URL($type = false)
 {
+	if ($type)
+	{
+		if ($type == "print")
+		{
+			return get_site_URL() . "presentation/print.css";
+		}
+	}
 	return get_site_URL() . "presentation/style.css";
 }
 

@@ -92,7 +92,7 @@ class question
 		return $this->Notes;
 	}
 	
-	public function get_Answers($max_num_answers = 4)
+	public function get_Answers($max_num_answers = 4, $random_seed = false)
 	{
 		global $mydb;
 		$answers = get_answers_from_question_ID($this->ID);
@@ -123,6 +123,13 @@ class question
 		{
 			throw new exception("Error: No wrong answers found");
 		}
+	
+		
+		if ($random_seed)
+		{
+			srand($random_seed);
+		}
+		
 		
 		//select one right answer and $max_num_answers-1 wrong answers;
 		$out_answers[] = $correct_answers[array_rand($correct_answers)];

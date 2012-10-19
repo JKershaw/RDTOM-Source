@@ -557,6 +557,8 @@ function rebuild_questions_holes_map()
 {
 	global $mydb;
 	// delete then remake the holes map table
+	
+	//TODO instead of this, fetch an array of questions to go in (using a default array of parameters) and rebuild using that.
 	$query = "
 	DROP TABLE IF EXISTS rdtom_questions_holes_map;
 	CREATE TABLE rdtom_questions_holes_map ( row_id int not NULL primary key, Question_ID int not null);

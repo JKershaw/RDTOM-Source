@@ -167,6 +167,74 @@ if (($url_array[1] == "edit") && !$question_deleted)
 	$reports_question = $mydb->get_reports_from_question_ID($question->get_ID(), REPORT_OPEN);
 }
 
+
+// a recomptue request was recieved
+if ($_GET['recompute'])
+{
+	if ($_GET['recompute'] == "difficulty")
+	{
+		// remove all difficulty relationships
+		$difficulty_terms = $mydb->get_terms("difficulty");
+		
+		foreach($difficulty_terms as $term)
+		{
+			$mydb->remove_relationship_given_Term_ID($term->get_ID());
+		}
+		
+		$message .= "Difficulty relationships removed! ";
+		
+		// for each difficulty level get all questions - limits are calculated to the nearest 10
+		$all_beginner_questions = get_questions_difficulty_limit(80, 100);
+		$all_intermediate_questions = get_questions_difficulty_limit(40, 90);
+		$all_expert_questions = get_questions_difficulty_limit(0, 60);
+		
+		$message .= "All questions loaded (Beginner " . count($all_beginner_questions) . ", Intermediate: " . count($all_intermediate_questions) . ", Expert: " . count($all_expert_questions) . ")!";
+		
+		// for each question, add the difficulty relationship
+		$beginner_term = $mydb->get_term_from_taxonomy_and_name("difficulty", "Beginner");
+		$intermediate_term = $mydb->get_term_from_taxonomy_and_name("difficulty", "Intermediate");
+		$expert_term = $mydb->get_term_from_taxonomy_and_name("difficulty", "Expert");
+		
+		$message .= "Term IDs loaded (Beginner " . $beginner_term->get_ID() . ", Intermediate: " . $intermediate_term->get_ID() . ", Expert: " . $expert_term->get_ID() . ")!";
+		
+		foreach($all_beginner_questions as $question)
+		{
+			$mydb->add_relationship($question->get_ID(), $beginner_term->get_ID());
+		}
+		foreach($all_intermediate_questions as $question)
+		{
+			$mydb->add_relationship($question->get_ID(), $intermediate_term->get_ID());
+		}
+		foreach($all_expert_questions as $question)
+		{
+			$mydb->add_relationship($question->get_ID(), $expert_term->get_ID());
+		}
+		
+		$message .= " Relationships rebuilt!";
+
+	}	
+	/*
+	if ($_GET['recompute'] == "tagastest")
+	{	
+		// tag everything as a test question
+		
+		// delete all existing tags
+		$tag_question_term = $mydb->get_term_from_taxonomy_and_name("tag", "Test Question");
+		$mydb->remove_relationship_given_Term_ID($tag_question_term->get_ID());
+		
+		$message .= " Test Question tag removed from all questions!";
+		
+		$all_questions = get_questions();
+		
+		foreach($all_questions as $question)
+		{
+			$mydb->add_relationship($question->get_ID(), $tag_question_term->get_ID());
+		}
+		$message .= " Test Question tag added to all questions!";
+		
+	}
+	*/
+}
 // get the open reports (and the value for the menu)
 $reports_open = $mydb->get_reports(REPORT_OPEN);
 		
@@ -192,6 +260,7 @@ include("header.php");
 		<a class="button" onClick="show_page('all_questions');">All Questions</a>
 		<a class="button" onClick="show_page('logs');">Logs</a>
 		<!-- <a class="button" onClick="show_page('competition');">Competition</a> -->
+		<a class="button" onClick="show_page('recompute');">Recompute</a>
 		<a class="button" onClick="show_page('test');">Test</a>
 		<a class="button" onClick="show_page('admin');">Admin</a>
 	</p>
@@ -350,6 +419,14 @@ include("header.php");
 							echo get_admin_terms_checkboxes("tag", $question);
 						?>
 					</td>
+				</tr>			
+				<tr>
+					<td style="width:200px">Difficulty:</td>
+					<td>
+						<?php 
+							echo get_admin_terms_checkboxes("difficulty", $question);
+						?>
+					</td>
 				</tr>
 				<tr>
 					<td></td>
@@ -477,6 +554,12 @@ include("header.php");
 		<p id="viewalllink"><a onclick="$('#viewalllink').hide(); $('#viewalllist').show(); get_all_questions_list();">Load all questions</a></p>
 		<p id="viewalllist" style="display:none">
 		</p>
+
+	</div>
+	
+	<div class="layout_box" id="layout_box_recompute" style="display:none;">
+	
+		<p><a href="<?php echo get_site_URL() ?>admin/?recompute=difficulty#recompute">Recalculate difficulty terms for all questions</a></p>
 
 	</div>
 	
@@ -753,6 +836,15 @@ include("header.php");
 			else
 			{
 	    		$('#layout_box_test').hide();
+			}
+			
+			if (page_name == "recompute")
+			{
+	    		$('#layout_box_recompute').fadeIn();
+			}
+			else
+			{
+	    		$('#layout_box_recompute').hide();
 			}
 			
 	    	window.location.hash='#'+page_name;
