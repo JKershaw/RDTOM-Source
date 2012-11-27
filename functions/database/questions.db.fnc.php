@@ -125,10 +125,11 @@ function get_question_random_simple()
 
 function get_questions($terms_array = false)
 {
-	global $myPDO;
+	global $myPDO, $default_terms_array;
 	
 	if ($terms_array)
 	{
+	
 		// the array holds a list of taxonomys and values to use in the search for questions
 		/*
 		 * for example:
@@ -253,12 +254,12 @@ function get_questions($terms_array = false)
 				R.Question_ID = rdtom_questions.ID");
 		
 		$statement = $myPDO->query($query_string);
+	
 	}
 	else
 	{
 		$statement = $myPDO->query("SELECT * FROM rdtom_questions ORDER BY Section ASC");
 	}
-	
 	$results = $statement->fetchAll(PDO::FETCH_ASSOC);
 	
 	if ($results)
@@ -548,23 +549,36 @@ function add_question($req_text, $req_section, $req_notes)
 
 	$lastInsertedID = $myPDO->lastInsertId();
 	
-	rebuild_questions_holes_map();
-	
 	return $lastInsertedID;
 }
 
-function rebuild_questions_holes_map()
+function rebuild_questions_holes_map($terms_array = false)
 {
-	global $mydb;
-	// delete then remake the holes map table
+
+	global $mydb, $default_terms_array;
 	
-	//TODO instead of this, fetch an array of questions to go in (using a default array of parameters) and rebuild using that.
-	$query = "
-	DROP TABLE IF EXISTS rdtom_questions_holes_map;
-	CREATE TABLE rdtom_questions_holes_map ( row_id int not NULL primary key, Question_ID int not null);
-	SET @id = 0;
-	INSERT INTO rdtom_questions_holes_map SELECT @id := @id + 1, ID FROM rdtom_questions;";
+	$all_questions = get_questions($default_terms_array);
+	
+	// delete then remake the holes map table
+	$query = "DROP TABLE IF EXISTS rdtom_questions_holes_map;
+	CREATE TABLE rdtom_questions_holes_map ( row_id int not NULL primary key, Question_ID int not null);";
+	
 	$mydb->run_multi_query($query);
+	
+	// populate the table
+	$i = 0;
+	foreach ($all_questions as $question)
+	{
+		$query = "INSERT INTO rdtom_questions_holes_map (
+			row_id ,
+			Question_ID
+			)
+			VALUES (
+			'" . $i . "',  '" . $question->get_ID() . "'
+			);";
+		$i++;
+		$mydb->run_query($query);
+	}
 }
 
 function edit_question($req_ID, $req_text, $req_section, $req_notes)

@@ -162,7 +162,7 @@ class question
 	public function get_WFTDA_Link()
 	{
 		// if there's a section
-		if ($this->get_Section())
+		if ($this->get_Section() && $this->is_taxonomy_and_value("rule-set", "WFTDA6"))
 		{
 			// if it looks like a valid WFTDA rule
 			if (preg_match("@^([1-9][\.]?)+@", $this->get_Section()))
@@ -171,15 +171,15 @@ class question
 				$section_array = explode(".", $this->get_Section());
 				if (count($section_array) == 1)
 				{
-					return "http://wftda.com/rules/20100526/section/" . $section_array[0];
+					return "http://wftda.com/rules/20130101/section/" . $section_array[0];
 				}
 				elseif (count($section_array) <= 3)
 				{
-					return "http://wftda.com/rules/20100526/section/" . $section_array[0] . "." . $section_array[1];
+					return "http://wftda.com/rules/20130101/section/" . $section_array[0] . "." . $section_array[1];
 				}
 				else
 				{
-					return "http://wftda.com/rules/20100526/section/" . $section_array[0] . "." . $section_array[1] . "." . $section_array[2];
+					return "http://wftda.com/rules/20130101/section/" . $section_array[0] . "." . $section_array[1] . "." . $section_array[2];
 				}
 			}
 		}
@@ -315,5 +315,53 @@ class question
 		{
 			return false;
 		}
+	}
+	
+	public function is_default_terms_array()
+	{
+		global $default_terms_array;
+		// return true if this question falls within any of the default_terms_array
+		
+		// for each of the default taxonomy value pairs
+		
+		foreach ($default_terms_array as $taxonomy => $value)
+		{
+			// get all the terms for this taxonomy, if they exist
+			$terms = $this->get_terms($taxonomy);
+			
+			if ($terms)
+			{
+				// otherwise,return true if there's a partial match
+				foreach ($terms as $term)
+				{
+					if ($value == $term->get_Name())
+					{
+						return true;
+						//echo "Holes map not built because there are terms which do not match in the $taxonomy taxonomy ($value != " . $term->get_Name() . ")";
+						//break 2;
+					}
+				}
+			}
+		}
+		
+		return false;
+	}
+	
+	public function is_taxonomy_and_value($taxonomy, $value)
+	{
+		$terms = $this->get_terms($taxonomy);
+			
+		if ($terms)
+		{
+			// otherwise,return true if there's a partial match
+			foreach ($terms as $term)
+			{
+				if ($value == $term->get_Name())
+				{
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 }

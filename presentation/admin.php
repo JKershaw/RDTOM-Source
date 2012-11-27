@@ -23,7 +23,7 @@ if ($_POST)
 	// are we editing a question or adding a new one?
 	if ($_POST['question_id'] > 0)
 	{
-		if ($_POST['question_text'] == "delete")
+		if (strtolower($_POST['question_text']) == "delete")
 		{
 			$mydb->remove_question_and_answers($_POST['question_id']);
 			$message .= "Deleted. ";
@@ -88,6 +88,13 @@ if ($_POST)
 				}
 				$message .= "Relationships Rebuilt! ";	
 			}
+			
+			// rebuild the holes map, if the new question falls into the parameters defined in default_terms_array
+			if ($tmp_question->is_default_terms_array())
+			{
+				rebuild_questions_holes_map();
+				$message .= "Holes map rebuilt! ";	
+			}
 		}
 	}
 	else 
@@ -105,7 +112,7 @@ if ($_POST)
 				add_answer($question_id, $answer, $is_correct);
 			}
 		}
-		$message .= "Question saved!";
+		$message .= "New question saved! ";
 		
 		// build new relationships
 		if ($_POST['term_checkbox'])
@@ -115,6 +122,16 @@ if ($_POST)
 				$mydb->add_relationship($question_id, $term_ID);
 			}
 			$message .= "Relationships Built! ";	
+		}
+		
+		// do we need to rebuild the holes map
+		$tmp_question = get_question_from_ID($question_id);
+
+		// rebuild the holes map, if the new question falls into the parameters defined in default_terms_array
+		if ($tmp_question->is_default_terms_array())
+		{
+			rebuild_questions_holes_map();
+			$message .= "Holes map rebuilt! ";	
 		}
 	}
 }
@@ -294,14 +311,19 @@ include("header.php");
 		
 			?>">
 		
-			<input type="hidden" name="question_id" value = "<?php 
+			
+		
+			<table>
+			
+				<tr>
+					<td style="width:200px">ID:</td>
+					<td><input type="text" name="question_id" value = "<?php 
 			if ($question)
 			{
 				echo $question->get_ID();
 			}
-			?>"></input>
-		
-			<table>
+			?>"></input></td>
+				</tr>
 				<tr>
 					<td style="width:200px">Question:</td>
 					<td><textarea id="question_text" style="width:500px" name="question_text" cols="40" rows="5"><?php 
@@ -550,11 +572,32 @@ include("header.php");
 	</div>
 	
 	<div class="layout_box" id="layout_box_all_questions" style="display:none;">
-	
+		
+		<p>Section: <input type="text" id="filter_section" name="filter_section"/> <a onclick="filterQuestions();">Filter</a></p>
+		<p>Rule set: <a onClick="$('.question_string').hide();$('.WFTDA5').show();">WFTDA5</a> <a onClick="$('.question_string').hide();$('.WFTDA6').show();">WFTDA6</a></p>
+		
 		<p id="viewalllink"><a onclick="$('#viewalllink').hide(); $('#viewalllist').show(); get_all_questions_list();">Load all questions</a></p>
 		<p id="viewalllist" style="display:none">
 		</p>
-
+		
+		<script type="text/javascript">
+		function filterQuestions()
+		{
+			var class_name = $("#filter_section").val();
+			if (class_name != "")
+			{
+				class_name = '.section_' + class_name.replace(".", "_");
+				
+				$('.question_string').hide();
+				$(class_name).show();
+			}
+			else
+			{
+				$('.question_string').show();
+			}
+			
+		}
+		</script>
 	</div>
 	
 	<div class="layout_box" id="layout_box_recompute" style="display:none;">
@@ -576,7 +619,7 @@ include("header.php");
 		}
 		*/
 		
-		
+		/*
 		$params = array(
 				"tag" => "Test Question",
 				"rule-set" => "WFTDA6"
@@ -634,7 +677,7 @@ include("header.php");
 			echo "No questions found";
 		}
 		echo "<br />";
-		
+		*/
 		?>
 
 	</div>
@@ -773,8 +816,11 @@ include("header.php");
 			}
 		}
 
+		
 		function show_page(page_name)
 		{
+			
+			
 			if (page_name == "edit_question")
 			{
 	    		$('#layout_box_edit_question').fadeIn();
@@ -795,11 +841,15 @@ include("header.php");
 			
 			if (page_name == "all_questions")
 			{
+
+				
 	    		$('#layout_box_all_questions').fadeIn();
+	    		
 			}
 			else
 			{
 	    		$('#layout_box_all_questions').hide();
+	    		
 			}
 			
 			if (page_name == "logs")
@@ -856,5 +906,7 @@ include("header.php");
 		{
 	        show_page(location.href.substr(location.href.indexOf("#") + 1));
 	    }
+
+		
 		</script>
 <?php include("footer.php");  ?>

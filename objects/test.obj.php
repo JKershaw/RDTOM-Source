@@ -381,7 +381,8 @@ class test
 			You can only have your test marked once, so be sure to double-check all of your answers!
 		</p>
 		<p>
-			Link to this test (click on the link, then copy): <input id=\"link_to_test\" name=\"link_to_test\" type=\"text\" value=\"" . $this->return_test_URL() . "\">
+			Link to this test (<a onclick=\"shorten_link();\">shorten using bit.ly</a>): <input id=\"link_to_test\" name=\"link_to_test\" type=\"text\" value=\"" . $this->return_test_URL() . "\"> <span id=\"loading_bitly\" style=\"display:none\">Loading...</span>
+			
 		</p>
 		";
 
@@ -407,17 +408,50 @@ class test
 		$out .="
 		<script type=\"text/javascript\">
 		
-$(\"#link_to_test\").focus(function() {
-    var text_this = $(this);
-    text_this.select();
+		";
+		$out .= '
+		var has_been_shortened = false;
+		
+		function shorten_link()
+		{
+			
+			if (!has_been_shortened)
+			{
+			    $("#loading_bitly").fadeIn();
+			    
+			    
+				$.getJSON(
+		        "http://api.bitly.com/v3/shorten?callback=?", 
+		        { 
+		            "format": "json",
+		            "apiKey": "R_fdb4c15ca55edd5f58b4a83793197706",
+		            "login": "wardrox",
+		            "longUrl": "' . ($this->return_test_URL()) . '"
+		        },
+		        function(response)
+		        {
+		        	$("#link_to_test").val(response.data.url);
+			    	$("#loading_bitly").fadeOut();
+		        	
+		        }
+			    );
+		    }
+		    has_been_shortened = true;
 
-    // Work around Chrome's little problem
-    text_this.mouseup(function() {
-        // Prevent further mouseup intervention
-        text_this.unbind(\"mouseup\");
-        return false;
-    });
-});
+		}
+		';
+		$out .= "
+		$(\"#link_to_test\").focus(function() {
+		    var text_this = $(this);
+		    text_this.select();
+		
+		    // Work around Chrome's little problem
+		    text_this.mouseup(function() {
+		        // Prevent further mouseup intervention
+		        text_this.unbind(\"mouseup\");
+		        return false;
+		    });
+		});
 		
 		
 		var Test_Answers = new Array(" . count($QandA_ID_array) . ");

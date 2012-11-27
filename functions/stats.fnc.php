@@ -358,7 +358,7 @@ function return_chart_24hour_responses()
 			$hour_string = "This hour";
 		}
 		$data_string_array[] = "
-		['". $hour_string . "',  " .$raw_data[$id] . ",      " .$average_data[$id] . "]";
+		['". $hour_string . "',  " .(integer)$raw_data[$id] . ",      " .(integer)$average_data[$id] . "]";
 	}
 	
 	$data_string = implode(", ", $data_string_array);

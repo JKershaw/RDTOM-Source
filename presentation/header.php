@@ -67,9 +67,20 @@
 	  js.src = "//connect.facebook.net/en_GB/all.js#xfbml=1&appId=131848900255414";
 	  fjs.parentNode.insertBefore(js, fjs);
 	}(document, 'script', 'facebook-jssdk'));</script>
+	
 
+	<p id="p_new_rules_link" style="margin:0.5em"><a onclick="$('#p_new_rules_link').hide();$('#p_new_rules').fadeIn();"><strong>Important:</strong> This site is currently using the WFTDA May, 2010 rules and NOT the new WFTDA 2013 rules. Click here for more.</a></p>
+	<p id="p_new_rules" style="display:none; margin:0.5em">
+		The WFTDA have released an updated set of rules which everyone will be using next year. There's been no early access to the rules so I (Sausage Roller, guy who made the site, hello!) am currently in the process of going through the new rules myself and writing new questions. As soon as enough questions for the 2013 rules have been written an options will appear on the site letting you choose which rule set you are being tested on. Until then, the site will always show you the "old" rules.  
+		<br /><br />
+		You can get the new rules from <a href="http://wftda.com/rules">the WFTDA website</a>.
+	</p>
+
+	
 	<h1><a href="<?php echo get_site_URL(); ?>">Roller Derby Test O'Matic</a></h1>
 	<h2><?php echo get_page_subtitle(); ?></h2>
+	
+	
 		
 <?php 
 
