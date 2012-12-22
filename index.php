@@ -68,6 +68,9 @@ switch ($url_array[0])
 	case "test":
 		include("presentation/test.php");
 		break;	
+	case "submit":
+		include("presentation/submit.php");
+		break;		
 		
 	case "question":
 		set_up_question($url_array[1]);

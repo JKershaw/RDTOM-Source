@@ -574,29 +574,49 @@ include("header.php");
 	<div class="layout_box" id="layout_box_all_questions" style="display:none;">
 		
 		<p>Section: <input type="text" id="filter_section" name="filter_section"/> <a onclick="filterQuestions();">Filter</a></p>
-		<p>Rule set: <a onClick="$('.question_string').hide();$('.WFTDA5').show();">WFTDA5</a> <a onClick="$('.question_string').hide();$('.WFTDA6').show();">WFTDA6</a></p>
+		<p>Rule set: <a onClick="$('.question_string').hide();$('.WFTDA5').show();">WFTDA5</a> <a onClick="$('.question_string').hide();$('.WFTDA6').show();">WFTDA6</a> <a onClick="$('.question_string').hide();$('.WFTDA6_Draft').show();">WFTDA6_Draft</a></p>
 		
 		<p id="viewalllink"><a onclick="$('#viewalllink').hide(); $('#viewalllist').show(); get_all_questions_list();">Load all questions</a></p>
 		<p id="viewalllist" style="display:none">
 		</p>
 		
 		<script type="text/javascript">
+		var filter_string;
 		function filterQuestions()
 		{
 			var class_name = $("#filter_section").val();
-			if (class_name != "")
+
+			
+			if (filter_string != class_name)
 			{
-				class_name = '.section_' + class_name.replace(".", "_");
+				filter_string = class_name;
 				
-				$('.question_string').hide();
-				$(class_name).show();
-			}
-			else
-			{
-				$('.question_string').show();
+				// remove the training full stop if there is one
+				if (class_name.substr(class_name.length - 1) == ".")
+				{
+					class_name = class_name.slice(0, - 1);
+				}
+				
+				if (class_name != "")
+				{
+					class_name = '.section_' + class_name.replace(/\./g, "_");
+				
+					$('.question_string').hide();
+					$(class_name).show();
+				}
+				else
+				{
+					$('.question_string').show();
+				}
 			}
 			
 		}
+
+		$(document).ready(function(){
+		    var intervalID = setInterval(function(){
+		    	filterQuestions()
+		    }, 100); // 100 ms check
+		});
 		</script>
 	</div>
 	
@@ -807,10 +827,9 @@ include("header.php");
 			if (type == "pen")
 			{
 				$("input[name='answer[0]']").val("No Impact/No Penalty");
-				$("input[name='answer[1]']").val("Minor Penalty");
-				$("input[name='answer[2]']").val("Major Penalty");
-				$("input[name='answer[3]']").val("Expulsion");
-				<?php for ($i = 4; $i < NUMBER_OF_ANSWERS; $i++) { ?>
+				$("input[name='answer[1]']").val("Major Penalty");
+				$("input[name='answer[2]']").val("Expulsion");
+				<?php for ($i = 3; $i < NUMBER_OF_ANSWERS; $i++) { ?>
 				$("input[name='answer[<?php echo $i ?>]']").val("");	
 				<?php } ?>
 			}
