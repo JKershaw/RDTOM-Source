@@ -114,7 +114,7 @@
 					{
 						?>, <a href="<?php echo get_site_URL(); ?>admin/edit/<?php echo $question->get_ID(); ?>#edit_question">Edit question</a><?php 
 					}
-					?>
+					echo ", " . tracker_get_query_string(); ?>
 				</p>
 			<?php 
 		} 

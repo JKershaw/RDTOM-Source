@@ -557,7 +557,18 @@ function get_admin_terms_checkboxes($term, $question = false)
 				}
 			}
 			
-			$out .= "<input $selected_string type=\"checkbox\" id=\"term_checkbox[" . $term->get_ID() . "]\" name=\"term_checkbox[" . $term->get_ID() . "]\">" . htmlentities(stripslashes($term->get_Name())) . "<br />";
+			// special case where we want the Author
+			if ($term->get_taxonomy() == "author-id")
+			{
+				$tmp_user = $mydb->get_user_from_ID($term->get_Name());
+				$display_name = $tmp_user->get_Name();
+			}
+			else
+			{
+				$display_name = $term->get_Name();
+			}
+			
+			$out .= "<input $selected_string type=\"checkbox\" id=\"term_checkbox[" . $term->get_ID() . "]\" name=\"term_checkbox[" . $term->get_ID() . "]\">" . htmlentities(stripslashes($display_name)) . "<br />";
 		}
 		
 	}

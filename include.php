@@ -17,6 +17,7 @@ include('functions/control.fnc.php');
 include('functions/account.fnc.php');
 include('functions/stats.fnc.php');
 include('functions/email.fnc.php');
+include('functions/tracker.fnc.php');
 
 // Database (function) files
 include('functions/database/questions.db.fnc.php');

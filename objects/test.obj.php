@@ -62,7 +62,7 @@ class test
 			$this->difficulty = $difficulty;
 			
 			// we want only WFTDA 5 questions and questions tagged with "Test Question" to be shown
-			$terms_array["rule-set"] = "WFTDA5";
+			$terms_array["rule-set"] = "WFTDA6";
 			$terms_array["tag"] = "Test Question";
 			
 			$all_questions = get_questions($terms_array);

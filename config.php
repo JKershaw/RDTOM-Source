@@ -71,7 +71,7 @@ $email_from_name = "Roller Derby Test O'Matic";
  * When fetching questions, this is the deafult search parameter
  */
 
-$default_terms_array = array("rule-set" => "WFTDA5");
+$default_terms_array = array("rule-set" => "WFTDA6");
 
 /*
  * DEFINITIONS - THESE NEVER CHANGE

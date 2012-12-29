@@ -24,6 +24,14 @@ if (is_logged_in())
 			if ($_POST['question_id'] > 0)
 			{
 				// editing a post
+				$tmp_question = get_question_from_ID($_POST['question_id']);
+				
+				// is the Author, the Author of this post
+				if (!$tmp_question->is_relationship_true("author-id", $user->get_ID()))
+				{
+					throw new exception ("You must be the author of this question to edit it.");
+				}
+				
 	
 				// save all the answers submitted into an array
 				foreach ($_POST['answer'] as $id => $answer)
@@ -35,7 +43,6 @@ if (is_logged_in())
 					}
 				}
 				
-				$tmp_question = get_question_from_ID($_POST['question_id']);
 				
 				// have the answers changed? There may not be any answers.
 				if ($temp_answer_array && ($tmp_question->is_answers_different($temp_answer_array)))
@@ -424,7 +431,11 @@ if (is_logged_in())
 		<?php 
 		
 		// get all questions for the user,
-		$all_author_questions = get_questions(array("author-id" => $user->get_ID()));
+		try {
+			$all_author_questions = get_questions(array("author-id" => $user->get_ID()));
+		} catch (Exception $e) {
+		}
+		
 		
 		// show with edit links
 		if ($all_author_questions)

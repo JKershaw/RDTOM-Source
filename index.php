@@ -22,6 +22,8 @@ set_up_logged_in_user();
 set_up_url_array();
 
 // begin processing
+// start the page tracker
+set_up_tracker();
 
 // do we want to perform some function or other, then show the default page?
 switch ($url_array[0]) 

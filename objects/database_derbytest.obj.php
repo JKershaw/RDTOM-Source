@@ -815,22 +815,32 @@ class database_derbytest extends database
 		$this->run_query($query);
 	}
 	
-	public function get_terms($req_taxonomy, $req_Question_ID = false)
+	public function get_terms($req_taxonomy = false, $req_Question_ID = false)
 	{
-		$req_taxonomy = $this->mysql_res($req_taxonomy);
 		
 		if ($req_Question_ID)
 		{
 			settype($req_Question_ID, "integer");
-		
-			$query = "SELECT rdtom_terms.* 
-				FROM rdtom_terms
-				JOIN rdtom_relationships ON rdtom_relationships.Term_ID = rdtom_terms.ID
-				WHERE taxonomy =  '$req_taxonomy'
-				AND rdtom_relationships.Question_ID =  '$req_Question_ID'";
+			if ($req_taxonomy)
+			{
+				$req_taxonomy = $this->mysql_res($req_taxonomy);
+				$query = "SELECT rdtom_terms.* 
+					FROM rdtom_terms
+					JOIN rdtom_relationships ON rdtom_relationships.Term_ID = rdtom_terms.ID
+					WHERE taxonomy =  '$req_taxonomy'
+					AND rdtom_relationships.Question_ID =  '$req_Question_ID'";
+			}
+			else
+			{
+				$query = "SELECT rdtom_terms.* 
+					FROM rdtom_terms
+					JOIN rdtom_relationships ON rdtom_relationships.Term_ID = rdtom_terms.ID
+					WHERE rdtom_relationships.Question_ID =  '$req_Question_ID'";
+			}
 		}
 		else
 		{
+			$req_taxonomy = $this->mysql_res($req_taxonomy);
 			$query = "SELECT * FROM rdtom_terms WHERE taxonomy = '$req_taxonomy' ";
 		}
 		

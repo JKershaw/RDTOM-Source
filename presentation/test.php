@@ -30,6 +30,7 @@ if (!$url_array[1])
 ?>
 
 <h3>Create your test:</h3>
+<p><strong>Until the questions for the new rules have been used for a few weeks, the tests this page generates should not be relied on.</strong></p>
 <p>Note: Tests answers are not currently saved and don't count towards any of your statistics. For feedback, feature requests, questions and bug reports; please visit the <a href="http://www.facebook.com/RollerDerbyTestOMatic">RDTOM Facebook page</a>. I take no responsibility for anything you choose to do with these tests.</p>
 <form id="submittestparameters" name="submittestparameters" method="post" action="<? echo get_site_URL()?>test/generate">
 

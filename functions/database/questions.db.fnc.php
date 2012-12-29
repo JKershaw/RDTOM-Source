@@ -72,7 +72,11 @@ function get_question_random()
 			$question = get_question_from_array($result);
 			
 			// if the question hasn't already been asked recently OR we're not remebering things in the session, return it
-			if (!$remeber_in_session || ($_SESSION['random_questions_asked'] && !in_array($question->get_ID(), $_SESSION['random_questions_asked'])))
+			if (!$remeber_in_session || 
+				(
+				!$_SESSION['random_questions_asked'] || 
+				($_SESSION['random_questions_asked'] && !in_array($question->get_ID(), $_SESSION['random_questions_asked'])))
+				)
 			{
 				return $question;
 			}
@@ -83,13 +87,18 @@ function get_question_random()
 		}
 	}
 	
-	// we tried 5 times to find a unique question, and failed, so resort back to the old random question getter
+	// we tried a few times to find a unique question, and failed, so resort back to the old random question getter
 	return get_question_random_simple();
 }
 
 function get_question_random_simple()
 {
-	global $myPDO, $remeber_in_session;
+	// get random question from default taxonomies
+	global $default_terms_array;
+	$questions = get_questions($default_terms_array);
+	$question = $questions[array_rand($questions)];
+	/*
+	global $myPDO, $remeber_in_session, $default_terms_array;
 	
 	$clause = "";
 	
@@ -120,6 +129,8 @@ function get_question_random_simple()
 		throw new exception("Woah, either the site ran out of questions, or the database is being updated. Try reloading the page.");
 	}	
 
+	*/
+	
 	return $question;
 }
 
@@ -602,6 +613,6 @@ function edit_question($req_ID, $req_text, $req_section, $req_notes)
 			':Notes'=>$req_notes,
 			':ID'=>$req_ID));
 	
-	rebuild_questions_holes_map();
+	//rebuild_questions_holes_map();
 }
 ?>

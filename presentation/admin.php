@@ -317,12 +317,12 @@ include("header.php");
 			
 				<tr>
 					<td style="width:200px">ID:</td>
-					<td><input type="text" name="question_id" value = "<?php 
+					<td><input type="text"  id="question_id" name="question_id" value = "<?php 
 			if ($question)
 			{
 				echo $question->get_ID();
 			}
-			?>"></input></td>
+			?>"></input> (<a onClick="$('#term_checkbox\\[2\\]').prop('checked', true);$('#term_checkbox\\[1\\]').prop('checked', false);$('#question_id').val('');setdefaultanswers('pen');">6-ify penalty</a>)</td>
 				</tr>
 				<tr>
 					<td style="width:200px">Question:</td>
@@ -449,10 +449,18 @@ include("header.php");
 							echo get_admin_terms_checkboxes("difficulty", $question);
 						?>
 					</td>
+				</tr>			
+				<tr>
+					<td style="width:200px">Author:</td>
+					<td>
+						<?php 
+							echo get_admin_terms_checkboxes("author-id", $question);
+						?>
+					</td>
 				</tr>
 				<tr>
 					<td></td>
-					<td><a class="button" onclick="newquestionvalidation('editquestionform');return false;"/><?php 
+					<td><a class="button" id="edit_question_button" onclick="newquestionvalidation('editquestionform');return false;"/><?php 
 						if ($question)
 						{
 							echo "Edit";
@@ -573,8 +581,11 @@ include("header.php");
 	
 	<div class="layout_box" id="layout_box_all_questions" style="display:none;">
 		
-		<p>Section: <input type="text" id="filter_section" name="filter_section"/> <a onclick="filterQuestions();">Filter</a></p>
-		<p>Rule set: <a onClick="$('.question_string').hide();$('.WFTDA5').show();">WFTDA5</a> <a onClick="$('.question_string').hide();$('.WFTDA6').show();">WFTDA6</a> <a onClick="$('.question_string').hide();$('.WFTDA6_Draft').show();">WFTDA6_Draft</a></p>
+		<p>Section: <input type="text" id="filter_section" name="filter_section"/></p>
+		<p>Rule set: 
+			<a class="current_ruleset_selector current_ruleset_selector_WFTDA5" onClick="change_current_ruleset('WFTDA5');">WFTDA5</a> 
+			<a class="current_ruleset_selector current_ruleset_selector_WFTDA6" onClick="change_current_ruleset('WFTDA6');">WFTDA6</a> 
+			<a class="current_ruleset_selector current_ruleset_selector_WFTDA6_Draft" onClick="change_current_ruleset('WFTDA6_Draft');">WFTDA6_Draft</a></p>
 		
 		<p id="viewalllink"><a onclick="$('#viewalllink').hide(); $('#viewalllist').show(); get_all_questions_list();">Load all questions</a></p>
 		<p id="viewalllist" style="display:none">
@@ -582,39 +593,53 @@ include("header.php");
 		
 		<script type="text/javascript">
 		var filter_string;
-		function filterQuestions()
-		{
-			var class_name = $("#filter_section").val();
+		var current_ruleset = "question_string";
 
-			
-			if (filter_string != class_name)
+		function change_current_ruleset(new_ruleset)
+		{
+			current_ruleset = '.' + new_ruleset;
+			$('.current_ruleset_selector').css( "font-weight" , "normal");
+			$('.current_ruleset_selector_' + new_ruleset).css( "font-weight" , "bold");
+			filterQuestions(true);
+		}
+		
+		function filterQuestions(var_force)
+		{
+			var current_section = $("#filter_section").val();
+
+			// Do we need to filter?
+			if ((filter_string != current_section) || var_force)
 			{
-				filter_string = class_name;
-				
+				filter_string = current_section;
+					
 				// remove the training full stop if there is one
-				if (class_name.substr(class_name.length - 1) == ".")
+				if (current_section.substr(current_section.length - 1) == ".")
 				{
-					class_name = class_name.slice(0, - 1);
+					current_section = current_section.slice(0, - 1);
 				}
+
+				// hide everything, then decide what to show $('.question_string').hide();
+				$('.question_string').hide();
 				
-				if (class_name != "")
+				// filter by section
+				if (current_section == "")
 				{
-					class_name = '.section_' + class_name.replace(/\./g, "_");
-				
-					$('.question_string').hide();
-					$(class_name).show();
+					// no section specified, so show the current section
+					$(current_ruleset).show();
 				}
 				else
 				{
-					$('.question_string').show();
+					// a section is given
+					current_section = '.section_' + current_section.replace(/\./g, "_");
+					$(current_section + current_ruleset).show();
 				}
+				
 			}
-			
 		}
 
 		$(document).ready(function(){
 		    var intervalID = setInterval(function(){
-		    	filterQuestions()
+		    	filterQuestions(false)
 		    }, 100); // 100 ms check
 		});
 		</script>
@@ -629,6 +654,20 @@ include("header.php");
 	<div class="layout_box" id="layout_box_test" style="display:none;">
 	
 		<?php 
+		/*
+		$all_questions = get_questions();
+		
+		foreach ($all_questions as $question)
+		{
+			try {
+				$question->get_answers();
+			} catch (Exception $e) {
+				echo $question->get_ID() . " ";
+			}
+			
+			
+		}
+		*/
 		/*
 		$all_users = $mydb->get_users();
 		
@@ -756,6 +795,8 @@ include("header.php");
 
 		<script type="text/javascript">
 
+
+		
 		function get_all_questions_list()
 		{
 			$("#viewalllist").html("<p>Loading...</p>");
@@ -863,7 +904,9 @@ include("header.php");
 
 				
 	    		$('#layout_box_all_questions').fadeIn();
-	    		
+	    		$('#viewalllink').hide(); 
+	    		$('#viewalllist').show(); 
+	    		get_all_questions_list();
 			}
 			else
 			{

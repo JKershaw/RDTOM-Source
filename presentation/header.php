@@ -15,7 +15,7 @@
 		
 		<title>Roller Derby Test O'Matic</title>
 		
-		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script>
+		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8/jquery.min.js"></script>
    		
 		<link rel="stylesheet" href="<?echo get_CSS_URL(); ?>" type="text/css" />
 		<link rel="stylesheet" href="<?echo get_CSS_URL("print"); ?>" type="text/css" media="print">
@@ -69,11 +69,11 @@
 	}(document, 'script', 'facebook-jssdk'));</script>
 	
 
-	<p id="p_new_rules_link" style="margin:0.5em"><a onclick="$('#p_new_rules_link').hide();$('#p_new_rules').fadeIn();"><strong>Important:</strong> This site is currently using the WFTDA May, 2010 rules and NOT the new WFTDA 2013 rules. Click here for more.</a></p>
+	<p id="p_new_rules_link" style="margin:0.5em"><a onclick="$('#p_new_rules_link').hide();$('#p_new_rules').fadeIn();"><strong>Important:</strong> This site is currently using the new WFTDA 2013 rules. Click here for more.</a></p>
 	<p id="p_new_rules" style="display:none; margin:0.5em">
-		The WFTDA have released an updated set of rules which everyone will be using next year. There's been no early access to the rules so I (Sausage Roller, guy who made the site, hello!) am currently in the process of going through the new rules myself and writing new questions. As soon as enough questions for the 2013 rules have been written an options will appear on the site letting you choose which rule set you are being tested on. Until then, the site will always show you the "old" rules.  
+		The WFTDA have released an updated set of rules. This site is now testing you on them. Not every section is covered yet, but most of the are and we're working on the rest.
 		<br /><br />
-		You can get the new rules from <a href="http://wftda.com/rules">the WFTDA website</a>.
+		You can view and download the rules from <a href="http://wftda.com/rules">the WFTDA website</a>.
 	</p>
 
 	

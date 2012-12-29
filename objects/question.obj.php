@@ -12,6 +12,8 @@ class question
 	private $ResponseCount;
 	private $answers_array;
 	
+	private $all_terms;
+	
 	function __construct(
 		$req_ID,
 		$req_Text,
@@ -305,16 +307,51 @@ class question
 	
 	public function get_terms($req_taxonomy)
 	{
+		// set up the local cached copy of the terms
+		if (!$this->all_terms)
+		{
+			global $mydb;
+			$this->all_terms = $mydb->get_terms(false, $this->ID);
+		}
+		
+		// find the terms from the cached copy
+		if ($this->all_terms)
+		{
+			foreach ($this->all_terms as $term)
+			{
+				if ($term->get_taxonomy() == $req_taxonomy)
+				{
+					$terms[$term->get_ID()] = $term;
+				}
+			}
+			
+			// return value
+			if ($terms)
+			{
+				return $terms;
+			}
+		}
+		
+		return false;
+	}
+	
+	public function is_relationship_true($req_taxonomy, $req_termname)
+	{
 		global $mydb;
-		$terms = $mydb->get_terms($req_taxonomy, $this->ID);
+		$terms = $this->get_terms($req_taxonomy);
 		if ($terms)
 		{
-			return $terms;
+			foreach ($terms as $term)
+			{
+				if ($term->get_Name() == $req_termname)
+				{
+					return true;
+				}
+			}
 		}
-		else
-		{
-			return false;
-		}
+		
+		return false;
+		
 	}
 	
 	public function is_default_terms_array()

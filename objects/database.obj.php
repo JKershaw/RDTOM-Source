@@ -69,6 +69,12 @@ class database
 	// run a query and return the results
 	public function run_query($req_query)
 	{	
+		if (is_admin())
+		{
+			list($usec, $sec) = explode(" ", microtime());
+			$query_timer_start = ((float)$usec + (float)$sec);
+		}
+		
 		$link = mysql_connect($this->dbHost, $this->dbUser, $this->dbUserPw)
 	  		or die("Could not connect : " . mysql_error());
 			
@@ -77,6 +83,15 @@ class database
 			
 		$results = mysql_query($req_query)
 			or die("Query error:<br />" . $req_query . "<br />" . mysql_error());
+		
+		if (is_admin())
+		{
+			list($usec, $sec) = explode(" ", microtime());
+			$query_timer_end = ((float)$usec + (float)$sec);
+			
+			// save the query
+			tracker_add_query($req_query, $query_timer_end - $query_timer_start);
+		}
 		
 		return $results;
 	}

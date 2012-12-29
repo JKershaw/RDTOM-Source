@@ -73,7 +73,7 @@ function set_up_database()
 	/* Connect to an ODBC database using driver invocation */
 	try 
 	{
-	    $myPDO = new PDO("mysql:dbname=$database_name;host=$database_host", $database_username, $database_userpassword);
+	    $myPDO = new LoggedPDO("mysql:dbname=$database_name;host=$database_host", $database_username, $database_userpassword);
 	} 
 	catch (PDOException $e) 
 	{
