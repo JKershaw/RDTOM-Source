@@ -1,7 +1,8 @@
 AddHandler php5-script .php
 
-ExpiresByType image/gif "access plus 1 month"
-ExpiresByType text/css "access 1 week"
+<FilesMatch "\.(gif|css)$">
+Header set Cache-Control "max-age=172800, proxy-revalidate"
+</FilesMatch>
 
 RewriteEngine on
 

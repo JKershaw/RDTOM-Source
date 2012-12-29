@@ -43,7 +43,7 @@ include("header.php");
 			A graph of responses-per-hour covering the past 24 hours:
 		</p>
 		<p>
-			<?php echo return_chart_24hour_responses(get_sections_array(), $mydb->get_responses(10000)); ?>
+			<?php echo return_chart_24hour_responses(); ?>
 		</p>
 		
 		<p>

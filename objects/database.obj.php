@@ -69,14 +69,19 @@ class database
 	// run a query and return the results
 	public function run_query($req_query)
 	{	
+		global $saved_link;
+		
 		if (is_admin())
 		{
 			list($usec, $sec) = explode(" ", microtime());
 			$query_timer_start = ((float)$usec + (float)$sec);
 		}
 		
-		$link = mysql_connect($this->dbHost, $this->dbUser, $this->dbUserPw)
-	  		or die("Could not connect : " . mysql_error());
+		if (!$saved_link)
+		{
+			$saved_link = mysql_connect($this->dbHost, $this->dbUser, $this->dbUserPw)
+	  			or die("Could not connect : " . mysql_error());
+		}
 			
 		mysql_select_db($this->dbName) 
 			or die("Could not select database");
