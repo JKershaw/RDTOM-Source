@@ -17,7 +17,7 @@
 		
 		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8/jquery.min.js"></script>
    		
-		<link rel="stylesheet" href="<?echo get_CSS_URL(); ?>" type="text/css" />
+		<link rel="stylesheet" href="<?echo get_CSS_URL("minify"); ?>" type="text/css" />
 		<link rel="stylesheet" href="<?echo get_CSS_URL("print"); ?>" type="text/css" media="print">
 		
         <link rel="icon" href="<?echo get_theme_directory(); ?>favicon.gif" type="image/gif"/>

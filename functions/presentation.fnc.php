@@ -32,7 +32,7 @@ function is_admin()
 	global $user;
 	if ($user)
 	{
-		if ($user->get_Name() == "Sausage Roller")
+		if (($user->get_Name() == "Sausage Roller") || ($user->get_Name() == "Cornish Knocker"))
 		{
 			return true;
 		}
@@ -182,6 +182,10 @@ function get_CSS_URL($type = false)
 		if ($type == "print")
 		{
 			return get_site_URL() . "presentation/print.css";
+		}
+		if ($type == "minify")
+		{
+			return get_site_URL() . "presentation/style-min.css";
 		}
 	}
 	return get_site_URL() . "presentation/style.css";

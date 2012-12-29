@@ -1,5 +1,8 @@
 AddHandler php5-script .php
 
+ExpiresByType image/gif "access plus 1 month"
+ExpiresByType text/css "access 1 week"
+
 RewriteEngine on
 
 RewriteRule ajax.php(.+)? ajax.php$1 [L]
