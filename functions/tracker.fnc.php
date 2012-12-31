@@ -103,9 +103,11 @@ class LoggedPDO extends PDO
     /**
      * @return LoggedPDOStatement
      */
-   // public function prepare($query) {
-    //    return new LoggedPDOStatement(parent::prepare($query));
-    //}
+    /*
+    public function prepare($query) {
+        return new LoggedPDOStatement(parent::prepare($query));
+    }
+    */
 }
 
 /**
@@ -132,7 +134,7 @@ class LoggedPDOStatement {
         $start = microtime(true);
         $result = $this->statement->execute();
         $time = microtime(true) - $start;
-        tracker_add_query($query, $time);
+        tracker_add_query($this->statement->queryString, $time);
         return $result;
     }
     /**

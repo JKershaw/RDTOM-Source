@@ -349,14 +349,10 @@ class database_derbytest extends database
 	
 	public function get_stats_hourly_posts($hour_count)
 	{
-		// get the data from the database
-		$hour_format = $this->mysql_res($hour_format);
-		
 		$time_ago = gmmktime() - (60*60*$hour_count);
 		$time_ago = floor($time_ago/3600) * 3600;
 		
-		$time_now = gmmktime();
-		
+		/*
 		$query = "
 			SELECT 
 			count(*) AS responses,
@@ -364,23 +360,34 @@ class database_derbytest extends database
 			FROM rdtom_responses 
 			WHERE Timestamp > '$time_ago'  
 			GROUP BY hour 
-			ORDER BY Timestamp ASC";
+			LIMIT 0 , 30";
+		
 		
 		$raw_data = $this->get_results($query);
+		*/
+		
+		// get the data from the database
+		$query = "
+			SELECT 
+			Timestamp
+			FROM rdtom_responses 
+			WHERE Timestamp > '$time_ago' ";
+		
+		$raw_timestamps = $this->get_col($query);
 		
 		// build an empty array
 		for ($i = 0; $i < 24; $i ++)
 		{
 			$tmp_timestamp = $time_ago + (60*60*$i);
-			// PHP starts counting from 0, mySQL from 1
-			$key = date('Y ', $tmp_timestamp) . (date('z', $tmp_timestamp)+1) . date(' H', $tmp_timestamp);
-			$results[$key] = 0;
+			$results[(int) $tmp_timestamp / 3600] = 0;
+			
 		}
 		
-		// fill the array
-		foreach ($raw_data as $stat)
+		// fill it with data
+		foreach ($raw_timestamps as $timestamp)
 		{
-			$results[$stat['hour']] = $stat['responses'];
+			//$results[date('Y z H', $timestamp)]++;
+			$results[(int) $timestamp / 3600]++;
 		}
 		
 		// get the index starting from 0

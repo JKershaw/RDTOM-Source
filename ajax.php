@@ -375,36 +375,51 @@ function ajax_get_poll_results()
 function ajax_get_admin_questions_list()
 {
 	global $mydb;
-	$questions = get_questions();
-	foreach ($questions as $question)
+	if ($_POST['search'])
 	{
-		$section_string = $question->get_Section();
-		$section_array = explode("." , $section_string);
-		
-		
-		$div_class_array = array();
-		
-		// filter by section
-		$div_class_array[] = "section_$section_array[0]";
-		$div_class_array[] = "section_$section_array[0]_$section_array[1]";
-		$div_class_array[] = "section_$section_array[0]_$section_array[1]_$section_array[2]";
-		
-		// filter by rule set
-		$terms = $question->get_terms("rule-set");
-		if ($terms)
+		$questions = get_questions_search($_POST['search']);
+	}
+	else
+	{
+		$questions = get_questions();
+	}
+	
+	if ($questions)
+	{
+		foreach ($questions as $question)
 		{
-			foreach ($terms as $term)
+			$section_string = $question->get_Section();
+			$section_array = explode("." , $section_string);
+			
+			
+			$div_class_array = array();
+			
+			// filter by section
+			$div_class_array[] = "section_$section_array[0]";
+			$div_class_array[] = "section_$section_array[0]_$section_array[1]";
+			$div_class_array[] = "section_$section_array[0]_$section_array[1]_$section_array[2]";
+			
+			// filter by rule set
+			$terms = $question->get_terms("rule-set");
+			if ($terms)
 			{
-				$div_class_array[] = $term->get_Name();
+				foreach ($terms as $term)
+				{
+					$div_class_array[] = $term->get_Name();
+				}
 			}
+			$div_class_array_string = implode(" ", $div_class_array);
+			
+			$out .= "<div style=\"clear:left\" class=\" question_string " . $div_class_array_string . "\">" 
+				. $question->get_Section() 
+				. " <a href=\"" . get_site_URL() . "admin/edit/" . $question->get_ID() . "#edit_question\">" 
+				. htmlentities(stripslashes($question->get_Text())) . "</a>
+				</div>";
 		}
-		$div_class_array_string = implode(" ", $div_class_array);
-		
-		$out .= "<div style=\"clear:left\" class=\" question_string " . $div_class_array_string . "\">" 
-			. $question->get_Section() 
-			. " <a href=\"" . get_site_URL() . "admin/edit/" . $question->get_ID() . "#edit_question\">" 
-			. htmlentities(stripslashes($question->get_Text())) . "</a>
-			</div>";
+	}
+	else
+	{
+		$out .= "<p>No questions found.</p>";
 	}
 	
 	return $out;

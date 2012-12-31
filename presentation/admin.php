@@ -581,6 +581,8 @@ include("header.php");
 	
 	<div class="layout_box" id="layout_box_all_questions" style="display:none;">
 		
+		
+		<p>Search: <input type="text" id="questions_search" name="questions_search"/> <a onClick="get_search_questions_list();">Search</a></p>
 		<p>Section: <input type="text" id="filter_section" name="filter_section"/></p>
 		<p>Rule set: 
 			<a class="current_ruleset_selector current_ruleset_selector_WFTDA5" onClick="change_current_ruleset('WFTDA5');">WFTDA5</a> 
@@ -654,6 +656,8 @@ include("header.php");
 	<div class="layout_box" id="layout_box_test" style="display:none;">
 	
 		<?php 
+		
+		print_r(get_questions_search('passed'));
 		/*
 		$all_questions = get_questions();
 		
@@ -812,7 +816,24 @@ include("header.php");
 				}
 			);	
 		}
+		function get_search_questions_list()
+		{
+			$("#viewalllist").html("<p>Loading...</p>");
 
+			$.post("ajax.php", { 
+				call: "get_admin_questions_list", 
+				search: $("#questions_search").val()
+				},
+				
+				function(data) {
+
+					$("#viewalllist").html(data);
+					
+				}
+			);	
+		}
+
+		
 		function get_competition_list()
 		{
 			$("#viewcompetition").html("<p>Loading...</p>");

@@ -291,6 +291,42 @@ function get_questions($terms_array = false)
 	}
 }
 
+
+function get_questions_search($search_string)
+{
+	global $myPDO;
+	
+	// search the question text
+	$statement = $myPDO->prepare("SELECT * FROM rdtom_questions WHERE LOWER(Text) LIKE LOWER(?)");
+	$statement->bindValue(1, "%$search_string%", PDO::PARAM_STR);
+	$statement->execute();
+	$results = $statement->fetchAll(PDO::FETCH_ASSOC);
+	
+	// get question IDs given answer results
+	$statement = $myPDO->prepare("SELECT * FROM rdtom_questions JOIN (SELECT DISTINCT Question_ID FROM `rdtom_answers` WHERE LOWER(Text) LIKE LOWER(?)) as rows ON (id = Question_ID);");
+	$statement->bindValue(1, "%$search_string%", PDO::PARAM_STR);
+	$statement->execute();
+	$results2 = $statement->fetchAll(PDO::FETCH_ASSOC);
+	
+	$results = array_merge($results, $results2);
+	
+	
+	if ($results)
+	{
+		foreach ($results as $result)
+		{
+			$question = get_question_from_array($result);
+			$out[$question->get_ID()] = $question;
+		}
+		
+		// sort questions, naturally, by section 
+		usort($out, 'compare_questions');
+		
+		return $out;
+	}
+	
+}
+
 function get_questions_from_User_ID($req_User_ID, $opt_limit = false, $opt_timelimit = false, $opt_only_wrong = false)
 {
 	global $myPDO;
