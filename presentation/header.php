@@ -15,9 +15,11 @@
 		
 		<title>Roller Derby Test O'Matic</title>
 		
-		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script>
+		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8/jquery.min.js"></script>
    		
-		<link rel="stylesheet" href="<?echo get_CSS_URL(); ?>?v=30April" type="text/css" />
+		<link rel="stylesheet" href="<?echo get_CSS_URL(); ?>" type="text/css" />
+		<link rel="stylesheet" href="<?echo get_CSS_URL("print"); ?>" type="text/css" media="print">
+		
         <link rel="icon" href="<?echo get_theme_directory(); ?>favicon.gif" type="image/gif"/>
         <link rel="apple-touch-icon-precomposed" href="<?echo get_theme_directory(); ?>RDTOM_touch_icon.png"/>		
 		
@@ -65,9 +67,20 @@
 	  js.src = "//connect.facebook.net/en_GB/all.js#xfbml=1&appId=131848900255414";
 	  fjs.parentNode.insertBefore(js, fjs);
 	}(document, 'script', 'facebook-jssdk'));</script>
-
+	
+<!-- 
+	<p id="p_new_rules_link" style="margin:0.5em"><a onclick="$('#p_new_rules_link').hide();$('#p_new_rules').fadeIn();"><strong>Important:</strong> This site is currently using the new WFTDA 2013 rules. Click here for more.</a></p>
+	<p id="p_new_rules" style="display:none; margin:0.5em">
+		The WFTDA have released an updated set of rules. This site is now testing you on them. Not every section is covered yet, but most of the are and we're working on the rest.
+		<br /><br />
+		You can view and download the rules from <a href="http://wftda.com/rules">the WFTDA website</a>.
+	</p>
+ -->
+	
 	<h1><a href="<?php echo get_site_URL(); ?>">Roller Derby Test O'Matic</a></h1>
 	<h2><?php echo get_page_subtitle(); ?></h2>
+	
+	
 		
 <?php 
 

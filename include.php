@@ -17,6 +17,7 @@ include('functions/control.fnc.php');
 include('functions/account.fnc.php');
 include('functions/stats.fnc.php');
 include('functions/email.fnc.php');
+include('functions/tracker.fnc.php');
 
 // Database (function) files
 include('functions/database/questions.db.fnc.php');
@@ -31,6 +32,7 @@ include('objects/response.obj.php');
 include('objects/report.obj.php');
 include('objects/user.obj.php');
 include('objects/term.obj.php');
+include('objects/test.obj.php');
 
 // Extra files
 include("functions/phpmailer/class.phpmailer.php");

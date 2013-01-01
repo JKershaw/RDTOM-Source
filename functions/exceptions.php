@@ -76,6 +76,8 @@ function echo_error_page($error_string)
 			
 			<title>Roller Derby Test O'Matic</title>
 			
+			<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script>
+			
 			<link rel="stylesheet" href="http://rollerderbytestomatic.com/presentation/style.css" type="text/css" />
 	        <link rel="icon" href="http://rollerderbytestomatic.com/presentation/favicon.gif" type="image/gif"/>
 	        <link rel="apple-touch-icon-precomposed" href="http://rollerderbytestomatic.com/presentation/RDTOM_touch_icon.png"/>	
@@ -104,8 +106,8 @@ function echo_error_page($error_string)
 		<h2>Turn left and break the site.</h2>
 	
 		<p>For some reason the site has generated an error. It's been logged and will be delt with accordingly (Being a broken website, Major!). You can try doing what you just did again and see if it's only a temporary bug.<p>
-		<p>The error was:</p>
-		<p><?php echo $error_string; ?></p>
+		<p id="p_link"><a onclick="$('#p_link').hide(); $('#p_error').show();">Click to see the error details</a></p>
+		<p id="p_error" style="display:none"><?php echo $error_string; ?></p>
 		</body>
 	</html>
 	<?php 

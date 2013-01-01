@@ -32,7 +32,7 @@ function is_admin()
 	global $user;
 	if ($user)
 	{
-		if ($user->get_Name() == "Sausage Roller")
+		if (($user->get_Name() == "Sausage Roller") || ($user->get_Name() == "Cornish Knocker"))
 		{
 			return true;
 		}
@@ -175,8 +175,19 @@ function get_site_URL()
 	return $site_URL;
 }
 
-function get_CSS_URL()
+function get_CSS_URL($type = false)
 {
+	if ($type)
+	{
+		if ($type == "print")
+		{
+			return get_site_URL() . "presentation/print.css";
+		}
+		if ($type == "minify")
+		{
+			return get_site_URL() . "presentation/style-min.css";
+		}
+	}
 	return get_site_URL() . "presentation/style.css";
 }
 
@@ -550,7 +561,18 @@ function get_admin_terms_checkboxes($term, $question = false)
 				}
 			}
 			
-			$out .= "<input $selected_string type=\"checkbox\" id=\"term_checkbox[" . $term->get_ID() . "]\" name=\"term_checkbox[" . $term->get_ID() . "]\">" . htmlentities(stripslashes($term->get_Name())) . "<br />";
+			// special case where we want the Author
+			if ($term->get_taxonomy() == "author-id")
+			{
+				$tmp_user = $mydb->get_user_from_ID($term->get_Name());
+				$display_name = $tmp_user->get_Name();
+			}
+			else
+			{
+				$display_name = $term->get_Name();
+			}
+			
+			$out .= "<input $selected_string type=\"checkbox\" id=\"term_checkbox[" . $term->get_ID() . "]\" name=\"term_checkbox[" . $term->get_ID() . "]\">" . htmlentities(stripslashes($display_name)) . "<br />";
 		}
 		
 	}

@@ -1,5 +1,9 @@
 AddHandler php5-script .php
 
+<FilesMatch "\.(gif|css)$">
+Header set Cache-Control "max-age=172800, proxy-revalidate"
+</FilesMatch>
+
 RewriteEngine on
 
 RewriteRule ajax.php(.+)? ajax.php$1 [L]

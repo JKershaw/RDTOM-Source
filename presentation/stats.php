@@ -12,9 +12,10 @@ set_page_subtitle("Turn left and check out these awesome stats.");
 include("header.php");
 ?>
 	<p>
-		<a class="button" onclick="$('#layout_box_graphs').hide();$('#layout_box_traffic').hide();$('#layout_box_general').fadeIn();">General</a>
-		<a class="button" onclick="$('#layout_box_general').hide();$('#layout_box_traffic').hide();$('#layout_box_graphs').fadeIn();drawChart();">Graphs and Charts</a>
-		<a class="button" onclick="$('#layout_box_general').hide();$('#layout_box_graphs').hide();$('#layout_box_traffic').fadeIn();">Web Traffic</a>
+		<a class="button" onclick="$('#layout_box_graphs').hide();$('#layout_box_traffic').hide();$('#layout_box_general').fadeIn();$('#layout_box_questions').hide();">General</a>
+		<a class="button" onclick="$('#layout_box_general').hide();$('#layout_box_traffic').hide();$('#layout_box_graphs').fadeIn();$('#layout_box_questions').hide();drawChart();">Graphs and Charts</a>
+		<a class="button" onclick="$('#layout_box_general').hide();$('#layout_box_graphs').hide();$('#layout_box_traffic').fadeIn();$('#layout_box_questions').hide();">Web Traffic</a>
+		<a class="button" onclick="$('#layout_box_general').hide();$('#layout_box_graphs').hide();$('#layout_box_traffic').hide();$('#layout_box_questions').fadeIn();">Questions</a>
 	</p>
 	
 	<div class="layout_box" id="layout_box_general">
@@ -42,7 +43,7 @@ include("header.php");
 			A graph of responses-per-hour covering the past 24 hours:
 		</p>
 		<p>
-			<?php echo return_chart_24hour_responses(get_sections_array(), $mydb->get_responses(10000)); ?>
+			<?php echo return_chart_24hour_responses(); ?>
 		</p>
 		
 		<p>
@@ -73,7 +74,15 @@ include("header.php");
 			<iframe src="http://www.seethestats.com/stats/6319/Visitors_5174a3827_ifr.html" style="width:700px;height:300px;border:none;" scrolling="no" frameborder="0"></iframe>
 		</p>
 	</div>
+	
+	<div class="layout_box" id="layout_box_questions" style="display:none;">
+		<h3>Question breakdown by type (there is overlap):</h3>
+		<p>WFTDA 5 (May 2010): <?php echo number_format(count(get_questions(array("rule-set" => "WFTDA5"))));?></p>
+		<p>WFTDA 6 (Jan 2013): <?php echo number_format(count(get_questions(array("rule-set" => "WFTDA6"))));?></p>
 		
+		
+		
+	</div>
 		<script type="text/javascript">
 
 		
