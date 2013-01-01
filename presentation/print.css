@@ -1,0 +1,16 @@
+body	
+{
+	font-size:12px;
+	max-width: 100%;	
+}
+
+.footer
+{
+	display:none;
+}
+
+
+.print_footer 
+{
+	display: block;
+}

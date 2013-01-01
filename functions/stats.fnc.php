@@ -281,101 +281,121 @@ function return_chart_24hour_responses()
 	global $mydb;
 
 	// get the raw values
-	$stats = $mydb->get_stats_hourly_posts(24);
-	
-	$current_day = -1;
-	$day_offset = 0;
-	
-	foreach ($stats as $id => $stat)
-	{
-		// break the hour string down into its three parts
-
-		preg_match_all('/\d+/', $stat['hour'], $numbers);
-
-		// are we on a new day?
-		if ($current_day != $numbers[0][1])
-		{
-			// ignore if this is the first time
-			if ($current_day != -1)
-			{
-				// we're onto a new day, so add the 24 hour offset
-				$day_offset = 1;
-			}
-			$current_day = $numbers[0][1];
-		}
-		
-		$hour = $numbers[0][2] + (24 * $day_offset);
-		
-		$raw_data[$hour] = $stat['responses'];
-	}
-	
-	// add any 0 data points
-	// get the hour 24 hours ago
-	$hour_ago = date("G", (gmmktime() - 86400));
-	
-	for ($i = $hour_ago; $i <= $hour_ago; $i++)
-	{
-		if (!$raw_data[$i])
-		{
-			$raw_data[$i] = 0;
-		}
-	}
+	$raw_data = $mydb->get_stats_hourly_posts(24);
 	
 	// make the final data point the current per hour rate
-	array_pop($raw_data);
-	$raw_data[$hour] = $mydb->get_response_count_since(gmmktime() - 3600);
+	// $raw_data[24] = $mydb->get_response_count_since(gmmktime() - 3600);
 	
-	
-	// get the floating average
-	$tmp_average_data = get_average_of_array($raw_data, 2);
-	// make the average_data index start at the same place as the raw_data and add 0 at the start
-	reset($raw_data);
-	$raw_data_first_key = key($raw_data);
-	
-	foreach ($tmp_average_data as $average_index => $data)
+	// use a mix of the current hour plus previous hour to get value
+	$current_minute = date('i');
+	if ($current_minute > 0)
 	{
-		if (!$data)
-		{
-			$data = 0;
-		}
-		$average_data[$raw_data_first_key + $average_index] = $data;
+		$percentage_hour_complete = round($current_minute / 60);
+		$raw_data[24] = round($raw_data[24] + ($raw_data[23] * (1 - $percentage_hour_complete)));
 	}
+	else
+	{
+		$raw_data[24] = $raw_data[23];
+	}
+	
+	
+	/*
+	 * With an average
+	 */
+	/*
+		// get the floating average
+		$tmp_average_data = get_average_of_array($raw_data, 2);
+		
+		// make the average_data index start at the same place as the raw_data and add 0 at the start
+		reset($raw_data);
+		$raw_data_first_key = key($raw_data);
+		
+		foreach ($tmp_average_data as $average_index => $data)
+		{
+			if (!$data)
+			{
+				$data = 0;
+			}
+			$average_data[$raw_data_first_key + $average_index] = $data;
+		}
+		
+		// merge it all into one array
+		foreach($raw_data as $id => $response_count)
+		{
+			$hour_count = 24-$id;
+			if ($hour_count > 1)
+			{
+				$hour_string = $hour_count . " hours ago";
+			}
+			elseif ($hour_count == 1)
+			{
+				$hour_string = $hour_count . " hour ago";
+			}
+			elseif ($hour_count == 0)
+			{
+				$hour_string = "This hour";
+			}
+			$data_string_array[] = "
+			['". $hour_string . "',  " .(integer)$raw_data[$id] . ",      " .(integer)$average_data[$id] . "]";
+		}
+		
+		$data_string = implode(", ", $data_string_array);
+		
+		$drawChart_string = '
+		var data = google.visualization.arrayToDataTable([
+	          [\'Hour\', \'Responses\', \'Average\'],
+	          ' . $data_string . '
+	        ]);
+	
+	    var options = {
+	          titlePosition: \'none\',
+	          hAxis: {titlePosition: \'none\', textPosition: \'none\'},
+	          chartArea: {width: \'90%\', height: \'90%\', top: 10},
+	          legend: {position: \'none\'},
+	          colors: [\'#b1b1e8\', \'#0000FF\']
+	    };
+	    ';
+	*/
+	// without average
 	
 	// merge it all into one array
-	foreach($raw_data as $id => $response_count)
-	{
-		$hour_count = $hour-$id;
-		if ($hour_count > 1)
+		foreach($raw_data as $id => $response_count)
 		{
-			$hour_string = $hour_count . " hours ago";
+			$hour_count = 24-$id;
+			if ($hour_count > 1)
+			{
+				$hour_string = $hour_count . " hours ago";
+			}
+			elseif ($hour_count == 1)
+			{
+				$hour_string = $hour_count . " hour ago";
+			}
+			elseif ($hour_count == 0)
+			{
+				$hour_string = "This hour";
+			}
+			$data_string_array[] = "
+			['". $hour_string . "',  " .(integer)$raw_data[$id] . "]";
 		}
-		elseif ($hour_count == 1)
-		{
-			$hour_string = $hour_count . " hour ago";
-		}
-		elseif ($hour_count == 0)
-		{
-			$hour_string = "This hour";
-		}
-		$data_string_array[] = "
-		['". $hour_string . "',  " .$raw_data[$id] . ",      " .$average_data[$id] . "]";
-	}
+		
+		$data_string = implode(", ", $data_string_array);
+		
+		$drawChart_string = '
+		var data = google.visualization.arrayToDataTable([
+	          [\'Hour\', \'Responses\'],
+	          ' . $data_string . '
+	        ]);
 	
-	$data_string = implode(", ", $data_string_array);
+	    var options = {
+	          titlePosition: \'none\',
+	          hAxis: {titlePosition: \'none\', textPosition: \'none\'},
+	          chartArea: {width: \'90%\', height: \'90%\', top: 10},
+	          legend: {position: \'none\'},
+	          colors: [\'#0000FF\']
+	    };
+	    ';
 	
-	$drawChart_string = '
-	var data = google.visualization.arrayToDataTable([
-          [\'Hour\', \'Responses\', \'Average\'],
-          ' . $data_string . '
-        ]);
-
-        var options = {
-          titlePosition: \'none\',
-          hAxis: {titlePosition: \'none\', textPosition: \'none\'},
-          chartArea: {width: \'90%\', height: \'90%\', top: 10},
-          legend: {position: \'none\'},
-          colors: [\'#b1b1e8\', \'#0000FF\']
-        };
+	$drawChart_string .= '
 
         var chart = new google.visualization.LineChart(document.getElementById(\'chart_24responses\'));
         chart.draw(data, options);';

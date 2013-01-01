@@ -347,27 +347,53 @@ class database_derbytest extends database
 	
 	
 	
-	public function get_stats_hourly_posts($hour_count, $hour_format = "%Y %j %H")
+	public function get_stats_hourly_posts($hour_count)
 	{
-		
-		$hour_format = $this->mysql_res($hour_format);
-		
 		$time_ago = gmmktime() - (60*60*$hour_count);
-		$time_now = gmmktime();
-		// round
 		$time_ago = floor($time_ago/3600) * 3600;
-		//$time_ago = floor($time_ago/3600) * 3600;
 		
+		/*
 		$query = "
 			SELECT 
 			count(*) AS responses,
-			FROM_UNIXTIME(Timestamp, '$hour_format') AS hour 
+			FROM_UNIXTIME(Timestamp, '%Y %j %H') AS hour 
 			FROM rdtom_responses 
-			WHERE Timestamp > '$time_ago' 
-			AND Timestamp < '$time_now'  
+			WHERE Timestamp > '$time_ago'  
 			GROUP BY hour 
-			ORDER BY Timestamp ASC";
-		return $this->get_results($query);
+			LIMIT 0 , 30";
+		
+		
+		$raw_data = $this->get_results($query);
+		*/
+		
+		// get the data from the database
+		$query = "
+			SELECT 
+			Timestamp
+			FROM rdtom_responses 
+			WHERE Timestamp > '$time_ago' ";
+		
+		$raw_timestamps = $this->get_col($query);
+		
+		// build an empty array
+		for ($i = 0; $i < 24; $i ++)
+		{
+			$tmp_timestamp = $time_ago + (60*60*$i);
+			$results[(int) $tmp_timestamp / 3600] = 0;
+			
+		}
+		
+		// fill it with data
+		foreach ($raw_timestamps as $timestamp)
+		{
+			//$results[date('Y z H', $timestamp)]++;
+			$results[(int) $timestamp / 3600]++;
+		}
+		
+		// get the index starting from 0
+		$results = array_values($results);
+		
+		return $results;
 	}
 	
 
@@ -815,22 +841,32 @@ class database_derbytest extends database
 		$this->run_query($query);
 	}
 	
-	public function get_terms($req_taxonomy, $req_Question_ID = false)
+	public function get_terms($req_taxonomy = false, $req_Question_ID = false)
 	{
-		$req_taxonomy = $this->mysql_res($req_taxonomy);
 		
 		if ($req_Question_ID)
 		{
 			settype($req_Question_ID, "integer");
-		
-			$query = "SELECT rdtom_terms.* 
-				FROM rdtom_terms
-				JOIN rdtom_relationships ON rdtom_relationships.Term_ID = rdtom_terms.ID
-				WHERE taxonomy =  '$req_taxonomy'
-				AND rdtom_relationships.Question_ID =  '$req_Question_ID'";
+			if ($req_taxonomy)
+			{
+				$req_taxonomy = $this->mysql_res($req_taxonomy);
+				$query = "SELECT rdtom_terms.* 
+					FROM rdtom_terms
+					JOIN rdtom_relationships ON rdtom_relationships.Term_ID = rdtom_terms.ID
+					WHERE taxonomy =  '$req_taxonomy'
+					AND rdtom_relationships.Question_ID =  '$req_Question_ID'";
+			}
+			else
+			{
+				$query = "SELECT rdtom_terms.* 
+					FROM rdtom_terms
+					JOIN rdtom_relationships ON rdtom_relationships.Term_ID = rdtom_terms.ID
+					WHERE rdtom_relationships.Question_ID =  '$req_Question_ID'";
+			}
 		}
 		else
 		{
+			$req_taxonomy = $this->mysql_res($req_taxonomy);
 			$query = "SELECT * FROM rdtom_terms WHERE taxonomy = '$req_taxonomy' ";
 		}
 		
@@ -869,6 +905,25 @@ class database_derbytest extends database
 		}
 	}
 	
+	public function get_term_from_taxonomy_and_name($req_taxonomy, $req_name)
+	{
+		$req_taxonomy = $this->mysql_res($req_taxonomy);
+		$req_name = $this->mysql_res($req_name);
+		
+		$query = "SELECT * FROM rdtom_terms WHERE taxonomy = '$req_taxonomy' AND name = '$req_name'";
+
+		$result = $this->get_row($query);
+		
+		if ($result)
+		{
+			return $this->get_term_from_array($result);
+		}
+		else
+		{
+			return false;
+		}
+	}
+	
 	public function get_term_from_array($req_array)
 	{
 		
@@ -884,6 +939,14 @@ class database_derbytest extends database
 		settype($req_question_ID, "integer");
 		
 		$query = "DELETE FROM rdtom_relationships WHERE Question_ID = '" .$req_question_ID . "'";
+		$this->run_query($query);
+	}
+	
+	public function remove_relationship_given_Term_ID($req_term_ID)
+	{
+		settype($req_term_ID, "integer");
+		
+		$query = "DELETE FROM rdtom_relationships WHERE Term_ID = '" .$req_term_ID . "'";
 		$this->run_query($query);
 	}
 	

@@ -23,7 +23,7 @@ if ($_POST)
 	// are we editing a question or adding a new one?
 	if ($_POST['question_id'] > 0)
 	{
-		if ($_POST['question_text'] == "delete")
+		if (strtolower($_POST['question_text']) == "delete")
 		{
 			$mydb->remove_question_and_answers($_POST['question_id']);
 			$message .= "Deleted. ";
@@ -88,6 +88,13 @@ if ($_POST)
 				}
 				$message .= "Relationships Rebuilt! ";	
 			}
+			
+			// rebuild the holes map, if the new question falls into the parameters defined in default_terms_array
+			if ($tmp_question->is_default_terms_array())
+			{
+				rebuild_questions_holes_map();
+				$message .= "Holes map rebuilt! ";	
+			}
 		}
 	}
 	else 
@@ -105,7 +112,7 @@ if ($_POST)
 				add_answer($question_id, $answer, $is_correct);
 			}
 		}
-		$message .= "Question saved!";
+		$message .= "New question saved! ";
 		
 		// build new relationships
 		if ($_POST['term_checkbox'])
@@ -115,6 +122,16 @@ if ($_POST)
 				$mydb->add_relationship($question_id, $term_ID);
 			}
 			$message .= "Relationships Built! ";	
+		}
+		
+		// do we need to rebuild the holes map
+		$tmp_question = get_question_from_ID($question_id);
+
+		// rebuild the holes map, if the new question falls into the parameters defined in default_terms_array
+		if ($tmp_question->is_default_terms_array())
+		{
+			rebuild_questions_holes_map();
+			$message .= "Holes map rebuilt! ";	
 		}
 	}
 }
@@ -167,6 +184,74 @@ if (($url_array[1] == "edit") && !$question_deleted)
 	$reports_question = $mydb->get_reports_from_question_ID($question->get_ID(), REPORT_OPEN);
 }
 
+
+// a recomptue request was recieved
+if ($_GET['recompute'])
+{
+	if ($_GET['recompute'] == "difficulty")
+	{
+		// remove all difficulty relationships
+		$difficulty_terms = $mydb->get_terms("difficulty");
+		
+		foreach($difficulty_terms as $term)
+		{
+			$mydb->remove_relationship_given_Term_ID($term->get_ID());
+		}
+		
+		$message .= "Difficulty relationships removed! ";
+		
+		// for each difficulty level get all questions - limits are calculated to the nearest 10
+		$all_beginner_questions = get_questions_difficulty_limit(80, 100);
+		$all_intermediate_questions = get_questions_difficulty_limit(40, 90);
+		$all_expert_questions = get_questions_difficulty_limit(0, 60);
+		
+		$message .= "All questions loaded (Beginner " . count($all_beginner_questions) . ", Intermediate: " . count($all_intermediate_questions) . ", Expert: " . count($all_expert_questions) . ")!";
+		
+		// for each question, add the difficulty relationship
+		$beginner_term = $mydb->get_term_from_taxonomy_and_name("difficulty", "Beginner");
+		$intermediate_term = $mydb->get_term_from_taxonomy_and_name("difficulty", "Intermediate");
+		$expert_term = $mydb->get_term_from_taxonomy_and_name("difficulty", "Expert");
+		
+		$message .= "Term IDs loaded (Beginner " . $beginner_term->get_ID() . ", Intermediate: " . $intermediate_term->get_ID() . ", Expert: " . $expert_term->get_ID() . ")!";
+		
+		foreach($all_beginner_questions as $question)
+		{
+			$mydb->add_relationship($question->get_ID(), $beginner_term->get_ID());
+		}
+		foreach($all_intermediate_questions as $question)
+		{
+			$mydb->add_relationship($question->get_ID(), $intermediate_term->get_ID());
+		}
+		foreach($all_expert_questions as $question)
+		{
+			$mydb->add_relationship($question->get_ID(), $expert_term->get_ID());
+		}
+		
+		$message .= " Relationships rebuilt!";
+
+	}	
+	/*
+	if ($_GET['recompute'] == "tagastest")
+	{	
+		// tag everything as a test question
+		
+		// delete all existing tags
+		$tag_question_term = $mydb->get_term_from_taxonomy_and_name("tag", "Test Question");
+		$mydb->remove_relationship_given_Term_ID($tag_question_term->get_ID());
+		
+		$message .= " Test Question tag removed from all questions!";
+		
+		$all_questions = get_questions();
+		
+		foreach($all_questions as $question)
+		{
+			$mydb->add_relationship($question->get_ID(), $tag_question_term->get_ID());
+		}
+		$message .= " Test Question tag added to all questions!";
+		
+	}
+	*/
+}
 // get the open reports (and the value for the menu)
 $reports_open = $mydb->get_reports(REPORT_OPEN);
 		
@@ -192,6 +277,7 @@ include("header.php");
 		<a class="button" onClick="show_page('all_questions');">All Questions</a>
 		<a class="button" onClick="show_page('logs');">Logs</a>
 		<!-- <a class="button" onClick="show_page('competition');">Competition</a> -->
+		<a class="button" onClick="show_page('recompute');">Recompute</a>
 		<a class="button" onClick="show_page('test');">Test</a>
 		<a class="button" onClick="show_page('admin');">Admin</a>
 	</p>
@@ -225,14 +311,19 @@ include("header.php");
 		
 			?>">
 		
-			<input type="hidden" name="question_id" value = "<?php 
+			
+		
+			<table>
+			
+				<tr>
+					<td style="width:200px">ID:</td>
+					<td><input type="text"  id="question_id" name="question_id" value = "<?php 
 			if ($question)
 			{
 				echo $question->get_ID();
 			}
-			?>"></input>
-		
-			<table>
+			?>"></input> (<a onClick="$('#term_checkbox\\[2\\]').prop('checked', true);$('#term_checkbox\\[1\\]').prop('checked', false);$('#question_id').val('');setdefaultanswers('pen');">6-ify penalty</a>)</td>
+				</tr>
 				<tr>
 					<td style="width:200px">Question:</td>
 					<td><textarea id="question_text" style="width:500px" name="question_text" cols="40" rows="5"><?php 
@@ -350,10 +441,26 @@ include("header.php");
 							echo get_admin_terms_checkboxes("tag", $question);
 						?>
 					</td>
+				</tr>			
+				<tr>
+					<td style="width:200px">Difficulty:</td>
+					<td>
+						<?php 
+							echo get_admin_terms_checkboxes("difficulty", $question);
+						?>
+					</td>
+				</tr>			
+				<tr>
+					<td style="width:200px">Author:</td>
+					<td>
+						<?php 
+							echo get_admin_terms_checkboxes("author-id", $question);
+						?>
+					</td>
 				</tr>
 				<tr>
 					<td></td>
-					<td><a class="button" onclick="newquestionvalidation('editquestionform');return false;"/><?php 
+					<td><a class="button" id="edit_question_button" onclick="newquestionvalidation('editquestionform');return false;"/><?php 
 						if ($question)
 						{
 							echo "Edit";
@@ -473,16 +580,98 @@ include("header.php");
 	</div>
 	
 	<div class="layout_box" id="layout_box_all_questions" style="display:none;">
-	
+		
+		
+		<p>Search: <input type="text" id="questions_search" name="questions_search"/> <a onClick="get_search_questions_list();">Search</a></p>
+		<p>Section: <input type="text" id="filter_section" name="filter_section"/></p>
+		<p>Rule set: 
+			<a class="current_ruleset_selector current_ruleset_selector_WFTDA5" onClick="change_current_ruleset('WFTDA5');">WFTDA5</a> 
+			<a class="current_ruleset_selector current_ruleset_selector_WFTDA6" onClick="change_current_ruleset('WFTDA6');">WFTDA6</a> 
+			<a class="current_ruleset_selector current_ruleset_selector_WFTDA6_Draft" onClick="change_current_ruleset('WFTDA6_Draft');">WFTDA6_Draft</a></p>
+		
 		<p id="viewalllink"><a onclick="$('#viewalllink').hide(); $('#viewalllist').show(); get_all_questions_list();">Load all questions</a></p>
 		<p id="viewalllist" style="display:none">
 		</p>
+		
+		<script type="text/javascript">
+		var filter_string;
+		var current_ruleset = "question_string";
+
+		function change_current_ruleset(new_ruleset)
+		{
+			current_ruleset = '.' + new_ruleset;
+			$('.current_ruleset_selector').css( "font-weight" , "normal");
+			$('.current_ruleset_selector_' + new_ruleset).css( "font-weight" , "bold");
+			filterQuestions(true);
+		}
+		
+		function filterQuestions(var_force)
+		{
+			var current_section = $("#filter_section").val();
+
+			// Do we need to filter?
+			if ((filter_string != current_section) || var_force)
+			{
+				filter_string = current_section;
+					
+				// remove the training full stop if there is one
+				if (current_section.substr(current_section.length - 1) == ".")
+				{
+					current_section = current_section.slice(0, - 1);
+				}
+
+				// hide everything, then decide what to show $('.question_string').hide();
+				$('.question_string').hide();
+				
+				// filter by section
+				if (current_section == "")
+				{
+					// no section specified, so show the current section
+					$(current_ruleset).show();
+				}
+				else
+				{
+					// a section is given
+					current_section = '.section_' + current_section.replace(/\./g, "_");
+					$(current_section + current_ruleset).show();
+				}
+				
+			}
+		}
+
+		$(document).ready(function(){
+		    var intervalID = setInterval(function(){
+		    	filterQuestions(false)
+		    }, 100); // 100 ms check
+		});
+		</script>
+	</div>
+	
+	<div class="layout_box" id="layout_box_recompute" style="display:none;">
+	
+		<p><a href="<?php echo get_site_URL() ?>admin/?recompute=difficulty#recompute">Recalculate difficulty terms for all questions</a></p>
 
 	</div>
 	
 	<div class="layout_box" id="layout_box_test" style="display:none;">
 	
 		<?php 
+		
+		print_r(get_questions_search('passed'));
+		/*
+		$all_questions = get_questions();
+		
+		foreach ($all_questions as $question)
+		{
+			try {
+				$question->get_answers();
+			} catch (Exception $e) {
+				echo $question->get_ID() . " ";
+			}
+			
+			
+		}
+		*/
 		/*
 		$all_users = $mydb->get_users();
 		
@@ -493,7 +682,7 @@ include("header.php");
 		}
 		*/
 		
-		
+		/*
 		$params = array(
 				"tag" => "Test Question",
 				"rule-set" => "WFTDA6"
@@ -551,7 +740,7 @@ include("header.php");
 			echo "No questions found";
 		}
 		echo "<br />";
-		
+		*/
 		?>
 
 	</div>
@@ -610,6 +799,8 @@ include("header.php");
 
 		<script type="text/javascript">
 
+
+		
 		function get_all_questions_list()
 		{
 			$("#viewalllist").html("<p>Loading...</p>");
@@ -625,7 +816,24 @@ include("header.php");
 				}
 			);	
 		}
+		function get_search_questions_list()
+		{
+			$("#viewalllist").html("<p>Loading...</p>");
 
+			$.post("ajax.php", { 
+				call: "get_admin_questions_list", 
+				search: $("#questions_search").val()
+				},
+				
+				function(data) {
+
+					$("#viewalllist").html(data);
+					
+				}
+			);	
+		}
+
+		
 		function get_competition_list()
 		{
 			$("#viewcompetition").html("<p>Loading...</p>");
@@ -681,17 +889,19 @@ include("header.php");
 			if (type == "pen")
 			{
 				$("input[name='answer[0]']").val("No Impact/No Penalty");
-				$("input[name='answer[1]']").val("Minor Penalty");
-				$("input[name='answer[2]']").val("Major Penalty");
-				$("input[name='answer[3]']").val("Expulsion");
-				<?php for ($i = 4; $i < NUMBER_OF_ANSWERS; $i++) { ?>
+				$("input[name='answer[1]']").val("Major Penalty");
+				$("input[name='answer[2]']").val("Expulsion");
+				<?php for ($i = 3; $i < NUMBER_OF_ANSWERS; $i++) { ?>
 				$("input[name='answer[<?php echo $i ?>]']").val("");	
 				<?php } ?>
 			}
 		}
 
+		
 		function show_page(page_name)
 		{
+			
+			
 			if (page_name == "edit_question")
 			{
 	    		$('#layout_box_edit_question').fadeIn();
@@ -712,11 +922,17 @@ include("header.php");
 			
 			if (page_name == "all_questions")
 			{
+
+				
 	    		$('#layout_box_all_questions').fadeIn();
+	    		$('#viewalllink').hide(); 
+	    		$('#viewalllist').show(); 
+	    		get_all_questions_list();
 			}
 			else
 			{
 	    		$('#layout_box_all_questions').hide();
+	    		
 			}
 			
 			if (page_name == "logs")
@@ -755,6 +971,15 @@ include("header.php");
 	    		$('#layout_box_test').hide();
 			}
 			
+			if (page_name == "recompute")
+			{
+	    		$('#layout_box_recompute').fadeIn();
+			}
+			else
+			{
+	    		$('#layout_box_recompute').hide();
+			}
+			
 	    	window.location.hash='#'+page_name;
 	    	
 		}
@@ -764,5 +989,7 @@ include("header.php");
 		{
 	        show_page(location.href.substr(location.href.indexOf("#") + 1));
 	    }
+
+		
 		</script>
 <?php include("footer.php");  ?>

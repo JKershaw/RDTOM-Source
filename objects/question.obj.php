@@ -12,6 +12,8 @@ class question
 	private $ResponseCount;
 	private $answers_array;
 	
+	private $all_terms;
+	
 	function __construct(
 		$req_ID,
 		$req_Text,
@@ -92,7 +94,7 @@ class question
 		return $this->Notes;
 	}
 	
-	public function get_Answers($max_num_answers = 4)
+	public function get_Answers($max_num_answers = 4, $random_seed = false)
 	{
 		global $mydb;
 		$answers = get_answers_from_question_ID($this->ID);
@@ -123,6 +125,13 @@ class question
 		{
 			throw new exception("Error: No wrong answers found");
 		}
+	
+		
+		if ($random_seed)
+		{
+			srand($random_seed);
+		}
+		
 		
 		//select one right answer and $max_num_answers-1 wrong answers;
 		$out_answers[] = $correct_answers[array_rand($correct_answers)];
@@ -155,7 +164,7 @@ class question
 	public function get_WFTDA_Link()
 	{
 		// if there's a section
-		if ($this->get_Section())
+		if ($this->get_Section() && $this->is_taxonomy_and_value("rule-set", "WFTDA6"))
 		{
 			// if it looks like a valid WFTDA rule
 			if (preg_match("@^([1-9][\.]?)+@", $this->get_Section()))
@@ -164,15 +173,15 @@ class question
 				$section_array = explode(".", $this->get_Section());
 				if (count($section_array) == 1)
 				{
-					return "http://wftda.com/rules/20100526/section/" . $section_array[0];
+					return "http://wftda.com/rules/20130101/section/" . $section_array[0];
 				}
 				elseif (count($section_array) <= 3)
 				{
-					return "http://wftda.com/rules/20100526/section/" . $section_array[0] . "." . $section_array[1];
+					return "http://wftda.com/rules/20130101/section/" . $section_array[0] . "." . $section_array[1];
 				}
 				else
 				{
-					return "http://wftda.com/rules/20100526/section/" . $section_array[0] . "." . $section_array[1] . "." . $section_array[2];
+					return "http://wftda.com/rules/20130101/section/" . $section_array[0] . "." . $section_array[1] . "." . $section_array[2];
 				}
 			}
 		}
@@ -298,15 +307,98 @@ class question
 	
 	public function get_terms($req_taxonomy)
 	{
+		// set up the local cached copy of the terms
+		if (!$this->all_terms)
+		{
+			global $mydb;
+			$this->all_terms = $mydb->get_terms(false, $this->ID);
+		}
+		
+		// find the terms from the cached copy
+		if ($this->all_terms)
+		{
+			foreach ($this->all_terms as $term)
+			{
+				if ($term->get_taxonomy() == $req_taxonomy)
+				{
+					$terms[$term->get_ID()] = $term;
+				}
+			}
+			
+			// return value
+			if ($terms)
+			{
+				return $terms;
+			}
+		}
+		
+		return false;
+	}
+	
+	public function is_relationship_true($req_taxonomy, $req_termname)
+	{
 		global $mydb;
-		$terms = $mydb->get_terms($req_taxonomy, $this->ID);
+		$terms = $this->get_terms($req_taxonomy);
 		if ($terms)
 		{
-			return $terms;
+			foreach ($terms as $term)
+			{
+				if ($term->get_Name() == $req_termname)
+				{
+					return true;
+				}
+			}
 		}
-		else
+		
+		return false;
+		
+	}
+	
+	public function is_default_terms_array()
+	{
+		global $default_terms_array;
+		// return true if this question falls within any of the default_terms_array
+		
+		// for each of the default taxonomy value pairs
+		
+		foreach ($default_terms_array as $taxonomy => $value)
 		{
-			return false;
+			// get all the terms for this taxonomy, if they exist
+			$terms = $this->get_terms($taxonomy);
+			
+			if ($terms)
+			{
+				// otherwise,return true if there's a partial match
+				foreach ($terms as $term)
+				{
+					if ($value == $term->get_Name())
+					{
+						return true;
+						//echo "Holes map not built because there are terms which do not match in the $taxonomy taxonomy ($value != " . $term->get_Name() . ")";
+						//break 2;
+					}
+				}
+			}
 		}
+		
+		return false;
+	}
+	
+	public function is_taxonomy_and_value($taxonomy, $value)
+	{
+		$terms = $this->get_terms($taxonomy);
+			
+		if ($terms)
+		{
+			// otherwise,return true if there's a partial match
+			foreach ($terms as $term)
+			{
+				if ($value == $term->get_Name())
+				{
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 }

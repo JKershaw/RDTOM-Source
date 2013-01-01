@@ -8,7 +8,7 @@ function set_up_question($question_ID)
 	// set the is question global variable
 	$is_question = true;
 
-	if ($question_ID == "random")
+	if (($question_ID == "random") || !$question_ID)
 	{
 		$is_random_question = true;
 		$question = get_question_random();
@@ -73,7 +73,7 @@ function set_up_database()
 	/* Connect to an ODBC database using driver invocation */
 	try 
 	{
-	    $myPDO = new PDO("mysql:dbname=$database_name;host=$database_host", $database_username, $database_userpassword);
+	    $myPDO = new LoggedPDO("mysql:dbname=$database_name;host=$database_host", $database_username, $database_userpassword);
 	} 
 	catch (PDOException $e) 
 	{

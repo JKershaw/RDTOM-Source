@@ -72,7 +72,11 @@ function get_question_random()
 			$question = get_question_from_array($result);
 			
 			// if the question hasn't already been asked recently OR we're not remebering things in the session, return it
-			if (!$remeber_in_session || ($_SESSION['random_questions_asked'] && !in_array($question->get_ID(), $_SESSION['random_questions_asked'])))
+			if (!$remeber_in_session || 
+				(
+				!$_SESSION['random_questions_asked'] || 
+				($_SESSION['random_questions_asked'] && !in_array($question->get_ID(), $_SESSION['random_questions_asked'])))
+				)
 			{
 				return $question;
 			}
@@ -83,13 +87,18 @@ function get_question_random()
 		}
 	}
 	
-	// we tried 5 times to find a unique question, and failed, so resort back to the old random question getter
+	// we tried a few times to find a unique question, and failed, so resort back to the old random question getter
 	return get_question_random_simple();
 }
 
 function get_question_random_simple()
 {
-	global $myPDO, $remeber_in_session;
+	// get random question from default taxonomies
+	global $default_terms_array;
+	$questions = get_questions($default_terms_array);
+	$question = $questions[array_rand($questions)];
+	/*
+	global $myPDO, $remeber_in_session, $default_terms_array;
 	
 	$clause = "";
 	
@@ -120,15 +129,18 @@ function get_question_random_simple()
 		throw new exception("Woah, either the site ran out of questions, or the database is being updated. Try reloading the page.");
 	}	
 
+	*/
+	
 	return $question;
 }
 
 function get_questions($terms_array = false)
 {
-	global $myPDO;
+	global $myPDO, $default_terms_array;
 	
 	if ($terms_array)
 	{
+	
 		// the array holds a list of taxonomys and values to use in the search for questions
 		/*
 		 * for example:
@@ -253,12 +265,12 @@ function get_questions($terms_array = false)
 				R.Question_ID = rdtom_questions.ID");
 		
 		$statement = $myPDO->query($query_string);
+	
 	}
 	else
 	{
 		$statement = $myPDO->query("SELECT * FROM rdtom_questions ORDER BY Section ASC");
 	}
-	
 	$results = $statement->fetchAll(PDO::FETCH_ASSOC);
 	
 	if ($results)
@@ -277,6 +289,42 @@ function get_questions($terms_array = false)
 	{
 		throw new exception("Whoops, no questions found in the database");
 	}
+}
+
+
+function get_questions_search($search_string)
+{
+	global $myPDO;
+	
+	// search the question text
+	$statement = $myPDO->prepare("SELECT * FROM rdtom_questions WHERE LOWER(Text) LIKE LOWER(?)");
+	$statement->bindValue(1, "%$search_string%", PDO::PARAM_STR);
+	$statement->execute();
+	$results = $statement->fetchAll(PDO::FETCH_ASSOC);
+	
+	// get question IDs given answer results
+	$statement = $myPDO->prepare("SELECT * FROM rdtom_questions JOIN (SELECT DISTINCT Question_ID FROM `rdtom_answers` WHERE LOWER(Text) LIKE LOWER(?)) as rows ON (id = Question_ID);");
+	$statement->bindValue(1, "%$search_string%", PDO::PARAM_STR);
+	$statement->execute();
+	$results2 = $statement->fetchAll(PDO::FETCH_ASSOC);
+	
+	$results = array_merge($results, $results2);
+	
+	
+	if ($results)
+	{
+		foreach ($results as $result)
+		{
+			$question = get_question_from_array($result);
+			$out[$question->get_ID()] = $question;
+		}
+		
+		// sort questions, naturally, by section 
+		usort($out, 'compare_questions');
+		
+		return $out;
+	}
+	
 }
 
 function get_questions_from_User_ID($req_User_ID, $opt_limit = false, $opt_timelimit = false, $opt_only_wrong = false)
@@ -421,6 +469,82 @@ function get_questions_hard($limit = 30, $easy = false)
 	}
 }
 
+
+function get_questions_difficulty_limit($lower_limit, $upper_limit)
+{
+	global $myPDO;
+
+	
+	// The query to get the IDs of hard questions
+	$statement = $myPDO->prepare("
+	SELECT 
+		* ,
+		correct_perc
+	FROM 
+		rdtom_questions
+	JOIN
+	(
+		SELECT
+	        Question_ID,
+			correct_perc
+	        
+	   FROM
+	        (
+	        SELECT 
+				Question_ID, 
+				ROUND((COUNT( CASE  `Correct` WHEN 1 THEN  `Correct` END ) / COUNT( * )) *10) *10 AS  'correct_perc'
+			FROM  
+				`rdtom_responses` 
+			GROUP BY 
+				`Question_ID` 
+			ORDER BY 
+				`correct_perc` ASC 
+			) O
+		WHERE 
+			O.correct_perc <= :upper_limit
+		AND 
+			O.correct_perc >= :lower_limit
+	) R
+	ON 
+		R.Question_ID = rdtom_questions.ID
+	");
+
+	$statement->bindValue(':lower_limit', $lower_limit, PDO::PARAM_INT);
+	$statement->bindValue(':upper_limit', $upper_limit, PDO::PARAM_INT);
+	$statement->execute();
+	$results = $statement->fetchAll();
+	
+	if ($results)
+	{
+		foreach ($results as $result)
+		{
+			$out[] = get_question_from_array($result);
+		}
+		return $out;
+	}
+	else
+	{
+		return false;
+	}
+}
+/*
+ * Query to fetch frequency of each percentage
+	SELECT
+        COUNT(Question_ID),
+        correct_perc
+        FROM
+        (SELECT 
+		Question_ID, 
+		ROUND((COUNT( CASE  `Correct` WHEN 1 THEN  `Correct` END ) / COUNT( * )) *100) AS  'correct_perc'
+	FROM  
+		`rdtom_responses` 
+	GROUP BY 
+		`Question_ID` 
+	ORDER BY 
+		`correct_perc` ASC 
+	) O
+        GROUP BY correct_perc
+ */
 function get_question_correct_perc($req_ID)
 {
 	global $myPDO;
@@ -472,21 +596,36 @@ function add_question($req_text, $req_section, $req_notes)
 
 	$lastInsertedID = $myPDO->lastInsertId();
 	
-	rebuild_questions_holes_map();
-	
 	return $lastInsertedID;
 }
 
-function rebuild_questions_holes_map()
+function rebuild_questions_holes_map($terms_array = false)
 {
-	global $mydb;
+
+	global $mydb, $default_terms_array;
+	
+	$all_questions = get_questions($default_terms_array);
+	
 	// delete then remake the holes map table
-	$query = "
-	DROP TABLE IF EXISTS rdtom_questions_holes_map;
-	CREATE TABLE rdtom_questions_holes_map ( row_id int not NULL primary key, Question_ID int not null);
-	SET @id = 0;
-	INSERT INTO rdtom_questions_holes_map SELECT @id := @id + 1, ID FROM rdtom_questions;";
+	$query = "DROP TABLE IF EXISTS rdtom_questions_holes_map;
+	CREATE TABLE rdtom_questions_holes_map ( row_id int not NULL primary key, Question_ID int not null);";
+	
 	$mydb->run_multi_query($query);
+	
+	// populate the table
+	$i = 0;
+	foreach ($all_questions as $question)
+	{
+		$query = "INSERT INTO rdtom_questions_holes_map (
+			row_id ,
+			Question_ID
+			)
+			VALUES (
+			'" . $i . "',  '" . $question->get_ID() . "'
+			);";
+		$i++;
+		$mydb->run_query($query);
+	}
 }
 
 function edit_question($req_ID, $req_text, $req_section, $req_notes)
@@ -510,6 +649,6 @@ function edit_question($req_ID, $req_text, $req_section, $req_notes)
 			':Notes'=>$req_notes,
 			':ID'=>$req_ID));
 	
-	rebuild_questions_holes_map();
+	//rebuild_questions_holes_map();
 }
 ?>
