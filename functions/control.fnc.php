@@ -8,7 +8,7 @@ function set_up_question($question_ID)
 	// set the is question global variable
 	$is_question = true;
 
-	if ($question_ID == "random")
+	if (($question_ID == "random") || !$question_ID)
 	{
 		$is_random_question = true;
 		$question = get_question_random();
