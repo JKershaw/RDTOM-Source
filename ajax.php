@@ -73,8 +73,6 @@ try
 			$out = ajax_get_admin_competition_list();	
 		break;
 		
-		
-		
 	}
 	
 	echo $out;
@@ -88,8 +86,7 @@ function ajax_save_response()
 {
 	global $mydb, $remeber_in_session, $random_questions_to_remeber;
 	// saving the response
-	// Array ( [call] => save_response [question_ID] => 436 [response_ID] => 1919 )
-
+	
 	// clean the input
 	$question_ID = $_POST['question_ID'];
 	$response_ID = $_POST['response_ID'];
@@ -97,11 +94,12 @@ function ajax_save_response()
 	settype($response_ID, "integer");
 	
 	// get the question from the ID (tests if ID is valid)
-	$question = get_question_from_ID($question_ID);
+	// $question = get_question_from_ID($question_ID);
 	
-	// get if the answer is correct (will throw exception is invalid ID)
+	// is the answer is correct (will throw exception if it's an invalid ID)
 	$response_is_correct = is_answer_correct_from_ID($response_ID);
 	
+	// get the right User ID
 	if (is_logged_in())
 	{
 		global $user;
@@ -128,14 +126,7 @@ function ajax_save_response()
 		}
 		$_SESSION['random_questions_asked'][] = $question_ID;
 		
-		// remeber if it was correct or not
-		// remeber an unlimited number
-		/*
-		if (count($_SESSION['random_questions_results']) >= $random_questions_to_remeber)
-		{
-			array_shift($_SESSION['random_questions_results']);
-		}
-		*/
+		// remeber the results
 		$_SESSION['random_questions_results'][] = $response_is_correct;
 	}
 	

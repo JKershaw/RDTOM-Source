@@ -290,7 +290,7 @@ function return_chart_24hour_responses()
 	$current_minute = date('i');
 	if ($current_minute > 0)
 	{
-		$percentage_hour_complete = round($current_minute / 60);
+		$percentage_hour_complete = $current_minute / 60;
 		$raw_data[24] = round($raw_data[24] + ($raw_data[23] * (1 - $percentage_hour_complete)));
 	}
 	else
