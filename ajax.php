@@ -200,6 +200,14 @@ function ajax_count_minutly_responses()
 	return $mydb->get_response_count_since(gmmktime() - 60);
 }
 
+/*
+ * TODO Highest minutly rate
+ * 
+ * SELECT count(ID) as count, MINUTE(FROM_UNIXTIME(`Timestamp`)) as minute, 
+HOUR(FROM_UNIXTIME(`Timestamp`)) as hour, DAYOFYEAR(FROM_UNIXTIME(`Timestamp`)) as day 
+FROM rdtom_responses WHERE Timestamp > '1357127466'  GROUP BY minute, hour, day ORDER BY count DESC
+ */
+
 function ajax_count_questions()
 {
 	return get_question_count();
