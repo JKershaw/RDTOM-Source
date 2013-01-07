@@ -6,14 +6,15 @@
  * Built to help Roller Derby players learn the rules
  */
 
+// start the page speed tracker
+list($usec, $sec) = explode(" ", microtime());
+$page_timer_start = ((float)$usec + (float)$sec);
+		
 // start the output buffer
 ob_start ();
 
 // include needed files
 include('include.php');
-
-// start the page speed tracker
-set_up_tracker();
 
 // start the session
 session_start();

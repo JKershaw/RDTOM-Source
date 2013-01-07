@@ -58,13 +58,24 @@ else
 	?>
 </ol>
 
+<?php if ($question->get_Notes()) {?>
+	<p  style="display:none;" class="question_notes">Note: <?php echo htmlentities(stripslashes($question->get_Notes())); ?></p>
+<?php } ?>
+
+<p>
+	<a class="button mobilebutton" href="<?php echo get_site_URL(); ?>">New Question</a>
+</p>
+
 <?php if ($question->get_Source()) {?>
 	<p class="small_p" >Source: <?php echo htmlentities(stripslashes($question->get_Source())); ?></p>
 <?php } ?>
 
-<?php if ($question->get_Notes()) {?>
-	<p  style="display:none;" class="question_notes">Note: <?php echo htmlentities(stripslashes($question->get_Notes())); ?></p>
+<?php if ($question->get_Author()) {?>
+	<p class="small_p" >Author: <?php echo htmlentities(stripslashes($question->get_Author())); ?></p>
 <?php } ?>
+
+
+
 
 <script type="text/javascript">
 	var answered = false;
@@ -137,13 +148,6 @@ else
 	});
 	
 </script>
-
-
-
-<p>
-	<a class="button mobilebutton" href="<?php echo get_site_URL(); ?>">New Question</a>
-</p>
-
 
 <div class="report_form" id="hidden_report_form">
 	

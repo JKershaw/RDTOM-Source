@@ -30,7 +30,6 @@ if (!$url_array[1])
 ?>
 
 <h3>Create your test:</h3>
-<p><strong>Until the questions for the new rules have been used for a few weeks, the tests this page generates should not be relied on.</strong></p>
 <p>Note: Tests answers are not currently saved and don't count towards any of your statistics. For feedback, feature requests, questions and bug reports; please visit the <a href="http://www.facebook.com/RollerDerbyTestOMatic">RDTOM Facebook page</a>. I take no responsibility for anything you choose to do with these tests.</p>
 <form id="submittestparameters" name="submittestparameters" method="post" action="<? echo get_site_URL()?>test/generate">
 
@@ -48,8 +47,11 @@ if (!$url_array[1])
 <div id="test_customisation">
 	<p><strong>Difficulty</strong></p>
 	<p>
+		<input type="radio" name="test_difficulty" value="mixed" checked> Mixed</checkbox>
+	</p>
+	<p>
 		<input type="radio" name="test_difficulty" value="beginner"> Beginner</checkbox><br />
-		<input type="radio" name="test_difficulty" value="intermediate" checked> Intermediate</checkbox><br />
+		<input type="radio" name="test_difficulty" value="intermediate"> Intermediate</checkbox><br />
 		<input type="radio" name="test_difficulty" value="expert"> Expert</checkbox>
 	</p>
 	
@@ -95,13 +97,13 @@ if (!$url_array[1])
 		</script>
 	</p>
 	
-	<p><strong>Pass percentage:</strong></p>
+	<p><strong>Pass percentage</strong></p>
 	
 	<p>
 		<input type="text" size="5" id="test_pass_percentage"  name="test_pass_percentage" value="80" />&#37; (<span id="test_number_of_questions_span">36 / 45</span>)
 	</p>
 	
-	<p><strong>Type of test to generate:</strong></p>
+	<p><strong>Type of test to generate</strong></p>
 	
 	<p>
 		<input type="radio" name="test_output" value="interactiveHTML" checked> Interactive (can be filled in online) </checkbox><br />

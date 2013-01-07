@@ -55,7 +55,7 @@ class test
 			{
 				$terms_array["difficulty"] = "Expert";
 			}
-			else // default
+			elseif ($difficulty == "intermediate") // default
 			{
 				$terms_array["difficulty"] = "Intermediate";
 			}
@@ -117,7 +117,15 @@ class test
 		{
 			return "expert";
 		}
-		return "intermediate";
+		elseif ($this->difficulty == "intermediate")
+		{
+			return "intermediate";
+		}
+		else
+		{
+			return "mixed";
+		}
+		return false;
 	}
 	
 	public function set_pass_percentage($req_pass_percentage)

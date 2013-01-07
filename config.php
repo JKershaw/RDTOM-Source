@@ -1,5 +1,4 @@
 <?php
-
 /*
  * Parse the ini file
  */

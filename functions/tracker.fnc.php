@@ -15,9 +15,8 @@ function set_up_tracker()
 	// starts before we've set the user
 	//if (function_exists("is_admin") && is_admin())
 	//{
-		global $page_timer_start;
-		list($usec, $sec) = explode(" ", microtime());
-		$page_timer_start = ((float)$usec + (float)$sec);
+		//global $page_timer_start;
+		
 	//}
 }
 

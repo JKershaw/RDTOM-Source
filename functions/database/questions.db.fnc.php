@@ -134,7 +134,7 @@ function get_question_random_simple()
 	return $question;
 }
 
-function get_questions($terms_array = false)
+function get_questions($terms_array = false, $sort = true)
 {
 	global $myPDO, $default_terms_array;
 	
@@ -281,7 +281,10 @@ function get_questions($terms_array = false)
 		}
 		
 		// sort questions, naturally, by section 
-		usort($out, 'compare_questions');
+		if ($sort)
+		{
+			usort($out, 'compare_questions');
+		}
 		
 		return $out;
 	}

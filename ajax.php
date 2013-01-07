@@ -9,30 +9,15 @@
 // include needed files
 include('include.php');
 
-// start the session
-session_start();
+// process and return the ajax request
 try 
 {
-	// create necessary objects
+	// create the database
 	set_up_database();
-	set_up_logged_in_user();
-	//set_up_url_array();
 	
-	// process and return the ajax request
+	// those ajax requests which don't need session or user info
 	switch ($_POST['call']) 
 	{
-		case "save_response":
-			$out = ajax_save_response();	
-		break;	
-		case "remebered_questions_count":
-			$out = ajax_remebered_questions_count();		
-		break;	
-		case "remebered_questions_percentage":
-			$out = ajax_remebered_questions_percentage();	
-		break;	
-		case "remebered_questions_string":
-			$out = ajax_remebered_questions_string();	
-		break;	
 		case "count_responses":
 			$out = ajax_count_responses();	
 		break;	
@@ -57,6 +42,38 @@ try
 		case "count_unique_IPs":
 			$out = ajax_count_unique_IPs();	
 		break;
+	}
+	
+	// did the switch activate? 
+	if ($out)
+	{
+		echo $out;
+		exit;
+	}
+
+	
+	
+	// these functions reqire a logged in user
+	// start the session
+	session_start();
+	set_up_logged_in_user();
+	//set_up_url_array();
+	
+	// process and return the ajax request
+	switch ($_POST['call']) 
+	{
+		case "save_response":
+			$out = ajax_save_response();	
+		break;	
+		case "remebered_questions_count":
+			$out = ajax_remebered_questions_count();		
+		break;	
+		case "remebered_questions_percentage":
+			$out = ajax_remebered_questions_percentage();	
+		break;	
+		case "remebered_questions_string":
+			$out = ajax_remebered_questions_string();	
+		break;
 		case "save_poll_results":
 			$out = ajax_save_poll_results();	
 		break;
@@ -75,7 +92,6 @@ try
 		case "get_competition_list":
 			$out = ajax_get_admin_competition_list();	
 		break;
-		
 	}
 	
 	echo $out;

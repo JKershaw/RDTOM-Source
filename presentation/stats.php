@@ -78,8 +78,8 @@ include("header.php");
 	
 	<div class="layout_box" id="layout_box_questions" style="display:none;">
 		<h3>Question breakdown by type (there is overlap):</h3>
-		<p>WFTDA 5 (May 2010): <?php echo number_format(count(get_questions(array("rule-set" => "WFTDA5"))));?></p>
-		<p>WFTDA 6 (Jan 2013): <?php echo number_format(count(get_questions(array("rule-set" => "WFTDA6"))));?></p>
+		<p>WFTDA 5 (May 2010): <?php echo number_format(count(get_questions(array("rule-set" => "WFTDA5"), false)));?></p>
+		<p>WFTDA 6 (Jan 2013): <?php echo number_format(count(get_questions(array("rule-set" => "WFTDA6"), false)));?></p>
 		
 		
 		

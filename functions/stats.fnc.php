@@ -77,7 +77,25 @@ function return_chart_section_percentages($section_array, $response_array)
 	
 	foreach($response_array as $response)
 	{
-		$section_number = $section_array[$response->get_Question_ID()];
+		$section_number = intval($section_array[$response->get_Question_ID()][0]);
+		if ($section_number)
+		{
+			if (($section_number == 1) && ($section_array[$response->get_Question_ID()][1] == "0"))
+			{
+				$section_number = 10;
+			}
+			// get the first two values
+			if ($response->get_Correct())
+			{
+				$section_counts[$section_number]["correct"]++;
+			}
+			else
+			{
+				$section_counts[$section_number]["wrong"]++;
+			}
+		}
+		
+		/*$section_number = $section_array[$response->get_Question_ID()];
 		if (preg_match("@^([1-9][\.]?)+@", $section_number))
 		{
 			// get the first two values
@@ -91,7 +109,7 @@ function return_chart_section_percentages($section_array, $response_array)
 			{
 				$section_counts[$section_string_array[0]]["wrong"]++;
 			}
-		}
+		}*/
 	}
 	
 	ksort($section_counts);
