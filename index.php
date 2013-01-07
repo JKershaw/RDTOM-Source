@@ -16,9 +16,6 @@ ob_start ();
 // include needed files
 include('include.php');
 
-// start the session
-session_start();
-
 // create necessary objects & set up
 set_up_presentation();
 set_up_database();

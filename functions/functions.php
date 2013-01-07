@@ -60,8 +60,8 @@ function report_question()
 
 function forget_remebered_questions()
 {
-	unset($_SESSION['random_questions_asked']);
-	unset($_SESSION['random_questions_results']);
+	delete_session('random_questions_asked');
+	delete_session('random_questions_results');
 }
 
 function get_colour_from_percentage($perc_value)

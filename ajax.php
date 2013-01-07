@@ -138,15 +138,23 @@ function ajax_save_response()
 	// remeber what question was answered
 	if ($remeber_in_session)
 	{
+		
+		$random_questions_asked = get_session('random_questions_asked');
+		$random_questions_results = get_session('random_questions_results');
+		
 		// if we know the last 100, forget one
-		if (count($_SESSION['random_questions_asked']) >= $random_questions_to_remeber)
+		if (count($random_questions_asked) >= $random_questions_to_remeber)
 		{
-			array_shift($_SESSION['random_questions_asked']);
+			array_shift($random_questions_asked);
 		}
-		$_SESSION['random_questions_asked'][] = $question_ID;
+		$random_questions_asked[] = $question_ID;
 		
 		// remeber the results
-		$_SESSION['random_questions_results'][] = $response_is_correct;
+		$random_questions_results[] = $response_is_correct;
+		
+		// save to the session
+		set_session('random_questions_asked', $random_questions_asked);
+		set_session('random_questions_results', $random_questions_results);
 	}
 	
 	if ($_POST['return_remebered_questions_string'])
@@ -168,16 +176,17 @@ function ajax_save_response()
 
 function ajax_remebered_questions_count()
 {
-	$result = count($_SESSION['random_questions_asked']);
+	$result = count(get_session('random_questions_asked'));
 	settype($result, "integer");
 	return $result;
 }
 
 function ajax_remebered_questions_percentage()
 {
-	if (count($_SESSION['random_questions_results']) > 0)
+	$random_questions_results = get_session('random_questions_results');
+	if (count($random_questions_results) > 0)
 	{
-		foreach ($_SESSION['random_questions_results'] as $tmp_result)
+		foreach ($random_questions_results as $tmp_result)
 		{
 			if ($tmp_result)
 			{
@@ -185,7 +194,7 @@ function ajax_remebered_questions_percentage()
 			}
 		}
 		
-		$result = round ($correct_count / count($_SESSION['random_questions_results']));
+		$result = round ($correct_count / count($random_questions_results));
 	}
 	else
 	{

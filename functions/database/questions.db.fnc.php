@@ -74,8 +74,8 @@ function get_question_random()
 			// if the question hasn't already been asked recently OR we're not remebering things in the session, return it
 			if (!$remeber_in_session || 
 				(
-				!$_SESSION['random_questions_asked'] || 
-				($_SESSION['random_questions_asked'] && !in_array($question->get_ID(), $_SESSION['random_questions_asked'])))
+				!get_session('random_questions_asked') || 
+				(get_session('random_questions_asked') && !in_array($question->get_ID(), get_session('random_questions_asked'))))
 				)
 			{
 				return $question;
@@ -96,42 +96,7 @@ function get_question_random_simple()
 	// get random question from default taxonomies
 	global $default_terms_array;
 	$questions = get_questions($default_terms_array);
-	$question = $questions[array_rand($questions)];
-	/*
-	global $myPDO, $remeber_in_session, $default_terms_array;
-	
-	$clause = "";
-	
-	// exclude remebered questions
-	if ($remeber_in_session)
-	{
-		if (count($_SESSION['random_questions_asked']) > 0)
-		{
-			foreach ($_SESSION['random_questions_asked'] as $ID_to_ignore)
-			{
-				$where_array[$ID_to_ignore] = "ID != '$ID_to_ignore'";
-			}
-			$clause = " WHERE " . implode(" AND ", $where_array);
-		}
-	}
-	
-	$query = "SELECT * FROM rdtom_questions" . $clause . " ORDER BY RAND() LIMIT 1";
-	
-	$statement = $myPDO->query($query);
-	$result = $statement->fetch(PDO::FETCH_ASSOC);
-	
-	if ($result)
-	{
-		$question = get_question_from_array($result);
-	}
-	else
-	{
-		throw new exception("Woah, either the site ran out of questions, or the database is being updated. Try reloading the page.");
-	}	
-
-	*/
-	
-	return $question;
+	return $questions[array_rand($questions)];
 }
 
 function get_questions($terms_array = false, $sort = true)

@@ -70,9 +70,9 @@ else
 	<p class="small_p" >Source: <?php echo htmlentities(stripslashes($question->get_Source())); ?></p>
 <?php } ?>
 
-<?php if ($question->get_Author()) {?>
+<!--<?php if ($question->get_Author()) {?>
 	<p class="small_p" >Author: <?php echo htmlentities(stripslashes($question->get_Author())); ?></p>
-<?php } ?>
+<?php } ?>-->
 
 
 

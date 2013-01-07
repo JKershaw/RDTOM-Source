@@ -65,7 +65,7 @@ function get_page_subtitle()
 function is_remebering_results()
 {
 
-	if (count($_SESSION['random_questions_asked']) > 0)
+	if (count(get_session('random_questions_asked')) > 0)
 	{
 		return true;
 		
@@ -84,11 +84,14 @@ function get_remebered_string()
 
 	$correct_count = 0;
 	
-	if (count($_SESSION['random_questions_asked']) > 0)
+	$random_questions_asked = get_session('random_questions_asked');
+	$random_questions_results = get_session('random_questions_results');
+	
+	if (count($random_questions_asked) > 0)
 	{
 		/*
-		$result .= "The site is remembering the last <strong>" . count($_SESSION['random_questions_asked']) . "</strong> question";
-		if (count($_SESSION['random_questions_asked'])!=1) 
+		$result .= "The site is remembering the last <strong>" . count($random_questions_asked) . "</strong> question";
+		if (count($random_questions_asked)!=1) 
 		{ 
 			$result .= "s";
 		}
@@ -96,9 +99,9 @@ function get_remebered_string()
 		*/
 		
 		// add the success percentage
-		if (count($_SESSION['random_questions_results']) > 0)
+		if (count($random_questions_results) > 0)
 		{
-			foreach ($_SESSION['random_questions_results'] as $tmp_result)
+			foreach ($random_questions_results as $tmp_result)
 			{
 				if ($tmp_result)
 				{
@@ -106,16 +109,16 @@ function get_remebered_string()
 				}
 			}
 			
-			$perc_value = round ((($correct_count / count($_SESSION['random_questions_results'])) * 100), 2);
+			$perc_value = round ((($correct_count / count($random_questions_results)) * 100), 2);
 			$perc_colour = get_colour_from_percentage($perc_value);
 			
-			$result .= "You have a current success rate of <span style=\"font-weight:bold; color:" . $perc_colour . "\">" . $perc_value . "%</span> (" . $correct_count . " correct out of " . count($_SESSION['random_questions_results']) . ").";
+			$result .= "You have a current success rate of <span style=\"font-weight:bold; color:" . $perc_colour . "\">" . $perc_value . "%</span> (" . $correct_count . " correct out of " . count($random_questions_results) . ").";
 		}
 		
 		// add the winning streak
 		
 		// if the most recent response was correct
-		if ($_SESSION['random_questions_results'][count($_SESSION['random_questions_results'])-1])
+		if ($random_questions_results[count($random_questions_results)-1])
 		{
 			$current_streak = 1;
 			$lost_streak = false;
@@ -126,9 +129,9 @@ function get_remebered_string()
 			$lost_streak = true;
 		}
 		
-		for ($i = count($_SESSION['random_questions_results'])-2; $i>=0; $i--)
+		for ($i = count($random_questions_results)-2; $i>=0; $i--)
 		{
-			if ($_SESSION['random_questions_results'][$i])
+			if ($random_questions_results[$i])
 			{
 				$current_streak ++;
 			}
@@ -152,7 +155,7 @@ function get_remebered_string()
 			}	
 		}
 		
-		if (count($_SESSION['random_questions_asked']) > ($random_questions_to_remeber * 0.9))
+		if (count($random_questions_asked) > ($random_questions_to_remeber * 0.9))
 		{
 			$result .= " The site only remembers not to ask you the last " . $random_questions_to_remeber . " questions you've answered."; 
 		}

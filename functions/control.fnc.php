@@ -38,28 +38,6 @@ function set_up_question($question_ID)
 	}
 }
 
-function set_up_logged_in_user()
-{
-	global $mydb, $user;
-	
-	// do we have a session variable?
-	if ($_SESSION['rdtom_userID'])
-	{
-		$user = $mydb->get_user_from_ID($_SESSION['rdtom_userID']);
-	}
-	elseif ($_COOKIE["token"])
-	{
-		// is it valid?
-		$tmp_user = $mydb->get_user_from_token($_COOKIE["token"], get_ip());
-		if ($tmp_user)
-		{
-			// we have a valid token, so remeber the user
-			$user = $tmp_user;
-			$_SESSION['rdtom_userID'] = $user->get_ID();
-		}
-	}
-}
-
 function set_up_database()
 {
 	// set up the mysql Object
