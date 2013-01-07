@@ -23,7 +23,8 @@ class test
 	{
 		if ($opt_number_of_questions < 1)
 		{
-			throw new exception("Could not generate test, number of requested questions too low or missing");
+			$opt_number_of_questions = 1;
+			//throw new exception("Could not generate test, number of requested questions too low or missing");
 		}
 		
 		// get all applicable questions	

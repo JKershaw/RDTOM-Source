@@ -129,6 +129,28 @@ function return_chart_section_percentages($section_array, $response_array)
 	return $out;
 }
 
+
+function return_chart_section_percentages_all() 
+{
+	
+	$section_array = cache_get("sections_array");
+	if (!$section_array)
+	{
+		$section_array = get_sections_array();
+		cache_set("sections_array", $section_array);
+	}
+	
+	$recent_responses = cache_get("last_10000_responses");
+	if (!$recent_responses)
+	{
+		global $mydb;
+		$recent_responses = $mydb->get_responses(10000);
+		cache_set("last_10000_responses", $recent_responses);
+	}
+	
+	return return_chart_section_percentages($section_array, $recent_responses);
+}
+
 function return_stats_user_progress($user = false)
 {
 	global $mydb, $responses_needed_for_section_breakdown;
@@ -281,16 +303,29 @@ function return_chart_24hour_responses()
 	global $mydb;
 
 	// get the raw values
-	$raw_data = $mydb->get_stats_hourly_posts(24);
+	$raw_data = cache_get("stats_hourly_posts");
+	if (!$raw_data)
+	{
+		$raw_data = $mydb->get_stats_hourly_posts(24);
+		cache_set("stats_hourly_posts", $raw_data);
+	}
+	
+	$current_minute = date('i');
+	$percentage_hour_complete = $current_minute / 60;
 	
 	// make the final data point the current per hour rate
-	// $raw_data[24] = $mydb->get_response_count_since(gmmktime() - 3600);
+	$raw_data[24] = cache_get("response_count_last_hour");
+	if (!$raw_data[24])
+	{
+		$raw_data[24] = $mydb->get_response_count_since(gmmktime() - round($percentage_hour_complete * 3600));
+		cache_set("response_count_last_hour", $raw_data[24], 600);
+	}
+	
 	
 	// use a mix of the current hour plus previous hour to get value
-	$current_minute = date('i');
+	
 	if ($current_minute > 0)
 	{
-		$percentage_hour_complete = $current_minute / 60;
 		$raw_data[24] = round($raw_data[24] + ($raw_data[23] * (1 - $percentage_hour_complete)));
 	}
 	else

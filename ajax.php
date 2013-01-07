@@ -36,6 +36,9 @@ try
 		case "count_responses":
 			$out = ajax_count_responses();	
 		break;	
+		case "count_daily_responses":
+			$out = ajax_count_daily_responses();	
+		break;	
 		case "count_hourly_responses":
 			$out = ajax_count_hourly_responses();	
 		break;	
@@ -186,6 +189,19 @@ function ajax_count_responses()
 {
 	global $mydb;
 	return $mydb->get_response_count();
+}
+
+function ajax_count_daily_responses()
+{
+	global $mydb;
+	
+	$daily_response_count = cache_get("daily_response_count");
+	if (!$daily_response_count)
+	{
+		$daily_response_count = $mydb->get_response_count_since(gmmktime() - 86400);
+		cache_set("daily_response_count", $daily_response_count, 600);
+	}
+	return $daily_response_count;
 }
 
 function ajax_count_hourly_responses()

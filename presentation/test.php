@@ -68,7 +68,7 @@ if (!$url_array[1])
 	
 			    question_count = parseInt($('#test_number_of_questions').val());
 	
-			    if (question_count < 1)
+			    if ((question_count < 1) || (question_count == ""))
 			    {
 			    	question_count = 1;
 			    }
