@@ -7,7 +7,7 @@
  */
 
 /*
- * This file is loaded every minute and must remeber which functions it has fired and when
+ * This file is loaded every 5 minutes and must remeber which functions it has fired and when
  */
 
 /*
@@ -17,7 +17,7 @@
 $cron_tasks = Array ( 
 				Array (
 					"function" => "stats_hourly_posts",
-					"seconds" => 90),
+					"seconds" => 300),
 				Array (
 					"function" => "response_count_last_hour",
 					"seconds" => 600),
