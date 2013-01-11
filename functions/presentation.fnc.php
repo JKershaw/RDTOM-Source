@@ -57,7 +57,7 @@ function get_page_subtitle()
 	}
 	else
 	{
-		return "Turn left and learn the <i>new</i> rules.";
+		return "Turn left and learn the <i>2013</i> rules.";
 	}
 }
 

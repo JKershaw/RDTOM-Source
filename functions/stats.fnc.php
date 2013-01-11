@@ -152,21 +152,17 @@ function return_chart_section_percentages_all()
 {
 	
 	$section_array = cache_get("sections_array");
-	if (!$section_array)
-	{
-		$section_array = get_sections_array();
-		cache_set("sections_array", $section_array);
-	}
-	
 	$recent_responses = cache_get("last_10000_responses");
-	if (!$recent_responses)
+	
+	if ($recent_responses && $section_array)
 	{
-		global $mydb;
-		$recent_responses = $mydb->get_responses(10000);
-		cache_set("last_10000_responses", $recent_responses);
+		return return_chart_section_percentages($section_array, $recent_responses);
+	}
+	else
+	{
+		return "Cache not found";
 	}
 	
-	return return_chart_section_percentages($section_array, $recent_responses);
 }
 
 function return_stats_user_progress($user = false)
@@ -324,8 +320,7 @@ function return_chart_24hour_responses()
 	$raw_data = cache_get("stats_hourly_posts");
 	if (!$raw_data)
 	{
-		$raw_data = $mydb->get_stats_hourly_posts(24);
-		cache_set("stats_hourly_posts", $raw_data);
+		return "No stats_hourly_posts cache found";
 	}
 	
 	$current_minute = date('i');
@@ -335,8 +330,7 @@ function return_chart_24hour_responses()
 	$raw_data[24] = cache_get("response_count_last_hour");
 	if (!$raw_data[24])
 	{
-		$raw_data[24] = $mydb->get_response_count_since(gmmktime() - round($percentage_hour_complete * 3600));
-		cache_set("response_count_last_hour", $raw_data[24], 600);
+		return "No response_count_last_hour cache found";
 	}
 	
 	

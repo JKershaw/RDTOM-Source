@@ -98,7 +98,7 @@ try
 }
 catch (Exception $e) 
 {
-	save_log("error", $e->getMessage());
+	save_log("error_ajax", $e->getMessage());
 }
 
 function ajax_save_response()
