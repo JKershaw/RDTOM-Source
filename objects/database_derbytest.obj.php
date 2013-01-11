@@ -367,6 +367,7 @@ class database_derbytest extends database
 		*/
 		
 		// get the data from the database
+		
 		$query = "
 			SELECT 
 			Timestamp
