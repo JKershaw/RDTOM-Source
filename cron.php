@@ -22,11 +22,14 @@ $cron_tasks = Array (
 					"function" => "response_count_last_hour",
 					"seconds" => 600),
 				Array (
-					"function" => "sections_array",
+					"function" => "last_10000_sections",
 					"seconds" => 3600),
 				Array (
-					"function" => "last_10000_responses",
-					"seconds" => 3600)
+					"function" => "delete_old_cache_files",
+					"seconds" => 7200),
+				Array (
+					"function" => "delete_old_usertokens",
+					"seconds" => 86400)
 			);
 
 
@@ -93,15 +96,46 @@ function response_count_last_hour()
 	cache_set("response_count_last_hour", $mydb->get_response_count_since(gmmktime() - round($percentage_hour_complete * 3600)));
 }
 
-function sections_array()
-{
-	cache_set("sections_array", get_sections_array());
-}
-
-function last_10000_responses()
+function last_10000_sections()
 {
 	global $mydb;
-	cache_set("last_10000_responses", $mydb->get_responses(10000));
+	
+	$section_array = get_sections_array();
+	$recent_responses = $mydb->get_responses(10000);
+	
+	$data_array = process_sections_responses_into_data($recent_responses, $section_array);
+		
+	cache_set("last_10000_sections", $data_array);
 }
 
+function delete_old_usertokens()
+{
+	global $mydb;
+	// delete tokens older than 90 days
+	$mydb->remove_old_token(gmmktime() - 7776000);
+}
+
+function delete_old_cache_files()
+{
+	
+	// create a handler for the directory
+	$handler = @opendir("filecache");
+
+	if ($handler)
+	{
+		// open directory and walk through the filenames
+		while ($file = readdir($handler)) 
+		{
+			// if file isn't this directory or its parent, add it to the results
+			if ($file != "." && $file != "..") 
+			{
+				// get the cache, if the cache is out of date it'll be deleted
+				cache_get($file);
+			}
+		}
+
+		 // tidy up: close the handler
+		closedir($handler);		
+	}
+}
 ?>

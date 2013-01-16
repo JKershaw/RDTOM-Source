@@ -336,7 +336,7 @@ class database_derbytest extends database
 			'$req_Question_ID',  
 			'$req_Answer_ID',  
 			'$req_Timestamp_ID',  
-			'$req_Correct',  
+			$req_Correct,  
 			'$req_IP',
 			'$req_User_ID'
 		);
@@ -704,6 +704,14 @@ class database_derbytest extends database
 		settype($req_User_ID, "integer");
 		
 		$query = "DELETE FROM rdtom_usertokens WHERE User_ID = '" . $req_User_ID . "' AND IP = '" . $req_IP . "'";
+		$this->run_query($query);	
+	}
+	
+	public function remove_old_token($req_timestamp)
+	{
+		settype($req_timestamp, "integer");
+		
+		$query = "DELETE FROM rdtom_usertokens WHERE Timestamp < '" . $req_timestamp . "'";
 		$this->run_query($query);	
 	}
 	

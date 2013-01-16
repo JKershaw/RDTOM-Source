@@ -54,28 +54,11 @@ function return_stats_user_totals()
 
 }
 
-function return_stats_user_section_totals()
+function process_sections_responses_into_data($recent_responses, $section_array)
 {
-	global $responses_needed_for_section_breakdown;
-	
-	$user_responses = return_user_responses();
-	
-	if (!$user_responses || (count($user_responses) < $responses_needed_for_section_breakdown))
-	{
-		return "<p>Once you have answered more than " . $responses_needed_for_section_breakdown . " questions, a breakdown of which sections you're good at and which need work will be shown here.</p>";
-	}
-	
-	// get all the section data
-	$user_questions_sections = return_user_questions_sections();
-	
-	return return_chart_section_percentages($user_questions_sections, $user_responses);
-}
-
-
-function return_chart_section_percentages($section_array, $response_array)
-{
-	
-	foreach($response_array as $response)
+	// create the data to chart
+	// for each of the responses
+	foreach($recent_responses as $response)
 	{
 		$section_number = intval($section_array[$response->get_Question_ID()][0]);
 		if ($section_number)
@@ -94,22 +77,6 @@ function return_chart_section_percentages($section_array, $response_array)
 				$section_counts[$section_number]["wrong"]++;
 			}
 		}
-		
-		/*$section_number = $section_array[$response->get_Question_ID()];
-		if (preg_match("@^([1-9][\.]?)+@", $section_number))
-		{
-			// get the first two values
-			$section_string_array = explode(".", $section_number);
-			
-			if ($response->get_Correct())
-			{
-				$section_counts[$section_string_array[0]]["correct"]++;
-			}
-			else
-			{
-				$section_counts[$section_string_array[0]]["wrong"]++;
-			}
-		}*/
 	}
 	
 	ksort($section_counts);
@@ -117,18 +84,85 @@ function return_chart_section_percentages($section_array, $response_array)
 	foreach ($section_counts as $id => $section_count)
 	{
 		$percentage = round(($section_count['correct'] * 100) / ($section_count['correct'] + $section_count['wrong']));
-		$data_string_array[] = "['Section " . $id . "',  " . $percentage . "]";
+		$data_array[$id] = $percentage;
+	}
+	
+	return $data_array;
+}
+
+function return_chart_section_percentages_all() 
+{
+	
+	$data_array = cache_get("last_10000_sections");
+	
+	if ($data_array)
+	{
+		return return_chart_section_percentages($data_array);
+	}
+	else
+	{
+		return "Cache not found";
+	}
+	
+}
+
+function return_stats_user_section_totals()
+{
+	global $responses_needed_for_section_breakdown;
+	
+	$user_responses = return_user_responses();
+	
+	if (!$user_responses || (count($user_responses) < $responses_needed_for_section_breakdown))
+	{
+		return "<p>Once you have answered more than " . $responses_needed_for_section_breakdown . " questions, a breakdown of which sections you're good at and which need work will be shown here.</p>";
+	}
+	
+	// get all the section data
+	$user_questions_sections = return_user_questions_sections();
+	
+	$data_array = process_sections_responses_into_data($user_responses, $user_questions_sections);
+		
+	$data_array2 = cache_get("last_10000_sections");
+	
+	return return_chart_section_percentages($data_array, $data_array2);
+}
+
+
+function return_chart_section_percentages($data_array, $data_array2 = false)
+{
+	
+	foreach ($data_array as $id => $percentage)
+	{
+		if ($data_array2)
+		{
+			$data_string_array[] = "['Section " . $id . "',  " . $percentage . ",  " . $data_array2[$id] . "]";
+		}
+		else
+		{
+			$data_string_array[] = "['Section " . $id . "',  " . $percentage . "]";
+		}
 	}
 	
 	$data_string = implode(", ", $data_string_array);
 	
+	if ($data_array2)
+	{
+		$data_string_text = "['Section', 'Percentage Correct', 'Average'],";
+	}
+	else
+	{
+		$data_string_text = "['Section', 'Percentage Correct'],";
+	}
+	
 	$drawChart_string = '
 		var data = google.visualization.arrayToDataTable([
-          [\'Section\', \'Percentage Correct\'],
+          ' . $data_string_text . '
           ' . $data_string . '
         ]);
 
         var options = {
+          colors: [\'#0000FF\', \'#BBBBFF\'],
+          focusTarget: \'category\',
           titlePosition: \'none\',
           hAxis: {titlePosition: \'none\',},
           chartArea: {left:30, width: \'90%\', height: \'80%\', top: 10},
@@ -147,23 +181,6 @@ function return_chart_section_percentages($section_array, $response_array)
 	return $out;
 }
 
-
-function return_chart_section_percentages_all() 
-{
-	
-	$section_array = cache_get("sections_array");
-	$recent_responses = cache_get("last_10000_responses");
-	
-	if ($recent_responses && $section_array)
-	{
-		return return_chart_section_percentages($section_array, $recent_responses);
-	}
-	else
-	{
-		return "Cache not found";
-	}
-	
-}
 
 function return_stats_user_progress($user = false)
 {
@@ -197,9 +214,9 @@ function return_stats_user_progress($user = false)
 			$data[date("oW",$response->get_Timestamp())]["wrong"]++;
 		}
 		
-		if (!$lowest_week_value || (date("oW",$response->get_Timestamp()) < $lowest_week_value))
+		if (!$lowest_week_value || ($response->get_Timestamp() < $lowest_week_value))
 		{
-			$lowest_week_value = date("oW",$response->get_Timestamp());
+			$lowest_week_value = $response->get_Timestamp();
 		}
 	}
 	
@@ -212,29 +229,26 @@ function return_stats_user_progress($user = false)
 	foreach ($data as $week_key => $data_point)
 	{
 		$data[$week_key]["total"] = $data[$week_key]["correct"] + $data[$week_key]["wrong"];
-		//if ($data[$week_key]["total"] > 0)
-		//{
-		//	$data[$week_key]["perc"] = number_format(($data[$week_key]["correct"] / $data[$week_key]["total"]) * 100, 2);
-		//}
 	}
 	
 
 	// fill in the blank weeks between the lowest week count, and now
-	$current_week_value = date("oW");
-	for($i = $lowest_week_value; $i <= $current_week_value; $i++)
+	$current_week_value = gmmktime();
+	for($i = $lowest_week_value; $i <= $current_week_value; $i=$i+604800)
 	{
-		if (!$data[$i])
+		$week_number = date("oW",$i);
+		if (!$data[$week_number])
 		{
-			$data[$i]["total"] = 0;
-			//$data[$i]["perc"] = 0;
-			$data[$i]["correct"] = 0;
-			$data[$i]["wrong"] = 0;
+			$data[$week_number]["total"] = 0;
+			//$data[$week_number]["perc"] = 0;
+			$data[$week_number]["correct"] = 0;
+			$data[$week_number]["wrong"] = 0;
 		}
 		
-		settype($data[$i]["total"], "integer");
-		//settype($data[$i]["perc"], "integer");
-		settype($data[$i]["correct"], "integer");
-		settype($data[$i]["wrong"], "integer");
+		settype($data[$week_number]["total"], "integer");
+		//settype($data[$week_number]["perc"], "integer");
+		settype($data[$week_number]["correct"], "integer");
+		settype($data[$week_number]["wrong"], "integer");
 		
 	}
 	
@@ -259,6 +273,7 @@ function return_stats_user_progress($user = false)
 	// sort the data
 	ksort($data);
 	
+	$current_week_value = date("oW");
 	foreach ($data as $week_key => $data_point)
 	{
 		if ($week_key == $current_week_value)
@@ -271,7 +286,8 @@ function return_stats_user_progress($user = false)
 		}
 		if ($week_key < ($current_week_value-1))
 		{
-			$week_string = ($current_week_value - $week_key) . " weeks ago";
+			// TODO make this work
+			//$week_string = ($current_week_value - $week_key) . " weeks ago";
 		}
 		
 		//$data_array[] = "
