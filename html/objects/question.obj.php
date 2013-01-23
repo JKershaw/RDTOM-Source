@@ -51,6 +51,21 @@ class question
 		return false;
 	}
 
+	public function get_Author()
+	{
+		global $mydb;
+		$source_terms = $this->get_terms("author-id");
+		if ($source_terms)
+		{
+			foreach($source_terms as $source_term)
+			{
+				$tmp_user = $mydb->get_user_from_ID($source_term->get_Name());
+				return $tmp_user->get_Name();
+			}
+		}
+		return false;
+	}
+
 	public function get_Section()
 	{
 		// get the first section

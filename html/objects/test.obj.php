@@ -23,7 +23,8 @@ class test
 	{
 		if ($opt_number_of_questions < 1)
 		{
-			throw new exception("Could not generate test, number of requested questions too low or missing");
+			$opt_number_of_questions = 1;
+			//throw new exception("Could not generate test, number of requested questions too low or missing");
 		}
 		
 		// get all applicable questions	
@@ -54,7 +55,7 @@ class test
 			{
 				$terms_array["difficulty"] = "Expert";
 			}
-			else // default
+			elseif ($difficulty == "intermediate") // default
 			{
 				$terms_array["difficulty"] = "Intermediate";
 			}
@@ -116,7 +117,15 @@ class test
 		{
 			return "expert";
 		}
-		return "intermediate";
+		elseif ($this->difficulty == "intermediate")
+		{
+			return "intermediate";
+		}
+		else
+		{
+			return "mixed";
+		}
+		return false;
 	}
 	
 	public function set_pass_percentage($req_pass_percentage)

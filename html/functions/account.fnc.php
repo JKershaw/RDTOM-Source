@@ -9,7 +9,7 @@ function user_log_in($req_username, $req_password, $remeber_me = false)
 	if ($user)
 	{
 		// logged in
-		$_SESSION['rdtom_userID'] = $user->get_ID();
+		set_session('rdtom_userID', $user->get_ID());
 	}
 	else
 	{
@@ -42,11 +42,12 @@ function user_log_out()
 	setcookie("token", "", gmmktime()-2678400);
 	
 	// clear the user values
-	$user = false;
-	$_SESSION['rdtom_userID'] = false;
+	delete_session('rdtom_userID');
 	
+	$user = false;
 	unset($user);
-	unset($_SESSION['rdtom_userID']);
+	
+	forget_remebered_questions();
 	
 
 }
@@ -221,5 +222,27 @@ function set_up_reset_token($forgetful_user)
 	
 	// save a log
 	save_log("password_reset", "User Email: " . $forgetful_user->get_Email());
+}
+
+function set_up_logged_in_user()
+{
+	global $mydb, $user;
+	
+	// do we have a session variable?
+	if (get_session('rdtom_userID'))
+	{
+		$user = $mydb->get_user_from_ID(get_session('rdtom_userID'));
+	}
+	elseif ($_COOKIE["token"])
+	{
+		// is it valid?
+		$tmp_user = $mydb->get_user_from_token($_COOKIE["token"], get_ip());
+		if ($tmp_user)
+		{
+			// we have a valid token, so remeber the user
+			$user = $tmp_user;
+			set_session('rdtom_userID', $user->get_ID());
+		}
+	}
 }
 ?>

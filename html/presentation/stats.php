@@ -31,6 +31,7 @@ include("header.php");
 		<p>
 			Total: <span id="count_responses_string">Loading ...</span> <span id="count_responses_difference_string"></span><br />
 			Individuals: <span id="count_unique_IPs_string">Loading ...</span> <span id="count_unique_IPs_difference_string"></span><br />
+			Current per-day rate: <span id="count_daily_responses_string">Loading ...</span> <span id="count_daily_responses_difference_string"></span><br />
 			Current per-hour rate: <span id="count_hourly_responses_string">Loading ...</span> <span id="count_hourly_responses_difference_string"></span><br />
 			Current per-minute rate: <span id="count_minutly_responses_string">Loading ...</span> <span id="count_minutly_responses_difference_string"></span><br />
 		</p>
@@ -51,7 +52,7 @@ include("header.php");
 		</p>
 		
 		<p>
-			<?php echo return_chart_section_percentages(get_sections_array(), $mydb->get_responses(10000)); ?>
+			<?php echo return_chart_section_percentages_all(); ?>
 		</p>
 	</div>
 	
@@ -77,8 +78,8 @@ include("header.php");
 	
 	<div class="layout_box" id="layout_box_questions" style="display:none;">
 		<h3>Question breakdown by type (there is overlap):</h3>
-		<p>WFTDA 5 (May 2010): <?php echo number_format(count(get_questions(array("rule-set" => "WFTDA5"))));?></p>
-		<p>WFTDA 6 (Jan 2013): <?php echo number_format(count(get_questions(array("rule-set" => "WFTDA6"))));?></p>
+		<p>WFTDA 5 (May 2010): <?php echo number_format(count(get_questions(array("rule-set" => "WFTDA5"), false)));?></p>
+		<p>WFTDA 6 (Jan 2013): <?php echo number_format(count(get_questions(array("rule-set" => "WFTDA6"), false)));?></p>
 		
 		
 		
@@ -173,9 +174,12 @@ include("header.php");
 			check_frequency["count_minutly_responses"] 	= 5;
 			check_frequency["count_hourly_responses"] 	= 11;
 			check_frequency["count_unique_IPs"] 		= 17;
-			check_frequency["count_questions"] 			= 41;
-			check_frequency["count_answers"] 			= 43;
+			
 			check_frequency["count_users"] 				= 47;
+			check_frequency["count_daily_responses"] 	= 53;
+
+			check_frequency["count_questions"] 			= 101;
+			check_frequency["count_answers"] 			= 103;
 			
 
 			// values to define which values need to be updated

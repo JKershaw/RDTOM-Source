@@ -9,32 +9,20 @@
 // include needed files
 include('include.php');
 
-// start the session
-session_start();
+// process and return the ajax request
 try 
 {
-	// create necessary objects
+	// create the database
 	set_up_database();
-	set_up_logged_in_user();
-	//set_up_url_array();
 	
-	// process and return the ajax request
+	// those ajax requests which don't need session or user info
 	switch ($_POST['call']) 
 	{
-		case "save_response":
-			$out = ajax_save_response();	
-		break;	
-		case "remebered_questions_count":
-			$out = ajax_remebered_questions_count();		
-		break;	
-		case "remebered_questions_percentage":
-			$out = ajax_remebered_questions_percentage();	
-		break;	
-		case "remebered_questions_string":
-			$out = ajax_remebered_questions_string();	
-		break;	
 		case "count_responses":
 			$out = ajax_count_responses();	
+		break;	
+		case "count_daily_responses":
+			$out = ajax_count_daily_responses();	
 		break;	
 		case "count_hourly_responses":
 			$out = ajax_count_hourly_responses();	
@@ -54,6 +42,38 @@ try
 		case "count_unique_IPs":
 			$out = ajax_count_unique_IPs();	
 		break;
+	}
+	
+	// did the switch activate? 
+	if ($out)
+	{
+		echo $out;
+		exit;
+	}
+
+	
+	
+	// these functions reqire a logged in user
+	// start the session
+	session_start();
+	set_up_logged_in_user();
+	//set_up_url_array();
+	
+	// process and return the ajax request
+	switch ($_POST['call']) 
+	{
+		case "save_response":
+			$out = ajax_save_response();	
+		break;	
+		case "remebered_questions_count":
+			$out = ajax_remebered_questions_count();		
+		break;	
+		case "remebered_questions_percentage":
+			$out = ajax_remebered_questions_percentage();	
+		break;	
+		case "remebered_questions_string":
+			$out = ajax_remebered_questions_string();	
+		break;
 		case "save_poll_results":
 			$out = ajax_save_poll_results();	
 		break;
@@ -72,24 +92,20 @@ try
 		case "get_competition_list":
 			$out = ajax_get_admin_competition_list();	
 		break;
-		
-		
-		
 	}
 	
 	echo $out;
 }
 catch (Exception $e) 
 {
-	save_log("error", $e->getMessage());
+	save_log("error_ajax", $e->getMessage());
 }
 
 function ajax_save_response()
 {
 	global $mydb, $remeber_in_session, $random_questions_to_remeber;
 	// saving the response
-	// Array ( [call] => save_response [question_ID] => 436 [response_ID] => 1919 )
-
+	
 	// clean the input
 	$question_ID = $_POST['question_ID'];
 	$response_ID = $_POST['response_ID'];
@@ -97,11 +113,12 @@ function ajax_save_response()
 	settype($response_ID, "integer");
 	
 	// get the question from the ID (tests if ID is valid)
-	$question = get_question_from_ID($question_ID);
+	// $question = get_question_from_ID($question_ID);
 	
-	// get if the answer is correct (will throw exception is invalid ID)
+	// is the answer is correct (will throw exception if it's an invalid ID)
 	$response_is_correct = is_answer_correct_from_ID($response_ID);
 	
+	// get the right User ID
 	if (is_logged_in())
 	{
 		global $user;
@@ -121,22 +138,23 @@ function ajax_save_response()
 	// remeber what question was answered
 	if ($remeber_in_session)
 	{
-		// if we know the last 100, forget one
-		if (count($_SESSION['random_questions_asked']) >= $random_questions_to_remeber)
-		{
-			array_shift($_SESSION['random_questions_asked']);
-		}
-		$_SESSION['random_questions_asked'][] = $question_ID;
 		
-		// remeber if it was correct or not
-		// remeber an unlimited number
-		/*
-		if (count($_SESSION['random_questions_results']) >= $random_questions_to_remeber)
+		$random_questions_asked = get_session('random_questions_asked');
+		$random_questions_results = get_session('random_questions_results');
+		
+		// if we know the last 100, forget one
+		if (count($random_questions_asked) >= $random_questions_to_remeber)
 		{
-			array_shift($_SESSION['random_questions_results']);
+			array_shift($random_questions_asked);
 		}
-		*/
-		$_SESSION['random_questions_results'][] = $response_is_correct;
+		$random_questions_asked[] = $question_ID;
+		
+		// remeber the results
+		$random_questions_results[] = $response_is_correct;
+		
+		// save to the session
+		set_session('random_questions_asked', $random_questions_asked);
+		set_session('random_questions_results', $random_questions_results);
 	}
 	
 	if ($_POST['return_remebered_questions_string'])
@@ -158,16 +176,17 @@ function ajax_save_response()
 
 function ajax_remebered_questions_count()
 {
-	$result = count($_SESSION['random_questions_asked']);
+	$result = count(get_session('random_questions_asked'));
 	settype($result, "integer");
 	return $result;
 }
 
 function ajax_remebered_questions_percentage()
 {
-	if (count($_SESSION['random_questions_results']) > 0)
+	$random_questions_results = get_session('random_questions_results');
+	if (count($random_questions_results) > 0)
 	{
-		foreach ($_SESSION['random_questions_results'] as $tmp_result)
+		foreach ($random_questions_results as $tmp_result)
 		{
 			if ($tmp_result)
 			{
@@ -175,7 +194,7 @@ function ajax_remebered_questions_percentage()
 			}
 		}
 		
-		$result = round ($correct_count / count($_SESSION['random_questions_results']));
+		$result = round ($correct_count / count($random_questions_results));
 	}
 	else
 	{
@@ -197,6 +216,19 @@ function ajax_count_responses()
 	return $mydb->get_response_count();
 }
 
+function ajax_count_daily_responses()
+{
+	global $mydb;
+	
+	$daily_response_count = cache_get("daily_response_count");
+	if (!$daily_response_count)
+	{
+		$daily_response_count = $mydb->get_response_count_since(gmmktime() - 86400);
+		cache_set("daily_response_count", $daily_response_count, 600);
+	}
+	return $daily_response_count;
+}
+
 function ajax_count_hourly_responses()
 {
 	global $mydb;
@@ -208,6 +240,14 @@ function ajax_count_minutly_responses()
 	global $mydb;
 	return $mydb->get_response_count_since(gmmktime() - 60);
 }
+
+/*
+ * TODO Highest minutly rate
+ * 
+ * SELECT count(ID) as count, MINUTE(FROM_UNIXTIME(`Timestamp`)) as minute, 
+HOUR(FROM_UNIXTIME(`Timestamp`)) as hour, DAYOFYEAR(FROM_UNIXTIME(`Timestamp`)) as day 
+FROM rdtom_responses WHERE Timestamp > '1357127466'  GROUP BY minute, hour, day ORDER BY count DESC
+ */
 
 function ajax_count_questions()
 {
