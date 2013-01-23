@@ -29,7 +29,7 @@ class response
 	
 	public function is_correct()
 	{
-		return ($this->Correct == 1);
+		return $this->Correct;
 	}
 	
 	public function get_ID()

@@ -104,10 +104,22 @@ function echo_error_page($error_string)
 	
 		<h1><a href="http://rollerderbytestomatic.com/">Roller Derby Test O'Matic</a></h1>
 		<h2>Turn left and break the site.</h2>
-	
+	<?php
+	if (strstr($error_string, "max_user_connections")) 
+	{
+	?>
+		<p>Whoops! The database has just been overloaded. This is probably a temporary issue (and has been logged and will be looked into), so try doing what you just did again or refreshing the page.<p>
+	<?php 
+	}
+	else
+	{
+	?>
 		<p>For some reason the site has generated an error. It's been logged and will be delt with accordingly (Being a broken website, Major!). You can try doing what you just did again and see if it's only a temporary bug.<p>
 		<p id="p_link"><a onclick="$('#p_link').hide(); $('#p_error').show();">Click to see the error details</a></p>
-		<p id="p_error" style="display:none"><?php echo $error_string; ?></p>
+		<p id="p_error" style="display:none"><?php echo $error_string; ?></p>	
+	<?php 
+	}
+	?>
 		</body>
 	</html>
 	<?php 

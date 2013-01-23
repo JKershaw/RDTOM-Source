@@ -6,14 +6,15 @@
  * Built to help Roller Derby players learn the rules
  */
 
+// start the page speed tracker
+list($usec, $sec) = explode(" ", microtime());
+$page_timer_start = ((float)$usec + (float)$sec);
+		
 // start the output buffer
 ob_start ();
 
 // include needed files
 include('include.php');
-
-// start the session
-session_start();
 
 // create necessary objects & set up
 set_up_presentation();
@@ -22,8 +23,6 @@ set_up_logged_in_user();
 set_up_url_array();
 
 // begin processing
-// start the page tracker
-set_up_tracker();
 
 // do we want to perform some function or other, then show the default page?
 switch ($url_array[0]) 
