@@ -3,11 +3,11 @@
  * Parse the ini file
  */
 
-try {
+//try {
 	$ini_array = parse_ini_file("config.ini");
-} catch (Exception $e) {
-	echo "There is no config.ini file.";
-}
+//} catch (Exception $e) {
+//	echo "There is no config.ini file.";
+//}
 
 /*
  * Database connection details, stored in the ini files for security
