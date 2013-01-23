@@ -50,8 +50,10 @@ function get_question_random()
 	// at most try to find a new unique question 5 times
 	for($i=0;$i<$random_question_find_attempts;$i++)
 	{
-		//echo "*";
+
 		// code from http://jan.kneschke.de/projects/mysql/order-by-rand/
+		// TODO AB test this to get average time taken to run query
+		/*
 		$query = "
 		SELECT * FROM rdtom_questions
 		  JOIN (SELECT r1.Question_ID
@@ -62,7 +64,27 @@ function get_question_random()
 		               AS r2
 		        WHERE r1.row_id >= r2.row_id
 		        ORDER BY r1.row_id ASC
-		        LIMIT 1) as rows ON (id = Question_ID);";	
+		        LIMIT 1) as rows ON (id = Question_ID);";	*/
+		
+		$query = "SELECT COUNT(*) FROM rdtom_questions_holes_map";
+		
+		$statement = $myPDO->query($query);
+		$result = $statement->fetch(PDO::FETCH_BOTH);
+		
+		$random_question = rand(0, $result[0]);
+		
+		$query = "
+		SELECT 
+			*
+		FROM 
+			rdtom_questions
+		INNER JOIN 
+			rdtom_questions_holes_map
+		ON 
+			rdtom_questions_holes_map.Question_ID = rdtom_questions.id
+		WHERE
+			rdtom_questions_holes_map.row_id = $random_question ";
+		
 		
 		$statement = $myPDO->query($query);
 		$result = $statement->fetch(PDO::FETCH_ASSOC);
