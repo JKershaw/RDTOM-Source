@@ -655,7 +655,7 @@ include("header.php");
 	
 	<div class="layout_box" id="layout_box_test" style="display:none;">
 	
-	TESTING STUFF
+	I wonder if this'll change stuff?
 		<?php 
 		
 		//print_r(get_questions_search('passed'));
