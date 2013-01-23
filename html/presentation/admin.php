@@ -655,9 +655,12 @@ include("header.php");
 	
 	<div class="layout_box" id="layout_box_test" style="display:none;">
 	
+	TESTING STUFF
 		<?php 
 		
-		print_r(get_questions_search('passed'));
+		//print_r(get_questions_search('passed'));
+		
+		
 		/*
 		$all_questions = get_questions();
 		
