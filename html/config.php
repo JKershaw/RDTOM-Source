@@ -5,6 +5,11 @@
 
 $ini_array = parse_ini_file("config.ini");
 
+if (!$ini_array)
+{
+	echo "You need a config.ini file.";
+	exit;
+}
 /*
  * Database connection details, stored in the ini files for security
  */
