@@ -578,4 +578,57 @@ function get_admin_terms_checkboxes($term, $question = false)
 	
 	return $out;
 }
+
+function get_admin_terms_checkboxes_ajax($term, $question)
+{
+	global $mydb;
+	
+	$terms = $mydb->get_terms($term);
+	
+	if ($terms)
+	{
+		if ($question)
+		{
+			$question_terms = $question->get_terms($term);
+		}
+		
+		foreach($terms as $term)
+		{
+			$style = "";
+			if ($question_terms)
+			{
+				// is this rule set already chosen for this question?
+				
+				foreach ($question_terms as $question_term)
+				{
+					if ($question_term->get_ID() == $term->get_ID())
+					{
+						$style = "style=\"font-weight: bold;\"";
+					}
+				}
+			}
+			
+			// special case where we want the Author
+			if ($term->get_taxonomy() == "author-id")
+			{
+				$tmp_user = $mydb->get_user_from_ID($term->get_Name());
+				$display_name = $tmp_user->get_Name();
+			}
+			else
+			{
+				$display_name = $term->get_Name();
+			}
+			
+			$out .= "<a $style id=\"term_" . $term->get_ID() . "_" . $question->get_ID() . "\" onclick=\"toggle_term_relationship(" . $term->get_ID() . ", " . $question->get_ID() . ")\">" . htmlentities(stripslashes($display_name)) . "</a> ";
+		}
+		
+	}
+	else
+	{
+		$out .= "No terms found";
+	}	
+	
+	return $out;
+}
+
 ?>

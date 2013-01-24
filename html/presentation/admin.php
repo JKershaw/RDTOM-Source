@@ -993,6 +993,31 @@ include("header.php");
 	        show_page(location.href.substr(location.href.indexOf("#") + 1));
 	    }
 
-		
+		function toggle_term_relationship(term_id, question_id)
+		{
+			// send AJAX request
+			// make it light grey and remeber what it was
+			var tmp_colour = $("#term_" + term_id + "_" + question_id).css("color"); 
+			$("#term_" + term_id + "_" + question_id).css("color", "grey"); 
+
+			$.post("ajax.php", { 
+				call: "set_admin_relationship", 
+				termID: term_id,
+				questionID: question_id,
+				},
+				
+				function(data) {
+
+					// is now a relationship
+					// make bold
+					$("#term_" + term_id + "_" + question_id).css("font-weight", "bold"); 
+
+					// remove light grey
+					$("#term_" + term_id + "_" + question_id).css("color", tmp_colour); 
+					
+				}
+			);	
+			
+		}
 		</script>
 <?php include("footer.php");  ?>

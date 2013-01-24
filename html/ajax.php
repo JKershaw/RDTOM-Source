@@ -92,6 +92,9 @@ try
 		case "get_competition_list":
 			$out = ajax_get_admin_competition_list();	
 		break;
+		case "set_admin_relationship":
+			$out = ajax_get_admin_set_relationship();	
+		break;
 	}
 	
 	echo $out;
@@ -450,10 +453,18 @@ function ajax_get_admin_questions_list()
 			}
 			$div_class_array_string = implode(" ", $div_class_array);
 			
-			$out .= "<div style=\"clear:left\" class=\" question_string " . $div_class_array_string . "\">" 
+			$out .= "<div style=\"clear:left\" class=\" question_string " . $div_class_array_string . "\">
+			<a onclick=\"$('#extra_" . $question->get_ID() . "').toggle();\">+</a> " 
 				. $question->get_Section() 
 				. " <a href=\"" . get_site_URL() . "admin/edit/" . $question->get_ID() . "#edit_question\">" 
 				. htmlentities(stripslashes($question->get_Text())) . "</a>
+				<span id=\"extra_" . $question->get_ID() . "\" style=\"display:none;\">
+				<p style=\"font-size: 10px; margin-left: 1em;\">
+				";
+			$out .= get_admin_terms_checkboxes_ajax("tag", $question);
+			$out .= "
+				</p>
+				</span>
 				</div>";
 		}
 	}
@@ -531,5 +542,17 @@ function ajax_get_admin_competition_list()
 	}
 	
 	return $entry_counter . " qualified users. " . $entry_almost_counter . " with 50+ responses but not 80%<hr>" . $out . "<hr>" . $out_2 . "<hr>" . $out_3;
+}
+
+function ajax_get_admin_set_relationship()
+{
+	global $mydb;
+	if (!is_admin())
+	{
+		return "";
+	}
+	
+	$mydb->add_relationship($_POST['questionID'], $_POST['termID']);
+	
 }
 ?>
