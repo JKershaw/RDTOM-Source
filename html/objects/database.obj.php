@@ -81,10 +81,12 @@ class database
 		{
 			$saved_link = mysql_connect($this->dbHost, $this->dbUser, $this->dbUserPw)
 	  			or die("Could not connect : " . mysql_error());
+	  			
+			mysql_select_db($this->dbName) 
+				or die("Could not select database");	  			
 		}
 			
-		mysql_select_db($this->dbName) 
-			or die("Could not select database");
+
 			
 		$results = mysql_query($req_query)
 			or die("Query error:<br />" . $req_query . "<br />" . mysql_error());
@@ -157,8 +159,13 @@ class database
 	// make a string safe
 	public function mysql_res($req_text)
 	{
-		$link = mysql_connect($this->dbHost, $this->dbUser, $this->dbUserPw)
-	  		or die("Could not connect : " . mysql_error());
+		global $saved_link;
+		
+		if (!$saved_link)
+		{
+			$saved_link = mysql_connect($this->dbHost, $this->dbUser, $this->dbUserPw)
+	  			or die("Could not connect : " . mysql_error());
+		}
 			
 		mysql_select_db($this->dbName) 
 			or die("Could not select database");
