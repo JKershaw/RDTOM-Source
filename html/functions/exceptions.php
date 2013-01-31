@@ -1,5 +1,45 @@
 <?php
 
+function save_log($log_name, $request_string, $question_ID = null)
+{
+	global $log_file_date_format, $mydb;
+	
+	// create the file name for the log
+	$filename = "logs/" . date($log_file_date_format) . "_" . $log_name . ".txt";
+
+	// add meta data to the string
+	$stringData = date("[d-m-Y H:i:s]") . " [" . get_ip() . "] " . $request_string . "\n";
+	
+	// save the log
+	file_put_contents($filename, $stringData, FILE_APPEND);  
+	
+	// if it's a report, also save it in the database
+	if ($log_name == "report")
+	{
+		$report = new report(-1, get_ip(), gmmktime(), $question_ID, 0, $request_string, REPORT_OPEN);
+		set_report($report);
+	}
+
+}
+
+// get the current IP address
+function get_ip()
+{
+
+		if (getenv("HTTP_CLIENT_IP") && strcasecmp(getenv("HTTP_CLIENT_IP"), "unknown"))
+           $ip = getenv("HTTP_CLIENT_IP");
+       else if (getenv("HTTP_X_FORWARDED_FOR") && strcasecmp(getenv("HTTP_X_FORWARDED_FOR"), "unknown"))
+           $ip = getenv("HTTP_X_FORWARDED_FOR");
+       else if (getenv("REMOTE_ADDR") && strcasecmp(getenv("REMOTE_ADDR"), "unknown"))
+           $ip = getenv("REMOTE_ADDR");
+       else if (isset($_SERVER['REMOTE_ADDR']) && $_SERVER['REMOTE_ADDR'] && strcasecmp($_SERVER['REMOTE_ADDR'], "unknown"))
+           $ip = $_SERVER['REMOTE_ADDR'];
+       else
+           $ip = "unknown";
+           
+	return $ip;
+}
+
 // Handle any uncaught exceptions
 function exception_handler($exception) 
 {

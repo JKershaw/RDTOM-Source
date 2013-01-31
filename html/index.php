@@ -30,6 +30,10 @@ switch ($url_array[0])
 	case "forget":
 		forget_remebered_questions();
 		break;	
+		
+	case "changes":
+		toggle_view_only_changes();
+		break;	
 	
 	case "report":
 		if (!$_POST)

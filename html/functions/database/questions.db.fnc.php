@@ -41,6 +41,11 @@ function get_question_random()
 {
 	global $mydb, $myPDO, $remeber_in_session, $random_question_find_attempts;
 
+	if (is_view_only_changes())
+	{
+		return get_question_random_changed();
+	}
+			
 	// if the holes table is being rebuilt, cheat
 	if (!$mydb->does_table_exist("rdtom_questions_holes_map"))
 	{
@@ -50,8 +55,10 @@ function get_question_random()
 	// at most try to find a new unique question 5 times
 	for($i=0;$i<$random_question_find_attempts;$i++)
 	{
-		//echo "*";
+
 		// code from http://jan.kneschke.de/projects/mysql/order-by-rand/
+		// TODO AB test this to get average time taken to run query
+		/*
 		$query = "
 		SELECT * FROM rdtom_questions
 		  JOIN (SELECT r1.Question_ID
@@ -62,7 +69,27 @@ function get_question_random()
 		               AS r2
 		        WHERE r1.row_id >= r2.row_id
 		        ORDER BY r1.row_id ASC
-		        LIMIT 1) as rows ON (id = Question_ID);";	
+		        LIMIT 1) as rows ON (id = Question_ID);";	*/
+		
+		$query = "SELECT COUNT(*) FROM rdtom_questions_holes_map";
+		
+		$statement = $myPDO->query($query);
+		$result = $statement->fetch(PDO::FETCH_BOTH);
+		
+		$random_question = rand(0, $result[0]);
+		
+		$query = "
+		SELECT 
+			*
+		FROM 
+			rdtom_questions
+		INNER JOIN 
+			rdtom_questions_holes_map
+		ON 
+			rdtom_questions_holes_map.Question_ID = rdtom_questions.id
+		WHERE
+			rdtom_questions_holes_map.row_id = $random_question ";
+		
 		
 		$statement = $myPDO->query($query);
 		$result = $statement->fetch(PDO::FETCH_ASSOC);
@@ -94,9 +121,42 @@ function get_question_random()
 function get_question_random_simple()
 {
 	// get random question from default taxonomies
-	global $default_terms_array;
+	global $default_terms_array, $random_question_find_attempts, $remeber_in_session;
 	$questions = get_questions($default_terms_array);
-	return $questions[array_rand($questions)];
+	
+	for($i=0;$i<$random_question_find_attempts;$i++)
+	{
+
+		$question = $questions[array_rand($questions)];
+			
+		// if the question hasn't already been asked recently OR we're not remebering things in the session, return it
+		if (!$remeber_in_session || 
+			(
+			!get_session('random_questions_asked') || 
+			(get_session('random_questions_asked') && !in_array($question->get_ID(), get_session('random_questions_asked'))))
+			)
+		{
+			return $question;
+		}
+	}
+	
+	// if we've asked every question, ask them again
+	delete_session('random_questions_asked');
+	
+	return $questions[array_rand($questions)];;
+}
+
+function get_question_random_changed()
+{
+	// get random question from default taxonomies
+	global $mydb, $myPDO, $remeber_in_session, $random_question_find_attempts;
+
+	// load all applicable questions
+	$all_questions = get_questions(array("rule-set" => "WFTDA6", "tag" => "Changed Rule"));
+		
+	// return a question at random
+	return $all_questions[array_rand($all_questions, 1)];
+	
 }
 
 function get_questions($terms_array = false, $sort = true)

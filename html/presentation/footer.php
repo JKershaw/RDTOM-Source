@@ -74,7 +74,23 @@
 			<?php 
 		} 
 		?>		
-				
+		
+		<?php if (is_view_only_changes())
+		{ ?>
+			<p>
+				You are being given questions which <strong>only</strong> relate to rules which have been <a href="http://wftda.com/rules/change-summary/rules-2013-01-01" target="_blank">updated in the WFTDA 2013 rule set</a>. <a href="<?php echo get_site_URL(); ?>changes">Click here to be tested on all the rules.</a>
+			</p>	
+		<?php 
+		} 
+		else
+		{
+		?>
+			<p>
+				<a href="<?php echo get_site_URL(); ?>changes">Click here to be tested on <strong>only</strong> the rules which have been updated with the new WFTDA 2013 rule set</a>
+			</p>	
+			<?php 
+		}
+		?>	
 			<p>
 				<a href="<?php echo get_site_URL(); ?>test/">Generate a Rules Test</a>
 			</p>
@@ -104,9 +120,9 @@
 				The site will only remember information as long as necessary, and won't disclose personal information to outside sources without your explicit permission. The site will only collect personal information by lawful and fair means. Personal data collected will be relevant to the purposes for which it is to be used, and, to the extent necessary for those purposes, should be accurate, complete, and up-to-date. The site will protect your personal information by reasonable security safeguards against loss or theft, as well as unauthorized access, disclosure, copying, use or modification.  <a onclick="$('#p_disclaimer_link').fadeIn();$('#p_disclaimer').hide();">Hide</a> 
 			</p>
 
-			<!-- <p class="vote_string">
-				<a href="<?php echo get_site_URL(); ?>poll">What features should be added next to the Test O'Matic?</a>
-			</p> -->
+			<p class="vote_string">
+				<span style="font-weight:bold; color:yellow; background-color: #333; padding:0 3px;">NEW!</span> <a href="<?php echo get_site_URL(); ?>poll">What features should be added next to the Test O'Matic?</a>
+			</p> 
 			
 		<?php if (is_admin()) 
 		{

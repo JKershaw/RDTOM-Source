@@ -92,6 +92,9 @@ try
 		case "get_competition_list":
 			$out = ajax_get_admin_competition_list();	
 		break;
+		case "set_admin_relationship":
+			$out = ajax_get_admin_set_relationship();	
+		break;
 	}
 	
 	echo $out;
@@ -218,6 +221,12 @@ function ajax_count_responses()
 
 function ajax_count_daily_responses()
 {
+	
+	$raw_data = cache_get("stats_hourly_posts");
+	$raw_data[24] = cache_get("response_count_last_hour");
+	return array_sum($raw_data);
+	
+	/*
 	global $mydb;
 	
 	$daily_response_count = cache_get("daily_response_count");
@@ -226,13 +235,13 @@ function ajax_count_daily_responses()
 		$daily_response_count = $mydb->get_response_count_since(gmmktime() - 86400);
 		cache_set("daily_response_count", $daily_response_count, 600);
 	}
-	return $daily_response_count;
+	return $daily_response_count;*/
+	
 }
 
 function ajax_count_hourly_responses()
 {
-	global $mydb;
-	return $mydb->get_response_count_since(gmmktime() - 3600);
+	return cache_get("response_count_last_hour");
 }
 
 function ajax_count_minutly_responses()
@@ -335,7 +344,7 @@ function ajax_save_poll_results()
 
 function ajax_get_poll_results()
 {
-	global $mydb;
+	global $mydb, $poll_questions;
 	
 	$query = "
 			SELECT 
@@ -345,23 +354,11 @@ function ajax_get_poll_results()
 	
 	$results = $mydb->get_results($query);
 	
-	//offset from other poll
-	$offset_extra[10] = 1;
-	$offset_extra[1] = 7;
-	$offset_extra[2] = 16;
-	$offset_extra[3] = 8;
-	$offset_extra[4] = 11;
-	$offset_extra[5] = 10;
-	$offset_extra[6] = 0;
-	$offset_extra[7] = 3;
-	$offset_extra[8] = 8;
-	$offset_extra[9] = 5;
-	
 	$highest_count = 0;
 	$total_votes = 0;
 	foreach ($results as $result)
 	{
-		$poll_count[$result['Question_ID']] = $result['responses'] + $offset_extra[$result['Question_ID']];
+		$poll_count[$result['Question_ID']] = $result['responses'];
 		$total_votes += $poll_count[$result['Question_ID']];
 		if ($highest_count < $poll_count[$result['Question_ID']])
 		{
@@ -371,20 +368,7 @@ function ajax_get_poll_results()
 	
 	$highest_count = round($highest_count * 1.3);
 	$highest_percentage = round(($highest_count * 100)/ $total_votes);
-	
-	$poll_questions = array();
 
-	$poll_questions[10] = "Other rule sets (e.g. No Minors Beta, USARS, WORD)";
-	$poll_questions[1] = "Questions for officials (refs & NSOs)";
-	$poll_questions[2] = "[Done] Stats showing what sections you're good/bad at";
-	$poll_questions[3] = "Select which questions you will be given (difficulty, rules sections etc.)";
-	$poll_questions[4] = "A free mobile app";
-	$poll_questions[5] = "Auto-generated mock tests";
-	$poll_questions[6] = "Other languages";
-	$poll_questions[7] = "User submitted (and moderated) questions";
-	$poll_questions[8] = "Questions with images";
-	$poll_questions[9] = "Discussion areas to discuss specific questions, rules, and the site in general";
-	
 	$extra_letter_index = 65; 
 	
 	foreach ($poll_count as $question_ID => $question_count)
@@ -450,10 +434,18 @@ function ajax_get_admin_questions_list()
 			}
 			$div_class_array_string = implode(" ", $div_class_array);
 			
-			$out .= "<div style=\"clear:left\" class=\" question_string " . $div_class_array_string . "\">" 
+			$out .= "<div style=\"clear:left\" class=\" question_string " . $div_class_array_string . "\">
+			<a onclick=\"$('#extra_" . $question->get_ID() . "').toggle();\">+</a> " 
 				. $question->get_Section() 
 				. " <a href=\"" . get_site_URL() . "admin/edit/" . $question->get_ID() . "#edit_question\">" 
 				. htmlentities(stripslashes($question->get_Text())) . "</a>
+				<span id=\"extra_" . $question->get_ID() . "\" style=\"display:none;\">
+				<p style=\"font-size: 10px; margin-left: 1em;\">
+				";
+			$out .= get_admin_terms_checkboxes_ajax("tag", $question);
+			$out .= "
+				</p>
+				</span>
 				</div>";
 		}
 	}
@@ -531,5 +523,17 @@ function ajax_get_admin_competition_list()
 	}
 	
 	return $entry_counter . " qualified users. " . $entry_almost_counter . " with 50+ responses but not 80%<hr>" . $out . "<hr>" . $out_2 . "<hr>" . $out_3;
+}
+
+function ajax_get_admin_set_relationship()
+{
+	global $mydb;
+	if (!is_admin())
+	{
+		return "";
+	}
+	
+	$mydb->add_relationship($_POST['questionID'], $_POST['termID']);
+	
 }
 ?>
