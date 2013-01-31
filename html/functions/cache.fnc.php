@@ -9,7 +9,7 @@ function cache_set($key, $string, $timeout = 7200)
 	$data['timeout'] = $timeout;
 	$data['data'] = serialize($string);
 	
-	save_log("cache", "ADD " . $key . ": Timestamp = " . $data['timestamp'] . ", Timeout = " . $data['timeout'] . ", Current timestamp = " . time());
+	//save_log("cache", "ADD " . $key . ": Timestamp = " . $data['timestamp'] . ", Timeout = " . $data['timeout'] . ", Current timestamp = " . time());
 	
 	$fh = fopen("filecache/" . $key, 'w') or die("can't open file: " . "/filecache/" . $key);
 
@@ -38,18 +38,18 @@ function cache_get($key)
 	
 	$theData = unserialize($theData);
 	
-	save_log("cache", "GET " . $key . ": Timestamp = " . $theData['timestamp'] . ", Timeout = " . $theData['timeout'] . ", Current timestamp = " . time());
+	//save_log("cache", "GET " . $key . ": Timestamp = " . $theData['timestamp'] . ", Timeout = " . $theData['timeout'] . ", Current timestamp = " . time());
 		
 	if ($_GET['nocache'] || (($theData['timestamp'] + $theData['timeout']) < time()))
 	{
-		save_log("cache", "GET " . $key . " Out of date");
+		//save_log("cache", "GET " . $key . " Out of date");
 		
 		cache_delete($key);
 		return false;
 	}
 	else 
 	{
-		save_log("cache", "GET " . $key . " Valid");
+		//save_log("cache", "GET " . $key . " Valid");
 		return unserialize($theData['data']);
 	}
 }
