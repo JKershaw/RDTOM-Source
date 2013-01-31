@@ -1,21 +1,7 @@
 <?php 
-		
-// the questions
-$poll_questions = array();
 
-$poll_questions[] = array("id" => 10, "text" => "Other rule sets (e.g. No Minors Beta, USARS, WORD)");
-$poll_questions[] = array("id" => 1, "text" => "Questions for officials (refs & NSOs)");
-$poll_questions[] = array("id" => 2, "text" => "[Done] Stats showing what sections you're good/bad at");
-$poll_questions[] = array("id" => 3, "text" => "Select which questions you will be given (difficulty, rules sections etc.)");
-$poll_questions[] = array("id" => 4, "text" => "A free mobile app");
-$poll_questions[] = array("id" => 5, "text" => "Auto-generated mock tests");
-$poll_questions[] = array("id" => 6, "text" => "Other languages");
-$poll_questions[] = array("id" => 7, "text" => "User submitted (and moderated) questions");
-$poll_questions[] = array("id" => 8, "text" => "Questions with images");
-$poll_questions[] = array("id" => 9, "text" => "Discussion areas to discuss specific questions, rules, and the site in general");
-
+// shuffle the poss questions
 shuffle($poll_questions);
-// poll goes here
 
 // show the page
 set_page_subtitle("Turn left and tell me what you think.");
@@ -32,9 +18,9 @@ padding: 30px;"
 <p>
 <?php 
 
-foreach($poll_questions as $poll_question)
+foreach($poll_questions as $poll_question_id => $poll_question_text)
 {
-	echo "<a style=\"font-size: 14px; line-height: 30px;\" id=\"poll_question" . $poll_question["id"] . "\" onclick=\"selected_answer(" . $poll_question["id"] . ")\">" . $poll_question["text"] . "</a></br>";
+	echo "<a style=\"font-size: 14px; line-height: 30px;\" id=\"poll_question" . $poll_question_id . "\" onclick=\"selected_answer(" . $poll_question_id . ")\">" . $poll_question_text . "</a></br>";
 }
 ?>
 <span style="font-size: 14px; line-height: 30px;">Other: <input type="text" id="text_other"  name="text_other"  style="width: 80%;"></input></span>
@@ -47,16 +33,13 @@ foreach($poll_questions as $poll_question)
 var selected_count = 0;
 var answer_choice = new Array();
 
-answer_choice[10] = false;
-answer_choice[1] = false;
-answer_choice[2] = false;
-answer_choice[3] = false;
-answer_choice[4] = false;
-answer_choice[5] = false;
-answer_choice[6] = false;
-answer_choice[7] = false;
-answer_choice[8] = false;
-answer_choice[9] = false;
+<?php 
+foreach($poll_questions as $poll_question_id => $poll_question_text)
+{
+	echo "
+	answer_choice[" . $poll_question_id . "] = false;";
+}
+?>
 
 function selected_answer(question_id)
 {
@@ -91,16 +74,14 @@ function save_answers()
 	
 	$.post("ajax.php", { 
 		call: "save_poll_results", 
-		answer10: answer_choice[10], 
-		answer1: answer_choice[1], 
-		answer2: answer_choice[2], 
-		answer3: answer_choice[3], 
-		answer4: answer_choice[4], 
-		answer5: answer_choice[5], 
-		answer6: answer_choice[6], 
-		answer7: answer_choice[7], 
-		answer8: answer_choice[8], 
-		answer9: answer_choice[9],
+		<?php 
+		foreach($poll_questions as $poll_question_id => $poll_question_text)
+		{
+			echo "
+			answer" . $poll_question_id . ": answer_choice[" . $poll_question_id . "],";
+		}
+		?>
+
 		answer_other: tmp_string},
 		
 		function(data) {
@@ -134,11 +115,8 @@ function get_results()
 <p style="font-size:14px">
 Hello! John / Sausage Roller (guy who made the site) here, just wondering what you would like to see added to the site next?
 </p>
-			
+
 <p style="font-size:14px">
-I recently <a href="https://www.google.co.uk/search?q=sad+violin+music">sprained my ankle</a> and will be off skates for the next few weeks (pity me!), so figure this is a great opportunity to get some features built. Yey code! I know what features <i>I'm</i> interested in, but as there's many more thousands of you than there are of me I thought it sensible to gather some opinions on what people want.
-</p>
-<p style="font-size:14px">
-If you have an awesome idea you're more than welcome to <a href="mailto:wardrox@gmail.com?Subject=Roller%20Derby%20Test%20O'Matic">email</a> me or post a comment on <a href="http://www.facebook.com/RollerDerbyTestOMatic">the Roller Derby Test O'Matic Facebook page</a>.
+If you have an awesome idea you're more than welcome to <a href="mailto:contact@rollerderbytestomatic.com?Subject=Roller%20Derby%20Test%20O'Matic">email</a> me or post a comment on <a href="http://www.facebook.com/RollerDerbyTestOMatic">the Roller Derby Test O'Matic Facebook page</a>.
 			</p>		
 <?php include("footer.php"); ?>

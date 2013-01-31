@@ -351,16 +351,16 @@ function return_chart_24hour_responses()
 	
 	
 	// use a mix of the current hour plus previous hour to get value
-	
+	/*
 	if ($current_minute > 0)
 	{
-		$raw_data[24] = round($raw_data[24] + ($raw_data[23] * (1 - $percentage_hour_complete)));
+		 $raw_data[24] = round($raw_data[24] + ($raw_data[23] * (1 - $percentage_hour_complete)));
 	}
 	else
 	{
 		$raw_data[24] = $raw_data[23];
 	}
-	
+	*/
 	
 	/*
 	 * With an average

@@ -3,7 +3,11 @@
  * Parse the ini file
  */
 
-$ini_array = parse_ini_file("config.ini");
+try {
+	$ini_array = parse_ini_file("config.ini");
+} catch (Exception $e) {
+	echo "There is no config.ini file.";
+}
 
 /*
  * Database connection details, stored in the ini files for security
@@ -86,4 +90,23 @@ define("REPORT_NOACTION", 4);
 // number of answers listed on the admin page
 define("NUMBER_OF_ANSWERS" , 10);
 
+
+/*
+ * Questions in the online poll
+ */
+
+
+$poll_questions[1] = "Questions for officials (refs & NSOs)";
+$poll_questions[2] = "More detailed stats showing what sections you're good/bad at";
+$poll_questions[3] = "Filtering on what questions you're being given (difficulty, topic etc.)";
+$poll_questions[4] = "An Android app";
+$poll_questions[5] = "An iPhone/iPad app";
+$poll_questions[6] = "Other languages";
+$poll_questions[7] = "User submitted (and moderated) questions";
+$poll_questions[8] = "Questions with images (ref hand signals, diagrams etc.)";
+$poll_questions[9] = "Discussion areas to discuss specific questions, rules, and the site in general";
+$poll_questions[10] = "Other rule sets (e.g. USARS, WORD)";
+$poll_questions[11] = "A support or donations page";
+$poll_questions[12] = "Public high scores";
+$poll_questions[12] = "An updated page layout and design";
 ?>
