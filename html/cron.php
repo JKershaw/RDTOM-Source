@@ -17,10 +17,10 @@
 $cron_tasks = Array ( 
 				Array (
 					"function" => "stats_hourly_posts",
-					"seconds" => 300),
+					"seconds" => 700),
 				Array (
 					"function" => "response_count_last_hour",
-					"seconds" => 600),
+					"seconds" => 800),
 				Array (
 					"function" => "last_10000_sections",
 					"seconds" => 3600),
@@ -91,9 +91,7 @@ function stats_hourly_posts()
 function response_count_last_hour()
 {
 	global $mydb;
-	$current_minute = date('i');
-	$percentage_hour_complete = $current_minute / 60;
-	cache_set("response_count_last_hour", $mydb->get_response_count_since(gmmktime() - round($percentage_hour_complete * 3600)));
+	cache_set("response_count_last_hour", $mydb->get_response_count_since(gmmktime() - 3600));
 }
 
 function last_10000_sections()
