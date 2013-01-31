@@ -108,4 +108,5 @@ $poll_questions[9] = "Discussion areas to discuss specific questions, rules, and
 $poll_questions[10] = "Other rule sets (e.g. USARS, WORD)";
 $poll_questions[11] = "A support or donations page";
 $poll_questions[12] = "Public high scores";
+$poll_questions[12] = "An updated page layout and design";
 ?>

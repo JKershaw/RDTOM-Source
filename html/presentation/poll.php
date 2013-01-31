@@ -117,6 +117,6 @@ Hello! John / Sausage Roller (guy who made the site) here, just wondering what y
 </p>
 
 <p style="font-size:14px">
-If you have an awesome idea you're more than welcome to <a href="mailto:wardrox@gmail.com?Subject=Roller%20Derby%20Test%20O'Matic">email</a> me or post a comment on <a href="http://www.facebook.com/RollerDerbyTestOMatic">the Roller Derby Test O'Matic Facebook page</a>.
+If you have an awesome idea you're more than welcome to <a href="mailto:contact@rollerderbytestomatic.com?Subject=Roller%20Derby%20Test%20O'Matic">email</a> me or post a comment on <a href="http://www.facebook.com/RollerDerbyTestOMatic">the Roller Derby Test O'Matic Facebook page</a>.
 			</p>		
 <?php include("footer.php"); ?>
