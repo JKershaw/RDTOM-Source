@@ -472,13 +472,14 @@ function get_competition_footer_string()
 function get_page_description()
 {
 	global $question;
-	if (is_question()) 
+	
+	if (!is_random_question()) 
 	{ 
-		$out = htmlspecialchars(stripslashes($question->get_Text())); 
+		$out = htmlspecialchars(stripslashes("Queston #" . $question->get_ID() . " - " . $question->get_Text())); 
 	} 
 	else
 	{ 
-		$out = "An online, free, Roller Derby rules test with hundreds of questions. Turn left and learn the rules.";
+		$out = "A free online roller derby rules test with hundreds of questions. Turn left and learn the rules.";
 	}
 	return $out;
 }
