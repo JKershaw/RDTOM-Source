@@ -408,12 +408,26 @@ include("header.php");
 				<tr>
 					<td style="width:200px">Notes:</td>
 					<td>
-						<input type="text"  id="question_notes" name="question_notes" style="width:500px" value="<?php 
+					<?php 
+					if ($question && $question->get_Notes())
+					{
+					?>
+						<textarea id="question_notes" style="width:500px" name="question_notes" cols="40" rows="5"><?php 
 						if ($question)
 						{
 							echo htmlentities(stripslashes($question->get_Notes()));
 						}
-						?>"></input>
+						?></textarea>
+					<?php 
+					}
+					else
+					{
+					?>
+						<span id="question_notes_link"><a onclick="$('#question_notes_link').hide();$('#question_notes').slideDown();">Click to add a note</a></span>
+						<textarea id="question_notes" style="width:500px; display:none;" name="question_notes" cols="40" rows="5"></textarea>
+					<?php 
+					}?>
+					
 					</td>
 				</tr>
 				<tr>
