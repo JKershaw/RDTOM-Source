@@ -20,7 +20,7 @@ $cron_tasks = Array (
 					"seconds" => 700),
 				Array (
 					"function" => "response_count_last_hour",
-					"seconds" => 800),
+					"seconds" => 600),
 				Array (
 					"function" => "last_10000_sections",
 					"seconds" => 3600),
@@ -68,7 +68,7 @@ try
 			echo "Cron completed: " . $cron_task['function'] . "<br />";
 			
 			// only execute one cron job per cycle to keep server load light
-			break;
+			// break;
 		}
 	}
 	
