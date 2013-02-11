@@ -158,7 +158,7 @@ else
 	<form name="formreport" method="post" action="<?php echo get_site_URL(); ?>report">	
 	<p>
 		<input type="hidden" id="report_question_ID" name="report_question_ID" value="<?php if ($question) echo $question->get_ID(); ?>" />
-		<textarea name="report_text"  id="report_text" rows="10"><?php 
+		<textarea name="report_text"  id="report_text" rows="10" cols="40"><?php 
 		if ($_POST['report_text']) 
 		{
 			echo stripslashes(htmlentities($_POST['report_text']));

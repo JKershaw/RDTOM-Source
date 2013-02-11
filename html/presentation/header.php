@@ -15,24 +15,26 @@
 		
 		<title>Roller Derby Test O'Matic</title>
 		
-		<link rel="stylesheet" href="<?echo get_CSS_URL(); ?>" type="text/css" />
-		<link rel="stylesheet" href="<?echo get_CSS_URL("print"); ?>" type="text/css" media="print">
+		<link rel="stylesheet" href="<?echo get_CSS_URL(); ?>" type="text/css" >
+		<link rel="stylesheet" href="<?echo get_CSS_URL("print"); ?>" type="text/css" media="print" >
 		
-        <link rel="icon" href="<?echo get_theme_directory(); ?>favicon.gif" type="image/gif"/>
-        <link rel="apple-touch-icon-precomposed" href="<?echo get_theme_directory(); ?>RDTOM_touch_icon.png"/>		
+        <link rel="icon" href="<?echo get_theme_directory(); ?>favicon.gif" type="image/gif">
+        <link rel="apple-touch-icon-precomposed" href="<?echo get_theme_directory(); ?>RDTOM_touch_icon.png">		
 		
-		<meta name="viewport" content="width=device-width" />
-		<meta property="og:title" content="Roller Derby Test O'Matic" />
-		<meta property="og:description" content="<?php echo get_page_description(); ?>" />
+		<meta name="viewport" content="width=device-width" >
+		<meta property="og:title" content="Roller Derby Test O'Matic" >
+		<meta property="og:description" content="<?php echo get_page_description(); ?>" >
 		<meta name="Description" content="<?php echo get_page_description(); ?>">
 		<?php if (is_competition_page())
 		{
 		?>
-		<meta property="og:image" content="<?php echo get_site_URL() ?>images/sponsors.png" />
+		<meta property="og:image" content="<?php echo get_site_URL() ?>images/sponsors.png" >
 		<?php 
 		}
 		?>
 	
+		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8/jquery.min.js" type="text/javascript"></script>
+   		
 		<?php 
 		if (!is_admin_page())
 		{
@@ -54,8 +56,7 @@
 		} 
 		?>
 	
-		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8/jquery.min.js"></script>
-   		
+		
 	</head>
 	
 	<body>

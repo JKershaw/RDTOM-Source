@@ -20,7 +20,7 @@ function user_log_in($req_username, $req_password, $remeber_me = false)
 	if ($remeber_me)
 	{
 		// generate token
-		$token_string = generateSalt(1000);
+		$token_string = generateSalt(200);
 		
 		// save it in the database
 		$mydb->add_token($token_string, $user->get_ID(), get_ip());
