@@ -445,7 +445,7 @@ function ajax_get_admin_questions_list()
 				. $question->get_Section() 
 				. " <a href=\"" . get_site_URL() . "admin/edit/" . $question->get_ID() . "#edit_question\">" 
 				. htmlentities(stripslashes($question->get_Text())) . "</a>
-				<span id=\"extra_" . $question->get_ID() . "\" style=\"display:none;\">
+				<span class=\"extra_all\" id=\"extra_" . $question->get_ID() . "\" style=\"display:none;\">
 				<p style=\"font-size: 10px; margin-left: 1em;\">
 				";
 			$out .= get_admin_terms_checkboxes_ajax("tag", $question);

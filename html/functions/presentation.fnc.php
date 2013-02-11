@@ -605,6 +605,11 @@ function get_admin_terms_checkboxes_ajax($term, $question)
 					if ($question_term->get_ID() == $term->get_ID())
 					{
 						$style = "style=\"font-weight: bold;\"";
+						
+					}
+					else
+					{
+						
 					}
 				}
 			}
@@ -620,6 +625,10 @@ function get_admin_terms_checkboxes_ajax($term, $question)
 				$display_name = $term->get_Name();
 			}
 			
+			//$bonus = "";
+			//if (!$style && ($term->get_ID() == 3))
+			//	$bonus = "xx";
+				
 			$out .= "<a $style id=\"term_" . $term->get_ID() . "_" . $question->get_ID() . "\" onclick=\"toggle_term_relationship(" . $term->get_ID() . ", " . $question->get_ID() . ")\">" . htmlentities(stripslashes($display_name)) . "</a> ";
 		}
 		
