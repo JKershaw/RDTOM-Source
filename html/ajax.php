@@ -346,6 +346,12 @@ function ajax_get_poll_results()
 {
 	global $mydb, $poll_questions;
 	
+	// make an empty array with all questions
+	foreach($poll_questions as $poll_question_id => $poll_question_text)
+	{
+		$poll_count[$poll_question_id] = 0;
+	}
+	
 	$query = "
 			SELECT 
 			count(*) AS responses, Question_ID

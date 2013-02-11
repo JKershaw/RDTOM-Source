@@ -151,6 +151,12 @@ function echo_error_page($error_string)
 		<p>Whoops! The database has just been overloaded. This is probably a temporary issue (and has been logged and will be looked into), so try doing what you just did again or refreshing the page.<p>
 	<?php 
 	}
+	elseif (strstr($error_string, "no question found")) 
+	{
+	?>
+		<p>Sorry, the database doesn't have the question in that you're looking for. It may have been deleted.<p>
+	<?php 
+	}
 	else
 	{
 	?>
