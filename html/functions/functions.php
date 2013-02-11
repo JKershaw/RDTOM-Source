@@ -3,14 +3,9 @@
 
 function report_question()
 {
-	global $report_string, $recaptcha_privatekey, $error_string, $url_array;
+	global $report_string, $error_string, $url_array;
 	
-	$resp = recaptcha_check_answer ($recaptcha_privatekey,
-                                $_SERVER["REMOTE_ADDR"],
-                                $_POST["recaptcha_challenge_field"],
-                                $_POST["recaptcha_response_field"]);
-
-	if ($_POST['report_question_ID'] && $resp->is_valid)
+	if ($_POST['report_question_ID'] && (strtolower(trim($_POST['report_extra'])) == "derby"))
 	{
 		$report_string = "Question #" . $_POST['report_question_ID'] . ": " . $_POST['report_text'];
 		save_log("report", $report_string, $_POST['report_question_ID']);
@@ -24,7 +19,7 @@ function report_question()
 		// Your code here to handle an error
 		if (!$resp->is_valid)
 		{
-			$error_string = "The reCAPTCHA wasn't entered correctly. Please try it again.";
+			$error_string = "The anti-spam code wasn't entered correctly. Please try it again.";
 		}
 		else
 		{

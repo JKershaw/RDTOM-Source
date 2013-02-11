@@ -170,8 +170,13 @@ else
 				echo $question->get_ID();
 			echo " because ... ";
 		}
-		?></textarea><br />
-		<?php echo recaptcha_get_html($recaptcha_publickey); ?><br />
+		?></textarea>
+	</p>
+	<p>
+		To prevent spam reports, please complete the following sentence:<br /> "Roller <input id="report_extra" name="report_extra" type="text" /> is an awesome sport."
+	</p>
+
+	<p>
 		<a class="button" onClick="document.formreport.submit()">Submit Report</a> <a class="button" onClick="$('#hidden_report_form').slideUp()">Cancel</a> 
 	</p>
 	</form>
