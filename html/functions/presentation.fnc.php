@@ -184,14 +184,14 @@ function get_CSS_URL($type = false)
 	{
 		if ($type == "print")
 		{
-			return get_site_URL() . "presentation/print.css";
+			return get_site_URL() . "presentation/print.css?v=" . filemtime("presentation/print.css");
 		}
 		if ($type == "minify")
 		{
-			return get_site_URL() . "presentation/style-min.css";
+			return get_site_URL() . "presentation/style-min.css?v=" . filemtime("presentation/style-min.css");
 		}
 	}
-	return get_site_URL() . "presentation/style.css";
+	return get_site_URL() . "presentation/style.css?v=" . filemtime("presentation/style-min.css");
 }
 
 function get_theme_directory()
