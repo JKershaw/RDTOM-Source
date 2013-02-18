@@ -191,7 +191,51 @@ function get_CSS_URL($type = false)
 			return get_site_URL() . "presentation/style-min.css?v=" . filemtime("presentation/style-min.css");
 		}
 	}
-	return get_site_URL() . "presentation/style.css?v=" . filemtime("presentation/style-min.css");
+	return get_site_URL() . "presentation/style.css?v=" . filemtime("presentation/style.css");
+}
+
+function get_CSS_embed($type = false)
+{
+	if ($type)
+	{
+		if ($type == "print")
+		{
+			return "
+				    <style type=\"text/css\">
+				        @media print {
+							body	
+							{
+								font-size:12px;
+								max-width: 100%;	
+							}
+							
+							.footer
+							{
+								display:none;
+							}
+							
+							
+							.print_footer 
+							{
+								display: block;
+							}
+				        }
+				    </style>
+			";
+			//return get_site_URL() . "presentation/print.css?v=" . filemtime("presentation/print.css");
+		}
+		if ($type == "minify")
+		{
+			return "<link rel=\"stylesheet\" href=\"" . get_site_URL() . "presentation/style-min.css?v=" . filemtime("presentation/style-min.css") . "\" type=\"text/css\" >";
+	
+		}
+	}
+	return "<link rel=\"stylesheet\" href=\"" . get_site_URL() . "presentation/style.css?v=" . filemtime("presentation/style.css") . "\" type=\"text/css\" >";
+	
+	
+	return ;	
+	
+
 }
 
 function get_theme_directory()

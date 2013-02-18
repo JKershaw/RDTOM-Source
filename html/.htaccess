@@ -6,6 +6,12 @@ Header unset ETag
 FileETag None
 </FilesMatch>
 
+<IfModule mod_headers.c>
+  <FilesMatch "\.(js|css|xml|gz)$">
+    Header append Vary: Accept-Encoding
+  </FilesMatch>
+</IfModule>
+
 RewriteEngine on
 
 RewriteRule ajax.php(.+)? ajax.php$1 [L]
