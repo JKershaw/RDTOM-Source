@@ -29,21 +29,22 @@ class api_resource_question extends api_resource
 		$XML_newquestion->addChild('notes', htmlentities($question->get_Notes()));
 		$XML_newquestion->addChild('wftda_link', htmlentities($question->get_WFTDA_Link()));
 		
+		$XML_newanswer = $this->out_XML->results->question->addChild('answers');
 		// save the answers
 		foreach ($answers as $answer)
 		{
+			$XML_newanswer = $this->out_XML->results->question->answers->addChild('answer');
+			$XML_newanswer->addChild('id', $answer->get_ID());
+			$XML_newanswer->addChild('text', htmlentities($answer->get_Text()));
+			
 			if ($answer->is_correct())
 			{
-				$is_correct_string = "yes";
+				$XML_newanswer->addChild('correct', "true");
 			}
 			else
 			{
-				$is_correct_string = "no";
+				$XML_newanswer->addChild('correct', "false");
 			}
-			$XML_newanswer = $this->out_XML->results->question->addChild('answer');
-			$XML_newanswer->addChild('id', $answer->get_ID());
-			$XML_newanswer->addChild('text', htmlentities($answer->get_Text()));
-			$XML_newanswer->addChild('correct', $is_correct_string);
 		}
 	}
 }
