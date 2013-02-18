@@ -1,11 +1,14 @@
 <?php
 class api_resource_question extends api_resource
 {
-	protected function build_XML()
+
+	
+	protected function build_XML($parameters)
 	{
-		if (is_numeric($this->parameters['ID']))
+		
+		if (is_numeric($parameters['ID']))
 		{
-			$question = get_question_from_ID($this->parameters['ID']);
+			$question = get_question_from_ID($parameters['ID']);
 		}
 		else
 		{

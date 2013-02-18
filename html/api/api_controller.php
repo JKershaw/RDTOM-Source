@@ -8,7 +8,6 @@
  * RDTOM.com/API	/[version]	/[format]	/[resource]
  * 			/0		/1			/2			/3
  */
-
 if ($url_array[1] == "0.1")
 {
 	// version 0.1 has been requested
@@ -19,20 +18,7 @@ if ($url_array[1] == "0.1")
 	$out_XML = get_resource_xml($resource_name);
 	
 	// output the resource
-	
-	// output the result
-	if ($url_array[2]=="nicexml")
-	{
-		echo "<pre>" . htmlentities(formatXmlString($out_XML->asXML())) . "</pre>";
-	}
-	else
-	{
-		header('Content-Type: text/xml');
-		echo $out_XML->asXML();
-	}
-	
-	
-	
+	output_xml($out_XML, $url_array[2]);
 }
 else
 {
@@ -48,19 +34,59 @@ function get_resource_xml($resource_name)
 		case "question":
 			$parameters = Array(
 				"resource" => "question",
-				"ID" => $url_array[3]);
+				"ID" => $_GET['ID']);
 			
 			$api_resource = new api_resource_question($parameters);
 			
 			break;	
 		default:
-			throw new Exception ("Resource not found: " . htmlentities($resource_name));
+			//throw new Exception ("Resource not found: " . htmlentities($resource_name));
+			echo "Resource not found";
+			exit;
 			break;
 	}
 	
 	return $api_resource->get_XML();
-	
-	
+}
+
+function output_xml($out_XML, $format)
+{
+	if ($format == "nicexml")
+	{
+		// HTML view of XML
+		echo "<pre>" . htmlentities(formatXmlString($out_XML->asXML())) . "</pre>";
+	}
+	elseif ($format == "json")
+	{
+		// JSON
+		echo json_encode($out_XML);
+	}
+	elseif ($format == "jsonp")
+	{
+		// JSONP
+		$requested_callback = htmlentities($_GET['callback']);
+		$requested_jsonarg = htmlentities($_GET['jsonarg']);
+		
+		if (!$requested_callback)
+		{
+			throw new exception ("No JSONP callback specified");
+		}
+		
+		if (!$requested_jsonarg)
+		{
+			echo "$requested_callback (" . json_encode($out_XML) . ", '$requested_jsonarg');";
+		}
+		else
+		{
+			echo "$requested_callback (" . json_encode($out_XML) . ");";
+		}
+	}
+	else
+	{
+		// XML
+		header('Content-Type: text/xml');
+		echo $out_XML->asXML();
+	}
 }
 
 ?>
