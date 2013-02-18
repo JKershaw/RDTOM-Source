@@ -21,7 +21,9 @@ RewriteRule stats.php(.+)? index.php$1 [L]
 RewriteRule poll.php(.+)? index.php$1 [L]
 RewriteRule allquestions.php(.+)? index.php$1 [L]
 
-RewriteRule ^([^\.]+)?$ index.php [L]
+RewriteRule ^api(.+)? index.php [NC,QSA,L]
+
+RewriteRule ^([^\.]+)?$ index.php [NC,QSA,L]
 
 ErrorDocument 404 /404
 
