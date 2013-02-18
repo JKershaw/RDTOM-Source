@@ -22,75 +22,87 @@ set_up_database();
 set_up_logged_in_user();
 set_up_url_array();
 
-// begin processing
+// begin processing the request
 
-// do we want to perform some function or other, then show the default page?
-switch ($url_array[0]) 
-{	
-	case "forget":
-		forget_remebered_questions();
-		break;	
-		
-	case "changes":
-		toggle_view_only_changes();
-		break;	
+if (strtolower($url_array[0]) == "api")
+{
+	// An API request
+	include('api_controller.php');
 	
-	case "report":
-		if (!$_POST)
-		{
-			header( 'Location: ' . get_site_URL()) ;
-			exit;
-		}
-		report_question();
-		break;		
+	
 }
-
-// show the page
-switch ($url_array[0]) 
+else
 {	
-
-	case "questions":
-		include("presentation/allquestions.php");
-		break;	
-	case "poll":
-		include("presentation/poll.php");
-		break;	
-	case "stats":
-		include("presentation/stats.php");
-		break;	
-	case "admin":
-		include("presentation/admin.php");
-		break;	
-	case "profile":
-		include("presentation/profile.php");
-		break;	
-	case "passwordreset":
-		include("presentation/passwordreset.php");
-		break;	
-	case "competition":
-		include("presentation/competition.php");
-		break;	
-	case "test":
-		include("presentation/test.php");
-		break;	
-	case "submit":
-		include("presentation/submit.php");
-		break;	
-	case "about":
-		include("presentation/about.php");
-		break;		
+	// A Web request
+	
+	// do we want to perform some function or other, then show the default page?
+	switch ($url_array[0]) 
+	{	
+		case "forget":
+			forget_remebered_questions();
+			break;	
+			
+		case "changes":
+			toggle_view_only_changes();
+			break;	
 		
-	case "question":
-		set_up_question($url_array[1]);
-		include("presentation/question.php");
-		break;		
-	default:
-		set_up_question("random");
-		include("presentation/question.php");
-		break;
-		
+		case "report":
+			if (!$_POST)
+			{
+				header( 'Location: ' . get_site_URL()) ;
+				exit;
+			}
+			report_question();
+			break;		
+	}
+	
+	// show the page
+	switch ($url_array[0]) 
+	{	
+	
+		case "questions":
+			include("presentation/allquestions.php");
+			break;	
+		case "poll":
+			include("presentation/poll.php");
+			break;	
+		case "stats":
+			include("presentation/stats.php");
+			break;	
+		case "admin":
+			include("presentation/admin.php");
+			break;	
+		case "profile":
+			include("presentation/profile.php");
+			break;	
+		case "passwordreset":
+			include("presentation/passwordreset.php");
+			break;	
+		case "competition":
+			include("presentation/competition.php");
+			break;	
+		case "test":
+			include("presentation/test.php");
+			break;	
+		case "submit":
+			include("presentation/submit.php");
+			break;	
+		case "about":
+			include("presentation/about.php");
+			break;		
+			
+		case "question":
+			set_up_question($url_array[1]);
+			include("presentation/question.php");
+			break;		
+		default:
+			set_up_question("random");
+			include("presentation/question.php");
+			break;
+			
+	}
 }
-
 //Output the buffer
 while (@ob_end_flush());
+
 ?>
