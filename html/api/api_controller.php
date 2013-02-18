@@ -8,6 +8,10 @@
  * RDTOM.com/API	/[version]	/[format]	/[resource]
  * 			/0		/1			/2			/3
  */
+
+save_log("api", $_SERVER['REQUEST_URI']);
+	
+
 if ($url_array[1] == "0.1")
 {
 	// version 0.1 has been requested
