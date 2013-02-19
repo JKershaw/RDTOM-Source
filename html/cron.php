@@ -17,13 +17,13 @@
 $cron_tasks = Array ( 
 				Array (
 					"function" => "stats_hourly_posts",
-					"seconds" => 700),
+					"seconds" => 1200),
 				Array (
 					"function" => "response_count_last_hour",
-					"seconds" => 600),
+					"seconds" => 300),
 				Array (
 					"function" => "last_10000_sections",
-					"seconds" => 3600),
+					"seconds" => 7200),
 				Array (
 					"function" => "rebuild_sitemap",
 					"seconds" => 86400),
@@ -61,7 +61,7 @@ try
 	foreach ($cron_tasks as $cron_task)
 	{
 		// check with the $cron_tasks_data to see when this function was last fired
-		if (($cron_tasks_data[$cron_task['function']] < (gmmktime() -  $cron_task['seconds'])) || ($_GET['force'] == $cron_task['function']))
+		if (($cron_tasks_data[$cron_task['function']] < (gmmktime() -  $cron_task['seconds'])) || ($_GET['force'] == $cron_task['function']) || ($_GET['force'] == "all"))
 		{
 			
 			$cron_task['function']();
