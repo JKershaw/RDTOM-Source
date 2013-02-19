@@ -271,8 +271,7 @@ function ajax_count_answers()
 
 function ajax_count_unique_IPs()
 {
-	global $mydb;
-	return $mydb->get_response_distinct_ip_count();
+	return cache_get("response_distinct_ip_count");
 }
 
 function ajax_count_users()

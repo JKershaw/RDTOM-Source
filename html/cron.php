@@ -31,6 +31,9 @@ $cron_tasks = Array (
 					"function" => "delete_old_cache_files",
 					"seconds" => 7200),
 				Array (
+					"function" => "stats_count_unique_IPs",
+					"seconds" => 3600),
+				Array (
 					"function" => "delete_old_usertokens",
 					"seconds" => 86400)
 			);
@@ -235,5 +238,11 @@ function rebuild_sitemap()
 	
 	// save the file
 	file_put_contents("sitemap.xml", $sitemap_string);
+}
+
+function stats_count_unique_IPs()
+{
+	global $mydb;
+	cache_set("response_distinct_ip_count", $mydb->get_response_distinct_ip_count());
 }
 ?>
