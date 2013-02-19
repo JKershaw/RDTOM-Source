@@ -184,14 +184,58 @@ function get_CSS_URL($type = false)
 	{
 		if ($type == "print")
 		{
-			return get_site_URL() . "presentation/print.css";
+			return get_site_URL() . "presentation/print.css?v=" . filemtime("presentation/print.css");
 		}
 		if ($type == "minify")
 		{
-			return get_site_URL() . "presentation/style-min.css";
+			return get_site_URL() . "presentation/style-min.css?v=" . filemtime("presentation/style-min.css");
 		}
 	}
-	return get_site_URL() . "presentation/style.css";
+	return get_site_URL() . "presentation/style.css?v=" . filemtime("presentation/style.css");
+}
+
+function get_CSS_embed($type = false)
+{
+	if ($type)
+	{
+		if ($type == "print")
+		{
+			return "
+				    <style type=\"text/css\">
+				        @media print {
+							body	
+							{
+								font-size:12px;
+								max-width: 100%;	
+							}
+							
+							.footer
+							{
+								display:none;
+							}
+							
+							
+							.print_footer 
+							{
+								display: block;
+							}
+				        }
+				    </style>
+			";
+			//return get_site_URL() . "presentation/print.css?v=" . filemtime("presentation/print.css");
+		}
+		if ($type == "minify")
+		{
+			return "<link rel=\"stylesheet\" href=\"" . get_site_URL() . "presentation/style-min.css?v=" . filemtime("presentation/style-min.css") . "\" type=\"text/css\" >";
+	
+		}
+	}
+	return "<link rel=\"stylesheet\" href=\"" . get_site_URL() . "presentation/style.css?v=" . filemtime("presentation/style.css") . "\" type=\"text/css\" >";
+	
+	
+	return ;	
+	
+
 }
 
 function get_theme_directory()
@@ -605,6 +649,11 @@ function get_admin_terms_checkboxes_ajax($term, $question)
 					if ($question_term->get_ID() == $term->get_ID())
 					{
 						$style = "style=\"font-weight: bold;\"";
+						
+					}
+					else
+					{
+						
 					}
 				}
 			}
@@ -620,6 +669,10 @@ function get_admin_terms_checkboxes_ajax($term, $question)
 				$display_name = $term->get_Name();
 			}
 			
+			//$bonus = "";
+			//if (!$style && ($term->get_ID() == 3))
+			//	$bonus = "xx";
+				
 			$out .= "<a $style id=\"term_" . $term->get_ID() . "_" . $question->get_ID() . "\" onclick=\"toggle_term_relationship(" . $term->get_ID() . ", " . $question->get_ID() . ")\">" . htmlentities(stripslashes($display_name)) . "</a> ";
 		}
 		

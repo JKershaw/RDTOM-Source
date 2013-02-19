@@ -17,13 +17,16 @@
 $cron_tasks = Array ( 
 				Array (
 					"function" => "stats_hourly_posts",
-					"seconds" => 700),
+					"seconds" => 1200),
 				Array (
 					"function" => "response_count_last_hour",
-					"seconds" => 600),
+					"seconds" => 300),
 				Array (
 					"function" => "last_10000_sections",
-					"seconds" => 3600),
+					"seconds" => 7200),
+				Array (
+					"function" => "rebuild_sitemap",
+					"seconds" => 86400),
 				Array (
 					"function" => "delete_old_cache_files",
 					"seconds" => 7200),
@@ -58,7 +61,7 @@ try
 	foreach ($cron_tasks as $cron_task)
 	{
 		// check with the $cron_tasks_data to see when this function was last fired
-		if (($cron_tasks_data[$cron_task['function']] < (gmmktime() -  $cron_task['seconds'])) || ($_GET['force'] == $cron_task['function']))
+		if (($cron_tasks_data[$cron_task['function']] < (gmmktime() -  $cron_task['seconds'])) || ($_GET['force'] == $cron_task['function']) || ($_GET['force'] == "all"))
 		{
 			
 			$cron_task['function']();
@@ -135,5 +138,102 @@ function delete_old_cache_files()
 		 // tidy up: close the handler
 		closedir($handler);		
 	}
+}
+
+function rebuild_sitemap()
+{
+	global $default_terms_array;
+	
+	
+	// get all the pages into an array
+	$sitemap = array (
+		1 => array(
+			"loc" => "http://rollerderbytestomatic.com",
+			//"lastmod" => "2005-01-01",
+			"changefreq" => "weekly",
+			"priority" => "1"
+		),
+		
+		2 => array(
+			"loc" => "http://rollerderbytestomatic.com/about",
+			//"lastmod" => "2005-01-01",
+			"changefreq" => "weekly",
+			"priority" => "1"
+		),
+		
+		3 => array(
+			"loc" => "http://rollerderbytestomatic.com/stats",
+			//"lastmod" => "2005-01-01",
+			"changefreq" => "weekly",
+			"priority" => "1"
+		),
+		
+		4 => array(
+			"loc" => "http://rollerderbytestomatic.com/stats",
+			//"lastmod" => "2005-01-01",
+			"changefreq" => "weekly",
+			"priority" => "1"
+		),
+		
+		5 => array(
+			"loc" => "http://rollerderbytestomatic.com/test",
+			//"lastmod" => "2005-01-01",
+			"changefreq" => "weekly",
+			"priority" => "1"
+		)
+	);
+	
+	$all_questions = get_questions($default_terms_array);
+	
+	foreach ($all_questions as $question)
+	{
+		$sitemap[] = array(
+			"loc" => $question->get_URL(),
+			"priority" => "0.5"
+		);
+	}
+	
+	// generate the sitemap into a string
+	
+	$sitemap_string = '<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">';
+	
+	foreach ($sitemap as $sitemap_item)
+	{
+		$sitemap_string .= '
+		<url>';
+		
+		if ($sitemap_item['loc'])
+		{
+			$sitemap_string .= '
+				<loc>' . htmlentities($sitemap_item['loc']) . "</loc>";
+		}
+		
+		if ($sitemap_item['lastmod'])
+		{
+			$sitemap_string .= '
+				<lastmod>' . htmlentities($sitemap_item['lastmod']) . "</lastmod>";
+		}
+		
+		if ($sitemap_item['changefreq'])
+		{
+			$sitemap_string .= '
+				<changefreq>' . htmlentities($sitemap_item['changefreq']) . "</changefreq>";
+		}
+		
+		if ($sitemap_item['priority'])
+		{
+			$sitemap_string .= '
+				<priority>' . htmlentities($sitemap_item['priority']) . "</priority>";
+		}
+		
+		$sitemap_string .= '
+		</url>';
+	}
+	
+	$sitemap_string .= '</urlset> ';
+	
+	// save the file
+	file_put_contents("sitemap.xml", $sitemap_string);
 }
 ?>

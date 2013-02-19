@@ -21,9 +21,6 @@ include('functions/tracker.fnc.php');
 include('functions/cache.fnc.php');
 include('functions/sessions.fnc.php');
 
-//recaptcha functions
-include('functions/recaptcha/recaptchalib.php');
-
 // Database (function) files
 include('functions/database/questions.db.fnc.php');
 include('functions/database/answers.db.fnc.php');

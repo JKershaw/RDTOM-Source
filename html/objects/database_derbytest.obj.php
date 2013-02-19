@@ -349,7 +349,9 @@ class database_derbytest extends database
 	
 	public function get_stats_hourly_posts($hour_count)
 	{
-		$time_ago = gmmktime() - (60*60*$hour_count);
+		// get the time x hours ago & round down
+		$time_now = gmmktime();
+		$time_ago = $time_now - (60*60*$hour_count);
 		$time_ago = floor($time_ago/3600) * 3600;
 		
 		/*
@@ -367,20 +369,18 @@ class database_derbytest extends database
 		*/
 		
 		// get the data from the database
-		
 		$query = "
 			SELECT 
 			Timestamp
 			FROM rdtom_responses 
-			WHERE Timestamp > '$time_ago' ";
+			WHERE Timestamp > '$time_ago' AND Timestamp < '$time_now'";
 		
 		$raw_timestamps = $this->get_col($query);
 		
-		// build an empty array
+		// build an empty array for the last 24 hours, this makes sure if any values are 0, they have a record
 		for ($i = 0; $i < 24; $i ++)
 		{
-			$tmp_timestamp = $time_ago + (60*60*$i);
-			$results[(int) $tmp_timestamp / 3600] = 0;
+			$results[$i] = 0;
 			
 		}
 		
@@ -388,11 +388,9 @@ class database_derbytest extends database
 		foreach ($raw_timestamps as $timestamp)
 		{
 			//$results[date('Y z H', $timestamp)]++;
-			$results[(int) $timestamp / 3600]++;
+			// seconds since 0 hour, rounded to the hour
+			$results[floor(($timestamp - $time_ago)/3600)]++;
 		}
-		
-		// get the index starting from 0
-		$results = array_values($results);
 		
 		return $results;
 	}

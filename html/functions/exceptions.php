@@ -45,15 +45,15 @@ function exception_handler($exception)
 {
 	// save a log of the error
 	$log_error_string = 
-		"MESSAGE: [" . $exception->getMessage() . "] 
-		URI: [" . $_SERVER['REQUEST_URI'] . "] 
+		"URI: [" . $_SERVER['REQUEST_URI'] . "] 
 		REQUEST: [" . print_r($_REQUEST, true) . "]";
-	
-	save_log("exception", $log_error_string);
 	
 	// display an error page for the user
 	$error_string .= $exception->getMessage() . "<br />\n";
 	$error_string .= "Line " . $exception->getLine() . " in file " . $exception->getFile() . " (Trace: " . $exception->getTraceAsString() . ")";
+	
+	save_log("exception", $error_string . $log_error_string);
+	
 	echo_error_page($error_string);
 }
 
@@ -155,6 +155,12 @@ function echo_error_page($error_string)
 	{
 	?>
 		<p>Sorry, the database doesn't have the question in that you're looking for. It may have been deleted.<p>
+	<?php 
+	}
+	elseif (strstr($error_string, "ran out of questions")) 
+	{
+	?>
+		<p>Woah, either the site ran out of questions, or the database is being updated. Try reloading the page, or <a href="http://rollerderbytestomatic.com/forget">click here to make the site forget which questions you have answered</a>.<p>
 	<?php 
 	}
 	else

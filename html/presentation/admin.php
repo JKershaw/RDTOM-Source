@@ -603,7 +603,10 @@ include("header.php");
 			<a class="current_ruleset_selector current_ruleset_selector_WFTDA6" onClick="change_current_ruleset('WFTDA6');">WFTDA6</a> 
 			<a class="current_ruleset_selector current_ruleset_selector_WFTDA6_Draft" onClick="change_current_ruleset('WFTDA6_Draft');">WFTDA6_Draft</a></p>
 		
+		<p><a onclick="$('.extra_all').toggle();">Toggle all</a></p>
+		
 		<p id="viewalllink"><a onclick="$('#viewalllink').hide(); $('#viewalllist').show(); get_all_questions_list();">Load all questions</a></p>
+		
 		<p id="viewalllist" style="display:none">
 		</p>
 		
@@ -942,9 +945,9 @@ include("header.php");
 
 				
 	    		$('#layout_box_all_questions').fadeIn();
-	    		$('#viewalllink').hide(); 
-	    		$('#viewalllist').show(); 
-	    		get_all_questions_list();
+	    		//$('#viewalllink').hide(); 
+	    		//$('#viewalllist').show(); 
+	    		//get_all_questions_list();
 			}
 			else
 			{
