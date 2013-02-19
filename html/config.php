@@ -50,11 +50,6 @@ $responses_needed_for_section_breakdown = 50;
 // When requesting a password reset, how many seconds is the token valid for?
 $password_reset_token_expire = 86400;
 
-// recaptcha stuff
-$recaptcha_publickey = $ini_array["recaptcha_publickey"];
-$recaptcha_privatekey = $ini_array["recaptcha_privatekey"];
-
-
 // the competition value
 $competition_value = 1000000;
 // minimum questions needed to answer to be eligable

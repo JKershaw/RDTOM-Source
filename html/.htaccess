@@ -1,8 +1,16 @@
 AddHandler php5-script .php
 
 <FilesMatch "\.(gif|css)$">
-Header set Cache-Control "max-age=172800, proxy-revalidate"
+Header set Expires "15 Apr 2022 20:00:00 GMT"
+Header unset ETag
+FileETag None
 </FilesMatch>
+
+<IfModule mod_headers.c>
+  <FilesMatch "\.(js|css|xml|gz)$">
+    Header append Vary: Accept-Encoding
+  </FilesMatch>
+</IfModule>
 
 RewriteEngine on
 
@@ -13,7 +21,9 @@ RewriteRule stats.php(.+)? index.php$1 [L]
 RewriteRule poll.php(.+)? index.php$1 [L]
 RewriteRule allquestions.php(.+)? index.php$1 [L]
 
-RewriteRule ^([^\.]+)?$ index.php [L]
+RewriteRule ^api(.+)? index.php [NC,QSA,L]
+
+RewriteRule ^([^\.]+)?$ index.php [NC,QSA,L]
 
 ErrorDocument 404 /404
 

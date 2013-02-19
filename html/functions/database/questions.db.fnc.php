@@ -39,6 +39,7 @@ function get_question_count()
 
 function get_question_random()
 {
+	//throw new exception("Woah, either the site ran out of questions, or the database is being updated. Try reloading the page, or <a href=\"http://rollerderbytestomatic.com/forget\">click here to make the site forget which questions you have answered</a>.");
 	global $mydb, $myPDO, $remeber_in_session, $random_question_find_attempts;
 
 	if (is_view_only_changes())
@@ -110,7 +111,7 @@ function get_question_random()
 		}
 		else
 		{
-			throw new exception("Woah, either the site ran out of questions, or the database is being updated. Try reloading the page.");
+			throw new exception("Woah, either the site ran out of questions, or the database is being updated. Try reloading the page, or <a href=\"http://rollerderbytestomatic.com/forget\">click here to make the site forget which questions you have answered</a>.");
 		}
 	}
 	

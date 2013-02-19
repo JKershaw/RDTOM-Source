@@ -70,7 +70,7 @@ function set_up_url_array()
 		if (trim($segment))
 		{
 			//$url_array[] = preg_replace("/[^%a-zA-Z0-9-_']/", "", $segment);
-			$url_array[] = $segment;
+			$url_array[] = strtolower($segment);
 		}
 	}
 	
