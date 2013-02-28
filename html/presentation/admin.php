@@ -502,7 +502,7 @@ include("header.php");
 		if ($question && $question->get_reports())
 		{
 			?>
-			<h3>Reports:</h3>
+			<h3>Open Reports:</h3>
 			<p>
 			<?php 
 			foreach ($question->get_reports() as $report)
@@ -523,26 +523,91 @@ include("header.php");
 			</p>
 			<?php 
 		}
-		?>
-		<h3>Comments:</h3>
-		<?php 
-		if ($question && $question->get_comments())
+		
+		if ($question)
 		{
-			foreach ($question->get_comments() as $comment)
+			?>
+			<h3>Comments:</h3>
+			<?php 
+			if ($question)
 			{
+				if ($question->get_comments())
+				{
+					foreach ($question->get_comments() as $comment)
+					{
+						$comment_and_reports[$comment->get_Timestamp()] = $comment;
+					}
+				}
 				
-				echo "<hr>
-				<strong>" . htmlentities($comment->get_author_name()) . "</strong><br />"
-				. htmlentities($comment->get_text());
+				if ($question->get_reports(false))
+				{
+					foreach ($question->get_reports(false) as $report)
+					{
+						$comment_and_reports[$report->get_Timestamp()] = $report;
+					}
+				}
 				
+				if ($comment_and_reports)
+				{
+					ksort($comment_and_reports);
+					
+					foreach ($comment_and_reports as $comment_or_report)
+					{
+						if (get_class($comment_or_report) == "comment")
+						{
+							echo "<hr>
+							<p>
+								<strong>" . htmlentities($comment_or_report->get_author_name()) . "</strong> <i>" . date("D, jS M Y H:i", $comment_or_report->get_Timestamp()) . "</i>
+							</p>
+							<p>
+								" . nl2br(htmlentities(stripslashes($comment_or_report->get_text()))) . "
+							</p>";
+						}
+						else
+						{
+							echo "<hr>
+							<p class=\"small_p\">
+								Report - <span style=\"font-weight:bold; color:red;\">" . $comment_or_report->get_Status_String() . "</span> <i>" . date("D, jS M Y H:i", $comment_or_report->get_Timestamp()) . "</i>
+							</p>
+							<p class=\"small_p\">
+								" . nl2br(htmlentities(stripslashes($comment_or_report->get_Text()))) . "
+							</p>
+							<p class=\"small_p\">	
+								Set: " . get_formatted_admin_report_links($comment_or_report) . "
+							</p>";
+						}
+					}
+				}
 			}
+			?>
+			<hr>
+			<p><strong>Leave a comment:</strong></p>
+			<textarea id="question_comment_text" style="width:500px;" name="question_comment_text" cols="40" rows="5"></textarea>
+			<input type="hidden" id="question_comment_question_id" name="question_comment_question_id" value="<?php echo $question->get_ID(); ?>"/>
+			
+			<br /><a class="button" id="save_comment_button" onclick="save_comment();return false;"/>Save Comment</a> <span id="question_comment_ajax_status"></span>
+			
+			<script type="text/javascript">
+				function save_comment()
+				{
+					$('#question_comment_ajax_status').show();
+					$('#question_comment_ajax_status').html("Saving...");
+					
+					// ajax save the response for stats tracking
+					$.post("ajax.php", { 
+						call: "save_comment", 
+						question_id: $('#question_comment_question_id').val(),
+						text: $('textarea#question_comment_text').val()},
+						function(data) {
+							$('#question_comment_ajax_status').html("Saved! Reload the page to view.");
+						}
+					);
+					
+				}
+			</script>
+		<?php 
 		}
 		?>
-		<p><strong>Leave a comment:</strong></p>
-		[Ajax form here]
-		
-
-		
 	</div>
 	
 	<div class="layout_box" id="layout_box_reports" style="display:none;">

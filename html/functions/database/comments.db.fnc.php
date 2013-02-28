@@ -6,7 +6,7 @@ function get_comment_from_array($req_array)
 		$req_array['User_ID'],
 		$req_array['Question_ID'],
 		$req_array['Timestamp'],
-		$req_array['Text'],
+		stripslashes($req_array['Text']),
 		$req_array['Type']);
 }
 
@@ -19,13 +19,12 @@ function set_comment($req_comment)
 		throw new exception ("No text given for comment.");
 	}
 	
-	if ($req_report->get_ID() <= 0)
+	if ($req_comment->get_ID() <= 0)
 	{
 		$statement = $myPDO->prepare("
 		INSERT 
 		INTO rdtom_comments 
 		(
-			ID ,
 			User_ID ,
 			Question_ID ,
 			Timestamp ,
@@ -34,7 +33,6 @@ function set_comment($req_comment)
 		)
 		VALUES 
 		(
-			:ID ,
 			:User_ID ,
 			:Question_ID,
 			:Timestamp ,
@@ -45,7 +43,7 @@ function set_comment($req_comment)
 	else
 	{
 		$statement = $myPDO->prepare("
-		UPDATE  rdtom_reports 
+		UPDATE  rdtom_comments 
 		SET  
 			User_ID = :User_ID,
 			Question_ID = :Question_ID;
@@ -64,8 +62,16 @@ function set_comment($req_comment)
 	$statement->bindValue(':Timestamp', $req_comment->get_Timestamp());
 	$statement->bindValue(':Text', $req_comment->get_Text());
 	$statement->bindValue(':Type', $req_comment->get_Type());
-	
+
 	$statement->execute();
+	/*
+	if ($statement->execute())
+	{
+		echo "true";
+	}
+	else
+	 print_r($statement->errorInfo());
+	 */
 }
 
 function get_comments_from_question_ID($req_ID)

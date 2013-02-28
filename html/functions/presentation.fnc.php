@@ -490,10 +490,17 @@ function get_formatted_admin_report($report)
 {
 	$out .= '<br />
 		 <a href="' . get_site_URL() . 'admin/edit/' . $report->get_Question_ID() . '">' . $report->get_Question_ID() . '</a>
-		(<a href="' . get_site_URL() . 'admin/?update_report=' . $report->get_ID() . '&new_status=fixed">fixed</a>, 
+		(' . get_formatted_admin_report_links($report) . '):' . nl2br(htmlentities(stripslashes($report->get_Text()))) . '<br />';
+	
+	return $out;
+}
+
+function get_formatted_admin_report_links($report)
+{
+	$out .= '<a href="' . get_site_URL() . 'admin/?update_report=' . $report->get_ID() . '&new_status=fixed">fixed</a>, 
 		 <a href="' . get_site_URL() . 'admin/?update_report=' . $report->get_ID() . '&new_status=incorrect">incorrect</a>, 
 		 <a href="' . get_site_URL() . 'admin/?update_report=' . $report->get_ID() . '&new_status=clarified">clarified</a>, 
-		 <a href="' . get_site_URL() . 'admin/?update_report=' . $report->get_ID() . '&new_status=noaction">no action taken</a>):' . nl2br(htmlentities(stripslashes($report->get_Text()))) . '<br />';
+		 <a href="' . get_site_URL() . 'admin/?update_report=' . $report->get_ID() . '&new_status=noaction">no action taken</a>';
 	
 	return $out;
 }

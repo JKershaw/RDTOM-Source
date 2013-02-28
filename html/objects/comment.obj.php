@@ -51,7 +51,7 @@ class comment
 	
 	public function get_Type()
 	{
-		return $this->get_Type;
+		return $this->Type;
 	}
 	
 	public function get_author_name()

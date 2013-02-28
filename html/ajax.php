@@ -65,6 +65,9 @@ try
 		case "save_response":
 			$out = ajax_save_response();	
 		break;	
+		case "save_comment":
+			$out = ajax_save_comment();	
+		break;	
 		case "remebered_questions_count":
 			$out = ajax_remebered_questions_count();		
 		break;	
@@ -101,7 +104,7 @@ try
 }
 catch (Exception $e) 
 {
-	save_log("error_ajax", $e->getMessage());
+	save_log("error_ajax", htmlentities(print_r($_POST)) . " " . $e->getMessage());
 }
 
 function ajax_save_response()
@@ -540,5 +543,36 @@ function ajax_get_admin_set_relationship()
 	
 	$mydb->add_relationship($_POST['questionID'], $_POST['termID']);
 	
+}
+
+function ajax_save_comment()
+{
+	global $user;
+	// saving a comment
+	
+	$question_comment_question_id = $_POST['question_id'];
+	$question_comment_text = $_POST['text'];
+	
+	// get the question from the ID (tests if ID is valid)
+	$question = get_question_from_ID($question_comment_question_id);
+	
+	if (!$question)
+	{
+		throw new exception ("Comment attempted to be saved for an invalid Question ID");
+	}
+	
+	// get the right User ID
+	if (!is_logged_in())
+	{
+		throw new exception ("Must be logged in to save a comment");
+	}
+	
+	// make a new comment
+	$comment = new comment(-1, $user->get_ID(), $question_comment_question_id, gmmktime(), $question_comment_text, QUESTION_COMMENT);
+	
+	// save the comment
+	set_comment($comment);
+	
+	echo "Saved!";
 }
 ?>
