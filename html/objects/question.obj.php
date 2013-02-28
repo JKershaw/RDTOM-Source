@@ -145,6 +145,7 @@ class question
 		if ($random_seed)
 		{
 			srand($random_seed);
+			mt_srand($random_seed);
 		}
 		
 		//select one right answer and $max_num_answers-1 wrong answers;
@@ -172,9 +173,11 @@ class question
 		
 		// we have an array where entry [0] is always correct
 		
+		
 		// rotate the array a random number of times
-		$number_of_rotations = round(rand(0, $max_num_answers));
-		//echo "<br />" . $number_of_rotations;
+		$number_of_rotations = round(mt_rand(0, $max_num_answers*2));
+		//echo "<br /> Rotations: " . $number_of_rotations . " ";
+		
 		for($i=0; $i<=$number_of_rotations;$i++)
 		{
 			array_push($this->answers, array_shift($this->answers));
@@ -183,18 +186,19 @@ class question
 		// if this correct answer index is the same as the last correct answer index, rotate again
 		foreach ($this->answers as $index => $answer)
 		{
-			// we have the rioght answer
+			// we have the right answer
 			if ($answer->is_correct())
 			{
-				//echo " " . $index;
+				//echo " index: " . $index . " ";
 				// is it the same as the last one?
 				if ($last_correct_answer_index == $index)
 				{
 					// rotate the array in a random direction
-					$random_number = round(rand(0,100));
-					if ($random_number > 10)
+					$random_number = round(mt_rand(0,100));
+					
+					if ($random_number > 20)
 					{
-						if ($random_number >= 50)
+						if ($random_number >= 60)
 						{
 							//echo "<";
 							array_push($this->answers, array_shift($this->answers));
@@ -204,10 +208,6 @@ class question
 							//echo ">";
 							array_unshift($this->answers, array_pop($this->answers));
 						}
-					}
-					else
-					{
-						//echo "|";
 					}
 					//shuffle($this->answers);
 				}

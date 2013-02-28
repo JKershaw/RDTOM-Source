@@ -263,6 +263,7 @@ class test
 								if ($answer->is_correct())
 								{
 									$answer_array[$i] = chr(65+ $answer_count);
+									$section_array[$i] = $question->get_Section();
 								}
 								$answer_count++;
 								
@@ -286,12 +287,13 @@ class test
 		</table>";
 				
 		$out .= "
-		<p>Answers: ";
+		<p>Answers:</p>
+		<p class=\"small_p\">";
 		foreach ($answer_array as $Question_Number => $Answer)
 		{
-			$answers_string[] = $Question_Number . " = " . $Answer;
+			$answers_string[] = $Question_Number . " = " . $Answer . " (see " . $section_array[$Question_Number] . ")";
 		}
-		$out .= implode(", ", $answers_string);
+		$out .= implode("<br />", $answers_string);
 		
 		$out .= "
 		</p>
