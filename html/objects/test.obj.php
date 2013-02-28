@@ -37,7 +37,10 @@ class test
 			// we know what questions we want;
 			foreach($question_IDs as $question_ID)
 			{
-				$all_questions[] = get_question_from_ID($question_ID);
+				try {
+					$all_questions[] = get_question_from_ID($question_ID);
+				} catch (Exception $e) {
+				}
 			}
 		}
 		else
@@ -382,6 +385,8 @@ class test
 				<td style="text-align: left;" id="text_passorfail2"></td>
 			</tr>
 		</table>';
+		
+		
 		$out .= "
 
 		<p id=\"mark_test_button\">
