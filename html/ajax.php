@@ -65,6 +65,9 @@ try
 		case "save_response":
 			$out = ajax_save_response();	
 		break;	
+		case "save_responses":
+			$out = ajax_save_responses();	
+		break;	
 		case "save_comment":
 			$out = ajax_save_comment();	
 		break;	
@@ -178,6 +181,42 @@ function ajax_save_response()
 			return "WRONG!";
 		}
 	}
+}
+
+function ajax_save_responses()
+{
+	global $mydb;
+	
+	// saving the responses
+	$answers_array = Array();
+	
+	// get the right User ID
+	if (is_logged_in())
+	{
+		global $user;
+		$user_ID = $user->get_ID();
+	}
+	else
+	{
+		$user_ID = 0;
+	}
+	
+	foreach($_POST['q_array'] as $index => $question_ID)
+	{
+		
+		// make sure the question ID is valid
+		$question = get_question_from_ID($question_ID);
+		
+		// is the answer ID valid
+		$response_is_correct = is_answer_correct_from_ID($_POST['a_array'][$index]);
+		
+		// save the response
+		$response = new response(-1, $question_ID, $_POST['a_array'][$index], gmmktime(), $response_is_correct, $_SERVER['REMOTE_ADDR'], $user_ID);
+		
+		$mydb->set_response($response);
+	
+	}
+	
 }
 
 function ajax_remebered_questions_count()
