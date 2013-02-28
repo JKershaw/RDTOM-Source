@@ -179,9 +179,6 @@ if (($url_array[1] == "edit") && !$question_deleted)
 	{
 		$message .= $e->getMessage();
 	}
-	
-	// get the reports for this question
-	$reports_question = $mydb->get_reports_from_question_ID($question->get_ID(), REPORT_OPEN);
 }
 
 
@@ -502,13 +499,13 @@ include("header.php");
 		
 		<?php 
 		
-		if ($reports_question)
+		if ($question && $question->get_reports())
 		{
 			?>
 			<h3>Reports:</h3>
 			<p>
 			<?php 
-			foreach ($reports_question as $report)
+			foreach ($question->get_reports() as $report)
 			{
 				if (($_POST['question_id'] == $report->get_Question_ID()) || ($url_array[2] == $report->get_Question_ID()))
 				{
@@ -527,6 +524,22 @@ include("header.php");
 			<?php 
 		}
 		?>
+		<h3>Comments:</h3>
+		<?php 
+		if ($question && $question->get_comments())
+		{
+			foreach ($question->get_comments() as $comment)
+			{
+				
+				echo "<hr>
+				<strong>" . htmlentities($comment->get_author_name()) . "</strong><br />"
+				. htmlentities($comment->get_text());
+				
+			}
+		}
+		?>
+		<p><strong>Leave a comment:</strong></p>
+		[Ajax form here]
 		
 
 		
@@ -563,7 +576,7 @@ include("header.php");
 		</p>
 		<p id="viewallreportslink"><a onclick="$('#viewallreportslink').hide(); $('#viewallreportslist').show();">View all reports</a></p>
 		<p id="viewallreportslist" style="display:none">
-			<?php 
+		<?php 
 			$reports = $mydb->get_reports();
 			
 			if ($reports)

@@ -25,6 +25,7 @@ include('functions/sessions.fnc.php');
 include('functions/database/questions.db.fnc.php');
 include('functions/database/answers.db.fnc.php');
 include('functions/database/reports.db.fnc.php');
+include('functions/database/comments.db.fnc.php');
 
 // Model (object) files autoload, phpMailer is also Autoloaded as used rarely
 function __autoload($classname) 

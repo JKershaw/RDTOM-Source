@@ -82,6 +82,12 @@ define("REPORT_FIXED", 2);
 define("REPORT_CLARIFIED", 3);
 define("REPORT_NOACTION", 4);
 
+// Question comment types
+define("QUESTION_COMMENT", 0);		// A comment left by a user on a Question
+define("QUESTION_CHANGED", 1);		// A change in the Question
+define("QUESTION_REPORTSTATUS", 2);	// A related report has had its status changed
+
+
 // number of answers listed on the admin page
 define("NUMBER_OF_ANSWERS" , 10);
 

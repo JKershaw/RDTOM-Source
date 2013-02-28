@@ -39,31 +39,6 @@ class database_derbytest extends database
 		return $out;
 	}
 
-	public function get_reports_from_question_ID($question_ID, $status = false)
-	{
-		settype($question_ID, "integer");
-		$clause = "WHERE Question_ID = '$question_ID'";
-		
-		if ($status !== false)
-		{
-			settype($status, "integer");
-			$clause .= "AND Status = '$status'";
-		}
-		
-		$query = "SELECT * FROM rdtom_reports $clause ORDER BY Timestamp ASC";
-		
-		$results = $this->get_results($query);
-		
-		if ($results)
-		{
-			foreach ($results as $result)
-			{
-				$out[] = get_report_from_array($result);
-			}
-		}
-		return $out;
-	}
-
 	public function get_report_from_ID($req_ID)
 	{
 		settype($req_ID, "integer");

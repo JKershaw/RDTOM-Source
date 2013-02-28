@@ -471,4 +471,14 @@ class question
 		}
 		return false;
 	}
+	
+	public function get_reports($report_status = REPORT_OPEN)
+	{
+		return get_reports_from_question_ID($this->get_ID(), $report_status);
+	}
+	
+	public function get_comments()
+	{
+		return get_comments_from_question_ID($this->get_ID());
+	}
 }
