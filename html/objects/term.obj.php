@@ -39,4 +39,9 @@ class term
 		return $this->taxonomy;
 	}
 	
+	public function __toString()
+	{
+		return "(" . $this->get_taxonomy() . ") " . $this->get_Name();
+	}
+	
 }

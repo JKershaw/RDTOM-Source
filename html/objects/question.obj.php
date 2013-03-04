@@ -481,4 +481,29 @@ class question
 	{
 		return get_comments_from_question_ID($this->get_ID());
 	}
+	
+	public function __toString()
+    {
+        
+        $answers = $this->get_all_Answers();
+        
+        $out .= "\n" . $this->get_Text() . "\n\n";
+        
+        foreach ($answers as $answer)
+        {
+        	if ($answer->is_correct())
+			{
+				$out .=  "[Correct] ";
+			}
+			else
+			{
+				$out .=  "          ";
+			}
+			$out .= stripslashes($answer->get_Text()) . "\n";
+        }
+        
+        
+        $out .= "\nTerms: " . implode(", ", $this->get_terms(true)) . "\n";
+        return $out;
+    }
 }
