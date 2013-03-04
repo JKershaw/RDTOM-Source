@@ -70,9 +70,12 @@ if ($_POST)
 				$message .= "Answers unchanged! ";
 			}
 			
+			$old_question = $tmp_question;
+			
 			// edit the question
 			edit_question($tmp_question->get_ID(), $_POST['question_text'], $_POST['question_section'], trim($_POST['question_notes']));
 			$message .= "Question edited! ";	
+			
 			
 			// check the applicable rule set
 			// remove all relationships
@@ -95,6 +98,15 @@ if ($_POST)
 				rebuild_questions_holes_map();
 				$message .= "Holes map rebuilt! ";	
 			}
+			
+			// save a comment
+			$comment_text = "Question Edited \n\nFrom: \n " . $old_question . " \nTo: \n" . get_question_from_ID($old_question->get_ID());
+			
+			// make a new comment
+			$comment = new comment(-1, $user->get_ID(), $old_question->get_ID(), gmmktime(), $comment_text, QUESTION_CHANGED);
+			
+			// save the comment
+			set_comment($comment);
 		}
 	}
 	else 
@@ -165,6 +177,8 @@ if ($_GET['update_report'])
 	set_report($report);
 	
 	$message .= "Report updated!";
+	
+	header( 'Location: ' . get_site_URL()  . 'admin/edit/' . $report->get_Question_ID() ) ;
 }
 
 
@@ -498,7 +512,7 @@ include("header.php");
 		</form>
 		
 		<?php 
-		
+		/*
 		if ($question && $question->get_reports())
 		{
 			?>
@@ -523,11 +537,11 @@ include("header.php");
 			</p>
 			<?php 
 		}
-		
+		*/
 		if ($question)
 		{
 			?>
-			<h3>Comments:</h3>
+			<h3>Comments and Reports:</h3>
 			<?php 
 			if ($question)
 			{
@@ -555,19 +569,40 @@ include("header.php");
 					{
 						if (get_class($comment_or_report) == "comment")
 						{
-							echo "<hr>
-							<p>
-								<strong>" . htmlentities($comment_or_report->get_author_name()) . "</strong> <i>" . date("D, jS M Y H:i", $comment_or_report->get_Timestamp()) . "</i>
-							</p>
-							<p>
-								" . nl2br(htmlentities(stripslashes($comment_or_report->get_text()))) . "
-							</p>";
+							if ($comment_or_report->get_Type() == QUESTION_COMMENT)
+							{
+								echo "<hr>
+								<p>
+									<strong>" . htmlentities($comment_or_report->get_author_name()) . "</strong> <i>" . date("D, jS M Y H:i", $comment_or_report->get_Timestamp()) . "</i>
+								</p>
+								<p>
+									" . nl2br(htmlentities(stripslashes($comment_or_report->get_text()))) . "
+								</p>";
+							}
+							else
+							{
+								echo "<hr>
+								<p class=\"small_p\">
+									<span style=\"font-weight:bold; color:orange;\">Edit - " . htmlentities($comment_or_report->get_author_name()) . "</span> <i>" . date("D, jS M Y H:i", $comment_or_report->get_Timestamp()) . "</i>
+								</p>
+								<p class=\"small_p\">
+									" . nl2br(htmlentities(stripslashes($comment_or_report->get_text()))) . "
+								</p>";								
+							}
 						}
 						else
 						{
+							if ($comment_or_report->get_Status() == REPORT_OPEN)
+							{
+								$text_colour = "red";
+							}
+							else
+							{
+								$text_colour = "green";
+							}
 							echo "<hr>
 							<p class=\"small_p\">
-								Report - <span style=\"font-weight:bold; color:red;\">" . $comment_or_report->get_Status_String() . "</span> <i>" . date("D, jS M Y H:i", $comment_or_report->get_Timestamp()) . "</i>
+								<span style=\"font-weight:bold; color:$text_colour;\">Report #" . $comment_or_report->get_ID() . " - " . $comment_or_report->get_Status_String() . "</span> <i>" . date("D, jS M Y H:i", $comment_or_report->get_Timestamp()) . "</i>
 							</p>
 							<p class=\"small_p\">
 								" . nl2br(htmlentities(stripslashes($comment_or_report->get_Text()))) . "
