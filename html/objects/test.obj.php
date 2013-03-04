@@ -287,7 +287,7 @@ class test
 		</table>";
 				
 		$out .= "
-		<p>Answers:</p>
+		<p style=\"page-break-before: always;\">Answers:</p>
 		<p class=\"small_p\">";
 		foreach ($answer_array as $Question_Number => $Answer)
 		{

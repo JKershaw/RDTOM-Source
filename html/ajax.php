@@ -201,20 +201,23 @@ function ajax_save_responses()
 		$user_ID = 0;
 	}
 	
-	foreach($_POST['q_array'] as $index => $question_ID)
+	if ($_POST['q_array'])
 	{
+		foreach($_POST['q_array'] as $index => $question_ID)
+		{
+			
+			// make sure the question ID is valid
+			$question = get_question_from_ID($question_ID);
+			
+			// is the answer ID valid
+			$response_is_correct = is_answer_correct_from_ID($_POST['a_array'][$index]);
+			
+			// save the response
+			$response = new response(-1, $question_ID, $_POST['a_array'][$index], gmmktime(), $response_is_correct, $_SERVER['REMOTE_ADDR'], $user_ID);
+			
+			$mydb->set_response($response);
 		
-		// make sure the question ID is valid
-		$question = get_question_from_ID($question_ID);
-		
-		// is the answer ID valid
-		$response_is_correct = is_answer_correct_from_ID($_POST['a_array'][$index]);
-		
-		// save the response
-		$response = new response(-1, $question_ID, $_POST['a_array'][$index], gmmktime(), $response_is_correct, $_SERVER['REMOTE_ADDR'], $user_ID);
-		
-		$mydb->set_response($response);
-	
+		}
 	}
 	
 }
