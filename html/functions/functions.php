@@ -23,7 +23,7 @@ function report_question()
 	else 
 	{
 		// Your code here to handle an error
-		if (!$resp->is_valid)
+		if (!(strtolower(trim($_POST['report_extra'])) == "derby"))
 		{
 			$error_string = "The anti-spam code wasn't entered correctly. Please try it again.";
 		}
