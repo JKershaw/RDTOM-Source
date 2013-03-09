@@ -424,10 +424,10 @@ function ajax_get_poll_results()
 	foreach ($poll_count as $question_ID => $question_count)
 	{
 		
-		$percentage = round(($question_count * 100)/ $total_votes);
+		$percentage = round(($question_count * 100)/ $total_votes, 1);
 		
 		$extra_letter_index ++;
-		$sortable_index = str_pad((int) $percentage,3,"0",STR_PAD_LEFT) . chr($extra_letter_index);
+		$sortable_index = str_pad((int) $question_count,3,"0",STR_PAD_LEFT) . chr($extra_letter_index);
 		
 		$html_array[$sortable_index] = "<span style=\"font-size:14px; float:left;\">" . $poll_questions[$question_ID] . "</span>
 		<span title=\"" . $question_count . " votes\" style=\"font-size:14px; float:right;\">" . $percentage . "%</span>
