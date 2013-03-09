@@ -14,6 +14,8 @@ if ($url_array[1] == "hard")
 	$_GET['hard'] = "yes";
 if ($url_array[1] == "easy")
 	$_GET['easy'] = "yes";
+if ($url_array[1] == "test")
+	$_GET['test'] = "yes";
 	
 //TODO get hard or easy question URLs working
 ?>
@@ -39,7 +41,14 @@ if ($url_array[1] == "easy")
 			}
 			else
 			{
-				$questions = get_questions();
+				if ($_GET['test'] == "yes")
+				{
+					$questions = get_questions(array("rule-set" => "WFTDA6", "tag" => "Test Question"));
+				}
+				else
+				{
+					$questions = get_questions();
+				}
 			}
 			
 			foreach ($questions as $question)
