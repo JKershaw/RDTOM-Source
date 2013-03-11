@@ -22,6 +22,8 @@ include('library/cache.fnc.php');
 include('library/sessions.fnc.php');
 
 // Data mapping files
+include('library/mappers/database.obj.php');
+include('library/mappers/database_derbytest.obj.php');
 include('library/mappers/questions.db.fnc.php');
 include('library/mappers/answers.db.fnc.php');
 include('library/mappers/reports.db.fnc.php');
