@@ -10,7 +10,9 @@ class question
 	
 	private $SuccessRate;
 	private $ResponseCount;
-	private $answers_array;
+	
+	private $all_answers = Array();
+	private $answers = Array();
 	
 	private $all_terms;
 	
@@ -111,15 +113,13 @@ class question
 	
 	public function get_Answers($max_num_answers = 4, $random_seed = false)
 	{
-		global $mydb;
-		$answers = get_answers_from_question_ID($this->ID);
-		
+		global $mydb, $last_correct_answer_index;
 		
 		// now we have all the answers, split them into correct and wrong arrays.
 		$correct_answers = Array();
 		$wrong_answers = Array();
 		
-		foreach ($answers as $answer)
+		foreach ($this->get_all_Answers() as $answer)
 		{
 			if ($answer->is_correct())
 			{
@@ -138,18 +138,18 @@ class question
 		
 		if (count($wrong_answers) < 1)
 		{
-			throw new exception("Error: No wrong answers found");
+			throw new exception("Error: No wrong answers found for question number " . $this->ID);
 		}
 	
-		
+		// if we are seeding the random settings from a known point, use this
 		if ($random_seed)
 		{
 			srand($random_seed);
+			mt_srand($random_seed);
 		}
 		
-		
 		//select one right answer and $max_num_answers-1 wrong answers;
-		$out_answers[] = $correct_answers[array_rand($correct_answers)];
+		$this->answers[] = $correct_answers[array_rand($correct_answers)];
 		
 		$wrong_answers_wanted = $max_num_answers-1;
 		if ($wrong_answers_wanted > count($wrong_answers))
@@ -163,17 +163,68 @@ class question
 		
 			foreach ($wrong_indexs as $wrong_index)
 			{
-				$out_answers[] = $wrong_answers[$wrong_index];
+				$this->answers[] = $wrong_answers[$wrong_index];
 			}
 		}
 		else
 		{
-			$out_answers[] = $wrong_answers[array_rand($wrong_answers)];
+			$this->answers[] = $wrong_answers[array_rand($wrong_answers)];
 		}
 		
-		shuffle($out_answers);
+		// we have an array where entry [0] is always correct
 		
-		return $out_answers;
+		
+		// rotate the array a random number of times
+		$number_of_rotations = round(mt_rand(0, $max_num_answers*2));
+		//echo "<br /> Rotations: " . $number_of_rotations . " ";
+		
+		for($i=0; $i<=$number_of_rotations;$i++)
+		{
+			array_push($this->answers, array_shift($this->answers));
+		}
+		
+		// if this correct answer index is the same as the last correct answer index, rotate again
+		foreach ($this->answers as $index => $answer)
+		{
+			// we have the right answer
+			if ($answer->is_correct())
+			{
+				//echo " index: " . $index . " ";
+				// is it the same as the last one?
+				if ($last_correct_answer_index == $index)
+				{
+					// rotate the array in a random direction
+					$random_number = round(mt_rand(0,100));
+					
+					if ($random_number > 20)
+					{
+						if ($random_number >= 60)
+						{
+							//echo "<";
+							array_push($this->answers, array_shift($this->answers));
+						}
+						else
+						{
+							//echo ">";
+							array_unshift($this->answers, array_pop($this->answers));
+						}
+					}
+					//shuffle($this->answers);
+				}
+				else
+				{
+					//echo "-";
+					// different answer, all is fine, remeber what this index is for next time
+					$last_correct_answer_index = $index;
+				}
+				
+				// we found the right answer, don't care about anything else.
+				break;
+			}
+			
+		}
+		
+		return $this->answers;
 	}
 	
 	public function get_WFTDA_Link()
@@ -207,7 +258,11 @@ class question
 	public function get_all_Answers($max_num_answers = 4, $get_ResponseRate = false)
 	{
 		global $mydb;
-		$answers_array = get_answers_from_question_ID($this->ID);
+		if ($this->all_answers)
+		{
+			return $this->all_answers;
+		}
+		$this->all_answers = get_answers_from_question_ID($this->ID);
 		
 		if ($get_ResponseRate)
 		{
@@ -221,7 +276,7 @@ class question
 					$sum_count += $count;
 				}
 				
-				foreach ($answers_array as $answer)
+				foreach ($this->all_answers as $answer)
 				{
 					$percentage = round(($Responseperc_array[$answer->get_ID()] / $sum_count) * 100);
 					$answer->set_SelectionPerc($percentage);
@@ -229,7 +284,7 @@ class question
 			}
 		}
 		
-		return $answers_array;
+		return $this->all_answers;
 		
 	}
 	
@@ -416,4 +471,39 @@ class question
 		}
 		return false;
 	}
+	
+	public function get_reports($report_status = REPORT_OPEN)
+	{
+		return get_reports_from_question_ID($this->get_ID(), $report_status);
+	}
+	
+	public function get_comments()
+	{
+		return get_comments_from_question_ID($this->get_ID());
+	}
+	
+	public function __toString()
+    {
+        
+        $answers = $this->get_all_Answers();
+        
+        $out .= "\n" . $this->get_Text() . "\n\n";
+        
+        foreach ($answers as $answer)
+        {
+        	if ($answer->is_correct())
+			{
+				$out .=  "[Correct] ";
+			}
+			else
+			{
+				$out .=  "          ";
+			}
+			$out .= stripslashes($answer->get_Text()) . "\n";
+        }
+        
+        
+        $out .= "\nTerms: " . implode(", ", $this->get_terms(true)) . "\n";
+        return $out;
+    }
 }

@@ -103,21 +103,7 @@
 				<span style="font-weight:bold; color:yellow; background-color: #333; padding:0 3px;">NEW!</span> <a href="<?php echo get_site_URL(); ?>poll">What features should be added next to the Test O'Matic?</a>
 			</p> 
 			
-		<?php if (is_admin()) 
-		{
-			?>		
-				<p>
-					<a href="<?php echo get_site_URL(); ?>admin/">Admin<?php echo get_open_report_count_string(); ?></a>, 
-					<a href="<?php echo get_site_URL(); ?>stats/">Stats</a><?php 
-					if (is_question()) 
-					{
-						?>, <a href="<?php echo get_site_URL(); ?>admin/edit/<?php echo $question->get_ID(); ?>#edit_question">Edit question</a><?php 
-					}
-					echo ", " . tracker_get_query_string(); ?>
-				</p>
-			<?php 
-		} 
-		?>	
+		
 		
 			<!--  
 			<div id="fb-root"></div>
@@ -147,6 +133,27 @@
 			<div class="facebook_wrap_narrow">
         		<iframe src="//www.facebook.com/plugins/like.php?href=http%3A%2F%2Frollerderbytestomatic.com%2F&amp;send=false&amp;layout=button_count&amp;width=100&amp;show_faces=false&amp;font&amp;colorscheme=light&amp;action=like&amp;height=21&amp;appId=131848900255414" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:100px; height:21px;"></iframe>
 			</div>
+			
+			<p>
+				<a href="<?php echo get_site_URL(); ?>cat">Meow</a>
+			</p>
+			
+			<?php if (is_admin()) 
+			{
+				?>		
+					<p style="text-align:right;">
+						<a href="<?php echo get_site_URL(); ?>admin/">Admin<?php echo get_open_report_count_string(); ?></a>, 
+						<a href="<?php echo get_site_URL(); ?>stats/">Stats</a><?php 
+						if (is_question()) 
+						{
+							?>, <a href="<?php echo get_site_URL(); ?>admin/edit/<?php echo $question->get_ID(); ?>#edit_question">Edit question</a><?php 
+						}
+						echo ", " . tracker_get_query_string(); ?>
+					</p>
+				<?php 
+			} 
+			?>	
+			
 			
 		</div>
 		<div class="print_footer">

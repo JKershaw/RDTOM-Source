@@ -76,4 +76,32 @@ function set_report($req_report)
 	
 	$statement->execute();
 }
+
+
+function get_reports_from_question_ID($question_ID, $status = false)
+{
+	global $mydb;
+	
+	settype($question_ID, "integer");
+	$clause = "WHERE Question_ID = '$question_ID'";
+	
+	if ($status !== false)
+	{
+		settype($status, "integer");
+		$clause .= "AND Status = '$status'";
+	}
+	
+	$query = "SELECT * FROM rdtom_reports $clause ORDER BY Timestamp ASC";
+	
+	$results = $mydb->get_results($query);
+	
+	if ($results)
+	{
+		foreach ($results as $result)
+		{
+			$out[] = get_report_from_array($result);
+		}
+	}
+	return $out;
+}
 ?>

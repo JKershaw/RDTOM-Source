@@ -3,6 +3,12 @@
 
 function report_question()
 {
+	if (!$_POST)
+	{
+		header( 'Location: ' . get_site_URL()) ;
+		exit;
+	}
+	
 	global $report_string, $error_string, $url_array;
 	
 	if ($_POST['report_question_ID'] && (strtolower(trim($_POST['report_extra'])) == "derby"))
@@ -17,7 +23,7 @@ function report_question()
 	else 
 	{
 		// Your code here to handle an error
-		if (!$resp->is_valid)
+		if (!(strtolower(trim($_POST['report_extra'])) == "derby"))
 		{
 			$error_string = "The anti-spam code wasn't entered correctly. Please try it again.";
 		}

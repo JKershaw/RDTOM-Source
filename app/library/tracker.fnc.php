@@ -25,7 +25,7 @@ function tracker_get_query_string()
 	if (!is_admin())
 		return;
 		
-	global $tracker, $page_timer_start;	
+	global $tracker, $page_timer_start, $mydb;	
 	
 	list($usec, $sec) = explode(" ", microtime());
 	$page_timer_end = ((float)$usec + (float)$sec);

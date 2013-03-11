@@ -31,13 +31,16 @@ $cron_tasks = Array (
 					"function" => "delete_old_cache_files",
 					"seconds" => 7200),
 				Array (
+					"function" => "stats_count_unique_IPs",
+					"seconds" => 3600),
+				Array (
 					"function" => "delete_old_usertokens",
 					"seconds" => 86400)
 			);
 
 
 // include needed files
-include('include.php');
+include('../app/include.php');
 
 // process and return the cron request
 try 
@@ -46,7 +49,7 @@ try
 	set_up_database();
 	
 	// load the file containing info on all the cron jobs
-	@$cron_tasks_data = unserialize(file_get_contents('cron_tasks_data'));
+	@$cron_tasks_data = unserialize(file_get_contents('../filecache/cron_tasks_data'));
 
 	if ($cron_tasks_data)
 	{
@@ -76,7 +79,7 @@ try
 	}
 	
 	// save the data
-	file_put_contents('cron_tasks_data', serialize($cron_tasks_data));
+	file_put_contents('../filecache/cron_tasks_data', serialize($cron_tasks_data));
 }
 catch (Exception $e) 
 {
@@ -120,7 +123,7 @@ function delete_old_cache_files()
 {
 	
 	// create a handler for the directory
-	$handler = @opendir("filecache");
+	$handler = @opendir("../filecache");
 
 	if ($handler)
 	{
@@ -235,5 +238,11 @@ function rebuild_sitemap()
 	
 	// save the file
 	file_put_contents("sitemap.xml", $sitemap_string);
+}
+
+function stats_count_unique_IPs()
+{
+	global $mydb;
+	cache_set("response_distinct_ip_count", $mydb->get_response_distinct_ip_count());
 }
 ?>

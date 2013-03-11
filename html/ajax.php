@@ -7,7 +7,7 @@
  */
 
 // include needed files
-include('include.php');
+include('../app/include.php');
 
 // process and return the ajax request
 try 
@@ -65,6 +65,12 @@ try
 		case "save_response":
 			$out = ajax_save_response();	
 		break;	
+		case "save_responses":
+			$out = ajax_save_responses();	
+		break;	
+		case "save_comment":
+			$out = ajax_save_comment();	
+		break;	
 		case "remebered_questions_count":
 			$out = ajax_remebered_questions_count();		
 		break;	
@@ -101,7 +107,7 @@ try
 }
 catch (Exception $e) 
 {
-	save_log("error_ajax", $e->getMessage());
+	save_log("error_ajax", htmlentities(print_r($_POST)) . " " . $e->getMessage());
 }
 
 function ajax_save_response()
@@ -175,6 +181,45 @@ function ajax_save_response()
 			return "WRONG!";
 		}
 	}
+}
+
+function ajax_save_responses()
+{
+	global $mydb;
+	
+	// saving the responses
+	$answers_array = Array();
+	
+	// get the right User ID
+	if (is_logged_in())
+	{
+		global $user;
+		$user_ID = $user->get_ID();
+	}
+	else
+	{
+		$user_ID = 0;
+	}
+	
+	if ($_POST['q_array'])
+	{
+		foreach($_POST['q_array'] as $index => $question_ID)
+		{
+			
+			// make sure the question ID is valid
+			$question = get_question_from_ID($question_ID);
+			
+			// is the answer ID valid
+			$response_is_correct = is_answer_correct_from_ID($_POST['a_array'][$index]);
+			
+			// save the response
+			$response = new response(-1, $question_ID, $_POST['a_array'][$index], gmmktime(), $response_is_correct, $_SERVER['REMOTE_ADDR'], $user_ID);
+			
+			$mydb->set_response($response);
+		
+		}
+	}
+	
 }
 
 function ajax_remebered_questions_count()
@@ -271,8 +316,7 @@ function ajax_count_answers()
 
 function ajax_count_unique_IPs()
 {
-	global $mydb;
-	return $mydb->get_response_distinct_ip_count();
+	return cache_get("response_distinct_ip_count");
 }
 
 function ajax_count_users()
@@ -380,10 +424,10 @@ function ajax_get_poll_results()
 	foreach ($poll_count as $question_ID => $question_count)
 	{
 		
-		$percentage = round(($question_count * 100)/ $total_votes);
+		$percentage = round(($question_count * 100)/ $total_votes, 1);
 		
 		$extra_letter_index ++;
-		$sortable_index = str_pad((int) $percentage,3,"0",STR_PAD_LEFT) . chr($extra_letter_index);
+		$sortable_index = str_pad((int) $question_count,3,"0",STR_PAD_LEFT) . chr($extra_letter_index);
 		
 		$html_array[$sortable_index] = "<span style=\"font-size:14px; float:left;\">" . $poll_questions[$question_ID] . "</span>
 		<span title=\"" . $question_count . " votes\" style=\"font-size:14px; float:right;\">" . $percentage . "%</span>
@@ -541,5 +585,36 @@ function ajax_get_admin_set_relationship()
 	
 	$mydb->add_relationship($_POST['questionID'], $_POST['termID']);
 	
+}
+
+function ajax_save_comment()
+{
+	global $user;
+	// saving a comment
+	
+	$question_comment_question_id = $_POST['question_id'];
+	$question_comment_text = $_POST['text'];
+	
+	// get the question from the ID (tests if ID is valid)
+	$question = get_question_from_ID($question_comment_question_id);
+	
+	if (!$question)
+	{
+		throw new exception ("Comment attempted to be saved for an invalid Question ID");
+	}
+	
+	// get the right User ID
+	if (!is_logged_in())
+	{
+		throw new exception ("Must be logged in to save a comment");
+	}
+	
+	// make a new comment
+	$comment = new comment(-1, $user->get_ID(), $question_comment_question_id, gmmktime(), $question_comment_text, QUESTION_COMMENT);
+	
+	// save the comment
+	set_comment($comment);
+	
+	echo "Saved!";
 }
 ?>

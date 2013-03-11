@@ -184,14 +184,14 @@ function get_CSS_URL($type = false)
 	{
 		if ($type == "print")
 		{
-			return get_site_URL() . "presentation/print.css?v=" . filemtime("presentation/print.css");
+			return get_site_URL() . "css/print.css?v=" . filemtime("css/print.css");
 		}
 		if ($type == "minify")
 		{
-			return get_site_URL() . "presentation/style-min.css?v=" . filemtime("presentation/style-min.css");
+			return get_site_URL() . "css/style-min.css?v=" . filemtime("css/style-min.css");
 		}
 	}
-	return get_site_URL() . "presentation/style.css?v=" . filemtime("presentation/style.css");
+	return get_site_URL() . "css/style.css?v=" . filemtime("css/style.css");
 }
 
 function get_CSS_embed($type = false)
@@ -222,15 +222,14 @@ function get_CSS_embed($type = false)
 				        }
 				    </style>
 			";
-			//return get_site_URL() . "presentation/print.css?v=" . filemtime("presentation/print.css");
 		}
 		if ($type == "minify")
 		{
-			return "<link rel=\"stylesheet\" href=\"" . get_site_URL() . "presentation/style-min.css?v=" . filemtime("presentation/style-min.css") . "\" type=\"text/css\" >";
+			return "<link rel=\"stylesheet\" href=\"" . get_site_URL() . "css/style-min.css?v=" . filemtime("css/style-min.css") . "\" type=\"text/css\" >";
 	
 		}
 	}
-	return "<link rel=\"stylesheet\" href=\"" . get_site_URL() . "presentation/style.css?v=" . filemtime("presentation/style.css") . "\" type=\"text/css\" >";
+	return "<link rel=\"stylesheet\" href=\"" . get_site_URL() . "css/style.css?v=" . filemtime("css/style.css") . "\" type=\"text/css\" >";
 	
 	
 	return ;	
@@ -240,7 +239,7 @@ function get_CSS_embed($type = false)
 
 function get_theme_directory()
 {
-	return get_site_URL() . "presentation/";
+	return get_site_URL() . "css/";
 }
 
 function is_error()
@@ -490,10 +489,17 @@ function get_formatted_admin_report($report)
 {
 	$out .= '<br />
 		 <a href="' . get_site_URL() . 'admin/edit/' . $report->get_Question_ID() . '">' . $report->get_Question_ID() . '</a>
-		(<a href="' . get_site_URL() . 'admin/?update_report=' . $report->get_ID() . '&new_status=fixed">fixed</a>, 
+		(' . get_formatted_admin_report_links($report) . '):' . nl2br(htmlentities(stripslashes($report->get_Text()))) . '<br />';
+	
+	return $out;
+}
+
+function get_formatted_admin_report_links($report)
+{
+	$out .= '<a href="' . get_site_URL() . 'admin/?update_report=' . $report->get_ID() . '&new_status=fixed">fixed</a>, 
 		 <a href="' . get_site_URL() . 'admin/?update_report=' . $report->get_ID() . '&new_status=incorrect">incorrect</a>, 
 		 <a href="' . get_site_URL() . 'admin/?update_report=' . $report->get_ID() . '&new_status=clarified">clarified</a>, 
-		 <a href="' . get_site_URL() . 'admin/?update_report=' . $report->get_ID() . '&new_status=noaction">no action taken</a>):' . nl2br(htmlentities(stripslashes($report->get_Text()))) . '<br />';
+		 <a href="' . get_site_URL() . 'admin/?update_report=' . $report->get_ID() . '&new_status=noaction">no action taken</a>';
 	
 	return $out;
 }

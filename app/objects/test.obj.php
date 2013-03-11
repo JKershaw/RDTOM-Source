@@ -37,7 +37,10 @@ class test
 			// we know what questions we want;
 			foreach($question_IDs as $question_ID)
 			{
-				$all_questions[] = get_question_from_ID($question_ID);
+				try {
+					$all_questions[] = get_question_from_ID($question_ID);
+				} catch (Exception $e) {
+				}
 			}
 		}
 		else
@@ -260,6 +263,7 @@ class test
 								if ($answer->is_correct())
 								{
 									$answer_array[$i] = chr(65+ $answer_count);
+									$section_array[$i] = $question->get_Section();
 								}
 								$answer_count++;
 								
@@ -283,12 +287,13 @@ class test
 		</table>";
 				
 		$out .= "
-		<p>Answers: ";
+		<p style=\"page-break-before: always;\">Answers:</p>
+		<p class=\"small_p\">";
 		foreach ($answer_array as $Question_Number => $Answer)
 		{
-			$answers_string[] = $Question_Number . " = " . $Answer;
+			$answers_string[] = $Question_Number . " = " . $Answer . " (see " . $section_array[$Question_Number] . ")";
 		}
-		$out .= implode(", ", $answers_string);
+		$out .= implode("<br />", $answers_string);
 		
 		$out .= "
 		</p>
@@ -382,16 +387,17 @@ class test
 				<td style="text-align: left;" id="text_passorfail2"></td>
 			</tr>
 		</table>';
+		
+		
 		$out .= "
 
 		<p id=\"mark_test_button\">
 			<a class=\"button\" onclick=\"mark_test();\">I've finished! Mark my test, please.</a>
 			<br /><br />
-			You can only have your test marked once, so be sure to double-check all of your answers!
+			You can only have your test marked once, so be sure to double-check all of your answers! Your responses will be saved when you have your test marked.
 		</p>
 		<p>
 			Link to this test (<a onclick=\"shorten_link();\">shorten using bit.ly</a>): <input id=\"link_to_test\" name=\"link_to_test\" type=\"text\" value=\"" . $this->return_test_URL() . "\"> <span id=\"loading_bitly\" style=\"display:none\">Loading...</span>
-			
 		</p>
 		";
 
@@ -469,8 +475,15 @@ class test
 		
 		" . $QandA_ID_array_string . "
 		
+		var data_q_array = new Array();
+		var data_a_array = new Array();
+		var data_array = new Array();
+		
 		function selected_answer(question_ID, answer_ID)
 		{
+		
+			data_array[question_ID] = answer_ID;
+			
 			if (!has_marked_test)
 			{
 				Test_Answers[question_ID] = answer_ID;
@@ -488,9 +501,11 @@ class test
 				}
 			}
 		}
-		
+
+
 		var correct_count;
 		var has_marked_test = false;
+		
 		
 		function mark_test()
 		{
@@ -502,7 +517,10 @@ class test
 				for(var answer_ID in QandA_ID_array[question_ID])
 				{
 					$('#answer_' + question_ID + '_' + answer_ID).css('color','black');
+					
 				}
+				
+				
 				
 				if (Test_Answers[question_ID])
 				{
@@ -549,6 +567,30 @@ class test
 			
 			$('#mark_test_button').fadeOut();
 			has_marked_test = true;
+			
+			// ajax save the responses
+			
+			
+			for(var question_ID in data_array)
+			{
+				data_q_array[data_q_array.length] = question_ID;
+				data_a_array[data_a_array.length] = data_array[question_ID];
+			}
+			
+			// parse the data array into something we can send
+			data_array[question_ID] = question_ID;
+			
+			$.post(\"ajax.php\", { 
+						call: \"save_responses\", 
+						q_array: data_q_array,
+						a_array: data_a_array
+						},
+						function(data) {
+							//alert(data);
+							//$('#text_passorfail2').html(data);
+						}
+					);
+			
 		}
 		</script>
 		
