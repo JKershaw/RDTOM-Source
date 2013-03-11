@@ -7,7 +7,7 @@
  */
 
 // include needed files
-include('include.php');
+include('../app/include.php');
 
 // process and return the ajax request
 try 

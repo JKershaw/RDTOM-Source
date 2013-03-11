@@ -11,7 +11,7 @@ function cache_set($key, $string, $timeout = 7200)
 	
 	//save_log("cache", "ADD " . $key . ": Timestamp = " . $data['timestamp'] . ", Timeout = " . $data['timeout'] . ", Current timestamp = " . time());
 	
-	$fh = fopen("filecache/" . $key, 'w') or die("can't open file: " . "/filecache/" . $key);
+	$fh = fopen("../filecache/" . $key, 'w') or die("can't open file: " . "/filecache/" . $key);
 
 	// save it
 	$stringData = serialize($data);
@@ -28,12 +28,12 @@ function cache_get($key)
 		
 	$key = preg_replace("/[^a-zA-Z0-9]/", "", $key);
 	
-	@$fh = fopen("filecache/" . $key, 'r');
+	@$fh = fopen("../filecache/" . $key, 'r');
 	if (!$fh)
 	{
 		return false;
 	}
-	$theData = fread($fh, filesize("filecache/" . $key));
+	$theData = fread($fh, filesize("../filecache/" . $key));
 	fclose($fh);
 	
 	$theData = unserialize($theData);
@@ -57,7 +57,7 @@ function cache_get($key)
 function cache_delete($key)
 {
 	$key = preg_replace("/[^a-zA-Z0-9]/", "", $key);
-	unlink("filecache/" . $key);
+	unlink("../filecache/" . $key);
 
 }
 
