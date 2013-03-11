@@ -62,6 +62,31 @@ class report
 		return $this->Status;
 	}
 	
+	public function get_Status_String()
+	{
+		switch ($this->Status) 
+		{
+			case 0:
+				return "OPEN";
+			break;
+			case 1:
+				return "INCORRECT";
+			break;
+			case 2:
+				return "FIXED";
+			break;
+			case 3:
+				return "CLARIFIED";
+			break;
+			case 4:
+				return "NO ACTION TAKEN";
+			break;
+			default:
+				return "UNKNOWN";
+			
+		}
+	}
+	
 	public function set_Status($req_status)
 	{
 		$this->Status = $req_status;

@@ -15,7 +15,9 @@ FileETag None
 RewriteEngine on
 
 RewriteRule ajax.php(.+)? ajax.php$1 [L]
-RewriteRule presentation/style.css(.+)? presentation/style.css$1 [L]
+RewriteRule cron.php(.+)? cron.php$1 [L]
+RewriteRule css/(.+)? css/$1 [L]
+RewriteRule images/(.+)? images/$1 [L]
 
 RewriteRule stats.php(.+)? index.php$1 [L]
 RewriteRule poll.php(.+)? index.php$1 [L]

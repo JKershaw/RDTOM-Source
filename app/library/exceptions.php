@@ -5,7 +5,7 @@ function save_log($log_name, $request_string, $question_ID = null)
 	global $log_file_date_format, $mydb;
 	
 	// create the file name for the log
-	$filename = "logs/" . date($log_file_date_format) . "_" . $log_name . ".txt";
+	$filename = "../logs/" . date($log_file_date_format) . "_" . $log_name . ".txt";
 
 	// add meta data to the string
 	$stringData = date("[d-m-Y H:i:s]") . " [" . get_ip() . "] " . $request_string . "\n";
@@ -118,9 +118,9 @@ function echo_error_page($error_string)
 			
 			<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script>
 			
-			<link rel="stylesheet" href="http://rollerderbytestomatic.com/presentation/style.css" type="text/css" />
-	        <link rel="icon" href="http://rollerderbytestomatic.com/presentation/favicon.gif" type="image/gif"/>
-	        <link rel="apple-touch-icon-precomposed" href="http://rollerderbytestomatic.com/presentation/RDTOM_touch_icon.png"/>	
+			<link rel="stylesheet" href="http://rollerderbytestomatic.com/css/style.css" type="text/css" />
+	        <link rel="icon" href="http://rollerderbytestomatic.com/images/favicon.gif" type="image/gif"/>
+	        <link rel="apple-touch-icon-precomposed" href="http://rollerderbytestomatic.com/images/RDTOM_touch_icon.png"/>	
 			
 			<meta name="viewport" content="width=device-width" />
 			<meta name="Description" content="An online, free, Roller Derby rules test with hundreds of questions.">

@@ -2,7 +2,6 @@
 /*
  * A database object for dealing specifically with the Roller Derby Test O'Matic database
  */
-include_once('database.obj.php');
 
 class database_derbytest extends database
 {
@@ -23,31 +22,6 @@ class database_derbytest extends database
 		{
 			settype($status, "integer");
 			$clause = "WHERE Status = '$status'";
-		}
-		
-		$query = "SELECT * FROM rdtom_reports $clause ORDER BY Timestamp ASC";
-		
-		$results = $this->get_results($query);
-		
-		if ($results)
-		{
-			foreach ($results as $result)
-			{
-				$out[] = get_report_from_array($result);
-			}
-		}
-		return $out;
-	}
-
-	public function get_reports_from_question_ID($question_ID, $status = false)
-	{
-		settype($question_ID, "integer");
-		$clause = "WHERE Question_ID = '$question_ID'";
-		
-		if ($status !== false)
-		{
-			settype($status, "integer");
-			$clause .= "AND Status = '$status'";
 		}
 		
 		$query = "SELECT * FROM rdtom_reports $clause ORDER BY Timestamp ASC";

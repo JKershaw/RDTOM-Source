@@ -70,9 +70,12 @@ if ($_POST)
 				$message .= "Answers unchanged! ";
 			}
 			
+			$old_question = $tmp_question;
+			
 			// edit the question
 			edit_question($tmp_question->get_ID(), $_POST['question_text'], $_POST['question_section'], trim($_POST['question_notes']));
 			$message .= "Question edited! ";	
+			
 			
 			// check the applicable rule set
 			// remove all relationships
@@ -95,6 +98,15 @@ if ($_POST)
 				rebuild_questions_holes_map();
 				$message .= "Holes map rebuilt! ";	
 			}
+			
+			// save a comment
+			$comment_text = "Question Edited \n\nFrom: \n " . $old_question . " \nTo: \n" . get_question_from_ID($old_question->get_ID());
+			
+			// make a new comment
+			$comment = new comment(-1, $user->get_ID(), $old_question->get_ID(), gmmktime(), $comment_text, QUESTION_CHANGED);
+			
+			// save the comment
+			set_comment($comment);
 		}
 	}
 	else 
@@ -165,6 +177,8 @@ if ($_GET['update_report'])
 	set_report($report);
 	
 	$message .= "Report updated!";
+	
+	header( 'Location: ' . get_site_URL()  . 'admin/edit/' . $report->get_Question_ID() ) ;
 }
 
 
@@ -179,9 +193,6 @@ if (($url_array[1] == "edit") && !$question_deleted)
 	{
 		$message .= $e->getMessage();
 	}
-	
-	// get the reports for this question
-	$reports_question = $mydb->get_reports_from_question_ID($question->get_ID(), REPORT_OPEN);
 }
 
 
@@ -501,14 +512,14 @@ include("header.php");
 		</form>
 		
 		<?php 
-		
-		if ($reports_question)
+		/*
+		if ($question && $question->get_reports())
 		{
 			?>
-			<h3>Reports:</h3>
+			<h3>Open Reports:</h3>
 			<p>
 			<?php 
-			foreach ($reports_question as $report)
+			foreach ($question->get_reports() as $report)
 			{
 				if (($_POST['question_id'] == $report->get_Question_ID()) || ($url_array[2] == $report->get_Question_ID()))
 				{
@@ -526,10 +537,112 @@ include("header.php");
 			</p>
 			<?php 
 		}
+		*/
+		if ($question)
+		{
+			?>
+			<h3>Comments and Reports:</h3>
+			<?php 
+			if ($question)
+			{
+				if ($question->get_comments())
+				{
+					foreach ($question->get_comments() as $comment)
+					{
+						$comment_and_reports[$comment->get_Timestamp()] = $comment;
+					}
+				}
+				
+				if ($question->get_reports(false))
+				{
+					foreach ($question->get_reports(false) as $report)
+					{
+						$comment_and_reports[$report->get_Timestamp()] = $report;
+					}
+				}
+				
+				if ($comment_and_reports)
+				{
+					ksort($comment_and_reports);
+					
+					foreach ($comment_and_reports as $comment_or_report)
+					{
+						if (get_class($comment_or_report) == "comment")
+						{
+							if ($comment_or_report->get_Type() == QUESTION_COMMENT)
+							{
+								echo "<hr>
+								<p>
+									<strong>" . htmlentities($comment_or_report->get_author_name()) . "</strong> <i>" . date("D, jS M Y H:i", $comment_or_report->get_Timestamp()) . "</i>
+								</p>
+								<p>
+									" . nl2br(htmlentities(stripslashes($comment_or_report->get_text()))) . "
+								</p>";
+							}
+							else
+							{
+								echo "<hr>
+								<p class=\"small_p\">
+									<span style=\"font-weight:bold; color:orange;\">Edit - " . htmlentities($comment_or_report->get_author_name()) . "</span> <i>" . date("D, jS M Y H:i", $comment_or_report->get_Timestamp()) . "</i>
+								</p>
+								<p class=\"small_p\">
+									" . nl2br(htmlentities(stripslashes($comment_or_report->get_text()))) . "
+								</p>";								
+							}
+						}
+						else
+						{
+							if ($comment_or_report->get_Status() == REPORT_OPEN)
+							{
+								$text_colour = "red";
+							}
+							else
+							{
+								$text_colour = "green";
+							}
+							echo "<hr>
+							<p class=\"small_p\">
+								<span style=\"font-weight:bold; color:$text_colour;\">Report #" . $comment_or_report->get_ID() . " - " . $comment_or_report->get_Status_String() . "</span> <i>" . date("D, jS M Y H:i", $comment_or_report->get_Timestamp()) . "</i>
+							</p>
+							<p class=\"small_p\">
+								" . nl2br(htmlentities(stripslashes($comment_or_report->get_Text()))) . "
+							</p>
+							<p class=\"small_p\">	
+								Set: " . get_formatted_admin_report_links($comment_or_report) . "
+							</p>";
+						}
+					}
+				}
+			}
+			?>
+			<hr>
+			<p><strong>Leave a comment:</strong></p>
+			<textarea id="question_comment_text" style="width:500px;" name="question_comment_text" cols="40" rows="5"></textarea>
+			<input type="hidden" id="question_comment_question_id" name="question_comment_question_id" value="<?php echo $question->get_ID(); ?>"/>
+			
+			<br /><a class="button" id="save_comment_button" onclick="save_comment();return false;"/>Save Comment</a> <span id="question_comment_ajax_status"></span>
+			
+			<script type="text/javascript">
+				function save_comment()
+				{
+					$('#question_comment_ajax_status').show();
+					$('#question_comment_ajax_status').html("Saving...");
+					
+					// ajax save the response for stats tracking
+					$.post("ajax.php", { 
+						call: "save_comment", 
+						question_id: $('#question_comment_question_id').val(),
+						text: $('textarea#question_comment_text').val()},
+						function(data) {
+							$('#question_comment_ajax_status').html("Saved! Reload the page to view.");
+						}
+					);
+					
+				}
+			</script>
+		<?php 
+		}
 		?>
-		
-
-		
 	</div>
 	
 	<div class="layout_box" id="layout_box_reports" style="display:none;">
@@ -563,24 +676,14 @@ include("header.php");
 		</p>
 		<p id="viewallreportslink"><a onclick="$('#viewallreportslink').hide(); $('#viewallreportslist').show();">View all reports</a></p>
 		<p id="viewallreportslist" style="display:none">
-			<?php 
+		<?php 
 			$reports = $mydb->get_reports();
 			
 			if ($reports)
 			{
 				foreach ($reports as $report)
 				{
-					?>
-					<a href="<?php echo get_site_URL() ?>admin/?edit=<?php echo $report->get_Question_ID();?>">
-						<?php echo $report->get_Question_ID();?>
-					</a>
-					(<a href="<?php echo get_site_URL() ?>admin/?update_report=<?php echo $report->get_ID();?>&new_status=open">open</a>, 
-					<a href="<?php echo get_site_URL() ?>admin/?update_report=<?php echo $report->get_ID();?>&new_status=fixed">fixed</a>, 
-					<a href="<?php echo get_site_URL() ?>admin/?update_report=<?php echo $report->get_ID();?>&new_status=incorrect">incorrect</a>, 
-					<a href="<?php echo get_site_URL() ?>admin/?update_report=<?php echo $report->get_ID();?>&new_status=clarified">clarified</a>, 
-					<a href="<?php echo get_site_URL() ?>admin/?update_report=<?php echo $report->get_ID();?>&new_status=noaction">no action taken</a>): 
-					<?php echo htmlentities(stripslashes($report->get_Text())); ?><br />
-					<?php 
+					echo get_formatted_admin_report($report);
 				}
 			}
 			else

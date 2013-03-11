@@ -77,7 +77,7 @@ function get_question_random()
 		$statement = $myPDO->query($query);
 		$result = $statement->fetch(PDO::FETCH_BOTH);
 		
-		$random_question = rand(0, $result[0]);
+		$random_question = mt_rand(0, $result[0]-1);
 		
 		$query = "
 		SELECT 
@@ -142,7 +142,7 @@ function get_question_random_simple()
 	}
 	
 	// if we've asked every question, ask them again
-	delete_session('random_questions_asked');
+	// delete_session('random_questions_asked');
 	
 	return $questions[array_rand($questions)];;
 }
