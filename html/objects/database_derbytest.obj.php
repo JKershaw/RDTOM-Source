@@ -2,7 +2,6 @@
 /*
  * A database object for dealing specifically with the Roller Derby Test O'Matic database
  */
-include_once('database.obj.php');
 
 class database_derbytest extends database
 {

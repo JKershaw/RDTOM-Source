@@ -4,28 +4,28 @@
  */
 
 // Exception handling
-include('functions/exceptions.php');
+include('library/exceptions.php');
 
 //configuration files
 include('config.php');
 
-// Control (function) files 
-include('functions/functions.php');
-include('functions/presentation.fnc.php');
-include('functions/support.fnc.php');
-include('functions/control.fnc.php');
-include('functions/account.fnc.php');
-include('functions/stats.fnc.php');
-include('functions/email.fnc.php');
-include('functions/tracker.fnc.php');
-include('functions/cache.fnc.php');
-include('functions/sessions.fnc.php');
+// Library files 
+include('library/functions.php');
+include('library/presentation.fnc.php');
+include('library/support.fnc.php');
+include('library/control.fnc.php');
+include('library/account.fnc.php');
+include('library/stats.fnc.php');
+include('library/email.fnc.php');
+include('library/tracker.fnc.php');
+include('library/cache.fnc.php');
+include('library/sessions.fnc.php');
 
-// Database (function) files
-include('functions/database/questions.db.fnc.php');
-include('functions/database/answers.db.fnc.php');
-include('functions/database/reports.db.fnc.php');
-include('functions/database/comments.db.fnc.php');
+// Data mapping files
+include('library/mappers/questions.db.fnc.php');
+include('library/mappers/answers.db.fnc.php');
+include('library/mappers/reports.db.fnc.php');
+include('library/mappers/comments.db.fnc.php');
 
 // Model (object) files autoload, phpMailer is also Autoloaded as used rarely
 function __autoload($classname) 
