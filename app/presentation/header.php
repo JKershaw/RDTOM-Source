@@ -18,8 +18,8 @@
 		<?echo get_CSS_embed("minify"); ?>
 		<?echo get_CSS_embed("print"); ?>
 		
-        <link rel="icon" href="<?echo get_theme_directory(); ?>favicon.gif" type="image/gif">
-        <link rel="apple-touch-icon-precomposed" href="<?echo get_theme_directory(); ?>RDTOM_touch_icon.png">		
+        <link rel="icon" href="<?echo get_site_URL(); ?>images/favicon.gif" type="image/gif">
+        <link rel="apple-touch-icon-precomposed" href="<?echo get_site_URL(); ?>images/RDTOM_touch_icon.png">		
 		
 		<meta name="viewport" content="width=device-width" >
 		<meta property="og:title" content="Roller Derby Test O'Matic" >

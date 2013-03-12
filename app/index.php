@@ -27,7 +27,7 @@ set_up_url_array();
 if (strtolower($url_array[0]) == "api")
 {
 	// An API request
-	include('api/api_controller.php');
+	include('api/controller.php');
 	
 	
 }

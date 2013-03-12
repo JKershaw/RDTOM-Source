@@ -237,11 +237,6 @@ function get_CSS_embed($type = false)
 
 }
 
-function get_theme_directory()
-{
-	return get_site_URL() . "css/";
-}
-
 function is_error()
 {
 	global $error_string;
