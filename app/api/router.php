@@ -5,92 +5,134 @@
  * 
  * Documentation is a Web request, so is included in the presentation folder.
  * 
- * RDTOM.com/API	/[version]	/[format]	/[resource]
- * 			/0		/1			/2			/3
+ * RDTOM.com/API	/[version]	/[format]	/[resource]	/...
+ * 			/0		/1			/2			/3			/...
  */
 
-save_log("api", $_SERVER['REQUEST_URI']);
-	
+/*
+ * Status codes follow standard HTTP status codes
+ * Extended into the 600s for specific errors
+ */
 
-if ($url_array[1] == "0.1")
-{
-	// version 0.1 has been requested
+$api_status_codes = array(
+	// everything's OK
+	200 => array(
+		"text" => "OK",
+		"description" => "Request sucessful"),
 	
-	// get the resource requested
-	$resource_name = $url_array[3];
+	// General error
+	400 => array(
+		"text" => "Bad Request",
+		"description" => "The request could not be fullfilled due to bad syntax"),
+	404 => array(
+		"text" => "Resource Not Found",
+		"description" => "The resource requested could not be found"),
+	416 => array(
+		"text" => "ID not found",
+		"description" => "A request for something with an ID not found was requested"),
+	418 => array(
+		"text" => "I am a teapot",
+		"description" => "The server is now using Hyper Text Coffee Pot Control Protocol"),
+	420 => array(
+		"text" => "Rate Limited",
+		"description" => "Calm down. Request failed due to too many requests recently."),
+	424 => array(
+		"text" => "Method Failure",
+		"description" => ""),
+	451 => array(
+		"text" => "Unavailable For Legal Reasons",
+		"description" => ""),
 	
-	$out_XML = get_resource_xml($resource_name);
+	// Server errors
+	500 => array(
+		"text" => "Internal Server Error",
+		"description" => "Something went wrong."),
+	501 => array(
+		"text" => "Not Implemented - Yet",
+		"description" => "It's coming, but be patient"),
+	503 => array(
+		"text" => "Service Unavailable",
+		"description" => "The server is down for maintenance, please try again in a moment"),
 	
-	// output the resource
-	output_xml($out_XML, $url_array[2]);
-}
-else
-{
-	// TODO error handling
-	echo "The API version you have requested does not exist.";
-}
+	// Specific RDTOM API Errors
+	600 => array(
+		"text" => "API Version Incorrect",
+		"description" => "The API version you have requested does not exist"),
+	601 => array(
+		"text" => "API Depreciated",
+		"description" => "The API version you have requested is no longer supported")
+	
+	);
 
-function get_resource_xml($resource_name)
-{
-	// for each resource, load up the object
-	switch ($resource_name) 
-	{	
-		case "question":
-			$parameters = Array(
-				"resource" => "question",
-				"ID" => $_GET['ID']);
-			
-			$api_resource = new api_resource_question($parameters);
-			
-			break;	
-		default:
-			//throw new Exception ("Resource not found: " . htmlentities($resource_name));
-			echo "Resource not found";
-			exit;
-			break;
-	}
-	
-	return $api_resource->get_XML();
-}
 
-function output_xml($out_XML, $format)
+if ($url_array[1])
 {
-	if ($format == "nicexml")
+	// save a log of the API request
+	save_log("api", $_SERVER['REQUEST_URI']);
+
+	// process the request
+	try 
 	{
-		// HTML view of XML
-		echo "<pre>" . htmlentities(formatXmlString($out_XML->asXML())) . "</pre>";
-	}
-	elseif ($format == "json")
-	{
-		// JSON
-		echo json_encode($out_XML);
-	}
-	elseif ($format == "jsonp")
-	{
-		// JSONP
-		$requested_callback = htmlentities($_GET['callback']);
-		$requested_jsonarg = htmlentities($_GET['jsonarg']);
+		// get the target controller
+		$target = "../app/api/" . str_ireplace(".", "_", $url_array[1]) . "/" . str_ireplace(".", "_", $url_array[1]) . "_controller.obj.php";
 		
-		if (!$requested_callback)
+		//get target
+		if (file_exists($target))
 		{
-			throw new exception ("No JSONP callback specified");
-		}
+			include_once("../app/api/abstract_api_controller.obj.php");
+			
+		    include_once($target);
+		    
+		    $resource_array = Array();
+		     
+		    for($i = 3; $i < count($url_array); $i++)
+		    {
+		    	$resource_array[] = $url_array[$i];
+		    }
+		    
+			$request = Array(
+				"format" => $url_array[2],
+				"resource" => $resource_array,
+				"parameters" => $_GET);
 		
-		if (!$requested_jsonarg)
-		{
-			echo "$requested_callback (" . json_encode($out_XML) . ", '$requested_jsonarg');";
+			// make a new controller
+		    $controller = new api_controller($request);
+		    
+		    // activate the controller
+		    $controller->main();
+		
 		}
 		else
 		{
-			echo "$requested_callback (" . json_encode($out_XML) . ");";
+		    //can't find the file in 'controllers'! 
+		    throw new exception('The controller for this version number was not found', 600);
 		}
-	}
-	else
+	} 
+	catch (Exception $e) 
 	{
-		// XML
+		// give a formatted XML error
+		$out_XML = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8" ?>
+		<response />');
+		$out_XML->addChild("status_code", $e->getCode());
+		$out_XML->addChild("status_code_text", $api_status_codes[$e->getCode()]['text']);
+		$out_XML->addChild("status_code_description", $api_status_codes[$e->getCode()]['description']);
+		$out_XML->addChild("status_message", $e->getMessage());
+		
+		// TODO use globally available output "library" so output format is consistent
 		header('Content-Type: text/xml');
 		echo $out_XML->asXML();
 	}
 }
+else
+{
+	include_once("../app/presentation/apidocumentation.php");
+}
 
+function api_resources_autoload($resource_name)
+{
+	global $url_array;
+	$target = "../app/api/" . str_ireplace(".", "_", $url_array[1]) . "/resources/" . $resource_name . ".obj.php";
+	return $target;
+	
+}
 ?>

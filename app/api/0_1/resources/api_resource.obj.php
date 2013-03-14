@@ -1,14 +1,11 @@
 <?php
 abstract class api_resource
 {
-	protected $out_XML;
+	protected $resource_XML;
 	
 	function __construct($req_parameters)
 	{
-		
-		// start the XML
-		$this->out_XML = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8" ?>
-		<response />');
+		$this->resource_XML = new SimpleXMLElement('<resource />');
 		
 		// populate the XML object with the data
 		$this->build_XML($req_parameters);
@@ -20,7 +17,7 @@ abstract class api_resource
 	
 	public function get_XML()
 	{
-		return $this->out_XML;
+		return $this->resource_XML;
 	}
 	
 }
