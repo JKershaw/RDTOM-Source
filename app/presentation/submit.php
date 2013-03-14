@@ -78,6 +78,12 @@ if (is_logged_in())
 				// build new relationships for the author
 				$mydb->add_relationship($tmp_question->get_ID(), $author_id_term->get_ID());
 				
+				// build new relationships for the language
+				$language_term = $mydb->get_term_from_taxonomy_and_name("language", "English");
+				$mydb->add_relationship($tmp_question->get_ID(), $language_term->get_ID());
+				
+				
+				
 				$message .= "Question edited! ";
 					
 			}
