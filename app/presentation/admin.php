@@ -6,6 +6,7 @@
  * Built to help Roller Derby players learn the rules
  */
 
+// TODO validate every question - make sure it has answers & correct meta data
 
 // if the user isn't an admin, show an error message
 if (!is_admin())
@@ -482,6 +483,14 @@ include("header.php");
 							echo get_admin_terms_checkboxes("author-id", $question);
 						?>
 					</td>
+				</tr>			
+				<tr>
+					<td style="width:200px">Language:</td>
+					<td>
+						<?php 
+							echo get_admin_terms_checkboxes("language", $question);
+						?>
+					</td>
 				</tr>
 				<tr>
 					<td></td>
@@ -512,32 +521,6 @@ include("header.php");
 		</form>
 		
 		<?php 
-		/*
-		if ($question && $question->get_reports())
-		{
-			?>
-			<h3>Open Reports:</h3>
-			<p>
-			<?php 
-			foreach ($question->get_reports() as $report)
-			{
-				if (($_POST['question_id'] == $report->get_Question_ID()) || ($url_array[2] == $report->get_Question_ID()))
-				{
-					echo "<strong>";
-				}
-				
-				echo get_formatted_admin_report($report);
-				
-				if (($_POST['question_id'] == $report->get_Question_ID()) || ($url_array[2] == $report->get_Question_ID()))
-				{
-					echo "</strong>";
-				}
-			}
-			?>
-			</p>
-			<?php 
-		}
-		*/
 		if ($question)
 		{
 			?>
@@ -775,12 +758,22 @@ include("header.php");
 	
 	<div class="layout_box" id="layout_box_test" style="display:none;">
 	
-	I wonder if this'll change stuff?
+	
+				
+		I wonder if this'll change stuff?
 		<?php 
 		
+		/*
+		$language_term = $mydb->get_term_from_taxonomy_and_name("language", "English");
+				
+		$all_questions = get_questions();
+		foreach ($all_questions as $tmp_question)
+		{
+		$mydb->add_relationship($tmp_question->get_ID(), $language_term->get_ID());
+		}
 		//print_r(get_questions_search('passed'));
 		
-		
+		*/
 		/*
 		$all_questions = get_questions();
 		
