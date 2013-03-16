@@ -85,6 +85,9 @@ else
 			break;	
 		case "cat":
 			include("presentation/cat.php");
+			break;	
+		case "forum":
+			include("presentation/forum.php");
 			break;		
 			
 		case "question":

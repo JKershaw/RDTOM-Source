@@ -20,6 +20,7 @@ include('library/email.fnc.php');
 include('library/tracker.fnc.php');
 include('library/cache.fnc.php');
 include('library/sessions.fnc.php');
+include('library/forum.fnc.php');
 
 // Data mapping files
 include('library/mappers/database.obj.php');
