@@ -47,6 +47,8 @@ if ($_POST)
 			
 			$tmp_question = get_question_from_ID($_POST['question_id']);
 			
+			$old_question_string = (string)$tmp_question;
+			
 			// have the answers changed? There may not be any answers.
 			if ($temp_answer_array && ($tmp_question->is_answers_different($temp_answer_array)))
 			{
@@ -70,8 +72,6 @@ if ($_POST)
 			{
 				$message .= "Answers unchanged! ";
 			}
-			
-			$old_question = $tmp_question;
 			
 			// edit the question
 			edit_question($tmp_question->get_ID(), $_POST['question_text'], $_POST['question_section'], trim($_POST['question_notes']));
@@ -101,10 +101,10 @@ if ($_POST)
 			}
 			
 			// save a comment
-			$comment_text = "Question Edited \n\nFrom: \n " . $old_question . " \nTo: \n" . get_question_from_ID($old_question->get_ID());
+			$comment_text = "Question Edited \n\nFrom: \n " . $old_question_string . " \nTo: \n" . get_question_from_ID($tmp_question->get_ID());
 			
 			// make a new comment
-			$comment = new comment(-1, $user->get_ID(), $old_question->get_ID(), gmmktime(), $comment_text, QUESTION_CHANGED);
+			$comment = new comment(-1, $user->get_ID(), $tmp_question->get_ID(), gmmktime(), $comment_text, QUESTION_CHANGED);
 			
 			// save the comment
 			set_comment($comment);
@@ -566,10 +566,17 @@ include("header.php");
 							{
 								echo "<hr>
 								<p class=\"small_p\">
-									<span style=\"font-weight:bold; color:orange;\">Edit - " . htmlentities($comment_or_report->get_author_name()) . "</span> <i>" . date("D, jS M Y H:i", $comment_or_report->get_Timestamp()) . "</i>
+									<span style=\"font-weight:bold; color:orange;\">
+										Edit - " . htmlentities($comment_or_report->get_author_name()) . "</span>
+									<i>" . date("D, jS M Y H:i", $comment_or_report->get_Timestamp()) . "</i>
+									<a id=\"edit_link_" . $comment_or_report->get_ID() . "_show\" onclick=\"$('#edit_link_" . $comment_or_report->get_ID() . "_show').hide(); $('#edit_link_" . $comment_or_report->get_ID() . "_hide').show(); $('#edit_text_" . $comment_or_report->get_ID() . "').show()\"/>Show</a>
+									<a id=\"edit_link_" . $comment_or_report->get_ID() . "_hide\" onclick=\"$('#edit_link_" . $comment_or_report->get_ID() . "_show').show(); $('#edit_link_" . $comment_or_report->get_ID() . "_hide').hide(); $('#edit_text_" . $comment_or_report->get_ID() . "').hide()\" style=\"display:none;\"/>Hide</a>
+									
 								</p>
 								<p class=\"small_p\">
+									<span id=\"edit_text_" . $comment_or_report->get_ID() . "\" style=\"display:none;\">
 									" . nl2br(htmlentities(stripslashes($comment_or_report->get_text()))) . "
+									</span>
 								</p>";								
 							}
 						}
