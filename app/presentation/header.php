@@ -15,8 +15,11 @@
 		
 		<title>Roller Derby Test O'Matic</title>
 		
-		<?echo get_CSS_embed("minify"); ?>
-		<?echo get_CSS_embed("print"); ?>
+		<?
+		//echo get_CSS_embed("minify"); 
+		echo get_CSS_embed(); 
+		echo get_CSS_embed("print"); 
+		?>
 		
         <link rel="icon" href="<?echo get_site_URL(); ?>images/favicon.gif" type="image/gif">
         <link rel="apple-touch-icon-precomposed" href="<?echo get_site_URL(); ?>images/RDTOM_touch_icon.png">		
