@@ -33,11 +33,11 @@ include('library/mappers/comments.db.fnc.php');
 // Model (object) files autoload, phpMailer is also Autoloaded as used rarely
 function __autoload($classname) 
 {
-	preg_replace("/[^a-z_]/", '', strtolower($classname));
+	$classname = preg_replace("/[^a-z_]/", '', strtolower($classname));
 	
 	if ($classname == "phpmailer")
 	{
-		$filename = "functions/phpmailer/class.phpmailer.php";
+		$filename = "library/phpmailer/class.phpmailer.php";
 	}
 	elseif(substr($classname, 0, 4) == "api_")
 	{
