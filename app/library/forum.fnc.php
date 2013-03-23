@@ -42,6 +42,8 @@ class forum
 				{
 					throw new exception ("Thread not found from slug");
 				}
+				
+				//TODO save the fact this thread has been viewed
 				$out .= $thread->get_body();
 			}
 			else
@@ -58,7 +60,25 @@ class forum
 		else
 		{
 			// front page
-		
+			$out .= "<h3>Forum</h3>";
+			
+			// Topics
+			$topics = get_topics();
+			if ($topics)
+			{
+				$out .= "<ol class=\"topics\">";
+				foreach($topics as $topic)
+				{
+					$out .= $topic->get_head();
+				}
+				$out .= "</ol>";
+				
+			}
+			else
+			{
+				$out .= "<p><i>No topics found</i></p>";
+			}
+			
 			// the front page of the forum
 			$out .= "<h3>Latest Threads</h3>";
 				
@@ -66,30 +86,16 @@ class forum
 			$latest_threads = get_latest_threads();
 			if ($latest_threads)
 			{
+				$out .= "<ol class=\"threads\">";
 				foreach($latest_threads as $thread)
 				{
 					$out .= $thread->get_head();
 				}
+				$out .= "</ol>";
 			}
 			else
 			{
 				$out .= "<p><i>No threads found</i></p>";
-			}
-			
-			$out .= "<h3>Topics</h3>";
-			
-			// Topics
-			$topics = get_topics();
-			if ($topics)
-			{
-				foreach($topics as $topic)
-				{
-					$out .= $topic->get_head();
-				}
-			}
-			else
-			{
-				$out .= "<p><i>No topics found</i></p>";
 			}
 		}
 		
@@ -127,14 +133,14 @@ class forum
 			}
 			
 			// make the new thread
-			$slug = str_replace(" ", "-", ereg_replace("[^A-Za-z0-9 ]", "", strtolower(substr($_POST['new_thread_title'], 0, 20))));
+			$slug = str_replace(" ", "-", ereg_replace("[^A-Za-z0-9 ]", "", strtolower(substr($_POST['new_thread_title'], 0, 100))));
 			
 			// is this a unique slug?
 			if (get_thread_from_slug($slug))
 			{
 				// no! Append a number
-				$slug_ID = 0;
-				while(get_thread_from_slug($slug . $slug_ID))
+				$slug_ID = 2;
+				while(get_thread_from_slug($slug . "-" . $slug_ID))
 				{
 					$slug_ID++;
 					
@@ -143,7 +149,7 @@ class forum
 						throw new exception ("Too many threads with that slug");
 					}
 				}
-				$slug .= $slug_ID;
+				$slug .= "-" . $slug_ID;
 			}
 			
 			$statement = $myPDO->prepare("
@@ -198,6 +204,16 @@ class forum
 			
 			header("Location: " . $thread->get_URL());
 		}
+		elseif($_POST['forum_form_name'] == "edit_post")
+		{
+			$this->edit_post($_POST['edit_post_text'], $_POST['edit_post_ID']);
+			
+			$post = get_post_from_id($_POST['edit_post_ID']);
+			
+			$thread = $post->get_parent_thread();
+			
+			header("Location: " . $thread->get_URL());
+		}
 		else
 		{
 			throw new exception("Form not found");
@@ -219,6 +235,10 @@ class forum
 			throw new exception ("Attempted to save a post for a topic which doesn't exist");
 		}
 		
+		if (!trim($text))
+		{
+			throw new exception ("No text given");
+		}
 		$statement = $myPDO->prepare("
 		INSERT 
 			INTO rdtom_forum_posts 
@@ -252,6 +272,44 @@ class forum
 		}
 	}
 	
+	private function edit_post($text, $post_ID)
+	{
+		global $myPDO, $user;
+		
+		$post = get_post_from_id($post_ID);
+		if (!$post)
+		{
+			throw new exception ("Attempted to edit a post which doesn't exist");
+		}
+			
+		$post_author = $post->get_author();
+		
+		if (($post_author->get_ID() != $user_ID) && !is_admin())
+		{
+			throw new exception ("You do not have permission to edit this post");
+		}
+	
+		if (!trim($text))
+		{
+			throw new exception ("No text given");
+		}
+		
+		
+		$statement = $myPDO->prepare("
+			UPDATE rdtom_forum_posts SET Text = :Text, Edited_Timestamp = :Edited_Timestamp WHERE ID = :ID;
+			");
+		
+		if(!$statement->execute(
+			array(	':Text' => $text, 
+					':ID' => $post_ID,
+					':Edited_Timestamp' => gmmktime())
+			)
+		)
+		{
+			throw new exception("Error editing post: " . print_r( $statement->errorInfo(), true));
+		}
+	}
+	
 }
 
 class topic
@@ -268,11 +326,30 @@ class topic
 		// get the "head" version of the topic, the one that appears on the front page
 		if ($this->data['Divider'])
 		{
-			return "<hr /><strong>" . htmlentities($this->data['Title']) . "</strong>";
+			return "
+			
+				<li class=\"topicslist_divider\">
+					<div class=\"topicslist_divider_wrap\">
+						" . htmlentities($this->data['Title']) . "
+					</div>
+				</li>";
 		}
 		else
 		{
-			return "<br /><br /><a href=\"" . $this->get_URL() . "\">" . htmlentities($this->data['Title']) . "</a><br /><i>" . htmlentities($this->data['Blurb']) . "</i>";
+			$latest_post = $this->get_latest_post();
+			
+			$out .= "<li class=\"topicslist_topic\">
+				<div class=\"topicslist_topic_wrap\">
+					<a href=\"" . $this->get_URL() . "\">" . htmlentities($this->data['Title']) . "</a>
+					<br /><i>" . htmlentities($this->data['Blurb']) . "</i>";
+					if ($latest_post)
+					{
+						$out .= $latest_post->get_latest_post_string();
+					}
+					$out .= "</li>
+				</div>";
+				
+			return $out;
 		}
 	}
 	
@@ -285,10 +362,12 @@ class topic
 		
 		if ($threads)
 		{
+			$out .= "<ol class=\"threads\">";
 			foreach($threads as $thread)
 			{
 				$out .= $thread->get_head();
 			}
+			$out .= "</ol>";
 		}
 		else
 		{
@@ -316,6 +395,11 @@ class topic
 		
 		
 		return $out;
+	}
+	
+	public function get_latest_post()
+	{
+		return get_latest_posts_from_topic_id($this->data['ID']);
 	}
 	
 	public function get_URL()
@@ -351,8 +435,22 @@ class thread
 	public function get_head()
 	{
 		// get the "head" version of the topic, the one that appears on the front page
-		return "<p><a href=\"" . $this->get_URL() . "\">" . htmlentities($this->data['Title']) . "</a></p>";
+		
+		$latest_post = $this->get_latest_post();
+		
+		$out .= "<li class=\"threadslist_thread\">
+			<div class=\"threadslist_thread_wrap\">
+				<a href=\"" . $this->get_URL() . "\">" . htmlentities(stripslashes($this->data['Title'])) . "</a>";
+				if ($latest_post)
+				{
+					$out .= "<br />" . $latest_post->get_latest_post_string();
+				}
+				$out .= "
+			</div>
+		</li>";
 		// get the "head" version of the thread, the one that appears on the topic page & front page
+		
+		return $out;
 	}
 	
 	public function get_body()
@@ -360,17 +458,19 @@ class thread
 		// get the "body" version of te thread, the page version of the thread listing all the posts
 		$parent_topic = $this->get_parent_topic();
 		
-		$out .= "<h3><a href=\"" . get_site_URL() . "forum\">Forum</a> > <a href=\"" . $parent_topic->get_URL() . "\">" . htmlentities($parent_topic->get_title()) . "</a> > " . htmlentities($this->data['Title']) . "</h3>";
+		$out .= "<h3><a href=\"" . get_site_URL() . "forum\">Forum</a> > <a href=\"" . $parent_topic->get_URL() . "\">" . htmlentities(stripslashes($parent_topic->get_title())) . "</a> > " . htmlentities(stripslashes($this->data['Title'])) . "</h3>";
 		
 		// get the "body" version of the topic, the page version of the topic listing all the threads
 		$posts = get_posts_from_thread_id($this->data['ID']);
 		
 		if ($posts)
 		{
+			$out .="<ol class=\"posts\">";
 			foreach($posts as $post)
 			{
 				$out .= $post->get_body();
 			}
+			$out .="</ol>";
 		}
 		else
 		{
@@ -384,7 +484,7 @@ class thread
 			$out .= "
 			<form name=\"form_new_post\" id=\"form_new_post\" method=\"post\" action=\"" . get_site_URL() . "forum\" >
 				<input type=\"hidden\" name=\"forum_form_name\" value=\"new_post\" />
-				<textarea name=\"new_post_body\" style=\"width:500px\" name=\"new_post_body\" cols=\"40\" rows=\"5\"></textarea>
+				<textarea name=\"new_post_body\" style=\"width:500px\" name=\"new_post_body\" cols=\"40\" rows=\"10\"></textarea>
 				<input type=\"hidden\" name=\"new_post_thread_ID\" value=\"" . $this->data['ID'] . "\" />
 				<br />
 				<a class=\"button\" id=\"new_thread_button\" onclick=\"document.form_new_post.submit();return false;\"/>Post</a>
@@ -406,15 +506,26 @@ class thread
 		return get_site_URL() . "forum/" . $parent_topic->get_slug() . "/" . $this->data['Slug'];
 	}
 	
+	public function get_Title()
+	{
+		return $this->data['Title'];
+	}
+	
 	public function get_parent_topic()
 	{
 		return get_topic_from_id($this->data['Topic_ID']);
+	}
+	
+	public function get_latest_post()
+	{
+		return get_latest_posts_from_thread_id($this->data['ID']);
 	}
 }
 
 class post
 {
 	private $data;
+	private $author;
 	
 	public function __construct($data)
 	{
@@ -422,7 +533,99 @@ class post
 	}
 	public function get_body()
 	{
-		return "<p>" . htmlentities($this->data['Text']) . "</p>";
+		global $user;
+		
+		$author = $this->get_author();
+		
+		$out .= "
+		<li class=\"forum_post\">
+			<div class=\"forum_post_meta\">
+				<div class=\"forum_post_meta_wrap\">
+					<img style=\"height:40px;width:40px\"src=\"" . get_gravatar($author->get_Email(), 40) . "\" /><br />
+					<span class=\"forum_post_meta_name\">" . htmlentities($author->get_Name()) . "</span><br />
+					<span class=\"forum_post_meta_posts\">Posts: " . number_format(get_post_count_from_user_id($this->data['Creator_User_ID'])) . "</span>
+				</div>
+			</div>
+			<div class=\"forum_post_content\">
+				<div class=\"forum_post_content_wrap\">
+				
+					<p id=\"forum_post_" . $this->data['ID'] . "\">" . nl2br(make_links_clickable(htmlentities(stripslashes($this->data['Text'])))) . "</p>
+					";
+		if (($user->get_ID() == $author->get_ID()) || is_admin())
+		{
+			$out .= "
+		
+					<span id=\"forum_post_edit_" . $this->data['ID'] . "\" style=\"display:none\">
+						<form name=\"form_edit_post_" . $this->data['ID'] . "\" id=\"form_edit_post\" method=\"post\" action=\"" . get_site_URL() . "forum\" >
+							<input type=\"hidden\" name=\"forum_form_name\" value=\"edit_post\" />
+							<textarea name=\"edit_post_text\" style=\"width:800px\" name=\"edit_post_text\" cols=\"40\" rows=\"10\">" . htmlentities(stripslashes($this->data['Text'])) . "</textarea>
+							<input type=\"hidden\" name=\"edit_post_ID\" value=\"" . $this->data['ID'] . "\" />
+							<br />
+							<a class=\"button\" id=\"new_thread_button\" onclick=\"document.form_edit_post_" . $this->data['ID'] . ".submit();return false;\"/>Edit</a> 
+							<a class=\"button\" id=\"new_thread_button\" onclick=\"$('#forum_post_edit_" . $this->data['ID'] . "').hide();$('#forum_post_" . $this->data['ID'] . "').fadeIn();\"/>Cancel</a>
+						</form>
+					</span>";
+		}
+			$out .= "		
+					<div class=\"forum_post_content_meta\">";
+		
+		$out .= "Posted " . $this->get_freshness_html();
+		if ($this->data['Edited_Timestamp'] > 0)
+		{
+			$out .= " (edited " . $this->get_edited_freshness_html() . ")";
+		
+		}
+		if (($user->get_ID() == $author->get_ID()) || is_admin())
+		{
+			$out .= " <a onclick=\"$('#forum_post_" . $this->data['ID'] . "').hide();$('#forum_post_edit_" . $this->data['ID'] . "').fadeIn();\">Edit</a>";
+		}
+		
+		$out .= "</div>
+				</div>
+			</div>
+		</li>
+		";
+				
+		return $out;
+	}
+	
+	public function get_latest_post_string()
+	{
+		$parent_thread = $this->get_parent_thread();
+		return "<div class=\"latest_post_string\">Latest post by <strong>" . htmlentities($this->get_author_name()) . "</strong> in <a href=\"" . $parent_thread->get_URL() . "\">" . htmlentities(stripslashes($parent_thread->get_Title())) . "</a>, " . $this->get_freshness_html() . "</div>";
+	}
+	
+	public function get_author()
+	{
+		global $mydb;
+		if (!$this->author)
+		{
+			$this->author = $mydb->get_user_from_ID($this->data['Creator_User_ID']);
+		}
+		return $this->author;
+		
+	}
+	
+	public function get_author_name()
+	{
+		$author = $this->get_author();
+		return $author->get_Name();
+		
+	}
+	
+	public function get_parent_thread()
+	{
+		return get_thread_from_id($this->data['Thread_ID']);
+	}
+	
+	public function get_freshness_html()
+	{
+		return "<span title=\"" . date("r", $this->data['Timestamp']) . "\">" . time_elapsed_string($this->data['Timestamp']) . "</span>";
+	}
+	
+	public function get_edited_freshness_html()
+	{
+		return "<span title=\"" . date("r", $this->data['Edited_Timestamp']) . "\">" . time_elapsed_string($this->data['Edited_Timestamp']) . "</span>";
 	}
 }
 
@@ -433,13 +636,33 @@ class post
 
 function get_latest_threads()
 {
-	// TODO get the latest 10 threads
+	global $myPDO;
+	$statement = $myPDO->prepare("
+		SELECT rdtom_forum_threads.*, thread_id, MAX(rdtom_forum_posts.Timestamp) AS NewestDate
+		FROM rdtom_forum_posts
+		JOIN rdtom_forum_threads
+		ON thread_id = rdtom_forum_threads.ID
+		GROUP BY thread_id
+		ORDER BY `NewestDate` Desc
+		LIMIT 0, 20
+	");
+	$statement->execute();
+	$results = $statement->fetchAll();
+	
+	$out = Array();
+	
+	foreach ($results as $result)
+	{
+		$out[] = new thread($result);
+	}
+	
+	return $out;
 }
 
 function get_topics()
 {
 	global $myPDO;
-	$statement = $myPDO->prepare("SELECT * FROM rdtom_forum_topics ORDER BY 'Order' Asc");
+	$statement = $myPDO->prepare("SELECT * FROM rdtom_forum_topics ORDER BY rdtom_forum_topics.Order Asc");
 	$statement->execute();
 	$results = $statement->fetchAll();
 	
@@ -525,7 +748,15 @@ function get_topic_from_id($ID)
 function get_threads_from_topic_id($ID)
 {
 	global $myPDO;
-	$statement = $myPDO->prepare("SELECT * FROM rdtom_forum_threads WHERE Topic_ID = :Topic_ID ORDER BY 'Order' Asc");
+	$statement = $myPDO->prepare("
+		SELECT rdtom_forum_threads.*, thread_id, MAX(rdtom_forum_posts.Timestamp) AS NewestDate
+		FROM rdtom_forum_posts
+		JOIN rdtom_forum_threads
+		ON thread_id = rdtom_forum_threads.ID
+		WHERE rdtom_forum_threads.Topic_ID = :Topic_ID
+		GROUP BY thread_id
+		ORDER BY `NewestDate` Desc
+	");
 	$statement->execute(array(':Topic_ID' => $ID));
 	$results = $statement->fetchAll();
 	
@@ -542,7 +773,7 @@ function get_threads_from_topic_id($ID)
 function get_posts_from_thread_id($ID)
 {
 	global $myPDO;
-	$statement = $myPDO->prepare("SELECT * FROM rdtom_forum_posts WHERE Thread_ID = :Thread_ID ORDER BY 'Timestamp' Asc");
+	$statement = $myPDO->prepare("SELECT * FROM rdtom_forum_posts WHERE Thread_ID = :Thread_ID ORDER BY Timestamp Asc");
 	$statement->execute(array(':Thread_ID' => $ID));
 	$results = $statement->fetchAll();
 	
@@ -554,4 +785,75 @@ function get_posts_from_thread_id($ID)
 	}
 	
 	return $out;
+}
+
+
+function get_post_from_id($ID)
+{
+	global $myPDO;
+	
+	$statement = $myPDO->prepare("SELECT * FROM rdtom_forum_posts WHERE ID = :ID");
+	$statement->execute(array(':ID' => $ID));
+	$results = $statement->fetch();
+	
+	if (!$results)
+	{
+		return false;
+	}
+	
+	return new post($results);
+}
+
+function get_latest_posts_from_thread_id($ID)
+{
+	global $myPDO;
+	$statement = $myPDO->prepare("SELECT * FROM rdtom_forum_posts WHERE Thread_ID = :Thread_ID ORDER BY Timestamp Desc Limit 1");
+	$statement->execute(array(':Thread_ID' => $ID));
+	$results = $statement->fetch();
+	
+	if($results)
+	{
+		return new post($results);
+	}
+	else
+	{
+		return false;
+	}
+}
+
+function get_latest_posts_from_topic_id($ID)
+{
+	global $myPDO;
+	$statement = $myPDO->prepare("SELECT * FROM rdtom_forum_posts WHERE Topic_ID = :Topic_ID ORDER BY Timestamp Desc Limit 1");
+	$statement->execute(array(':Topic_ID' => $ID));
+	$results = $statement->fetch();
+	
+	if($results)
+	{
+		return new post($results);
+	}
+	else
+	{
+		return false;
+	}
+}
+
+
+function get_post_count_from_user_id($ID)
+{
+	global $myPDO;
+	$statement = $myPDO->prepare("SELECT count(*) as count FROM rdtom_forum_posts WHERE Creator_User_ID = :Creator_User_ID");
+	$statement->execute(array(':Creator_User_ID' => $ID));
+	$results = $statement->fetch();
+	
+	return $results['count'];
+}
+
+/* Formatting Functions
+ * 
+ */
+
+// from http://stackoverflow.com/questions/5341168/best-way-to-make-links-clickable-in-block-of-text
+function make_links_clickable($text){
+    return preg_replace('!(((f|ht)tp(s)?://)[-a-zA-Z()0-9@:%_+.~#?&;//=]+)!i', '<a href="$1" rel="nofollow">$1</a>', $text);
 }
