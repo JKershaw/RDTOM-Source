@@ -335,6 +335,7 @@ ol
 .forum_post_content_wrap
 {
 	margin:10px;
+	word-wrap: break-word;
 }
 
 .forum_post_content_meta
