@@ -551,7 +551,7 @@ class post
 				
 					<p id=\"forum_post_" . $this->data['ID'] . "\">" . nl2br(make_links_clickable(htmlentities(stripslashes($this->data['Text'])))) . "</p>
 					";
-		if (($user->get_ID() == $author->get_ID()) || is_admin())
+		if (($user && ($user->get_ID() == $author->get_ID())) || is_admin())
 		{
 			$out .= "
 		
@@ -575,7 +575,7 @@ class post
 			$out .= " (edited " . $this->get_edited_freshness_html() . ")";
 		
 		}
-		if (($user->get_ID() == $author->get_ID()) || is_admin())
+		if (($user && ($user->get_ID() == $author->get_ID())) || is_admin())
 		{
 			$out .= " <a onclick=\"$('#forum_post_" . $this->data['ID'] . "').hide();$('#forum_post_edit_" . $this->data['ID'] . "').fadeIn();\">Edit</a>";
 		}
