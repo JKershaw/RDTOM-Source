@@ -54,7 +54,45 @@ function exception_handler($exception)
 	
 	save_log("exception", $error_string . $log_error_string);
 	
+	mail("wardrox@gmail.com", "RDTOM Exception", $error_string . $log_error_string);
+	
 	echo_error_page($error_string);
+}
+
+
+// Handle any uncaught Fatal Errors
+function fatal_handler() 
+{
+	$errfile = "unknown file";
+	$errstr  = "shutdown";
+	$errno   = E_CORE_ERROR;
+	$errline = 0;
+
+	$error = error_get_last();
+
+	// was there an error?
+	if( $error !== NULL) {
+		$errno   = $error["type"];
+		$errfile = $error["file"];
+		$errline = $error["line"];
+		$errstr  = $error["message"];
+		
+		// save a log of the error
+		$log_error_string = 
+			"URI: [" . $_SERVER['REQUEST_URI'] . "] 
+			REQUEST: [" . print_r($_REQUEST, true) . "]";
+		
+		// display an error page for the user
+		$error_string .= "\n" . $errstr . "\n";
+		$error_string .= "Line " . $errline . " in file " . $errfile;
+		
+		save_log("fatal", $error_string . $log_error_string);
+		
+		mail("wardrox@gmail.com", "RDTOM Fatal Error", $error_string . $log_error_string);
+		
+		echo_error_page($error_string);
+	}
+	
 }
 
 // error handler function
@@ -91,11 +129,13 @@ function error_handler($errno, $errstr, $errfile, $errline)
 
     // save a log of the error
 	$log_error_string = 
-		"MESSAGE: [" . $error_string . "] 
+		"\nMESSAGE: [" . $error_string . "] 
 		URI: [" . $_SERVER['REQUEST_URI'] . "] 
 		REQUEST: [" . print_r($_REQUEST, true) . "]";
 	
 	save_log("error", $log_error_string);
+	
+	mail("wardrox@gmail.com", "RDTOM Error", $error_string . $log_error_string);
 	
 	// display an error page for the user
 	echo_error_page($error_string);
@@ -181,5 +221,7 @@ function echo_error_page($error_string)
 //set error & exception handler
 set_error_handler("error_handler");
 set_exception_handler('exception_handler');
+register_shutdown_function( "fatal_handler" );
+
 
 ?>
