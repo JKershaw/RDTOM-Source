@@ -845,10 +845,14 @@ class database_derbytest extends database
 					WHERE rdtom_relationships.Question_ID =  '$req_Question_ID'";
 			}
 		}
-		else
+		elseif ($req_taxonomy)
 		{
 			$req_taxonomy = $this->mysql_res($req_taxonomy);
 			$query = "SELECT * FROM rdtom_terms WHERE taxonomy = '$req_taxonomy' ";
+		}
+		else
+		{
+			$query = "SELECT * FROM rdtom_terms ORDER BY taxonomy";
 		}
 		
 		$results = $this->get_results($query);

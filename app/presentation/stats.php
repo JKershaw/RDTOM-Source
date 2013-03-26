@@ -78,10 +78,38 @@ include("header.php");
 	
 	<div class="layout_box" id="layout_box_questions" style="display:none;">
 		<h3>Question breakdown by type (there is overlap):</h3>
-		<p>WFTDA 5 (May 2010): <?php echo number_format(count(get_questions(array("rule-set" => "WFTDA5"), false)));?></p>
-		<p>WFTDA 6 (Jan 2013): <?php echo number_format(count(get_questions(array("rule-set" => "WFTDA6"), false)));?></p>
+		<?php 
+		$current_taxonomy = "";
+		$breakdown_string_array = Array();
 		
+		foreach ($mydb->get_terms() as $term)
+		{
+			// don't care about author stats
+			if ($term->get_taxonomy() == "author-id")
+			{
+				continue;
+			}
+			
+			if ($current_taxonomy != $term->get_taxonomy())
+			{
+				$current_taxonomy = $term->get_taxonomy();
+				$breakdown_string_array[$current_taxonomy] .= "<strong>" . htmlentities($current_taxonomy) . "</strong>";
+			}
+			
+			try 
+			{	
+				$number_string = number_format(count(get_questions(array($term->get_taxonomy() => $term->get_Name()), false)));
+				$breakdown_string_array[$current_taxonomy] .= "<br /><span class=\"small_p\">" . htmlentities($term->get_Name()) . " (" . htmlentities($term->get_Description()) . "): " . $number_string . "</span>";
+				
+			} 
+			catch (Exception $e) 
+			{
+				$breakdown_string_array[$current_taxonomy] .= "<br /><span class=\"small_p\">" . htmlentities($term->get_Name()) . " (" . htmlentities($term->get_Description()) . "): <i>None</i></span>";
+			}
+		}
 		
+		echo "<p>" . implode("</p><p>", $breakdown_string_array) . "</p>";
+		?>
 		
 	</div>
 		<script type="text/javascript">
