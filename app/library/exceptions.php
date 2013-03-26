@@ -52,9 +52,12 @@ function exception_handler($exception)
 	$error_string .= $exception->getMessage() . "<br />\n";
 	$error_string .= "Line " . $exception->getLine() . " in file " . $exception->getFile() . " (Trace: " . $exception->getTraceAsString() . ")";
 	
-	save_log("exception", $error_string . $log_error_string);
-	
-	mail("wardrox@gmail.com", "RDTOM Exception", $error_string . $log_error_string);
+	// we don't care if it's a no-question-found error
+	if (!strstr($error_string, "no question found"))
+	{
+		save_log("exception", $error_string . $log_error_string);
+		mail("wardrox@gmail.com", "RDTOM Exception", $error_string . $log_error_string);
+	}
 	
 	echo_error_page($error_string);
 }
