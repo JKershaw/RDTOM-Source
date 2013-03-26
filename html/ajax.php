@@ -42,6 +42,9 @@ try
 		case "count_unique_IPs":
 			$out = ajax_count_unique_IPs();	
 		break;
+		case "random_forum_thread":
+			$out = ajax_random_forum_thread();	
+		break;
 	}
 	
 	// did the switch activate? 
@@ -616,5 +619,11 @@ function ajax_save_comment()
 	set_comment($comment);
 	
 	echo "Saved!";
+}
+
+function ajax_random_forum_thread()
+{
+	$thread = get_thread_from_random();
+	return "<a href=\"" . $thread->get_URL() . "\">" . htmlentities(stripslashes($thread->get_Title())) . "</a>";
 }
 ?>

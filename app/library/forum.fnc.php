@@ -712,6 +712,22 @@ function get_thread_from_id($ID)
 	
 	return new thread($results);
 }
+
+function get_thread_from_random()
+{
+	global $myPDO;
+	
+	$statement = $myPDO->prepare("SELECT * FROM rdtom_forum_threads ORDER BY RAND() LIMIT 0,1");
+	$statement->execute();
+	$results = $statement->fetch();
+	
+	if (!$results)
+	{
+		return false;
+	}
+	
+	return new thread($results);
+}
 	
 function get_topic_from_slug($slug)
 {
