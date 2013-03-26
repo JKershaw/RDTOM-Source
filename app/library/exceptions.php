@@ -150,7 +150,7 @@ function error_handler($errno, $errstr, $errfile, $errline)
 function echo_error_page($error_string)
 {
 	// clear the current output cache so we don't output half a page then an error
-	ob_end_clean();
+	@ob_end_clean();
 	
 	?><!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 	<html>
