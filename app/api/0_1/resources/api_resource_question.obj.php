@@ -20,8 +20,8 @@ class api_resource_question extends api_resource
 		
 		// generic question values
 		$XML_newquestion->addChild('id', $question->get_ID());
-		$XML_newquestion->addChild('text', htmlentities($question->get_Text()));
-		$XML_newquestion->addChild('notes', htmlentities($question->get_Notes()));
+		$XML_newquestion->addChild('text', htmlentities(stripslashes($question->get_Text())));
+		$XML_newquestion->addChild('notes', htmlentities(stripslashes($question->get_Notes())));
 		$XML_newquestion->addChild('wftda_link', htmlentities($question->get_WFTDA_Link()));
 		
 		// the sections

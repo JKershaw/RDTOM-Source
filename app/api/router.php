@@ -14,6 +14,10 @@
  * Extended into the 600s for specific errors
  */
 
+/*
+ * Complex queries vias XML http://stackoverflow.com/questions/10049677/how-to-model-logical-boolean-expressions-in-xml-efficiently
+ */
+
 $api_status_codes = array(
 	// everything's OK
 	200 => array(
@@ -97,9 +101,17 @@ if ($url_array[1])
 		
 			// make a new controller
 		    $controller = new api_controller($request);
-		    
-		    // activate the controller
-		    $controller->main();
+
+		    if ($resource_array[0] == "documentation")
+		    {
+		    	// get the controller's documentaion
+			    $controller->documentation();
+		    }
+		    else 
+		    {
+			    // activate the controller
+			    $controller->main();
+		    }
 		
 		}
 		else

@@ -83,6 +83,41 @@ class api_controller extends abstract_api_controller
 	
 	public function documentation()
 	{
-		echo "Version 0.1 is the most basic of APIs. The only resouirce available is Question, which has the optional parameter of ID. If no ID is given a random qwuestion is selected. The only questions returned are those which are within the default questions given to non-logged in users.";
+		echo "
+		<h3>Version 0.1</h3>
+		<p>To use the API you simply call a URI which contains the output format, resource you're after, and any parameters.</p>
+
+		<pre>http://rollerderbytestomatic.com/api/0.1/[format]/[resource]/[parameters]</pre>
+		
+		<p>If, for example, you want to get a random question in XML, you would use the following URL:</p>
+		
+		<pre>http://rollerderbytestomatic.com/api/0.1/xml/question/</pre>
+		
+		<p>In another example, if you wanted to get the results in JSONP, you must specify the callback function. To do this, add the parameter \"Callback\". In the following example we also want a specific question, so a second parameter of \"ID\" is added which specifies the question's ID.</p>
+		
+		<pre>http://rollerderbytestomatic.com/api/0.1/jsonp/question/?callback=my_function&ID=704</pre>
+		
+		<p>Available Formats:
+		
+		<ul>
+			<li>XML (Default)</li>
+			<li>NiceXML</li>
+			<li>JSON</li>
+			<li>JSONP</li>
+		</ul>
+		</p>
+		
+		<p>NiceXML is HTML formatted XML, useful for debugging.</p>
+		
+		<p>Parameters you can add:
+		<ul>
+			<li>jsonarg - if you want to pass an argument in your JSONP call</li>
+			<li>callback - the name of your callback function, required if you're requesting JSONP</li>
+			<li>ID - Used when requesting a Question to specify the ID</li>
+		</ul>
+		</p>
+		
+		<p>The only Resource available is Question.</p>
+";
 	}
 }
