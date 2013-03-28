@@ -46,8 +46,10 @@ function __autoload($classname)
 	else
 	{
 		$filename = "objects/". $classname .".obj.php";	
-	}	
-    include_once($filename);
+	}
+
+	include_once($filename);
+	
 }
 
 ?>

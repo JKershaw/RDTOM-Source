@@ -89,7 +89,7 @@ function fatal_handler()
 		$error_string = "\n" . $errstr . "\n";
 		$error_string .= "Line " . $errline . " in file " . $errfile;
 		
-		save_log("fatal", $error_string . $log_error_string);
+		@save_log("fatal", $error_string . $log_error_string);
 		
 		mail("wardrox@gmail.com", "RDTOM Fatal Error", $error_string . $log_error_string);
 		

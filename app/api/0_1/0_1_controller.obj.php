@@ -9,6 +9,10 @@ class api_controller extends abstract_api_controller
 		// load the resource object dynamically given the resource request
 		try 
 		{
+			if (!in_array($this->request['resource'][0], array("coffee", "question")))
+			{
+				throw new exception();
+			}
 			$resource_name = "api_resource_" . $this->request['resource'][0];
 			$resource = new $resource_name($this->request['parameters']);
 		} 
@@ -41,8 +45,13 @@ class api_controller extends abstract_api_controller
 		$this->output();
 	}
 	
-	private function output()
+	public function output($opt_xml = false)
 	{
+		if ($opt_xml)
+		{
+			$this->out_XML = $opt_xml;
+		}
+		
 		if ($this->request['format'] == "nicexml")
 		{
 			// HTML view of XML

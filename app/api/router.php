@@ -130,9 +130,22 @@ if ($url_array[1])
 		$out_XML->addChild("status_code_description", $api_status_codes[$e->getCode()]['description']);
 		$out_XML->addChild("status_message", $e->getMessage());
 		
-		// TODO use globally available output "library" so output format is consistent
-		header('Content-Type: text/xml');
-		echo $out_XML->asXML();
+		// try using the controller's output function
+		try 
+		{
+			if (!$controller)
+			{
+				throw new exception();
+			}
+			$controller->output($out_XML);
+		} 
+		catch (Exception $e) 
+		{
+			// worse case, just output the XML
+			header('Content-Type: text/xml');
+			echo $out_XML->asXML();
+		}
+		
 	}
 }
 else
