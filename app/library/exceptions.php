@@ -49,7 +49,7 @@ function exception_handler($exception)
 		REQUEST: [" . print_r($_REQUEST, true) . "]";
 	
 	// display an error page for the user
-	$error_string .= $exception->getMessage() . "<br />\n";
+	$error_string = $exception->getMessage() . "<br />\n";
 	$error_string .= "Line " . $exception->getLine() . " in file " . $exception->getFile() . " (Trace: " . $exception->getTraceAsString() . ")";
 	
 	// we don't care if it's a no-question-found error
@@ -86,7 +86,7 @@ function fatal_handler()
 			REQUEST: [" . print_r($_REQUEST, true) . "]";
 		
 		// display an error page for the user
-		$error_string .= "\n" . $errstr . "\n";
+		$error_string = "\n" . $errstr . "\n";
 		$error_string .= "Line " . $errline . " in file " . $errfile;
 		
 		save_log("fatal", $error_string . $log_error_string);
@@ -108,24 +108,24 @@ function error_handler($errno, $errstr, $errfile, $errline)
 
     switch ($errno) {
     case E_USER_ERROR:
-        $error_string .= "ERROR [$errno] $errstr<br />\n";
+        $error_string = "ERROR [$errno] $errstr<br />\n";
         $error_string .= "  Fatal error on line $errline in file $errfile";
         $error_string .= ", PHP " . PHP_VERSION . " (" . PHP_OS . ")<br />\n";
         //exit(1);
         break;
 
     case E_USER_WARNING:
-        $error_string .= "WARNING [$errno] $errstr<br />\n";
+        $error_string = "WARNING [$errno] $errstr<br />\n";
         $error_string .= "Line $errline in file $errfile";
         break;
 
     case E_USER_NOTICE:
-        $error_string .= "NOTICE [$errno] $errstr<br />\n";
+        $error_string = "NOTICE [$errno] $errstr<br />\n";
         $error_string .= "Line $errline in file $errfile";
         break;
 
     default:
-        $error_string .= "Unknown error type: [$errno] $errstr<br />\n";
+        $error_string = "Unknown error type: [$errno] $errstr<br />\n";
         $error_string .= "Line $errline in file $errfile";
         break;
     }
@@ -150,7 +150,10 @@ function error_handler($errno, $errstr, $errfile, $errline)
 function echo_error_page($error_string)
 {
 	// clear the current output cache so we don't output half a page then an error
-	@ob_end_clean();
+	if (ob_get_length())
+	{
+		ob_end_clean();
+	}
 	
 	?><!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 	<html>
