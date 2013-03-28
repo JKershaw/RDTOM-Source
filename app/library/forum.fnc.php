@@ -634,9 +634,15 @@ class post
  */
 
 
-function get_latest_threads()
+function get_latest_threads($limit = 20)
 {
 	global $myPDO;
+	
+	if ($limit == 1)
+	{
+		return get_latest_thread();
+	}
+	
 	$statement = $myPDO->prepare("
 		SELECT rdtom_forum_threads.*, thread_id, MAX(rdtom_forum_posts.Timestamp) AS NewestDate
 		FROM rdtom_forum_posts
@@ -644,8 +650,9 @@ function get_latest_threads()
 		ON thread_id = rdtom_forum_threads.ID
 		GROUP BY thread_id
 		ORDER BY `NewestDate` Desc
-		LIMIT 0, 20
+		LIMIT 0, :limit
 	");
+	$statement->bindValue(':limit', (int) $limit, PDO::PARAM_INT);
 	$statement->execute();
 	$results = $statement->fetchAll();
 	
@@ -657,6 +664,25 @@ function get_latest_threads()
 	}
 	
 	return $out;
+}
+
+function get_latest_thread()
+{
+	global $myPDO;
+	$statement = $myPDO->prepare("
+		SELECT rdtom_forum_threads.*, thread_id, MAX(rdtom_forum_posts.Timestamp) AS NewestDate
+		FROM rdtom_forum_posts
+		JOIN rdtom_forum_threads
+		ON thread_id = rdtom_forum_threads.ID
+		GROUP BY thread_id
+		ORDER BY `NewestDate` Desc
+		LIMIT 0, 1
+	");
+	$statement->execute();
+	$result = $statement->fetch();
+
+	return new thread($result);
+
 }
 
 function get_topics()

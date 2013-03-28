@@ -96,7 +96,7 @@
 				<a href="<?php echo get_site_URL(); ?>test/">Generate a Rules Test</a>
 			</p>
 			<p>
-				<span style="font-weight:bold; color:yellow; background-color: #333; padding:0 3px;">NEW!</span> <a href="<?php echo get_site_URL(); ?>forum">Forum:</a> <span id="footer_forum_thread"></span>
+				<a href="<?php echo get_site_URL(); ?>forum">Forum:</a> <span id="footer_forum_thread"></span>
 			</p> 
 			<p>
 				<a href="<?php echo get_site_URL(); ?>about/">About, Disclaimer &amp; Privacy Policy</a>
@@ -108,26 +108,6 @@
 			</p> 
 			 -->	
 		
-		
-			<!--  
-			<div id="fb-root"></div>
-			<script>(function(d, s, id) {
-			  var js, fjs = d.getElementsByTagName(s)[0];
-			  if (d.getElementById(id)) return;
-			  js = d.createElement(s); js.id = id;
-			  js.src = "//connect.facebook.net/en_GB/all.js#xfbml=1&appId=131848900255414";
-			  fjs.parentNode.insertBefore(js, fjs);
-			}(document, 'script', 'facebook-jssdk'));</script>
-				
-			<div class="facebook_wrap_wide">
-				<div class="fb-like" data-href="http://rollerderbytestomatic.com" data-send="false" data-width="500" data-show-faces="true"></div>
-			</div>
-			
-			<div class="facebook_wrap_narrow">
-				<div class="fb-like" data-href="http://rollerderbytestomatic.com/" data-send="false" data-layout="button_count" data-width="100" data-show-faces="false"></div>
-			</div>
-			
-			-->
 			<div class="facebook_wrap_wide">
 				<iframe src="http://www.facebook.com/plugins/like.php?href=http://rollerderbytestomatic.com/"
 				scrolling="no" frameborder="0"
@@ -171,6 +151,27 @@
 			{
 				
 				$.post("ajax.php", { 
+					call: "latest_forum_thread"},
+					function(data) 
+					{
+						// Show the data
+						$("#footer_forum_thread").hide().html(data).fadeIn('slow'); 
+					}				
+				);
+			}
+			
+			ajax_update_forum_thread();
+
+		</script>
+		
+		<?php 
+		/*
+		<script type="text/javascript">
+
+			function ajax_update_forum_thread()
+			{
+				
+				$.post("ajax.php", { 
 					call: "random_forum_thread"},
 					function(data) 
 					{
@@ -196,5 +197,7 @@
 			
 		
 		</script>
+		*/
+		?>
 	</body>
 </html>

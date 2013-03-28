@@ -45,6 +45,9 @@ try
 		case "random_forum_thread":
 			$out = ajax_random_forum_thread();	
 		break;
+		case "latest_forum_thread":
+			$out = ajax_latest_forum_thread();	
+		break;
 	}
 	
 	// did the switch activate? 
@@ -624,6 +627,18 @@ function ajax_save_comment()
 function ajax_random_forum_thread()
 {
 	$thread = get_thread_from_random();
-	return "<a href=\"" . $thread->get_URL() . "\">" . htmlentities(stripslashes($thread->get_Title())) . "</a>";
+	if($thread)
+	{
+		return "<a href=\"" . $thread->get_URL() . "\">" . htmlentities(stripslashes($thread->get_Title())) . "</a>";
+	}
+}
+
+function ajax_latest_forum_thread()
+{
+	$thread = get_latest_thread();
+	if($thread)
+	{
+		return "<a href=\"" . $thread->get_URL() . "\">" . htmlentities(stripslashes($thread->get_Title())) . "</a>";
+	}
 }
 ?>
