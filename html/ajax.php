@@ -113,7 +113,7 @@ try
 }
 catch (Exception $e) 
 {
-	save_log("error_ajax", htmlentities(print_r($_POST)) . " " . $e->getMessage());
+	save_log("error_ajax", htmlentities(print_r($_POST, true)) . " " . $e->getMessage());
 }
 
 function ajax_save_response()
