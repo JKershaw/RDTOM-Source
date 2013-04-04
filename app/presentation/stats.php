@@ -207,9 +207,9 @@ include("header.php");
 			check_frequency["count_responses"] 			= 3;
 			check_frequency["count_minutly_responses"] 	= 5;
 			check_frequency["count_hourly_responses"] 	= 11;
+			check_frequency["count_api"] 				= 13;
 			check_frequency["count_unique_IPs"] 		= 17;
 			
-			check_frequency["count_api"] 				= 5;
 			
 			check_frequency["count_users"] 				= 47;
 			check_frequency["count_daily_responses"] 	= 53;
