@@ -96,7 +96,7 @@
 				<a href="<?php echo get_site_URL(); ?>test/">Generate a Rules Test</a>
 			</p>
 			<p>
-				<a href="<?php echo get_site_URL(); ?>forum">Forum:</a> <span id="footer_forum_thread"></span>
+				<span style="font-weight:bold; color:yellow; background-color: #333; padding:0 3px;">NEW!</span> <a href="<?php echo get_site_URL(); ?>forum">Forum:</a> <span id="footer_forum_thread"></span>
 			</p> 
 			<p>
 				<a href="<?php echo get_site_URL(); ?>about/">About, Disclaimer &amp; Privacy Policy</a>

@@ -21,8 +21,13 @@ class api_resource_question extends api_resource
 		// generic question values
 		$XML_newquestion->addChild('id', $question->get_ID());
 		$XML_newquestion->addChild('text', htmlentities(stripslashes($question->get_Text())));
-		$XML_newquestion->addChild('notes', htmlentities(stripslashes($question->get_Notes())));
 		$XML_newquestion->addChild('wftda_link', htmlentities($question->get_WFTDA_Link()));
+		
+		// notes might be optional
+		if (preg_match('#\S#', htmlentities(stripslashes($question->get_Notes())))) // Checks for non-whitespace character
+			$XML_newquestion->addChild('notes', htmlentities(stripslashes($question->get_Notes())));
+		else
+			$XML_newquestion->addChild('notes');
 		
 		// the sections
 		$XML_sections = $XML_newquestion->addChild('sections');

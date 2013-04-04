@@ -9,7 +9,7 @@ class api_controller extends abstract_api_controller
 		// load the resource object dynamically given the resource request
 		try 
 		{
-			if (!in_array($this->request['resource'][0], array("coffee", "question")))
+			if (!in_array($this->request['resource'][0], array("coffee", "question", "questions")))
 			{
 				throw new exception();
 			}
@@ -52,6 +52,7 @@ class api_controller extends abstract_api_controller
 			$this->out_XML = $opt_xml;
 		}
 		
+		// output in the currect format
 		if ($this->request['format'] == "nicexml")
 		{
 			// HTML view of XML
@@ -60,11 +61,13 @@ class api_controller extends abstract_api_controller
 		elseif ($this->request['format'] == "json")
 		{
 			// JSON
+			header('Content-Type: application/json');
 			echo json_encode($this->out_XML);
 		}
 		elseif ($this->request['format'] == "jsonp")
 		{
 			// JSONP
+			header('Content-Type: application/javascript');
 			$requested_callback = htmlentities($_GET['callback']);
 			$requested_jsonarg = htmlentities($_GET['jsonarg']);
 			
@@ -126,7 +129,7 @@ class api_controller extends abstract_api_controller
 		</ul>
 		</p>
 		
-		<p>The only Resource available is Question.</p>
+		<p>The only Resources available are Question, and Questions. Question will return a random question (or a specific question, if you use the ID parameter). Questions will list all questions given the current defaults (as of 3rd April 2013 this is simply any question tagged as WFTDA6).</p>
 ";
 	}
 }
