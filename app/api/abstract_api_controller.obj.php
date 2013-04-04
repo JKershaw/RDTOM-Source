@@ -18,7 +18,14 @@ abstract class abstract_api_controller
 	{
 		//Output the data, or a passed XML error
 		header('Content-Type: text/xml');
-		echo $this->out_XML->asXML();
+		if ($opt_xml)
+		{
+			echo $opt_xml->asXML();
+		}
+		else
+		{
+			echo $this->out_XML->asXML();
+		}
 	}
 	
 	public function documentation()

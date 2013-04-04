@@ -85,6 +85,20 @@ class api_controller extends abstract_api_controller
 				echo "$requested_callback (" . json_encode($this->out_XML) . ");";
 			}
 		}
+		elseif ($this->request['format'] == "javascript")
+		{
+			// JSONP
+			header('Content-Type: application/javascript');
+			$requested_var = htmlentities($_GET['var']);
+			
+			if (!$requested_var)
+			{
+				throw new exception ("No Javascript variable name specified");
+			}
+
+			echo "var $requested_var = " . json_encode($this->out_XML) . ";";
+			
+		}
 		else
 		{
 			// XML

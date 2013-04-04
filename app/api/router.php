@@ -73,7 +73,28 @@ if ($url_array[1])
 {
 	// save a log of the API request
 	save_log("api", $_SERVER['REQUEST_URI']);
+	
+	// save a cache of the api request
+	$cached_api_calls = cache_get("api_calls");
+	
+	// delete old api calls
+	if ($cached_api_calls)
+	{
+		foreach ($cached_api_calls as $id => $cached_api_call)
+		{
+			
+			if ($cached_api_call['timestamp'] < gmmktime() - 3600)
+			{
+				unset($cached_api_calls[$id]);
+			}
+		}
+	}
+	
+	// save a new api call to the cache
+	$cached_api_calls[] = Array("timestamp" => gmmktime(), "request" => $_SERVER['REQUEST_URI']);
 
+	cache_set("api_calls", $cached_api_calls);
+	
 	// process the request
 	try 
 	{

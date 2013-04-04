@@ -24,6 +24,7 @@ include("header.php");
 			Questions: <span id="count_questions_string">Loading ...</span><span id="count_questions_difference_string"></span><br />
 			Answers: <span id="count_answers_string">Loading ...</span><span id="count_answers_difference_string"></span><br />
 			Accounts: <span id="count_users_string">Loading ...</span><span id="count_users_difference_string"></span><br />
+			
 		</p>
 		
 		<p><strong>Responses:</strong></p>
@@ -34,6 +35,11 @@ include("header.php");
 			Current per-day rate: <span id="count_daily_responses_string">Loading ...</span> <span id="count_daily_responses_difference_string"></span><br />
 			Current per-hour rate: <span id="count_hourly_responses_string">Loading ...</span> <span id="count_hourly_responses_difference_string"></span><br />
 			Current per-minute rate: <span id="count_minutly_responses_string">Loading ...</span> <span id="count_minutly_responses_difference_string"></span><br />
+		</p>
+		
+		<p><strong>API:</strong></p>
+		<p>
+			Hourly API Requests: <span id="count_api_string">Loading ...</span><span id="count_api_difference_string"></span><br />
 		</p>
 	</div>
 	
@@ -202,6 +208,8 @@ include("header.php");
 			check_frequency["count_minutly_responses"] 	= 5;
 			check_frequency["count_hourly_responses"] 	= 11;
 			check_frequency["count_unique_IPs"] 		= 17;
+			
+			check_frequency["count_api"] 				= 5;
 			
 			check_frequency["count_users"] 				= 47;
 			check_frequency["count_daily_responses"] 	= 53;

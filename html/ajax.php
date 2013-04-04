@@ -21,6 +21,9 @@ try
 		case "count_responses":
 			$out = ajax_count_responses();	
 		break;	
+		case "count_api":
+			$out = ajax_count_api();	
+		break;	
 		case "count_daily_responses":
 			$out = ajax_count_daily_responses();	
 		break;	
@@ -268,6 +271,19 @@ function ajax_count_responses()
 {
 	global $mydb;
 	return $mydb->get_response_count();
+}
+
+function ajax_count_api()
+{
+	$api_calls = cache_get("api_calls");
+	if ($api_calls)
+	{
+		return count($api_calls);
+	}
+	else
+	{
+		return 0;
+	}
 }
 
 function ajax_count_daily_responses()
