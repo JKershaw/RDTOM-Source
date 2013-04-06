@@ -107,9 +107,12 @@ function last_10000_sections()
 	$section_array = get_sections_array();
 	$recent_responses = $mydb->get_responses(10000);
 	
-	$data_array = process_sections_responses_into_data($recent_responses, $section_array);
-		
-	cache_set("last_10000_sections", $data_array);
+	// might not get these due to an sql error
+	if ($section_array && $recent_responses)
+	{
+		$data_array = process_sections_responses_into_data($recent_responses, $section_array);
+		cache_set("last_10000_sections", $data_array);
+	}
 }
 
 function delete_old_usertokens()

@@ -86,6 +86,7 @@ function process_sections_responses_into_data($recent_responses, $section_array)
 		$percentage = round(($section_count['correct'] * 100) / ($section_count['correct'] + $section_count['wrong']));
 		$data_array[$id] = $percentage;
 	}
+
 	
 	return $data_array;
 }
