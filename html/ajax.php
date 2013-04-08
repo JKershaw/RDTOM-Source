@@ -15,8 +15,10 @@ try
 	// create the database
 	set_up_database();
 	
+	// requests which don't require a user
+	
 	// those ajax requests which don't need session or user info
-	switch ($_POST['call']) 
+	switch ($_REQUEST['call']) 
 	{
 		case "count_responses":
 			$out = ajax_count_responses();	
@@ -69,7 +71,7 @@ try
 	//set_up_url_array();
 	
 	// process and return the ajax request
-	switch ($_POST['call']) 
+	switch ($_REQUEST['call']) 
 	{
 		case "save_response":
 			$out = ajax_save_response();	
@@ -109,6 +111,9 @@ try
 		break;
 		case "set_admin_relationship":
 			$out = ajax_get_admin_set_relationship();	
+		break;
+		case "stats_user_progress":
+			$out = ajax_stats_user_progress();	
 		break;
 	}
 	
@@ -656,5 +661,73 @@ function ajax_latest_forum_thread()
 	{
 		return "<a href=\"" . $thread->get_URL() . "\">" . htmlentities(stripslashes($thread->get_Title())) . "</a>";
 	}
+}
+
+function ajax_stats_user_progress()
+{
+	global $responses_needed_for_section_breakdown;
+	
+	if (is_admin() && $_REQUEST['User_ID'])
+	{
+		global $mydb;
+		$user_responses = $mydb->get_responses_from_User_ID($_REQUEST['User_ID']);
+		$user_ID = (int)$_REQUEST['User_ID'];
+	}
+	else
+	{
+		$user_responses = return_user_responses();
+	}
+	
+	if (!$user_responses || (count($user_responses) < $responses_needed_for_section_breakdown))
+	{
+	return "
+{
+  \"cols\": [
+         {\"id\":\"\",\"label\":\"point\",\"pattern\":\"\",\"type\":\"number\"},
+         {\"id\":\"\",\"label\":\"percentage\",\"pattern\":\"\",\"type\":\"number\"}
+        ],
+  \"rows\": [
+        ]
+}	";
+	}
+	
+	// Generate data of progress, a 10 point floating average
+	$raw_data =  Array();
+	foreach ($user_responses as $response)
+	{
+		if ($response->is_correct())
+		{
+			$raw_data[] = 100;
+		}
+		else
+		{
+			$raw_data[] = 0;
+		}
+	}
+	
+	$averaged_data = get_average_of_array($raw_data, 25);
+	$averaged_data = array_slice($averaged_data, 25);
+	array_splice($averaged_data, -25);
+	
+	$averaged_data = get_average_of_array($averaged_data, 3);
+	$averaged_data = array_slice($averaged_data, 3);
+	array_splice($averaged_data, -3);
+	
+	foreach ($averaged_data as $id => $data_point)
+	{
+		$averaged_data_string[] = "\n{\"c\":[{\"v\":" . $id . ",\"f\":null},{\"v\":" . $data_point . ",\"f\":null}]}";
+	}
+	
+	$data_string = implode(", ", $averaged_data_string);
+	
+	return "
+{
+  \"cols\": [
+         {\"id\":\"\",\"label\":\"point\",\"pattern\":\"\",\"type\":\"number\"},
+         {\"id\":\"\",\"label\":\"percentage\",\"pattern\":\"\",\"type\":\"number\"}
+        ],
+  \"rows\": [" . $data_string . "
+        ]
+}	";
 }
 ?>

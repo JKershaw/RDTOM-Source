@@ -105,7 +105,6 @@ if (is_logged_in())
 	
 	<div class="layout_box" id="layout_box_stats">
 	
-		<p>Your stats may take a few minutes to update.</p>
 		<?php echo return_stats_user_totals() ?>
 		
 		<?php echo return_stats_user_section_totals() ?>

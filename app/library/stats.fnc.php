@@ -148,11 +148,13 @@ function return_chart_section_percentages($data_array, $data_array2 = false)
 	
 	if ($data_array2)
 	{
-		$data_string_text = "['Section', 'Percentage Correct', 'Average'],";
+		$data_string_text = "['Section', 'You', 'Average'],";
+		$legend = "right";
 	}
 	else
 	{
 		$data_string_text = "['Section', 'Percentage Correct'],";
+		$legend = "none";
 	}
 	
 	$drawChart_string = '
@@ -166,8 +168,8 @@ function return_chart_section_percentages($data_array, $data_array2 = false)
           focusTarget: \'category\',
           titlePosition: \'none\',
           hAxis: {titlePosition: \'none\',},
-          chartArea: {left:30, width: \'90%\', height: \'80%\', top: 10},
-          legend: {position: \'none\'},
+          chartArea: {left:30, width: \'80%\', height: \'80%\', top: 10},
+          legend: {position: \'' . $legends . '\'},
           vAxis: {minValue: 0, maxValue: 100, gridlines: {count: 11}}
         };
 
@@ -189,19 +191,56 @@ function return_stats_user_progress($user = false)
 	
 	if ($user)
 	{
-		$user_responses = $mydb->get_responses_from_User_ID($user->get_ID());
 		$user_ID = $user->get_ID();
+		$user_call_string = ", User_ID: " . $user_ID;
+	}
+	
+	$drawChart_string = '
+
+	$("#chart_progress' . $user_ID . '").html("Loading ... ");
+	
+	var jsonData = $.ajax({
+            url: "ajax.php",
+            type: "POST",
+            data: {call: "stats_user_progress" ' . $user_call_string . '},
+            dataType:"json",
+            async: false
+            }).responseText;
+    
+	if (JSON.parse(jsonData).rows.length > 0)
+	{
+		var data' . $user_ID . ' = new google.visualization.DataTable(jsonData);
+		
+	    var options' . $user_ID . ' = {
+	    	  vAxis: {minValue: 0, maxValue: 100, gridlines: {count: 11}},
+	          titlePosition: \'none\',
+	          hAxis: {titlePosition: \'none\', textPosition: \'none\'},
+          	  chartArea: {left:30, width: \'80%\', height: \'90%\', top: 10},
+	          legend: {position: \'none\'},
+	          colors: [\'#0000FF\'],
+	          curveType: \'function\',
+	          enableInteractivity: false
+	    };
+	
+	    var chart' . $user_ID . ' = new google.visualization.LineChart(document.getElementById(\'chart_progress' . $user_ID . '\'));
+	    chart' . $user_ID . '.draw(data' . $user_ID . ', options' . $user_ID . ');	
 	}
 	else
 	{
-		$user_responses = return_user_responses();
+		$("#chart_progress' . $user_ID . '").html("You need to answer more questions to generate this graph.");
 	}
 	
-	if (!$user_responses || (count($user_responses) < $responses_needed_for_section_breakdown))
-	{
-		return "<!-- not enough questions answered to get progress report -->";
-	}
+
+    
+    ';
+
+	add_google_chart_drawChart($drawChart_string);
+   	
+	$out .= '<p>Your average success rate:</p><div id="chart_progress' . $user_ID . '" style="width: 100%; height: 200px;"></div>';
 	
+	
+	/*
+	 * Old version - bar charts
 	// split data into groups of weeks [YEAR.WEEKNUMBER]
 	
 	foreach ($user_responses as $response)
@@ -253,24 +292,6 @@ function return_stats_user_progress($user = false)
 		
 	}
 	
-	// TEST DATA
-	/*
-	$data_array = array();
-	
-	for($week_key = $lowest_week_value; $week_key <= $current_week_value; $week_key++)
-	{
-		$correct = rand(-2, 100);
-		$wrong = rand(-2, 40);
-		$perc = number_format(($correct / ($correct+$wrong)) * 100, 2);
-		
-		$data[$week_key]["total"] = $correct + $wrong;
-		$data[$week_key]["perc"] = $perc;
-		$data[$week_key]["correct"] = $correct;
-		$data[$week_key]["wrong"] = $wrong;
-	}
-	*/
-	// End of test data
-	
 	// sort the data
 	ksort($data);
 	
@@ -291,8 +312,6 @@ function return_stats_user_progress($user = false)
 			//$week_string = ($current_week_value - $week_key) . " weeks ago";
 		}
 		
-		//$data_array[] = "
-		//['" . $week_string . "', " . $data[$week_key]["wrong"] . ", " . $data[$week_key]["correct"] . ", " . $data[$week_key]["perc"] . "]";
 		$data_array[] = "
 		['" . $week_string . "', " . $data[$week_key]["wrong"] . ", " . $data[$week_key]["correct"] . "]";
 	}
@@ -325,6 +344,7 @@ function return_stats_user_progress($user = false)
    	
 	$out .= '<p>Weekly progress:</p><div id="chart_progress' . $user_ID . '" style="width: 100%; height: 300px;"></div>';
 	
+	*/
 	
 	return $out;
 }
@@ -487,7 +507,7 @@ function return_user_responses()
 			$user_responses = $mydb->get_responses_from_User_ID($user->get_ID());
 			$fetched_user_responses = true;
 			$cached_user_responses = $user_responses;
-			cache_set("user_responses_" + $user->get_ID(), $user_responses, 600);
+			cache_set("user_responses_" + $user->get_ID(), $user_responses, 6000);
 		}
 		
 		return $cached_user_responses;

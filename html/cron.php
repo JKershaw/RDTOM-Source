@@ -23,7 +23,7 @@ $cron_tasks = Array (
 					"seconds" => 300),
 				Array (
 					"function" => "last_10000_sections",
-					"seconds" => 7200),
+					"seconds" => 3600),
 				Array (
 					"function" => "rebuild_sitemap",
 					"seconds" => 86400),

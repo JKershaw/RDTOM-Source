@@ -102,11 +102,11 @@ class database_derbytest extends database
 		{
 			settype($since_timestamp, "integer");
 			settype($until_timestamp, "integer");
-			$query = "SELECT * FROM rdtom_responses WHERE User_ID = '" . $User_ID . "' AND Timestamp > '$since_timestamp' AND Timestamp <= '$until_timestamp'";
+			$query = "SELECT * FROM rdtom_responses WHERE User_ID = '" . $User_ID . "' AND Timestamp > '$since_timestamp' AND Timestamp <= '$until_timestamp' ORDER BY Timestamp Asc";
 		}
 		else
 		{
-			$query = "SELECT * FROM rdtom_responses WHERE User_ID = '" . $User_ID . "'";
+			$query = "SELECT * FROM rdtom_responses WHERE User_ID = '" . $User_ID . "' ORDER BY Timestamp Asc";
 		}
 		
 		$results = $this->get_results($query);

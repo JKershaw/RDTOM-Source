@@ -798,7 +798,7 @@ include("header.php");
 		/*
 		$all_users = $mydb->get_users();
 		
-		for ($i = 0; $i < 1000; $i++)
+		for ($i = 0; $i < 10; $i++)
 		{
 			$tmp_user = array_pop($all_users);
 			echo "<br />" . $tmp_user->get_Name() . "<br />" .  return_stats_user_progress($tmp_user);
