@@ -1,5 +1,5 @@
 <?php
-function cache_set($key, $string, $timeout = 7200)
+function cache_set($key, $string, $timeout = 86400)
 {
 	
 	// generate the data to save
