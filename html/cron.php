@@ -29,7 +29,7 @@ $cron_tasks = Array (
 					"seconds" => 86400),
 				Array (
 					"function" => "delete_old_cache_files",
-					"seconds" => 7200),
+					"seconds" => 15000),
 				Array (
 					"function" => "stats_count_unique_IPs",
 					"seconds" => 3600),
