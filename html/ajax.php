@@ -707,7 +707,7 @@ function ajax_stats_user_progress()
 	
 	$averaged_data = get_average_of_array($raw_data, 25);
 	$averaged_data = array_slice($averaged_data, 25);
-	array_splice($averaged_data, -25);
+	array_splice($averaged_data, -19);
 	
 	$averaged_data = get_average_of_array($averaged_data, 3);
 	$averaged_data = array_slice($averaged_data, 3);
