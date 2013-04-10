@@ -87,7 +87,6 @@ function process_sections_responses_into_data($recent_responses, $section_array)
 		$data_array[$id] = $percentage;
 	}
 
-	
 	return $data_array;
 }
 
@@ -118,19 +117,28 @@ function return_stats_user_section_totals()
 		return "<p>Once you have answered more than " . $responses_needed_for_section_breakdown . " questions, a breakdown of which sections you're good at and which need work will be shown here.</p>";
 	}
 	
-	// get all the section data
-	$user_questions_sections = return_user_questions_sections();
-	
-	$data_array = process_sections_responses_into_data($user_responses, $user_questions_sections);
+	try 
+	{
+		// get all the section data
+		$user_questions_sections = return_user_questions_sections();
 		
-	$data_array2 = cache_get("last_10000_sections");
-	
-	return return_chart_section_percentages($data_array, $data_array2);
+		$data_array = process_sections_responses_into_data($user_responses, $user_questions_sections);
+			
+		$data_array2 = cache_get("last_10000_sections");
+		
+		return return_chart_section_percentages($data_array, $data_array2);
+		
+	} 
+	catch (Exception $e) 
+	{
+		return "<p>Sorry, this chart is currently unavailable. Try again in a few minutes.</p>";
+	}
 }
 
 
 function return_chart_section_percentages($data_array, $data_array2 = false)
 {
+	// TODO make Ajax load
 	
 	foreach ($data_array as $id => $percentage)
 	{
