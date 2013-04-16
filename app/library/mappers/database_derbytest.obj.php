@@ -74,8 +74,7 @@ class database_derbytest extends database
 			settype($optional_user_ID, "integer");
 			$clause = " WHERE User_ID = '" . $optional_user_ID . "'";
 		}
-		
-		$query = "SELECT COUNT(*) FROM rdtom_responses" . $clause;
+		$query = "SELECT(SELECT COUNT(*) FROM rdtom_responses" . $clause . ") + (SELECT COUNT(*) FROM rdtom_responses_archive" . $clause . ") as count";
 		$result = $this->get_var($query);
 		return $result;
 	}
@@ -83,12 +82,12 @@ class database_derbytest extends database
 	public function get_response_count_from_Question_ID($req_ID)
 	{
 		settype($req_ID, "integer");
-		$query = "SELECT COUNT(*) FROM rdtom_responses WHERE Question_ID = " . $req_ID;
+		$query = "SELECT(SELECT COUNT(*) FROM rdtom_responses WHERE Question_ID = " . $req_ID . ") + (SELECT COUNT(*) FROM rdtom_responses_archive WHERE Question_ID = " . $req_ID . ") as count";
 		$result = $this->get_var($query);
 		return $result;
 	}
 	
-	public function get_responses_from_User_ID($User_ID, $since_timestamp = false, $until_timestamp = false)
+	public function get_responses_from_User_ID($User_ID, $include_archive = false)
 	{
 		settype($User_ID, "integer");
 	
@@ -97,12 +96,9 @@ class database_derbytest extends database
 			throw new exception ("No User ID given to get_responses_from_User_ID");
 		}
 		
-
-		if ($since_timestamp)
+		if ($include_archive)
 		{
-			settype($since_timestamp, "integer");
-			settype($until_timestamp, "integer");
-			$query = "SELECT * FROM rdtom_responses WHERE User_ID = '" . $User_ID . "' AND Timestamp > '$since_timestamp' AND Timestamp <= '$until_timestamp' ORDER BY Timestamp Asc";
+			$query = "SELECT Tbl1.* FROM ((SELECT * FROM rdtom_responses WHERE User_ID = '" . $User_ID . "') UNION ALL (SELECT * FROM rdtom_responses_archive WHERE User_ID = '" . $User_ID . "')) Tbl1   ORDER BY Tbl1.Timestamp Asc";
 		}
 		else
 		{
@@ -140,6 +136,17 @@ class database_derbytest extends database
 		$query = "
 		UPDATE 
 			rdtom_responses 
+		SET 
+			User_ID = '0'
+		WHERE 
+			User_ID = '" . $User_ID . "'
+			";
+		
+		$this->run_query($query);
+		
+		$query = "
+		UPDATE 
+			rdtom_responses_archive 
 		SET 
 			User_ID = '0'
 		WHERE 
@@ -249,7 +256,7 @@ class database_derbytest extends database
 	
 	public function get_response_distinct_ip_count()
 	{
-		$query = "SELECT COUNT(DISTINCT IP) FROM rdtom_responses";
+		$query = "SELECT(SELECT COUNT(DISTINCT IP) FROM rdtom_responses) + (SELECT COUNT(DISTINCT IP) FROM rdtom_responses) as count";
 		$result = $this->get_var($query);
 		return $result;
 	}
@@ -327,20 +334,6 @@ class database_derbytest extends database
 		$time_now = gmmktime();
 		$time_ago = $time_now - (60*60*$hour_count);
 		$time_ago = floor($time_ago/3600) * 3600;
-		
-		/*
-		$query = "
-			SELECT 
-			count(*) AS responses,
-			FROM_UNIXTIME(Timestamp, '%Y %j %H') AS hour 
-			FROM rdtom_responses 
-			WHERE Timestamp > '$time_ago'  
-			GROUP BY hour 
-			LIMIT 0 , 30";
-		
-		
-		$raw_data = $this->get_results($query);
-		*/
 		
 		// get the data from the database
 		$query = "

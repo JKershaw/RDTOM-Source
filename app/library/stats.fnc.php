@@ -537,7 +537,7 @@ function return_user_responses()
 		$cached_user_responses = cache_get("user_responses_" + $user->get_ID());
 		if(!$cached_user_responses)
 		{
-			$user_responses = $mydb->get_responses_from_User_ID($user->get_ID());
+			$user_responses = $mydb->get_responses_from_User_ID($user->get_ID(), true);
 			$fetched_user_responses = true;
 			$cached_user_responses = $user_responses;
 			cache_set("user_responses_" + $user->get_ID(), $user_responses, 6000);
