@@ -74,8 +74,28 @@ function get_answer_response_perc($req_QuestionID)
 		{
 			$out[$result['Answer_ID']] = $result['count'];
 		}
-		return $out;
+		
 	}
+	
+	// add the archive responses
+	$statement = $myPDO->prepare("
+		SELECT Answer_ID, COUNT( * ) AS count
+		FROM  `rdtom_responses_archive` 
+		JOIN rdtom_answers ON rdtom_answers.ID = rdtom_responses_archive.Answer_ID
+		WHERE rdtom_responses_archive.Question_ID = :QuestionID
+		GROUP BY  `Answer_ID` ");
+	$statement->execute(array(':QuestionID' => $req_QuestionID));
+	$results = $statement->fetchAll();	
+	
+	if ($results)
+	{
+		foreach ($results as $result)
+		{
+			$out[$result['Answer_ID']] += $result['count'];
+		}
+	}
+	
+	return $out;
 }
 
 function add_answer($req_Question_ID, $req_Text, $req_Correct)
