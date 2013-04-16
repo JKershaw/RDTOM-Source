@@ -38,7 +38,10 @@ $cron_tasks = Array (
 					"seconds" => 86400),
 				Array (
 					"function" => "archive_responses",
-					"seconds" => 600)
+					"seconds" => 3600),
+				Array (
+					"function" => "unarchive_responses",
+					"seconds" => 6000)
 			);
 
 
@@ -83,6 +86,8 @@ try
 	
 	// save the data
 	file_put_contents('../filecache/cron_tasks_data', serialize($cron_tasks_data));
+	
+	echo "cron_tasks_data saved <br />";
 }
 catch (Exception $e) 
 {
@@ -265,8 +270,7 @@ function archive_responses()
 	// how old do they have to be to archive?
 	$time_ago = gmmktime() - (5184000);
 	
-	$query = "SELECT * FROM rdtom_responses WHERE Timestamp < '$time_ago' ORDER BY ID ASC LIMIT 10000";
-	//echo $query;
+	$query = "SELECT * FROM rdtom_responses WHERE Timestamp < '$time_ago' ORDER BY ID ASC LIMIT 1000";
 	$results = $mydb->get_results($query);
 	
 	if ($results)
@@ -314,7 +318,73 @@ function archive_responses()
 	
 	if ($archive_count)
 	{
-		echo "" . $totaltime . " seconds for " . $archive_count . " items. " . ($totaltime / $archive_count) . " per item.";
+		echo "" . $totaltime . " seconds for " . $archive_count . " items. " . ($totaltime / $archive_count) . " per item. <br />";
+	} 
+}
+
+function unarchive_responses()
+{
+	global $mydb;
+	// Insert this block of code at the very top of your page: 
+	
+	$time = microtime(); 
+	$time = explode(" ", $time); 
+	$time = $time[1] + $time[0]; 
+	$start = $time; 
+	
+	// how old do they have to be to archive?
+	$time_ago = gmmktime() - (5184000);
+	
+	$query = "SELECT * FROM rdtom_responses_archive WHERE Timestamp > '$time_ago' ORDER BY ID ASC LIMIT 1000";
+
+	$results = $mydb->get_results($query);
+	
+	if ($results)
+	{
+		foreach ($results as $result_array)
+		{
+			// once clean, add it to the database
+			$query = "	
+				REPLACE INTO rdtom_responses (
+					ID, 
+					Question_ID, 
+					Answer_ID, 
+					Timestamp, 
+					Correct, 
+					IP,
+					User_ID)
+				VALUES ('" . $result_array['ID'] . "',
+					'" . $result_array['Question_ID'] . "', 
+					'" . $result_array['Answer_ID'] . "', 
+					'" . $result_array['Timestamp'] . "', 
+					'" . $result_array['Correct'] . "', 
+					'" . $mydb->mysql_res($result_array['IP']) . "',
+					'" . $result_array['User_ID'] . "')";
+			
+			$mydb->run_query($query);	
+			
+			$query = "DELETE FROM rdtom_responses_archive WHERE ID = " . $result_array['ID'];
+			$mydb->run_query($query);
+			$archive_count++;
+		}
+	}
+	else
+	{
+		echo "Nothing needs archiving.<br />";
+		//die;
+	}
+	
+	// Place this part at the very end of your page 
+	
+	$time = microtime(); 
+	$time = explode(" ", $time); 
+	$time = $time[1] + $time[0]; 
+	$finish = $time; 
+	$totaltime = ($finish - $start); 
+	
+	if ($archive_count)
+	{
+		echo "" . $totaltime . " seconds for " . $archive_count . " items. " . ($totaltime / $archive_count) . " per item. <br />";
 	} 
 }
 ?>

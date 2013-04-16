@@ -218,6 +218,10 @@ function echo_error_page($error_string)
 	<?php 
 	}
 	?>
+		<p style="text-align: center">
+			<iframe src="//www.facebook.com/plugins/likebox.php?href=http%3A%2F%2Fwww.facebook.com%2FRollerDerbyTestOMatic&amp;width=400&amp;height=558&amp;show_faces=true&amp;colorscheme=light&amp;stream=true&amp;border_color&amp;header=false&amp;appId=131848900255414" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:400px; height:558px;" allowTransparency="true"></iframe>
+		</p>
+		
 		</body>
 	</html>
 	<?php 
