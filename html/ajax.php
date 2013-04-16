@@ -115,6 +115,9 @@ try
 		case "stats_user_progress":
 			$out = ajax_stats_user_progress();	
 		break;
+		case "stats_user_section_totals":
+			$out = ajax_stats_user_section_totals();	
+		break;
 	}
 	
 	echo $out;
@@ -729,5 +732,40 @@ function ajax_stats_user_progress()
   \"rows\": [" . $data_string . "
         ]
 }	";
+}
+
+function ajax_stats_user_section_totals()
+{
+	$user_responses = return_user_responses();
+	$user_questions_sections = return_user_questions_sections();
+	
+	$data_array = process_sections_responses_into_data($user_responses, $user_questions_sections);
+		
+	$average_responses = cache_get("last_10000_sections");
+	
+	if ($data_array)
+	{
+		foreach ($data_array as $id => $percentage)
+		{
+			
+			$data_string_array[] = "\n{\"c\":[{\"v\":\"Section " . $id . "\",\"f\":null},{\"v\":" . $percentage . ",\"f\":null},{\"v\":" . $average_responses[$id] . ",\"f\":null}]}";
+			
+		}
+		$data_string = implode(", ", $data_string_array);
+	}
+	
+	
+	
+	return "
+{
+  \"cols\": [
+         {\"id\":\"\",\"label\":\"Section\",\"pattern\":\"\",\"type\":\"string\"},
+         {\"id\":\"\",\"label\":\"You\",\"pattern\":\"\",\"type\":\"number\"},
+         {\"id\":\"\",\"label\":\"Average\",\"pattern\":\"\",\"type\":\"number\"}
+        ],
+  \"rows\": [" . $data_string . "
+        ]
+}	";
+	
 }
 ?>

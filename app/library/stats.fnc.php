@@ -58,6 +58,7 @@ function process_sections_responses_into_data($recent_responses, $section_array)
 {
 	// create the data to chart
 	// for each of the responses
+
 	foreach($recent_responses as $response)
 	{
 		$section_number = intval($section_array[$response->get_Question_ID()][0]);
@@ -108,37 +109,62 @@ function return_chart_section_percentages_all()
 
 function return_stats_user_section_totals()
 {
-	global $responses_needed_for_section_breakdown;
+	global $user;
 	
-	$user_responses = return_user_responses();
-	
-	if (!$user_responses || (count($user_responses) < $responses_needed_for_section_breakdown))
+	if (!return_user_responses())
 	{
-		return "<p>Once you have answered more than " . $responses_needed_for_section_breakdown . " questions, a breakdown of which sections you're good at and which need work will be shown here.</p>";
+		return;
 	}
 	
-	try 
+	if ($user)
 	{
-		// get all the section data
-		$user_questions_sections = return_user_questions_sections();
-		
-		$data_array = process_sections_responses_into_data($user_responses, $user_questions_sections);
-			
-		$data_array2 = cache_get("last_10000_sections");
-		
-		return return_chart_section_percentages($data_array, $data_array2);
-		
-	} 
-	catch (Exception $e) 
-	{
-		return "<p>Sorry, this chart is currently unavailable. Try again in a few minutes.</p>";
+		$user_call_string = ", User_ID: " . $user->get_ID();
 	}
+	
+	$drawChart_string = '
+
+	var jsonData_user_section_totals = $.ajax({
+            url: "ajax.php",
+            type: "POST",
+            data: {call: "stats_user_section_totals" ' . $user_call_string . '},
+            dataType:"json",
+            async: false
+            }).responseText;
+    
+	if (JSON.parse(jsonData_user_section_totals).rows.length > 0)
+	{
+		data_user_section_totals = new google.visualization.DataTable(jsonData_user_section_totals);
+	    
+        options_user_section_totals = {
+          colors: [\'#0000FF\', \'#BBBBFF\'],
+          focusTarget: \'category\',
+          titlePosition: \'none\',
+          hAxis: {titlePosition: \'none\',},
+          chartArea: {left:30, width: \'80%\', height: \'80%\', top: 10},
+          legend: {position: \'' . $legends . '\'},
+          vAxis: {minValue: 0, maxValue: 100, gridlines: {count: 11}}
+        };
+	
+	    var chart_user_section_totals = new google.visualization.ColumnChart(document.getElementById(\'chart_section_breakdown\'));
+	    chart_user_section_totals.draw(data_user_section_totals, options_user_section_totals);	
+	}
+	else
+	{
+		$("#chart_section_breakdown").html("You need to answer more questions to generate this graph.");
+	}
+    ';
+
+	add_google_chart_drawChart($drawChart_string);
+   	
+	$out .= '<p>Section breakdown:</p><div id="chart_section_breakdown" style="width: 100%; height: 400px;">Loading ...</div>';
+	
+	return $out;
+	
 }
 
 
 function return_chart_section_percentages($data_array, $data_array2 = false)
 {
-	// TODO make Ajax load
 	
 	foreach ($data_array as $id => $percentage)
 	{
@@ -187,7 +213,7 @@ function return_chart_section_percentages($data_array, $data_array2 = false)
    	add_google_chart_drawChart($drawChart_string);
    	
 	
-	$out .= '<p>Section breakdown:</p><div id="chart_section_breakdown" style="width: 100%; height: 400px;"></div>';
+	$out .= '<p>Section breakdown:</p><div id="chart_section_breakdown" style="width: 100%; height: 400px;">Loading ...</div>';
 	
 	return $out;
 }
@@ -195,19 +221,21 @@ function return_chart_section_percentages($data_array, $data_array2 = false)
 
 function return_stats_user_progress($user = false)
 {
-	global $mydb, $responses_needed_for_section_breakdown;
+	$user_responses = return_user_responses();
+	if (!$user_responses)
+	{
+		return;
+	}
 	
 	if ($user)
 	{
-		$user_ID = $user->get_ID();
-		$user_call_string = ", User_ID: " . $user_ID;
+		$user_call_string = ", User_ID: " . $user->get_ID();
 	}
 	
 	$drawChart_string = '
 
-	$("#chart_progress' . $user_ID . '").html("Loading ... ");
 	
-	var jsonData = $.ajax({
+	var jsonData_user_progress = $.ajax({
             url: "ajax.php",
             type: "POST",
             data: {call: "stats_user_progress" ' . $user_call_string . '},
@@ -215,11 +243,11 @@ function return_stats_user_progress($user = false)
             async: false
             }).responseText;
     
-	if (JSON.parse(jsonData).rows.length > 0)
+	if (JSON.parse(jsonData_user_progress).rows.length > 0)
 	{
-		var data' . $user_ID . ' = new google.visualization.DataTable(jsonData);
+		data_stats_user_progress = new google.visualization.DataTable(jsonData_user_progress);
 		
-	    var options' . $user_ID . ' = {
+	    options_stats_user_progress = {
 	    	  vAxis: {minValue: 0, maxValue: 100, gridlines: {count: 11}},
 	          titlePosition: \'none\',
 	          hAxis: {titlePosition: \'none\', textPosition: \'none\'},
@@ -230,21 +258,18 @@ function return_stats_user_progress($user = false)
 	          enableInteractivity: false
 	    };
 	
-	    var chart' . $user_ID . ' = new google.visualization.LineChart(document.getElementById(\'chart_progress' . $user_ID . '\'));
-	    chart' . $user_ID . '.draw(data' . $user_ID . ', options' . $user_ID . ');	
+	    var chart_stats_user_progress = new google.visualization.LineChart(document.getElementById(\'chart_progress\'));
+	    chart_stats_user_progress.draw(data_stats_user_progress, options_stats_user_progress);	
 	}
 	else
 	{
-		$("#chart_progress' . $user_ID . '").html("You need to answer more questions to generate this graph.");
+		$("#chart_progress").html("You need to answer more questions to generate this graph.");
 	}
-	
-
-    
     ';
 
 	add_google_chart_drawChart($drawChart_string);
    	
-	$out .= '<p>Your average success rate:</p><div id="chart_progress' . $user_ID . '" style="width: 100%; height: 200px;"></div>';
+	$out .= '<p>Your average success rate:</p><div id="chart_progress' . $user_ID . '" style="width: 100%; height: 200px;">Loading ...</div>';
 	
 	
 	/*

@@ -190,7 +190,22 @@ if (is_logged_in())
 	    {
 	    	$('#layout_box_profile').hide();
 	    	$('#layout_box_stats').fadeIn();
-	    	drawChart();
+
+	    	if (typeof(google) != "undefined")
+	    	{
+	    		var chart_user_section_totals = new google.visualization.ColumnChart(document.getElementById('chart_section_breakdown'));
+	    		if (typeof(data_user_section_totals) != "undefined")
+	    		{
+	    			chart_user_section_totals.draw(data_user_section_totals, options_user_section_totals);	
+	    		}
+	    		
+	    	    var chart_stats_user_progress = new google.visualization.LineChart(document.getElementById('chart_progress'));
+	    	    if (typeof(data_stats_user_progress) != "undefined")
+	    		{
+	    	    	chart_stats_user_progress.draw(data_stats_user_progress, options_stats_user_progress);	
+	    		}
+	    	}
+	    	
 	    	window.location.hash='#stats';
 	    }
 	
