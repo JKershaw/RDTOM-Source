@@ -66,12 +66,21 @@ try
 		echo "cron_tasks_data not found <br />";
 	}
 	
+	$count = 0;
 	// for each cron job, check if it needs to be fired.
 	foreach ($cron_tasks as $cron_task)
 	{
 		// check with the $cron_tasks_data to see when this function was last fired
-		if (($cron_tasks_data[$cron_task['function']] < (gmmktime() -  $cron_task['seconds'])) || ($_GET['force'] == $cron_task['function']) || ($_GET['force'] == "all"))
+		if (($cron_tasks_data[$cron_task['function']] < (gmmktime() -  $cron_task['seconds'])) || ($_GET['force']))
 		{
+			if ($_GET['force'] && ($_GET['force'] != $cron_task['function']))
+			{
+				//echo "Force: " . $_GET['force'] . "!=" . $cron_task['function'] . "<br />";
+				continue;
+			}
+			echo "Cron started: " . $cron_task['function'] . "<br />";
+			
+			$count++;
 			
 			$cron_task['function']();
 			$cron_tasks_data[$cron_task['function']] = gmmktime();
@@ -80,7 +89,10 @@ try
 			echo "Cron completed: " . $cron_task['function'] . "<br />";
 			
 			// only execute one cron job per cycle to keep server load light
-			// break;
+			if ($count > 1)
+			{
+				break;
+			}
 		}
 	}
 	
@@ -335,7 +347,7 @@ function unarchive_responses()
 	// how old do they have to be to archive?
 	$time_ago = gmmktime() - (5184000);
 	
-	$query = "SELECT * FROM rdtom_responses_archive WHERE Timestamp > '$time_ago' ORDER BY ID ASC LIMIT 1000";
+	$query = "SELECT * FROM rdtom_responses_archive WHERE Timestamp > '$time_ago' LIMIT 10";
 
 	$results = $mydb->get_results($query);
 	

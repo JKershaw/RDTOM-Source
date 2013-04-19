@@ -3,6 +3,15 @@ class api_resource_questions extends api_resource
 {
 	protected function build_XML($parameters)
 	{
+		// is there a cached version?
+		$cache_name = "questions_cache_" . md5(serialize($parameters));
+		$cached_questions_XML = cache_get($cache_name);
+		if ($cached_questions_XML)
+		{
+			$this->resource_XML = new SimpleXMLElement($cached_questions_XML);;
+			return;
+		}
+		
 		global $default_terms_array;
 		$questions = get_questions($default_terms_array);
 		
@@ -53,6 +62,9 @@ class api_resource_questions extends api_resource
 			}
 		
 		}
+		
+		// set the cache
+		cache_set($cache_name, $this->resource_XML->asXML(), 7200);
 	}
 }
 ?>

@@ -297,6 +297,7 @@ function get_questions($terms_array = false, $sort = true)
 	{
 		$statement = $myPDO->query("SELECT * FROM rdtom_questions ORDER BY Section ASC");
 	}
+	
 	$results = $statement->fetchAll(PDO::FETCH_ASSOC);
 	
 	if ($results)

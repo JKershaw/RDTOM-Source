@@ -46,7 +46,8 @@ function exception_handler($exception)
 	// save a log of the error
 	$log_error_string = 
 		"URI: [" . $_SERVER['REQUEST_URI'] . "] 
-		REQUEST: [" . print_r($_REQUEST, true) . "]";
+		REQUEST: [" . print_r($_REQUEST, true) . "]
+		SERVER: [" . print_r($_SERVER, true) . "]";
 	
 	// display an error page for the user
 	$error_string = $exception->getMessage() . "<br />\n";
