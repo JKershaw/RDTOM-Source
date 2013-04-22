@@ -38,29 +38,41 @@ class forum
 			{
 				// a thread
 				$thread = get_thread_from_slug($url_array[2], $url_array[1]);
-				if (!$thread)
+				if ($thread)
 				{
-					throw new exception ("Thread not found from slug");
+					//TODO save the fact this thread has been viewed
+					$out .= $thread->get_body();
 				}
-				
-				//TODO save the fact this thread has been viewed
-				$out .= $thread->get_body();
+				else
+				{
+					$error_message = "Sorry, the Thread you were looking for couldn't be found.";
+				}
 			}
 			else
 			{
 				// a topic
 				$topic = get_topic_from_slug($url_array[1]);
-				if (!$topic)
+				if ($topic)
 				{
-					throw new exception ("Topic not found from slug");
+					$out .= $topic->get_body();
 				}
-				$out .= $topic->get_body();
+				else
+				{
+					$error_message = "Sorry, the Topic you were looking for couldn't be found.";
+				}
 			}
 		}
-		else
+		
+		// if it's not a thread or a topic (or the slug couldn't be found)
+		if (!$out)
 		{
 			// front page
 			$out .= "<h3>Forum</h3>";
+			
+			if ($error_message)
+			{
+				$out .= "<p class=\"error_string\">" . $error_message . "</p>";
+			}
 			
 			// Topics
 			$topics = get_topics();
@@ -99,6 +111,7 @@ class forum
 			}
 		}
 		
+		// display the forum
 		echo $out;
 	}
 	
