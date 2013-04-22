@@ -610,7 +610,7 @@ function ajax_stats_user_progress()
 	if (is_admin() && $_REQUEST['User_ID'])
 	{
 		global $mydb;
-		$user_responses = $mydb->get_responses_from_User_ID($_REQUEST['User_ID']);
+		$user_responses = $mydb->get_responses_from_User_ID($_REQUEST['User_ID'], true);
 		$user_ID = (int)$_REQUEST['User_ID'];
 	}
 	else
@@ -645,10 +645,12 @@ function ajax_stats_user_progress()
 		}
 	}
 	
-	$averaged_data = get_average_of_array($raw_data, 25);
-	$averaged_data = array_slice($averaged_data, 25);
-	array_splice($averaged_data, -19);
+	// get a floating point average and remove the ends, so we lose 20 points
+	$averaged_data = get_average_of_array($raw_data, 10);
+	$averaged_data = array_slice($averaged_data, 10);
+	array_splice($averaged_data, -10);
 	
+	// do the same again, we lose a further 6 points
 	$averaged_data = get_average_of_array($averaged_data, 3);
 	$averaged_data = array_slice($averaged_data, 3);
 	array_splice($averaged_data, -3);
