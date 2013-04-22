@@ -248,7 +248,7 @@ function return_stats_user_progress($user = false)
 		data_stats_user_progress = new google.visualization.DataTable(jsonData_user_progress);
 		
 	    options_stats_user_progress = {
-	    	  vAxis: {minValue: 0, maxValue: 100, gridlines: {count: 11}},
+	    	  vAxis: {viewWindow:{max:100, min:0},gridlines: {count: 6}, viewWindowMode: \'explicit\'},
 	          titlePosition: \'none\',
 	          hAxis: {titlePosition: \'none\', textPosition: \'none\'},
           	  chartArea: {left:30, width: \'80%\', height: \'90%\', top: 10},
