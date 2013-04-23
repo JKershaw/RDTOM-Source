@@ -423,6 +423,30 @@ function get_sections_array_from_User_ID($req_User_ID)
 		{
 			$out[$result['ID']] = $result['Section'];
 		}
+	}
+	
+	// add the archived responses
+	$statement = $myPDO->prepare("
+		SELECT rdtom_questions.ID, rdtom_questions.Section
+		FROM rdtom_questions
+		JOIN rdtom_responses_archive ON rdtom_responses_archive.Question_ID = rdtom_questions.ID
+		WHERE rdtom_responses_archive.User_ID = :ID");
+
+	$statement->bindValue(':ID', $req_User_ID, PDO::PARAM_INT);
+	$statement->execute();
+	
+	$results = $statement->fetchAll();
+	
+	if ($results)
+	{
+		foreach ($results as $result)
+		{
+			$out[$result['ID']] = $result['Section'];
+		}
+	}
+	
+	if ($out)
+	{
 		return $out;
 	}
 	else
