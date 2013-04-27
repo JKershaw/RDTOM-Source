@@ -33,7 +33,7 @@ elseif ($_POST['signupform'] == "yes")
 elseif ($_POST['disassociateform'] == "yes")
 {
 	$mydb->responses_disassociate($user->get_ID());
-	$profile_message = "Answers disassociated!";
+	$profile_message = "Answers disassociated! The site may take a little while to update, be patient.";
 	
 }
 elseif ($_POST['formpasswordupdate'] == "yes")

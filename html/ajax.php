@@ -678,8 +678,10 @@ function ajax_stats_user_section_totals()
 	$user_responses = return_user_responses();
 	$user_questions_sections = return_user_questions_sections();
 	
-	$data_array = process_sections_responses_into_data($user_responses, $user_questions_sections);
-		
+	if ($user_responses && $user_questions_sections)
+	{
+		$data_array = process_sections_responses_into_data($user_responses, $user_questions_sections);
+	}
 	$average_responses = cache_get("last_10000_sections");
 	
 	if ($data_array)
