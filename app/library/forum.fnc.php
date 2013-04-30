@@ -297,7 +297,8 @@ class forum
 			
 		$post_author = $post->get_author();
 		
-		if (($post_author->get_ID() != $user_ID) && !is_admin())
+		//if (($post_author->get_ID() != $user->get_ID()) && !is_admin())
+		if ($post_author->get_ID() != $user->get_ID())
 		{
 			throw new exception ("You do not have permission to edit this post");
 		}
