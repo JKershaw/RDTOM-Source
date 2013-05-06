@@ -149,6 +149,7 @@ function ajax_save_response()
 	{
 		global $user;
 		$user_ID = $user->get_ID();
+		cache_delete("user_responses_" . $user->get_ID());
 	}
 	else
 	{
@@ -212,6 +213,7 @@ function ajax_save_responses()
 	{
 		global $user;
 		$user_ID = $user->get_ID();
+		cache_delete("user_responses_" . $user->get_ID());
 	}
 	else
 	{
