@@ -57,8 +57,7 @@ function cache_get($key)
 function cache_delete($key)
 {
 	$key = preg_replace("/[^a-zA-Z0-9]/", "", $key);
-	unlink("../filecache/" . $key);
-
+	@unlink("../filecache/" . $key);
 }
 
 ?>
