@@ -25,16 +25,12 @@
         <link rel="apple-touch-icon-precomposed" href="<?echo get_site_URL(); ?>images/RDTOM_touch_icon.png">		
 		
 		<meta name="viewport" content="width=device-width" >
+		
 		<meta property="og:title" content="Roller Derby Test O'Matic" >
 		<meta property="og:description" content="<?php echo get_page_description(); ?>" >
+		<meta property="og:image" content="<?echo get_site_URL(); ?>images/RDTOM_touch_icon.png" >
+		
 		<meta name="Description" content="<?php echo get_page_description(); ?>">
-		<?php if (is_competition_page())
-		{
-		?>
-		<meta property="og:image" content="<?php echo get_site_URL() ?>images/sponsors.png" >
-		<?php 
-		}
-		?>
 	
 		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8/jquery.min.js" type="text/javascript"></script>
    		
