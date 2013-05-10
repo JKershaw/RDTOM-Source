@@ -652,7 +652,12 @@ class database_derbytest extends database
 		$req_token = $this->mysql_res($req_token);
 		$req_IP = $this->mysql_res($req_IP);
 
-		$query="SELECT User_ID FROM rdtom_usertokens WHERE Token = '" . $req_token . "' AND IP = '" . $req_IP . "'";
+		// No longer requires same IP to be remebered - account for people with changing IPs
+		// however, the Ip is still recorded when Tokens generated
+		
+		//$query="SELECT User_ID FROM rdtom_usertokens WHERE Token = '" . $req_token . "' AND IP = '" . $req_IP . "'";
+		$query="SELECT User_ID FROM rdtom_usertokens WHERE Token = '" . $req_token . "'";
+		
 		$result = $this->get_var($query);
 		
 		if ($result)
@@ -668,7 +673,8 @@ class database_derbytest extends database
 		$req_IP = $this->mysql_res($req_IP);
 		settype($req_User_ID, "integer");
 		
-		$query = "DELETE FROM rdtom_usertokens WHERE User_ID = '" . $req_User_ID . "' AND IP = '" . $req_IP . "'";
+		//$query = "DELETE FROM rdtom_usertokens WHERE User_ID = '" . $req_User_ID . "' AND IP = '" . $req_IP . "'";
+		$query = "DELETE FROM rdtom_usertokens WHERE User_ID = '" . $req_User_ID . "'";
 		$this->run_query($query);	
 	}
 	

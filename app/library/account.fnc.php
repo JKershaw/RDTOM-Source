@@ -20,7 +20,7 @@ function user_log_in($req_username, $req_password, $remeber_me = false)
 	if ($remeber_me)
 	{
 		// generate token
-		$token_string = generateSalt(100);
+		$token_string = generatealphaneumericSalt(100);
 		
 		// save it in the database
 		$mydb->add_token($token_string, $user->get_ID(), get_ip());
@@ -195,7 +195,7 @@ function set_up_reset_token($forgetful_user)
 {
 	global $mydb;
 	
-	// has a token been set up int he last 5 mins? If so, error
+	// has a token been set up in the last 5 mins? If so, error
 	
 	// generate token
 	$token_string = generatealphaneumericSalt(50);
