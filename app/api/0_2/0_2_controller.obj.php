@@ -5,6 +5,15 @@ class api_controller extends abstract_api_controller
 	public function main()
 	{
 		// process the request and output the results
+		// check if there's a client & dev name
+		if (!$this->request['parameters']['developer'])
+		{
+			throw new exception ("Missing developer parameter.", 400);
+		}
+		if (!$this->request['parameters']['application'])
+		{
+			throw new exception ("Missing application parameter.", 400);
+		}
 		
 		// load the resource object dynamically given the resource request
 		try 
@@ -118,7 +127,7 @@ class api_controller extends abstract_api_controller
 			<li><i>application</i> - The name of the app calling the API (it's a good idea to include your version number), e.g. &quot;RDTOMLite_Android_0_3&quot;</li>
 		</ul>
 		
-		<p>Failure to include these two paramters may cause your call to be rejected.</p>
+		<p>Failure to include these two paramters will cause your call to be rejected.</p>
 		
 		<p>Formats:
 		
@@ -134,7 +143,7 @@ class api_controller extends abstract_api_controller
 		<p>Resources:
 		<ul>
 			<li>Question - A specific question specified using the <i>ID</i> parameter </li>
-			<li>Questions - All the default questions</li>
+			<li>Questions - All the default questions. If you add the <i>search</i> parameter, every question in the database is searched (including those questions not in the default set) and those with the search text found in the question or answer are returned.</li>
 			<li>Statistic - A given statistic specified using the <i>ID</i> parameter (available options: responses, api_calls_hourly, responses_daily, responses_hourly, responses_minutly, questions, answers, users, unique_IPs) </li>
 			<li>LongQuestion - TBC</li>
 			<li>Changes - TBC</li>

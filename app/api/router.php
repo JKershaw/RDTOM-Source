@@ -82,7 +82,6 @@ if ($url_array[1])
 	{
 		foreach ($cached_api_calls as $id => $cached_api_call)
 		{
-			
 			if ($cached_api_call['timestamp'] < gmmktime() - 3600)
 			{
 				unset($cached_api_calls[$id]);

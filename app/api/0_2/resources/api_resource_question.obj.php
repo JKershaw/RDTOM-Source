@@ -23,6 +23,19 @@ class api_resource_question extends api_resource
 		$XML_newquestion->addChild('text', htmlentities(stripslashes($question->get_Text())));
 		$XML_newquestion->addChild('wftda_link', htmlentities($question->get_WFTDA_Link()));
 		
+		// meta data
+		$terms = $question->get_terms();
+		
+		$XML_questionmeta = $XML_newquestion->addChild('terms');
+		if ($terms)
+		{
+			foreach ($terms as $term)
+			{
+				$XML_questionmeta->addChild($term->get_taxonomy(), $term->get_Name());
+			}
+		}
+			
+		
 		// notes might be optional
 		if (preg_match('#\S#', htmlentities(stripslashes($question->get_Notes())))) // Checks for non-whitespace character
 			$XML_newquestion->addChild('notes', htmlentities(stripslashes($question->get_Notes())));
