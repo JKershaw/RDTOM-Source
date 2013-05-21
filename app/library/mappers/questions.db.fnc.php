@@ -338,8 +338,13 @@ function get_questions_search($search_string)
 	$statement->execute();
 	$results2 = $statement->fetchAll(PDO::FETCH_ASSOC);
 	
-	$results = array_merge($results, $results2);
+	// search the section text
+	$statement = $myPDO->prepare("SELECT * FROM rdtom_questions WHERE Section LIKE ?");
+	$statement->bindValue(1, "$search_string%", PDO::PARAM_STR);
+	$statement->execute();
+	$results3 = $statement->fetchAll(PDO::FETCH_ASSOC);
 	
+	$results = array_merge($results, $results2, $results3);
 	
 	if ($results)
 	{

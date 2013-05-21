@@ -88,6 +88,9 @@ else
 			break;	
 		case "forum":
 			include("presentation/forum.php");
+			break;	
+		case "search":
+			include("presentation/search.php");
 			break;		
 			
 		case "question":
