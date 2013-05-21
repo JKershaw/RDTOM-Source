@@ -601,7 +601,8 @@ function ajax_latest_forum_thread()
 	$thread = get_latest_thread();
 	if($thread)
 	{
-		return "<a href=\"" . $thread->get_URL() . "\">" . htmlentities(stripslashes($thread->get_Title())) . "</a>";
+		$latest_post = $thread->get_latest_post();
+		return "<a href=\"" . $thread->get_URL() . "\">&quot;" . htmlentities(stripslashes($thread->get_Title())) . "&quot; by " .  htmlentities(stripslashes($latest_post->get_author()->get_Name())) . "</a>";
 	}
 }
 
