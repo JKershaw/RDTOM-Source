@@ -104,6 +104,10 @@
 				<!-- Google Play -->
 				<a href="https://play.google.com/store/apps/details?id=com.rollerderbytestomatic.lite"><img border="0" alt="Android app on Google Play" src="https://developer.android.com/images/brand/en_app_rgb_wo_45.png" /></a>
 				
+				<!-- iTunes -->
+				<a href="https://itunes.apple.com/us/app/roller-derby-test-omatic-lite/id642903652?ls=1&mt=8"><img border="0" alt="iOS app on iTunes" src="<?php echo get_site_URL(); ?>images/ios.png" /></a>
+				
+				
 				<!-- Amazon -->
 				<a href="http://www.amazon.com/gp/product/B00CMNI6QI/ref=as_li_ss_il?ie=UTF8&camp=1789&creative=390957&creativeASIN=B00CMNI6QI&linkCode=as2&tag=rdtom-20"><img border="0" style="height: 45px;" alt="Android app on Amazon for Kindle"
 						src="<?php echo get_site_URL(); ?>images/amazon.png" /></a>
