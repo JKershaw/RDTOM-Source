@@ -66,7 +66,27 @@ class forum
 		// if it's not a thread or a topic (or the slug couldn't be found)
 		if (!$out)
 		{
-			// front page
+			
+			// latest threads
+			$out .= "<h3>Latest Threads</h3>";
+				
+			// latest Threads
+			$latest_threads = get_latest_threads();
+			if ($latest_threads)
+			{
+				$out .= "<ol class=\"threads\">";
+				foreach($latest_threads as $thread)
+				{
+					$out .= $thread->get_head(true);
+				}
+				$out .= "</ol>";
+			}
+			else
+			{
+				$out .= "<p><i>No threads found</i></p>";
+			}
+			
+			// Forums
 			$out .= "<h3>Forum</h3>";
 			
 			if ($error_message)
@@ -91,24 +111,6 @@ class forum
 				$out .= "<p><i>No topics found</i></p>";
 			}
 			
-			// the front page of the forum
-			$out .= "<h3>Latest Threads</h3>";
-				
-			// latest Threads
-			$latest_threads = get_latest_threads();
-			if ($latest_threads)
-			{
-				$out .= "<ol class=\"threads\">";
-				foreach($latest_threads as $thread)
-				{
-					$out .= $thread->get_head();
-				}
-				$out .= "</ol>";
-			}
-			else
-			{
-				$out .= "<p><i>No threads found</i></p>";
-			}
 		}
 		
 		// display the forum
@@ -379,7 +381,7 @@ class topic
 			$out .= "<ol class=\"threads\">";
 			foreach($threads as $thread)
 			{
-				$out .= $thread->get_head();
+				$out .= $thread->get_head(true);
 			}
 			$out .= "</ol>";
 		}
@@ -446,7 +448,7 @@ class thread
 		$this->data = $data;
 	}
 	
-	public function get_head()
+	public function get_head($hide_title = false)
 	{
 		// get the "head" version of the topic, the one that appears on the front page
 		
@@ -457,7 +459,7 @@ class thread
 				<a href=\"" . $this->get_URL() . "\">" . htmlentities(stripslashes($this->data['Title'])) . "</a>";
 				if ($latest_post)
 				{
-					$out .= "<br />" . $latest_post->get_latest_post_string();
+					$out .= "<br />" . $latest_post->get_latest_post_string($hide_title);
 				}
 				$out .= "
 			</div>
@@ -603,10 +605,18 @@ class post
 		return $out;
 	}
 	
-	public function get_latest_post_string()
+	public function get_latest_post_string($hide_title = false)
 	{
 		$parent_thread = $this->get_parent_thread();
-		return "<div class=\"latest_post_string\">Latest post by <strong>" . htmlentities($this->get_author_name()) . "</strong> in <a href=\"" . $parent_thread->get_URL() . "\">" . htmlentities(stripslashes($parent_thread->get_Title())) . "</a>, " . $this->get_freshness_html() . "</div>";
+		if ($hide_title)
+		{
+			return "<div class=\"latest_post_string\">Latest post by <strong>" . htmlentities($this->get_author_name()) . "</strong>, " . $this->get_freshness_html() . "</div>";
+		}
+		else
+		{
+			return "<div class=\"latest_post_string\">Latest post by <strong>" . htmlentities($this->get_author_name()) . "</strong> in <a href=\"" . $parent_thread->get_URL() . "\">" . htmlentities(stripslashes($parent_thread->get_Title())) . "</a>, " . $this->get_freshness_html() . "</div>";
+		}
+		
 	}
 	
 	public function get_author()
@@ -648,7 +658,7 @@ class post
  */
 
 
-function get_latest_threads($limit = 20)
+function get_latest_threads($limit = 15)
 {
 	global $myPDO;
 	
