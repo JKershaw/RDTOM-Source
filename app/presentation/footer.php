@@ -94,6 +94,7 @@
 		
 			<p>
 				<a href="<?php echo get_site_URL(); ?>test/">Generate a Rules Test</a> | 
+				<a href="<?php echo get_site_URL(); ?>search">Search</a> | 
 				<a href="<?php echo get_site_URL(); ?>about/">About, Disclaimer &amp; Privacy Policy</a> |
 				<a href="<?php echo get_site_URL(); ?>cat">Meow</a> | 
 				<a href="<?php echo get_site_URL(); ?>forum">Forum:</a> <span id="footer_forum_thread"></span>

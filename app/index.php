@@ -91,6 +91,9 @@ else
 			break;	
 		case "search":
 			include("presentation/search.php");
+			break;	
+		case "minimumskills":
+			include("presentation/minimumskills.php");
 			break;		
 			
 		case "question":

@@ -33,7 +33,15 @@
 		<meta name="Description" content="<?php echo get_page_description(); ?>">
 	
 		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8/jquery.min.js" type="text/javascript"></script>
+   		<script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
    		
+	<style>
+  #result_questions, #test_questions { list-style-type: none; margin: 0; padding: 0; float: left;  border: 1px solid #AAF; min-height:40px; background-color: #DDF; width:438px;}
+  #result_questions li, #test_questions li {margin: 5px; padding: 5px; border: 1px solid #AAF; background-color: white; font-size: 0.6em;}
+  #test_questions li {cursor:pointer;}
+  
+  .ui-state-highlight { height: 1.5em; line-height: 1.2em; background-color: #EEF}
+  </style>
 		<?php 
 		if (!is_admin_page())
 		{

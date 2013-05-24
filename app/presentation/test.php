@@ -8,9 +8,10 @@
 				
 
 /*
- * /test = set parameters
- * /test/generate = generate test
- * /test/[number] = load saved test
+ * /test 			= set parameters
+ * /test/generate 	= generate a random test
+ * /test/build 		= make test
+ * /test/[number] 	= load saved test
  */
 
 /*
@@ -27,101 +28,200 @@ include("header.php");
 if (!$url_array[1])
 {
 	// show the parameter selection form
-?>
-
-<h3>Create your test:</h3>
-<p>Note: Tests answers are saved when you complete your test and count towards your statistics. For feedback, feature requests, questions and bug reports; please visit the <a href="http://www.facebook.com/RollerDerbyTestOMatic">RDTOM Facebook page</a>. I take no responsibility for anything you choose to do with these tests.</p>
-<form id="submittestparameters" name="submittestparameters" method="post" action="<? echo get_site_URL()?>test/generate">
-
-<div id="test_default" style="display:none;">
-	<p>
-	Difficulty: Intermediate<br />
-	Number of questions: 45<br />
-	Pass percentage: 80% (36 / 45)<br />
-	Output: Online, interactive test<br />
-	</p>
-	<p>
-		<a onclick="$('#test_default').hide();$('#test_customisation').fadeIn();">Customise</a>
-	</p>
-</div>
-<div id="test_customisation">
-	<p><strong>Difficulty</strong></p>
-	<p>
-		<input type="radio" name="test_difficulty" value="mixed" checked> Mixed</checkbox>
-	</p>
-	<p>
-		<input type="radio" name="test_difficulty" value="beginner"> Beginner</checkbox><br />
-		<input type="radio" name="test_difficulty" value="intermediate"> Intermediate</checkbox><br />
-		<input type="radio" name="test_difficulty" value="expert"> Expert</checkbox>
-	</p>
+	?>
 	
-	<p><strong>Number of questions</strong></p>
+	<h3>Create a random test:</h3>
+	<p>Note: For feedback, feature requests, questions and bug reports; please <a href="<? echo get_site_URL()?>forum">visit the forum</a>. I take no responsibility for anything you choose to do with these tests.</p>
+	<form id="submittestparameters" name="submittestparameters" method="post" action="<? echo get_site_URL()?>test/generate">
 	
-	<p>
-		<input type="text" size="5" id="test_number_of_questions" name="test_number_of_questions" value="45" />
+	<div id="test_default" style="display:none;">
+		<p>
+		Difficulty: Intermediate<br />
+		Number of questions: 45<br />
+		Pass percentage: 80% (36 / 45)<br />
+		Output: Online, interactive test<br />
+		</p>
+		<p>
+			<a onclick="$('#test_default').hide();$('#test_customisation').fadeIn();">Customise</a>
+		</p>
+	</div>
+	<div id="test_customisation">
+		<p><strong>Difficulty</strong></p>
+		<p>
+			<input type="radio" name="test_difficulty" value="mixed" checked> Mixed</checkbox>
+		</p>
+		<p>
+			<input type="radio" name="test_difficulty" value="beginner"> Beginner</checkbox><br />
+			<input type="radio" name="test_difficulty" value="intermediate"> Intermediate</checkbox><br />
+			<input type="radio" name="test_difficulty" value="expert"> Expert</checkbox>
+		</p>
 		
-		<script type="text/javascript">
+		<p><strong>Number of questions</strong></p>
+		
+		<p>
+			<input type="text" size="5" id="test_number_of_questions" name="test_number_of_questions" value="45" />
+			
+			<script type="text/javascript">
+		
+			$(document).ready(function(){
+			    var intervalID = setInterval(function(){
+				    var percentage;
+				    var pass_mark;
+				    var question_count;
+		
+				    question_count = parseInt($('#test_number_of_questions').val());
+		
+				    if ((question_count < 1) || (question_count == ""))
+				    {
+				    	question_count = 1;
+				    }
+				    
+				    percentage = parseInt($('#test_pass_percentage').val());
+				    if (percentage < 1)
+				    {
+				    	percentage = 1;
+				    }
+				    if (percentage > 100)
+				    {
+				    	percentage = 100;
+				    }
+		
+				    pass_mark = Math.round(question_count * (percentage / 100));
+		
+			    	if (!isNaN(pass_mark))
+			    	{
+		    	    	$('#test_number_of_questions_span').html(pass_mark + " / " + question_count);
+			    	}
+			    }, 100); // 100 ms check
+			});
+			
+			</script>
+		</p>
+		
+		<p><strong>Pass percentage</strong></p>
+		
+		<p>
+			<input type="text" size="5" id="test_pass_percentage"  name="test_pass_percentage" value="80" />&#37; (<span id="test_number_of_questions_span">36 / 45</span>)
+		</p>
+		
+		<p><strong>Type of test to generate</strong></p>
+		
+		<p>
+			<input type="radio" name="test_output" value="interactiveHTML" checked> Interactive (can be filled in online) </checkbox><br />
+			<input type="radio" name="test_output" value="HTML"> Non-interactive (can be printed, answers are at the bottom of the page)</checkbox><br />
+			<!-- 
+			<input DISABLED type="radio" name="test_output" value="txt"> Basic Text .txt file (experimental)</checkbox><br />
+			<input DISABLED type="radio" name="test_output" value="doc"> Word / OpenOffice .doc file (experimental)</checkbox><br />
+			<input DISABLED type="radio" name="test_output" value="pdf"> Pdf file (experimental)</checkbox>
+			 -->
+		</p>
+	</div>
+	<p>
+		<a class="button mobilebutton" onclick="document.submittestparameters.submit();" >Generate Random Test</a>
+	</p>
+	</form>
+	<p>
+	</p>
+	<?php 
+}
+elseif ($url_array[1] == "build")
+{
+	?>
 	
-		$(document).ready(function(){
-		    var intervalID = setInterval(function(){
-			    var percentage;
-			    var pass_mark;
-			    var question_count;
+	<h3>Build a test:</h3>
+	<p>Note: For feedback, feature requests, questions and bug reports; please <a href="<? echo get_site_URL()?>forum">visit the forum</a>. I take no responsibility for anything you choose to do with these tests.</p>
 	
-			    question_count = parseInt($('#test_number_of_questions').val());
+	<div id="test_builder_wrap" style="width: 900px; border: 1px solid #AAA; overflow: auto;">
+		<div id="test_builder_questions" style="width:440px; float:left; border: 1px solid #AAA; overflow: auto; margin:2px; padding:2px;">
+			<h3>Your Test</h3>
+			<p>Drag and drop questions to reoerder.</p>
+			<ul id="test_questions">
+			</ul>
+		</div>
+		<div id="test_builder_finder" style="width:440px; float:left; border: 1px solid #AAA; overflow: auto; margin:2px; padding:2px;">
+			<h3>Find Questions</h3>
+			<p>Search: <br /><input type="text" id="search_string" style="width: 50%;"> <input type="button" onclick="search();" value="Find Questions"></p>
+			<p>Click on a question to add it to your test.</p>
+			<ul id="result_questions">
+			</ul>
+		</div>
 	
-			    if ((question_count < 1) || (question_count == ""))
-			    {
-			    	question_count = 1;
-			    }
-			    
-			    percentage = parseInt($('#test_pass_percentage').val());
-			    if (percentage < 1)
-			    {
-			    	percentage = 1;
-			    }
-			    if (percentage > 100)
-			    {
-			    	percentage = 100;
-			    }
+	</div>
+  
+	<script type="text/javascript">
+
+	  $(function() {
+	    $( "#test_questions" ).sortable({
+	      placeholder: "ui-state-highlight"
+	    }).disableSelection();
+	  });
+	  
+	function search()
+	{
+
+		$("#result_questions").html("Loading ... ");
+		// get the new question
+		$.getJSON('<?php echo get_site_URL() ?>api/0.2/json/questions/?developer=RDTOM&application=testbuilderpage&search=' + $("#search_string").val(), function(data) {
 	
-			    pass_mark = Math.round(question_count * (percentage / 100));
-	
-		    	if (!isNaN(pass_mark))
-		    	{
-	    	    	$('#test_number_of_questions_span').html(pass_mark + " / " + question_count);
-		    	}
-		    }, 100); // 100 ms check
+			$("#result_questions").html("");
+			if (data.resource.questions.question instanceof Array)
+			{
+				$.each(data.resource.questions.question, function(key, question) 
+				{
+					append_question(question);
+				});
+			}
+			else
+			{
+				// 1 or 0 results
+				if (typeof data.resource.questions.question  !== 'undefined')
+				{
+					// 1 result
+					append_question(data.resource.questions.question);
+				}
+			}
+		});
+	}
+
+	function append_question(question)
+	{
+		var is_WFTDA6 = false;
+		for (var key in question.terms) 
+		{
+			
+			if (question.terms.hasOwnProperty(key)) 
+			{
+				if (question.terms[key] instanceof Array)
+				{
+					$(question.terms[key]).each(function( index, item ) {
+						if (item == "WFTDA6")
+						{
+							is_WFTDA6 = true;
+						}
+					});				
+				}
+			}
+		}
+
+		if (!is_WFTDA6)
+		{
+			return;
+		}
+		
+
+		$(question.sections).each(function( index, section ) {
+			section_string = section.section;	
+			return false;
 		});
 		
-		</script>
-	</p>
+		question_html = "<li class=\"ui-state-default\" id=\"question_" + (question.id) + "\">" + section_string + " " + (question.text).replace(/\\(.)/mg, "$1") + " <br /><a onclick=\"$('#test_questions').append($('#question_" + (question.id) + "').clone());$('#result_questions #question_" + (question.id) + "').fadeOut();\">Add</a></li>";
+		
+		$("#result_questions").append(question_html);
+
+	}
+	</script>
 	
-	<p><strong>Pass percentage</strong></p>
-	
-	<p>
-		<input type="text" size="5" id="test_pass_percentage"  name="test_pass_percentage" value="80" />&#37; (<span id="test_number_of_questions_span">36 / 45</span>)
-	</p>
-	
-	<p><strong>Type of test to generate</strong></p>
-	
-	<p>
-		<input type="radio" name="test_output" value="interactiveHTML" checked> Interactive (can be filled in online) </checkbox><br />
-		<input type="radio" name="test_output" value="HTML"> Non-interactive (can be printed, answers are at the bottom of the page)</checkbox><br />
-		<!-- 
-		<input DISABLED type="radio" name="test_output" value="txt"> Basic Text .txt file (experimental)</checkbox><br />
-		<input DISABLED type="radio" name="test_output" value="doc"> Word / OpenOffice .doc file (experimental)</checkbox><br />
-		<input DISABLED type="radio" name="test_output" value="pdf"> Pdf file (experimental)</checkbox>
-		 -->
-	</p>
-</div>
-<p>
-	<a class="button mobilebutton" onclick="document.submittestparameters.submit();" >Generate Test</a>
-</p>
-</form>
-<p>
-</p>
-<?php 
+	<?php 
 }
 elseif ($url_array[1] == "generate")
 {
@@ -160,12 +260,9 @@ elseif ($url_array[1] == "generate")
 		$test->populate();
 	}
 	
-
+	// display the test
 	echo $test->get_formatted_output($test_output);
 
-	
-	// display the test
-	
 }
 include("footer.php");
 ?>
