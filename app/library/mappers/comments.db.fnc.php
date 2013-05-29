@@ -93,4 +93,24 @@ function get_comments_from_question_ID($req_ID)
 	}
 	return false;
 }
+
+function get_comments_since($req_timestamp)
+{
+	global $myPDO;
+	
+	$statement = $myPDO->prepare("SELECT * FROM rdtom_comments WHERE Timestamp >= :since");
+	$statement->execute(array(':since' => $req_timestamp));
+	$results = $statement->fetchAll();
+	
+	if ($results)
+	{
+		foreach ($results as $result)
+		{
+			$out[] = get_comment_from_array($result);
+		}
+			
+		return $out;
+	}
+	return false;
+}
 ?>

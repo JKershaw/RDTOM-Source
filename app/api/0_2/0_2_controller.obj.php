@@ -16,15 +16,15 @@ class api_controller extends abstract_api_controller
 		}
 		
 		// load the resource object dynamically given the resource request
-		try 
-		{
+		//try 
+		//{
 			$resource_name = "api_resource_" . $this->request['resource'][0];
 			$resource = new $resource_name($this->request['parameters']);
-		} 
-		catch (Exception $e) 
-		{
-			throw new exception ("The resource you have requested could not be found", 404);
-		}
+		//} 
+		//catch (Exception $e) 
+		//{
+		//	throw new exception ("The resource you have requested could not be found", 404);
+		//}
 
 		// we now have the resource object, so let's start building the XML output
 		
@@ -132,7 +132,7 @@ class api_controller extends abstract_api_controller
 		<p>Formats:
 		
 		<ul>
-			<li><i>XML</i> - Default</li>
+			<li><i>XML</i> - Default, UTF-8 XML</li>
 			<li><i>NiceXML</i> - HTML formatted XML</li>
 			<li><i>JSON</i> - JavaScript Object Notation</li>
 			<li><i>JSONP</i> - JSON with a callback, specified using the <i>callback</i> parameter. If you want to pass an argument in your JSONP call add the parameter <i>jsonarg</i></li>
@@ -145,18 +145,17 @@ class api_controller extends abstract_api_controller
 			<li>Question - A specific question specified using the <i>ID</i> parameter </li>
 			<li>Questions - All the default questions. If you add the <i>search</i> parameter, every question in the database is searched (including those questions not in the default set) and those with the search text found in the question or answer are returned.</li>
 			<li>Statistic - A given statistic specified using the <i>ID</i> parameter (available options: responses, api_calls_hourly, responses_daily, responses_hourly, responses_minutly, questions, answers, users, unique_IPs) </li>
-			<li>LongQuestion - TBC</li>
-			<li>Changes - TBC</li>
-			<li>Test - TBC</li>
+			<li>Changes - When given the required <i>since</i> parameter (which is a Unix timestamp for a GMT date and time, i.e. PHP's gmmktime() function), a list of IDs of questions which have been updated (created or edited) and a list of questions which have been deleted are returned. Take note: questions which fall outside the default set are listed.</li>
 		</ul>
 		</p>
 		
-		
-		
-		
 		<p>Example: you want to get a random question in XML, so use the following URL:</p>
 		
-		<pre>http://rollerderbytestomatic.com/api/0.2/xml/question/?developer=SausageRoller&application=testing</pre>
+		<pre>http://rollerderbytestomatic.com/api/0.2/xml/question/<br />?developer=SausageRoller&application=testing</pre>
+		
+		<p>Example: you want to get a list of changed questions since a specific time, in JSON:</p>
+		
+		<pre>http://rollerderbytestomatic.com/api/0.2/json/changes/<br />?developer=SausageRoller&application=testing&since=1369819830&callback=my_function</pre>
 		
 		
 ";
