@@ -509,8 +509,14 @@ class question
 			$out .= stripslashes($answer->get_Text()) . "\n";
         }
         
-        
-        $out .= "\nTerms: " . implode(", ", $this->get_terms(true)) . "\n";
+        if ($this->get_terms(true))
+        {
+        	$out .= "\nTerms: " . implode(", ", $this->get_terms(true)) . "\n";
+        }
+        else
+        {
+        	$out .= "\nTerms: \n";
+        }
         return $out;
     }
 }
