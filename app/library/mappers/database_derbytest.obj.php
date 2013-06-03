@@ -74,8 +74,7 @@ class database_derbytest extends database
 			settype($optional_user_ID, "integer");
 			$clause = " WHERE User_ID = '" . $optional_user_ID . "'";
 		}
-		
-		$query = "SELECT COUNT(*) FROM rdtom_responses" . $clause;
+		$query = "SELECT(SELECT COUNT(*) FROM rdtom_responses" . $clause . ") + (SELECT COUNT(*) FROM rdtom_responses_archive" . $clause . ") as count";
 		$result = $this->get_var($query);
 		return $result;
 	}
@@ -83,12 +82,12 @@ class database_derbytest extends database
 	public function get_response_count_from_Question_ID($req_ID)
 	{
 		settype($req_ID, "integer");
-		$query = "SELECT COUNT(*) FROM rdtom_responses WHERE Question_ID = " . $req_ID;
+		$query = "SELECT(SELECT COUNT(*) FROM rdtom_responses WHERE Question_ID = " . $req_ID . ") + (SELECT COUNT(*) FROM rdtom_responses_archive WHERE Question_ID = " . $req_ID . ") as count";
 		$result = $this->get_var($query);
 		return $result;
 	}
 	
-	public function get_responses_from_User_ID($User_ID, $since_timestamp = false, $until_timestamp = false)
+	public function get_responses_from_User_ID($User_ID, $include_archive = false)
 	{
 		settype($User_ID, "integer");
 	
@@ -97,16 +96,13 @@ class database_derbytest extends database
 			throw new exception ("No User ID given to get_responses_from_User_ID");
 		}
 		
-
-		if ($since_timestamp)
+		if ($include_archive)
 		{
-			settype($since_timestamp, "integer");
-			settype($until_timestamp, "integer");
-			$query = "SELECT * FROM rdtom_responses WHERE User_ID = '" . $User_ID . "' AND Timestamp > '$since_timestamp' AND Timestamp <= '$until_timestamp'";
+			$query = "SELECT Tbl1.* FROM ((SELECT * FROM rdtom_responses WHERE User_ID = '" . $User_ID . "') UNION ALL (SELECT * FROM rdtom_responses_archive WHERE User_ID = '" . $User_ID . "')) Tbl1   ORDER BY Tbl1.Timestamp Asc";
 		}
 		else
 		{
-			$query = "SELECT * FROM rdtom_responses WHERE User_ID = '" . $User_ID . "'";
+			$query = "SELECT * FROM rdtom_responses WHERE User_ID = '" . $User_ID . "' ORDER BY Timestamp Asc";
 		}
 		
 		$results = $this->get_results($query);
@@ -140,6 +136,17 @@ class database_derbytest extends database
 		$query = "
 		UPDATE 
 			rdtom_responses 
+		SET 
+			User_ID = '0'
+		WHERE 
+			User_ID = '" . $User_ID . "'
+			";
+		
+		$this->run_query($query);
+		
+		$query = "
+		UPDATE 
+			rdtom_responses_archive 
 		SET 
 			User_ID = '0'
 		WHERE 
@@ -249,7 +256,7 @@ class database_derbytest extends database
 	
 	public function get_response_distinct_ip_count()
 	{
-		$query = "SELECT COUNT(DISTINCT IP) FROM rdtom_responses";
+		$query = "SELECT(SELECT COUNT(DISTINCT IP) FROM rdtom_responses) + (SELECT COUNT(DISTINCT IP) FROM rdtom_responses) as count";
 		$result = $this->get_var($query);
 		return $result;
 	}
@@ -327,20 +334,6 @@ class database_derbytest extends database
 		$time_now = gmmktime();
 		$time_ago = $time_now - (60*60*$hour_count);
 		$time_ago = floor($time_ago/3600) * 3600;
-		
-		/*
-		$query = "
-			SELECT 
-			count(*) AS responses,
-			FROM_UNIXTIME(Timestamp, '%Y %j %H') AS hour 
-			FROM rdtom_responses 
-			WHERE Timestamp > '$time_ago'  
-			GROUP BY hour 
-			LIMIT 0 , 30";
-		
-		
-		$raw_data = $this->get_results($query);
-		*/
 		
 		// get the data from the database
 		$query = "
@@ -659,7 +652,12 @@ class database_derbytest extends database
 		$req_token = $this->mysql_res($req_token);
 		$req_IP = $this->mysql_res($req_IP);
 
-		$query="SELECT User_ID FROM rdtom_usertokens WHERE Token = '" . $req_token . "' AND IP = '" . $req_IP . "'";
+		// No longer requires same IP to be remebered - account for people with changing IPs
+		// however, the Ip is still recorded when Tokens generated
+		
+		//$query="SELECT User_ID FROM rdtom_usertokens WHERE Token = '" . $req_token . "' AND IP = '" . $req_IP . "'";
+		$query="SELECT User_ID FROM rdtom_usertokens WHERE Token = '" . $req_token . "'";
+		
 		$result = $this->get_var($query);
 		
 		if ($result)
@@ -675,7 +673,8 @@ class database_derbytest extends database
 		$req_IP = $this->mysql_res($req_IP);
 		settype($req_User_ID, "integer");
 		
-		$query = "DELETE FROM rdtom_usertokens WHERE User_ID = '" . $req_User_ID . "' AND IP = '" . $req_IP . "'";
+		//$query = "DELETE FROM rdtom_usertokens WHERE User_ID = '" . $req_User_ID . "' AND IP = '" . $req_IP . "'";
+		$query = "DELETE FROM rdtom_usertokens WHERE User_ID = '" . $req_User_ID . "'";
 		$this->run_query($query);	
 	}
 	
@@ -845,10 +844,14 @@ class database_derbytest extends database
 					WHERE rdtom_relationships.Question_ID =  '$req_Question_ID'";
 			}
 		}
-		else
+		elseif ($req_taxonomy)
 		{
 			$req_taxonomy = $this->mysql_res($req_taxonomy);
 			$query = "SELECT * FROM rdtom_terms WHERE taxonomy = '$req_taxonomy' ";
+		}
+		else
+		{
+			$query = "SELECT * FROM rdtom_terms ORDER BY taxonomy";
 		}
 		
 		$results = $this->get_results($query);

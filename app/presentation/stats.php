@@ -24,6 +24,7 @@ include("header.php");
 			Questions: <span id="count_questions_string">Loading ...</span><span id="count_questions_difference_string"></span><br />
 			Answers: <span id="count_answers_string">Loading ...</span><span id="count_answers_difference_string"></span><br />
 			Accounts: <span id="count_users_string">Loading ...</span><span id="count_users_difference_string"></span><br />
+			
 		</p>
 		
 		<p><strong>Responses:</strong></p>
@@ -34,6 +35,11 @@ include("header.php");
 			Current per-day rate: <span id="count_daily_responses_string">Loading ...</span> <span id="count_daily_responses_difference_string"></span><br />
 			Current per-hour rate: <span id="count_hourly_responses_string">Loading ...</span> <span id="count_hourly_responses_difference_string"></span><br />
 			Current per-minute rate: <span id="count_minutly_responses_string">Loading ...</span> <span id="count_minutly_responses_difference_string"></span><br />
+		</p>
+		
+		<p><strong>API:</strong></p>
+		<p>
+			Hourly API Requests: <span id="count_api_string">Loading ...</span><span id="count_api_difference_string"></span><br />
 		</p>
 	</div>
 	
@@ -78,10 +84,38 @@ include("header.php");
 	
 	<div class="layout_box" id="layout_box_questions" style="display:none;">
 		<h3>Question breakdown by type (there is overlap):</h3>
-		<p>WFTDA 5 (May 2010): <?php echo number_format(count(get_questions(array("rule-set" => "WFTDA5"), false)));?></p>
-		<p>WFTDA 6 (Jan 2013): <?php echo number_format(count(get_questions(array("rule-set" => "WFTDA6"), false)));?></p>
+		<?php 
+		$current_taxonomy = "";
+		$breakdown_string_array = Array();
 		
+		foreach ($mydb->get_terms() as $term)
+		{
+			// don't care about author stats
+			if ($term->get_taxonomy() == "author-id")
+			{
+				continue;
+			}
+			
+			if ($current_taxonomy != $term->get_taxonomy())
+			{
+				$current_taxonomy = $term->get_taxonomy();
+				$breakdown_string_array[$current_taxonomy] .= "<strong>" . htmlentities($current_taxonomy) . "</strong>";
+			}
+			
+			try 
+			{	
+				$number_string = number_format(count(get_questions(array($term->get_taxonomy() => $term->get_Name()), false)));
+				$breakdown_string_array[$current_taxonomy] .= "<br /><span class=\"small_p\">" . htmlentities($term->get_Name()) . " (" . htmlentities($term->get_Description()) . "): " . $number_string . "</span>";
+				
+			} 
+			catch (Exception $e) 
+			{
+				$breakdown_string_array[$current_taxonomy] .= "<br /><span class=\"small_p\">" . htmlentities($term->get_Name()) . " (" . htmlentities($term->get_Description()) . "): <i>None</i></span>";
+			}
+		}
 		
+		echo "<p>" . implode("</p><p>", $breakdown_string_array) . "</p>";
+		?>
 		
 	</div>
 		<script type="text/javascript">
@@ -173,7 +207,9 @@ include("header.php");
 			check_frequency["count_responses"] 			= 3;
 			check_frequency["count_minutly_responses"] 	= 5;
 			check_frequency["count_hourly_responses"] 	= 11;
+			check_frequency["count_api"] 				= 13;
 			check_frequency["count_unique_IPs"] 		= 17;
+			
 			
 			check_frequency["count_users"] 				= 47;
 			check_frequency["count_daily_responses"] 	= 53;

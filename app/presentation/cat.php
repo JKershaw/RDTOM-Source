@@ -32,11 +32,11 @@ function loadquestion()
 
 			// show the new question text
 			
-			$("#question").html(unescape((data.results.question.text).replace(/\\(.)/mg, "$1")));
+			$("#question").html(unescape((data.resource.question.text).replace(/\\(.)/mg, "$1")));
 
 
 			// load each new answer
-			$.each(data.results.question.answers.answer, function(key, answer) 
+			$.each(data.resource.question.answers.answer, function(key, answer) 
 			{
 				if (answer.correct == "true")
 				{

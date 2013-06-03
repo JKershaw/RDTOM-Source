@@ -6,6 +6,7 @@
  * Built to help Roller Derby players learn the rules
  */
 
+// TODO validate every question - make sure it has answers & correct meta data
 
 // if the user isn't an admin, show an error message
 if (!is_admin())
@@ -46,6 +47,8 @@ if ($_POST)
 			
 			$tmp_question = get_question_from_ID($_POST['question_id']);
 			
+			$old_question_string = (string)$tmp_question;
+			
 			// have the answers changed? There may not be any answers.
 			if ($temp_answer_array && ($tmp_question->is_answers_different($temp_answer_array)))
 			{
@@ -69,8 +72,6 @@ if ($_POST)
 			{
 				$message .= "Answers unchanged! ";
 			}
-			
-			$old_question = $tmp_question;
 			
 			// edit the question
 			edit_question($tmp_question->get_ID(), $_POST['question_text'], $_POST['question_section'], trim($_POST['question_notes']));
@@ -100,10 +101,10 @@ if ($_POST)
 			}
 			
 			// save a comment
-			$comment_text = "Question Edited \n\nFrom: \n " . $old_question . " \nTo: \n" . get_question_from_ID($old_question->get_ID());
+			$comment_text = "Question Edited \n\nFrom: \n " . $old_question_string . " \nTo: \n" . get_question_from_ID($tmp_question->get_ID());
 			
 			// make a new comment
-			$comment = new comment(-1, $user->get_ID(), $old_question->get_ID(), gmmktime(), $comment_text, QUESTION_CHANGED);
+			$comment = new comment(-1, $user->get_ID(), $tmp_question->get_ID(), gmmktime(), $comment_text, QUESTION_CHANGED);
 			
 			// save the comment
 			set_comment($comment);
@@ -482,6 +483,14 @@ include("header.php");
 							echo get_admin_terms_checkboxes("author-id", $question);
 						?>
 					</td>
+				</tr>			
+				<tr>
+					<td style="width:200px">Language:</td>
+					<td>
+						<?php 
+							echo get_admin_terms_checkboxes("language", $question);
+						?>
+					</td>
 				</tr>
 				<tr>
 					<td></td>
@@ -512,32 +521,6 @@ include("header.php");
 		</form>
 		
 		<?php 
-		/*
-		if ($question && $question->get_reports())
-		{
-			?>
-			<h3>Open Reports:</h3>
-			<p>
-			<?php 
-			foreach ($question->get_reports() as $report)
-			{
-				if (($_POST['question_id'] == $report->get_Question_ID()) || ($url_array[2] == $report->get_Question_ID()))
-				{
-					echo "<strong>";
-				}
-				
-				echo get_formatted_admin_report($report);
-				
-				if (($_POST['question_id'] == $report->get_Question_ID()) || ($url_array[2] == $report->get_Question_ID()))
-				{
-					echo "</strong>";
-				}
-			}
-			?>
-			</p>
-			<?php 
-		}
-		*/
 		if ($question)
 		{
 			?>
@@ -583,10 +566,17 @@ include("header.php");
 							{
 								echo "<hr>
 								<p class=\"small_p\">
-									<span style=\"font-weight:bold; color:orange;\">Edit - " . htmlentities($comment_or_report->get_author_name()) . "</span> <i>" . date("D, jS M Y H:i", $comment_or_report->get_Timestamp()) . "</i>
+									<span style=\"font-weight:bold; color:orange;\">
+										Edit - " . htmlentities($comment_or_report->get_author_name()) . "</span>
+									<i>" . date("D, jS M Y H:i", $comment_or_report->get_Timestamp()) . "</i>
+									<a id=\"edit_link_" . $comment_or_report->get_ID() . "_show\" onclick=\"$('#edit_link_" . $comment_or_report->get_ID() . "_show').hide(); $('#edit_link_" . $comment_or_report->get_ID() . "_hide').show(); $('#edit_text_" . $comment_or_report->get_ID() . "').show()\"/>Show</a>
+									<a id=\"edit_link_" . $comment_or_report->get_ID() . "_hide\" onclick=\"$('#edit_link_" . $comment_or_report->get_ID() . "_show').show(); $('#edit_link_" . $comment_or_report->get_ID() . "_hide').hide(); $('#edit_text_" . $comment_or_report->get_ID() . "').hide()\" style=\"display:none;\"/>Hide</a>
+									
 								</p>
 								<p class=\"small_p\">
+									<span id=\"edit_text_" . $comment_or_report->get_ID() . "\" style=\"display:none;\">
 									" . nl2br(htmlentities(stripslashes($comment_or_report->get_text()))) . "
+									</span>
 								</p>";								
 							}
 						}
@@ -775,12 +765,77 @@ include("header.php");
 	
 	<div class="layout_box" id="layout_box_test" style="display:none;">
 	
-	I wonder if this'll change stuff?
+	
+				
+		I wonder if this'll change stuff?
+		
+		
+		<div id="unarchiving_status"><a onclick="start_unarchiving();">Start unarchiving</a></div> 
+		<div id="unarchiving_count"></div> 
+		
+		
+		<script type="text/javascript">
+			var total_count;
+			var start;
+			var d = new Date();
+			var timeout_count = 0;
+			
+			function start_unarchiving()
+			{
+				$("#unarchiving_status").html("Started");
+				$("#unarchiving_count").html("0");
+
+				start = d.getTime();
+				total_count = 0;
+				unarchive();
+			}
+
+			function unarchive()
+			{
+				$("#unarchiving_status").html("Calling");
+				$.ajax({  
+				    url: "http://rollerderbytestomatic.com/cron.php?force=unarchive_responses",  
+				    dataType: "jsonp", 
+				    timeout: 30000,
+				    error: function(xhr, textStatus, errorThrown){
+				    	$("#unarchiving_status").html("Done!" + textStatus);
+				    	if (textStatus == "parsererror")
+				    	{
+				    		
+				    		total_count = total_count + 10;
+				    		d = new Date();
+				    		var average_time = Math.floor((((d.getTime() - start) / 1000) / total_count) * 1000)/1000;
+				    		var response_time = Math.floor(((d.getTime() - start) / 1000) / (total_count / 10) * 1000)/1000;
+				    		var hourly_rate = Math.round(3600 / (((d.getTime() - start) / 1000) / total_count));
+				    		
+				    		$("#unarchiving_count").html("Unarchived: " + total_count + " in " + ((d.getTime() - start) / 1000) + " seconds<br />Average: " + average_time + " seconds<br />Response time: "  + response_time + " seconds<br >Hourly rate: " + hourly_rate + "<br />Timeouts: " + timeout_count);
+				    		unarchive();
+				    	}
+				    	else
+				    	{
+				    		$("#unarchiving_status").html("Error " + textStatus);
+				    		timeout_count = timeout_count + 1;
+				    		unarchive();
+					    }
+				    }});
+
+			}
+			
+			//http://rollerderbytestomatic.com/cron.php?force=unarchive_responses
+		</script>
 		<?php 
 		
+		/*
+		$language_term = $mydb->get_term_from_taxonomy_and_name("language", "English");
+				
+		$all_questions = get_questions();
+		foreach ($all_questions as $tmp_question)
+		{
+		$mydb->add_relationship($tmp_question->get_ID(), $language_term->get_ID());
+		}
 		//print_r(get_questions_search('passed'));
 		
-		
+		*/
 		/*
 		$all_questions = get_questions();
 		
@@ -798,7 +853,7 @@ include("header.php");
 		/*
 		$all_users = $mydb->get_users();
 		
-		for ($i = 0; $i < 1000; $i++)
+		for ($i = 0; $i < 10; $i++)
 		{
 			$tmp_user = array_pop($all_users);
 			echo "<br />" . $tmp_user->get_Name() . "<br />" .  return_stats_user_progress($tmp_user);
@@ -877,7 +932,7 @@ include("header.php");
 		$results = array();
 
 		// create a handler for the directory
-		$handler = @opendir("logs");
+		$handler = @opendir("../logs/");
 
 		if ($handler)
 		{

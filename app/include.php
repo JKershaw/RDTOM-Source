@@ -20,6 +20,7 @@ include('library/email.fnc.php');
 include('library/tracker.fnc.php');
 include('library/cache.fnc.php');
 include('library/sessions.fnc.php');
+include('library/forum.fnc.php');
 
 // Data mapping files
 include('library/mappers/database.obj.php');
@@ -32,17 +33,23 @@ include('library/mappers/comments.db.fnc.php');
 // Model (object) files autoload, phpMailer is also Autoloaded as used rarely
 function __autoload($classname) 
 {
-	switch (strtolower($classname)) 
-	{	
-		case "phpmailer":
-			$filename = "functions/phpmailer/class.phpmailer.php";
-			break;	
-		
-		default:
-			$filename = "objects/". $classname .".obj.php";
-			break;		
-	}	
-    include($filename);
+	$classname = preg_replace("/[^a-z_]/", '', strtolower($classname));
+	
+	if ($classname == "phpmailer")
+	{
+		$filename = "library/phpmailer/class.phpmailer.php";
+	}
+	elseif(substr($classname, 0, 4) == "api_")
+	{
+		$filename = api_resources_autoload($classname);
+	}
+	else
+	{
+		$filename = "objects/". $classname .".obj.php";	
+	}
+
+	include_once($filename);
+	
 }
 
 ?>

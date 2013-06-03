@@ -27,9 +27,7 @@ set_up_url_array();
 if (strtolower($url_array[0]) == "api")
 {
 	// An API request
-	include('api/api_controller.php');
-	
-	
+	include('api/router.php');
 }
 else
 {	
@@ -87,6 +85,15 @@ else
 			break;	
 		case "cat":
 			include("presentation/cat.php");
+			break;	
+		case "forum":
+			include("presentation/forum.php");
+			break;	
+		case "search":
+			include("presentation/search.php");
+			break;	
+		case "minimumskills":
+			include("presentation/minimumskills.php");
 			break;		
 			
 		case "question":

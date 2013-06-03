@@ -15,11 +15,16 @@ try
 	// create the database
 	set_up_database();
 	
+	// requests which don't require a user
+	
 	// those ajax requests which don't need session or user info
-	switch ($_POST['call']) 
+	switch ($_REQUEST['call']) 
 	{
 		case "count_responses":
 			$out = ajax_count_responses();	
+		break;	
+		case "count_api":
+			$out = ajax_count_api();	
 		break;	
 		case "count_daily_responses":
 			$out = ajax_count_daily_responses();	
@@ -42,6 +47,12 @@ try
 		case "count_unique_IPs":
 			$out = ajax_count_unique_IPs();	
 		break;
+		case "random_forum_thread":
+			$out = ajax_random_forum_thread();	
+		break;
+		case "latest_forum_thread":
+			$out = ajax_latest_forum_thread();	
+		break;
 	}
 	
 	// did the switch activate? 
@@ -60,7 +71,7 @@ try
 	//set_up_url_array();
 	
 	// process and return the ajax request
-	switch ($_POST['call']) 
+	switch ($_REQUEST['call']) 
 	{
 		case "save_response":
 			$out = ajax_save_response();	
@@ -101,13 +112,19 @@ try
 		case "set_admin_relationship":
 			$out = ajax_get_admin_set_relationship();	
 		break;
+		case "stats_user_progress":
+			$out = ajax_stats_user_progress();	
+		break;
+		case "stats_user_section_totals":
+			$out = ajax_stats_user_section_totals();	
+		break;
 	}
 	
 	echo $out;
 }
 catch (Exception $e) 
 {
-	save_log("error_ajax", htmlentities(print_r($_POST)) . " " . $e->getMessage());
+	save_log("error_ajax", htmlentities(print_r($_POST, true)) . " " . $e->getMessage());
 }
 
 function ajax_save_response()
@@ -132,6 +149,7 @@ function ajax_save_response()
 	{
 		global $user;
 		$user_ID = $user->get_ID();
+		cache_delete("user_responses_" . $user->get_ID());
 	}
 	else
 	{
@@ -195,6 +213,7 @@ function ajax_save_responses()
 	{
 		global $user;
 		$user_ID = $user->get_ID();
+		cache_delete("user_responses_" . $user->get_ID());
 	}
 	else
 	{
@@ -262,6 +281,19 @@ function ajax_count_responses()
 {
 	global $mydb;
 	return $mydb->get_response_count();
+}
+
+function ajax_count_api()
+{
+	$api_calls = cache_get("api_calls");
+	if ($api_calls)
+	{
+		return count($api_calls);
+	}
+	else
+	{
+		return 0;
+	}
 }
 
 function ajax_count_daily_responses()
@@ -512,69 +544,6 @@ function ajax_string_to_one_million()
 	return time_string_to_million();
 }
 
-function ajax_competition_string()
-{
-	return get_competition_footer_string();
-}
-
-function ajax_get_admin_competition_list()
-{
-	global $mydb;
-	// return a list of people entered into the prize draw competition
-	
-	// get all the responses
-	$all_raw_responses = $mydb->get_responses_raw_between(1343197039, 1344406639);
-	
-	// get all the users
-	$all_users = $mydb->get_users();
-	
-	// get stats from the results
-	// $user_data_array[USER_ID][0] = wrong, [1] = correct
-	foreach ($all_raw_responses as $raw_response)
-	{
-		if ($raw_response["Correct"] == 1)
-		{
-			$user_data_array[$raw_response["User_ID"]][1]++;
-		}
-		else
-		{
-			$user_data_array[$raw_response["User_ID"]][0]++;
-		}
-	}
-	
-	// find all the users with 50 or more questions answered
-	
-	foreach ($user_data_array as $user_ID => $user_data)
-	{
-		if ($all_users[$user_ID])
-		{
-			if (($user_data[0] + $user_data[1]) >= 50)
-			{
-				$perc_value = round ((($user_data[1] / ($user_data[0] + $user_data[1])) * 100), 2);
-				$perc_colour = get_colour_from_percentage($perc_value);
-				if ($perc_value >= 80)
-				{
-					$out .= "<br />" . htmlentities(stripslashes($all_users[$user_ID]->get_Name())) . " [" . ($user_data[0] + $user_data[1]) . " <span style=\"font-weight:bold; color:" . $perc_colour . "\">" . $perc_value . "%</span>]";
-					$entry_counter ++;
-				}
-				else
-				{
-					$out_2 .= "<br />" . htmlentities(stripslashes($all_users[$user_ID]->get_Name())) . " [" . ($user_data[0] + $user_data[1]) . " <span style=\"font-weight:bold; color:" . $perc_colour . "\">" . $perc_value . "%</span>]";
-					$entry_almost_counter ++;
-				}
-			}
-		}
-		else
-		{
-			$perc_value = round ((($user_data[0] / ($user_data[0] + $user_data[1])) * 100), 2);
-			$perc_colour = get_colour_from_percentage($perc_value);
-			$out_3 .= "<br /> UNKNOWN [" . ($user_data[0] + $user_data[1]) . " <span style=\"font-weight:bold; color:" . $perc_colour . "\">" . $perc_value . "%</span>]";
-		}
-	}
-	
-	return $entry_counter . " qualified users. " . $entry_almost_counter . " with 50+ responses but not 80%<hr>" . $out . "<hr>" . $out_2 . "<hr>" . $out_3;
-}
-
 function ajax_get_admin_set_relationship()
 {
 	global $mydb;
@@ -616,5 +585,131 @@ function ajax_save_comment()
 	set_comment($comment);
 	
 	echo "Saved!";
+}
+
+function ajax_random_forum_thread()
+{
+	$thread = get_thread_from_random();
+	if($thread)
+	{
+		return "<a href=\"" . $thread->get_URL() . "\">" . htmlentities(stripslashes($thread->get_Title())) . "</a>";
+	}
+}
+
+function ajax_latest_forum_thread()
+{
+	$thread = get_latest_thread();
+	if($thread)
+	{
+		$latest_post = $thread->get_latest_post();
+		return "<a href=\"" . $thread->get_URL() . "\">&quot;" . htmlentities(stripslashes($thread->get_Title())) . "&quot; by " .  htmlentities(stripslashes($latest_post->get_author()->get_Name())) . "</a>";
+	}
+}
+
+function ajax_stats_user_progress()
+{
+	global $responses_needed_for_section_breakdown;
+	
+	if (is_admin() && $_REQUEST['User_ID'])
+	{
+		global $mydb;
+		$user_responses = $mydb->get_responses_from_User_ID($_REQUEST['User_ID'], true);
+		$user_ID = (int)$_REQUEST['User_ID'];
+	}
+	else
+	{
+		$user_responses = return_user_responses();
+	}
+	
+	if (!$user_responses || (count($user_responses) < $responses_needed_for_section_breakdown))
+	{
+	return "
+{
+  \"cols\": [
+         {\"id\":\"\",\"label\":\"point\",\"pattern\":\"\",\"type\":\"number\"},
+         {\"id\":\"\",\"label\":\"percentage\",\"pattern\":\"\",\"type\":\"number\"}
+        ],
+  \"rows\": [
+        ]
+}	";
+	}
+	
+	// Generate data of progress, a 10 point floating average
+	$raw_data =  Array();
+	foreach ($user_responses as $response)
+	{
+		if ($response->is_correct())
+		{
+			$raw_data[] = 100;
+		}
+		else
+		{
+			$raw_data[] = 0;
+		}
+	}
+	
+	// get a floating point average and remove the ends, so we lose 20 points
+	$averaged_data = get_average_of_array($raw_data, 10);
+	$averaged_data = array_slice($averaged_data, 10);
+	array_splice($averaged_data, -10);
+	
+	// do the same again, we lose a further 6 points
+	$averaged_data = get_average_of_array($averaged_data, 3);
+	$averaged_data = array_slice($averaged_data, 3);
+	array_splice($averaged_data, -3);
+	
+	foreach ($averaged_data as $id => $data_point)
+	{
+		$averaged_data_string[] = "\n{\"c\":[{\"v\":" . $id . ",\"f\":null},{\"v\":" . $data_point . ",\"f\":null}]}";
+	}
+	
+	$data_string = implode(", ", $averaged_data_string);
+	
+	return "
+{
+  \"cols\": [
+         {\"id\":\"\",\"label\":\"point\",\"pattern\":\"\",\"type\":\"number\"},
+         {\"id\":\"\",\"label\":\"percentage\",\"pattern\":\"\",\"type\":\"number\"}
+        ],
+  \"rows\": [" . $data_string . "
+        ]
+}	";
+}
+
+function ajax_stats_user_section_totals()
+{
+	$user_responses = return_user_responses();
+	$user_questions_sections = return_user_questions_sections();
+	
+	if ($user_responses && $user_questions_sections)
+	{
+		$data_array = process_sections_responses_into_data($user_responses, $user_questions_sections);
+	}
+	$average_responses = cache_get("last_10000_sections");
+	
+	if ($data_array)
+	{
+		foreach ($data_array as $id => $percentage)
+		{
+			
+			$data_string_array[] = "\n{\"c\":[{\"v\":\"Section " . $id . "\",\"f\":null},{\"v\":" . $percentage . ",\"f\":null},{\"v\":" . $average_responses[$id] . ",\"f\":null}]}";
+			
+		}
+		$data_string = implode(", ", $data_string_array);
+	}
+	
+	
+	
+	return "
+{
+  \"cols\": [
+         {\"id\":\"\",\"label\":\"Section\",\"pattern\":\"\",\"type\":\"string\"},
+         {\"id\":\"\",\"label\":\"You\",\"pattern\":\"\",\"type\":\"number\"},
+         {\"id\":\"\",\"label\":\"Average\",\"pattern\":\"\",\"type\":\"number\"}
+        ],
+  \"rows\": [" . $data_string . "
+        ]
+}	";
+	
 }
 ?>

@@ -46,15 +46,57 @@ function exception_handler($exception)
 	// save a log of the error
 	$log_error_string = 
 		"URI: [" . $_SERVER['REQUEST_URI'] . "] 
-		REQUEST: [" . print_r($_REQUEST, true) . "]";
+		REQUEST: [" . print_r($_REQUEST, true) . "]
+		SERVER: [" . print_r($_SERVER, true) . "]";
 	
 	// display an error page for the user
-	$error_string .= $exception->getMessage() . "<br />\n";
+	$error_string = $exception->getMessage() . "<br />\n";
 	$error_string .= "Line " . $exception->getLine() . " in file " . $exception->getFile() . " (Trace: " . $exception->getTraceAsString() . ")";
 	
-	save_log("exception", $error_string . $log_error_string);
+	// we don't care if it's a no-question-found error
+	if (!strstr($error_string, "no question found"))
+	{
+		save_log("exception", $error_string . $log_error_string);
+		mail("wardrox@gmail.com", "RDTOM Exception", $error_string . $log_error_string);
+	}
 	
 	echo_error_page($error_string);
+}
+
+
+// Handle any uncaught Fatal Errors
+function fatal_handler() 
+{
+	$errfile = "unknown file";
+	$errstr  = "shutdown";
+	$errno   = E_CORE_ERROR;
+	$errline = 0;
+
+	$error = error_get_last();
+
+	// was there an error?
+	if( $error !== NULL) {
+		$errno   = $error["type"];
+		$errfile = $error["file"];
+		$errline = $error["line"];
+		$errstr  = $error["message"];
+		
+		// save a log of the error
+		$log_error_string = 
+			"URI: [" . $_SERVER['REQUEST_URI'] . "] 
+			REQUEST: [" . print_r($_REQUEST, true) . "]";
+		
+		// display an error page for the user
+		$error_string = "\n" . $errstr . "\n";
+		$error_string .= "Line " . $errline . " in file " . $errfile;
+		
+		@save_log("fatal", $error_string . $log_error_string);
+		
+		mail("wardrox@gmail.com", "RDTOM Fatal Error", $error_string . $log_error_string);
+		
+		echo_error_page($error_string);
+	}
+	
 }
 
 // error handler function
@@ -67,35 +109,37 @@ function error_handler($errno, $errstr, $errfile, $errline)
 
     switch ($errno) {
     case E_USER_ERROR:
-        $error_string .= "ERROR [$errno] $errstr<br />\n";
+        $error_string = "ERROR [$errno] $errstr<br />\n";
         $error_string .= "  Fatal error on line $errline in file $errfile";
         $error_string .= ", PHP " . PHP_VERSION . " (" . PHP_OS . ")<br />\n";
         //exit(1);
         break;
 
     case E_USER_WARNING:
-        $error_string .= "WARNING [$errno] $errstr<br />\n";
+        $error_string = "WARNING [$errno] $errstr<br />\n";
         $error_string .= "Line $errline in file $errfile";
         break;
 
     case E_USER_NOTICE:
-        $error_string .= "NOTICE [$errno] $errstr<br />\n";
+        $error_string = "NOTICE [$errno] $errstr<br />\n";
         $error_string .= "Line $errline in file $errfile";
         break;
 
     default:
-        $error_string .= "Unknown error type: [$errno] $errstr<br />\n";
+        $error_string = "Unknown error type: [$errno] $errstr<br />\n";
         $error_string .= "Line $errline in file $errfile";
         break;
     }
 
     // save a log of the error
 	$log_error_string = 
-		"MESSAGE: [" . $error_string . "] 
+		"\nMESSAGE: [" . $error_string . "] 
 		URI: [" . $_SERVER['REQUEST_URI'] . "] 
 		REQUEST: [" . print_r($_REQUEST, true) . "]";
 	
 	save_log("error", $log_error_string);
+	
+	mail("wardrox@gmail.com", "RDTOM Error", $error_string . $log_error_string);
 	
 	// display an error page for the user
 	echo_error_page($error_string);
@@ -107,7 +151,10 @@ function error_handler($errno, $errstr, $errfile, $errline)
 function echo_error_page($error_string)
 {
 	// clear the current output cache so we don't output half a page then an error
-	ob_end_clean();
+	if (ob_get_length())
+	{
+		ob_end_clean();
+	}
 	
 	?><!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 	<html>
@@ -172,6 +219,10 @@ function echo_error_page($error_string)
 	<?php 
 	}
 	?>
+		<p style="text-align: center">
+			<iframe src="//www.facebook.com/plugins/likebox.php?href=http%3A%2F%2Fwww.facebook.com%2FRollerDerbyTestOMatic&amp;width=400&amp;height=558&amp;show_faces=true&amp;colorscheme=light&amp;stream=true&amp;border_color&amp;header=false&amp;appId=131848900255414" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:400px; height:558px;" allowTransparency="true"></iframe>
+		</p>
+		
 		</body>
 	</html>
 	<?php 
@@ -181,5 +232,7 @@ function echo_error_page($error_string)
 //set error & exception handler
 set_error_handler("error_handler");
 set_exception_handler('exception_handler');
+register_shutdown_function( "fatal_handler" );
+
 
 ?>

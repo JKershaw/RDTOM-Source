@@ -15,26 +15,33 @@
 		
 		<title>Roller Derby Test O'Matic</title>
 		
-		<?echo get_CSS_embed("minify"); ?>
-		<?echo get_CSS_embed("print"); ?>
+		<?
+		//echo get_CSS_embed("minify"); 
+		echo get_CSS_embed(); 
+		echo get_CSS_embed("print"); 
+		?>
 		
-        <link rel="icon" href="<?echo get_theme_directory(); ?>favicon.gif" type="image/gif">
-        <link rel="apple-touch-icon-precomposed" href="<?echo get_theme_directory(); ?>RDTOM_touch_icon.png">		
+        <link rel="icon" href="<?echo get_site_URL(); ?>images/favicon.gif" type="image/gif">
+        <link rel="apple-touch-icon-precomposed" href="<?echo get_site_URL(); ?>images/RDTOM_touch_icon.png">		
 		
 		<meta name="viewport" content="width=device-width" >
+		
 		<meta property="og:title" content="Roller Derby Test O'Matic" >
 		<meta property="og:description" content="<?php echo get_page_description(); ?>" >
+		<meta property="og:image" content="<?echo get_site_URL(); ?>images/RDTOM_touch_icon.png" >
+		
 		<meta name="Description" content="<?php echo get_page_description(); ?>">
-		<?php if (is_competition_page())
-		{
-		?>
-		<meta property="og:image" content="<?php echo get_site_URL() ?>images/sponsors.png" >
-		<?php 
-		}
-		?>
 	
 		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8/jquery.min.js" type="text/javascript"></script>
+   		<script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
    		
+	<style>
+  #result_questions, #test_questions { list-style-type: none; margin: 0; padding: 0; float: left;  border: 1px solid #AAF; min-height:40px; background-color: #DDF; width:438px;}
+  #result_questions li, #test_questions li {margin: 5px; padding: 5px; border: 1px solid #AAF; background-color: white; font-size: 0.6em;}
+  #test_questions li {cursor:pointer;}
+  
+  .ui-state-highlight { height: 1.5em; line-height: 1.2em; background-color: #EEF}
+  </style>
 		<?php 
 		if (!is_admin_page())
 		{

@@ -237,11 +237,6 @@ function get_CSS_embed($type = false)
 
 }
 
-function get_theme_directory()
-{
-	return get_site_URL() . "css/";
-}
-
 function is_error()
 {
 	global $error_string;
@@ -283,6 +278,12 @@ function get_google_chart_script()
 		
 		$script .= '<script type="text/javascript" src="https://www.google.com/jsapi"></script>';
 	   	$script .= '<script type="text/javascript">
+	   	
+	   		var options_user_section_totals;
+	   		var data_user_section_totals;
+	   		var data_stats_user_progress;
+	   		var options_stats_user_progress;
+	   		
 	      google.load("visualization", "1", {packages:["corechart"]});
 	      google.setOnLoadCallback(drawChart);
 	      function drawChart() {

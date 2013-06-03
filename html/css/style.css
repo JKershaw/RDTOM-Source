@@ -45,6 +45,10 @@ h2
 	margin-bottom: 70px;
 }
 
+h3 a	
+{
+	font-weight: bold;
+}
 .error_string
 {
 	color: red;
@@ -235,6 +239,154 @@ ol
 	margin-left: 50px;
 }
 
+/* Forum formatting */
+
+.topics
+{
+	clear: both;
+	margin: 1em 0;
+	padding: 0px;
+	border: 1px solid;
+}
+.topicslist_topic
+{
+	border-bottom: 1px dotted #C1C1C1;
+	padding: 10px 0;
+	clear: both;
+	width: 100%;
+	position: relative;
+	
+	list-style: none;
+	margin:0px;
+}
+
+.threads
+{
+	clear: both;
+	margin: 1em 0;
+	padding: 0px;
+	border: 1px solid;
+}
+
+.threadslist_thread
+{
+	border-bottom: 1px dotted #C1C1C1;
+	padding: 0;
+	clear: both;
+	width: 100%;
+	position: relative;
+	
+	list-style: none;
+	margin:0px;
+}
+
+.threadslist_thread_wrap, .topicslist_topic_wrap, .topicslist_divider_wrap
+{
+	padding: 5px 10px;
+}
+
+.latest_post_string
+{
+	font-size: 12px;
+	font-weight: normal;
+	font-style: italic;
+}
+
+.posts
+{
+	clear: both;
+	margin: 1em 0;
+	padding: 0px;
+	border: 1px solid;
+}
+
+.forum_post
+{
+	border-bottom: 1px dotted #C1C1C1;
+	padding: 0;
+	clear: both;
+	width: 100%;
+	position: relative;
+	
+	list-style: none;
+	margin:0px;
+	display: inline-block;
+}
+
+.forum_post_meta
+{
+	float: left;
+	width: 20%;
+	min-width: 100px;
+}
+
+.forum_post_meta_wrap
+{
+	margin:10px;
+}
+
+.forum_post_content
+{
+	float: left;
+	width: 80%;
+	min-width: 500px;
+}
+
+.forum_post_content_wrap
+{
+	margin:10px;
+	word-wrap: break-word;
+}
+
+.forum_post_content_meta
+{
+	clear: both;
+	border-top: 1px dotted #ccc;
+	margin: 10px 0 0;
+	padding: 5px 0 0;
+	font-size: 10px;
+}
+.forum_post_meta_name
+{
+	font-size:12px;
+	font-weight:bold;
+	line-height: 20px;
+}
+.forum_post_meta_posts
+{
+	font-size:12px;
+}
+	
+	
+.posts li:nth-child(odd)
+{
+	background-color: #F3F3F3;
+}
+
+.posts li:last-child
+{
+	border-bottom: 0px;
+}
+
+
+.topicslist_divider
+{
+	padding: 10px 0;
+	clear: both;
+	width: 100%;
+	position: relative;
+	
+	list-style: none;
+	margin:0px;
+		
+	background-color: #F3F3F3;
+	border-bottom: 1px dotted #C1C1C1;
+	font-weight:bold;
+}
+
+
+
+/* screen MEDIA */
 @media screen and (max-width: 480px) {
 	body 
 	{

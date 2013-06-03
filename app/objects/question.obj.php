@@ -375,7 +375,7 @@ class question
 		return get_site_URL() . "question/" . $this->ID;
 	}
 	
-	public function get_terms($req_taxonomy)
+	public function get_terms($req_taxonomy = false)
 	{
 		// set up the local cached copy of the terms
 		if (!$this->all_terms)
@@ -384,22 +384,29 @@ class question
 			$this->all_terms = $mydb->get_terms(false, $this->ID);
 		}
 		
-		// find the terms from the cached copy
-		if ($this->all_terms)
+		if ($req_taxonomy)
 		{
-			foreach ($this->all_terms as $term)
+			// find the terms from the cached copy, given a specific taxonomy
+			if ($this->all_terms)
 			{
-				if ($term->get_taxonomy() == $req_taxonomy)
+				foreach ($this->all_terms as $term)
 				{
-					$terms[$term->get_ID()] = $term;
+					if ($term->get_taxonomy() == $req_taxonomy)
+					{
+						$terms[$term->get_ID()] = $term;
+					}
+				}
+				
+				// return value
+				if ($terms)
+				{
+					return $terms;
 				}
 			}
-			
-			// return value
-			if ($terms)
-			{
-				return $terms;
-			}
+		}
+		else
+		{
+			return $this->all_terms;
 		}
 		
 		return false;
