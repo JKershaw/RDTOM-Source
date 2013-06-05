@@ -16,6 +16,9 @@ class question
 	
 	private $all_terms;
 	
+	private $correct_answer;
+	private $wrong_answers;
+	
 	function __construct(
 		$req_ID,
 		$req_Text,
@@ -110,27 +113,45 @@ class question
 	{
 		return $this->Notes;
 	}
+
+	public function get_Fixed_Answers()
+	{
+
+	}
 	
 	public function get_Answers($max_num_answers = 4, $random_seed = false)
 	{
+		
+		// generate random correct & wrong answers
 		global $mydb, $last_correct_answer_index;
 		
 		// now we have all the answers, split them into correct and wrong arrays.
 		$correct_answers = Array();
 		$wrong_answers = Array();
 		
-		foreach ($this->get_all_Answers() as $answer)
+		// have we already set the correct & wrong answers?
+		if ($this->correct_answer && $this->wrong_answers)
 		{
-			if ($answer->is_correct())
+			$wrong_answers = $this->wrong_answers;
+			$correct_answers[] = $this->correct_answer;
+		}
+		else
+		{
+			// if not already set, get a full array of them
+			foreach ($this->get_all_Answers() as $answer)
 			{
-				$correct_answers[] = $answer;
-			}
-			else
-			{
-				$wrong_answers[] = $answer;
+				if ($answer->is_correct())
+				{
+					$correct_answers[] = $answer;
+				}
+				else
+				{
+					$wrong_answers[] = $answer;
+				}
 			}
 		}
 		
+		// check for errors
 		if (count($correct_answers) < 1)
 		{
 			throw new exception("Uh oh... No correct answers found for question number " . $this->ID);
@@ -518,5 +539,32 @@ class question
         	$out .= "\nTerms: \n";
         }
         return $out;
+    }
+    
+    public function set_correct_answer($req_answer)
+    {
+    	if ($req_answer->is_correct())
+    	{
+    		$this->correct_answer = $req_answer;
+    	}
+    	else
+    	{
+    		throw new exception ("Attempted to save a wrong answer as a correct answer");
+    	}
+    }
+    
+    public function set_wrong_answers($req_answers)
+    {
+    	foreach ($req_answers as $req_answer)
+    	{
+	    	if (!$req_answer->is_correct())
+	    	{
+    			$this->wrong_answers[] = $req_answers;
+	    	}
+	    	else
+	    	{
+	    		throw new exception ("Attempted to save a correct answer as a wrong answer");
+	    	}
+    	}
     }
 }
