@@ -75,6 +75,9 @@
 		} 
 		?>		
 		
+		<p><span style="font-weight:bold; color:yellow; background-color: #333; padding:0 3px;">NEW!</span> <a href="<?php echo get_site_URL(); ?>minimumskills">Get the Minimum Skills app</a></p>
+		
+		
 		<?php if (is_view_only_changes())
 		{ ?>
 			<p>
@@ -115,7 +118,7 @@
 				<img src="http://www.assoc-amazon.com/e/ir?t=rdtom-20&l=as2&o=1&a=B00CMNI6QI" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" />
 				
 			</p>	
-		
+			
 			<div class="facebook_wrap_wide">
 				<iframe src="http://www.facebook.com/plugins/like.php?href=http://rollerderbytestomatic.com/"
 				scrolling="no" frameborder="0"

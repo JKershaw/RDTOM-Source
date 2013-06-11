@@ -57,10 +57,30 @@ function get_page_subtitle()
 	}
 	else
 	{
-		return "Turn left and learn the <i>2013</i> rules.";
+		return "Turn left and learn the rules.";
 	}
 }
 
+// set functions
+function set_page_title($req_title)
+{
+	global $page_title;
+	$page_title = $req_title;
+}
+
+// get functions
+function get_page_title()
+{
+	global $page_title;
+	if ($page_title)
+	{
+		return $page_title;
+	}
+	else
+	{
+		return "Roller Derby Test O'Matic";
+	}
+}
 
 function is_remebering_results()
 {
