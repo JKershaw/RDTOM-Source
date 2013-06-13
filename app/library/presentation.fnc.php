@@ -192,10 +192,65 @@ function get_remebered_string()
 	return $result;
 }
 
-function get_site_URL()
+function get_site_URL($check_if_ssl = false)
 {
 	global $site_URL;
-	return $site_URL;
+	if ($check_if_ssl && is_secure_https())
+	{
+		// we want the https URL
+		return get_secure_site_URL();
+	}
+	else
+	{
+		return $site_URL;
+	}
+}
+
+function get_secure_site_URL()
+{
+	global $site_URL;
+	return str_replace("http://", "https://" , $site_URL);
+}
+
+function get_http_or_https()
+{
+	if ($_SERVER["HTTPS"] == "on")
+	{
+		return "https";
+	} 
+	else 
+	{
+		return "http";
+	}
+}
+
+
+function force_secure()
+{
+	// if we want to force HTTPS
+	// if HTTPS is already on, everything is fine
+	if ($_SERVER["HTTPS"] == "on")
+	{
+		return true;
+	}
+	
+	// redirect to HTTPS & end script execution
+	header('Location: ' . preg_replace("/http/", "https", strtolower(curPageURL()), 1));
+	exit;
+}
+
+function is_secure_https()
+{
+	global $site_url;
+	
+	if ($_SERVER["HTTPS"] == "on")
+	{
+		return true;
+	} 
+	else 
+	{
+		return false;
+	}
 }
 
 function get_CSS_URL($type = false)
@@ -204,11 +259,11 @@ function get_CSS_URL($type = false)
 	{
 		if ($type == "print")
 		{
-			return get_site_URL() . "css/print.css?v=" . filemtime("css/print.css");
+			return get_site_URL(true) . "css/print.css?v=" . filemtime("css/print.css");
 		}
 		if ($type == "minify")
 		{
-			return get_site_URL() . "css/style-min.css?v=" . filemtime("css/style-min.css");
+			return get_site_URL(true) . "css/style-min.css?v=" . filemtime("css/style-min.css");
 		}
 	}
 	return get_site_URL() . "css/style.css?v=" . filemtime("css/style.css");
@@ -245,11 +300,11 @@ function get_CSS_embed($type = false)
 		}
 		if ($type == "minify")
 		{
-			return "<link rel=\"stylesheet\" href=\"" . get_site_URL() . "css/style-min.css?v=" . filemtime("css/style-min.css") . "\" type=\"text/css\" >";
+			return "<link rel=\"stylesheet\" href=\"" . get_site_URL(true) . "css/style-min.css?v=" . filemtime("css/style-min.css") . "\" type=\"text/css\" >";
 	
 		}
 	}
-	return "<link rel=\"stylesheet\" href=\"" . get_site_URL() . "css/style.css?v=" . filemtime("css/style.css") . "\" type=\"text/css\" >";
+	return "<link rel=\"stylesheet\" href=\"" . get_site_URL(true) . "css/style.css?v=" . filemtime("css/style.css") . "\" type=\"text/css\" >";
 	
 	
 	return ;	

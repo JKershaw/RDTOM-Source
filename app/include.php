@@ -29,6 +29,7 @@ include('library/mappers/questions.db.fnc.php');
 include('library/mappers/answers.db.fnc.php');
 include('library/mappers/reports.db.fnc.php');
 include('library/mappers/comments.db.fnc.php');
+include('library/mappers/test.db.fnc.php');
 
 // Model (object) files autoload, phpMailer is also Autoloaded as used rarely
 function __autoload($classname) 

@@ -118,6 +118,9 @@ try
 		case "stats_user_section_totals":
 			$out = ajax_stats_user_section_totals();	
 		break;
+		case "save_test":
+			$out = ajax_save_test();	
+		break;
 	}
 	
 	echo $out;
@@ -711,5 +714,64 @@ function ajax_stats_user_section_totals()
         ]
 }	";
 	
+}
+
+function ajax_save_test()
+{
+	global $user;
+	if (is_logged_in())
+	{
+		try {
+		// save or add the test
+		// return the ID of the test
+		/*
+		 * 			id: test_id,
+					title: $('#test_title').val(),
+					description: $('textarea#test_description').val(),
+					questions_and_answers: qanda,
+					status: $('input:radio[name=test_status]:checked').val(),
+					link_hash: link_hash 
+		 */
+		$test = new test();
+		
+		// build the test object
+		$test->set_ID($_POST['id']);
+		$test->set_Title($_POST['title']);
+		$test->set_Description($_POST['description']);
+		$test->set_Status($_POST['status']);
+		$test->set_link_hash($_POST['link_hash']);
+		
+		// Questions and Answers (array of IDs)
+		if ($_POST['questions_and_answers'] && is_array($_POST['questions_and_answers']))
+		{
+			foreach ($_POST['questions_and_answers'] as $qanda_IDs)
+			{
+				$answers = Array();
+				$question = get_question_from_ID($qanda_IDs[0]);
+				
+				if ($qanda_IDs[1] && is_array($qanda_IDs[1]))
+				{
+					foreach ($qanda_IDs[1] as $answer_ID)
+					{
+						$answers[] = get_answer_from_ID($answer_ID);
+					}
+				}
+				
+				$test->add_question($question, $answers);
+			}
+		}
+		
+		$test->set_Author_ID($user->get_ID());
+		
+			return set_test($test);
+			
+		} catch (Exception $e) {
+			return $e->getMessage();
+		}
+	}
+	else
+	{
+		return -1;
+	}
 }
 ?>

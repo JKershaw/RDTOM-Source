@@ -4,110 +4,166 @@ class test
 	private $ID;
 	private $Questions;
 	
-	private $pass_percentage;
+	// $Answers[QuestionID] = {A1, A2, A3, A4}
+	// array of Answers, in the order of display
+	private $Answers;
+	
+	// an array of just question ID and answer IDs, used so we can make a test object without needing to load all the questions
+	private $QandA_ID_Array;
+	
+	
+	private $pass_percentage = 80;
+	private $output_format = "interactiveHTML";
+	
 	private $number_of_questions;
 	private $difficulty;
-	private $output_format = "HTML";
 	
 	private $seed;
+	
+	private $title;
+	private $description;
+	private $status;
+	private $link_hash;
+	
+	private $Author_ID;
+	private $Timestamp_created;
+	private $Timestamp_edited;
+	private $count_view;
+	private $count_completed;
+	private $average_score;
 	
 	function __construct()
 	{
 		// generate a seed for this test
 		list($usec, $sec) = explode(' ', microtime());
-  		$this->seed = (float) $sec + ((float) $usec * 100000) + rand(0, 1000000);
-		
+  		$this->seed = (float) $sec + ((float) $usec * 1000000) + rand(0, 1000000);
 	}
 	
-	public function populate($opt_number_of_questions = 45, $difficulty = "intermediate", $question_IDs = false)
+	private function load_questions_and_answers()
 	{
-		if ($opt_number_of_questions < 1)
+		// if we've already populated the test, don't worry about it.
+		if ($this->Questions)
 		{
-			$opt_number_of_questions = 1;
-			//throw new exception("Could not generate test, number of requested questions too low or missing");
+			return;
 		}
 		
-		// get all applicable questions	
-		if ($question_IDs)
+		// use $QandA_ID_Array to populate $Questions and $Answers
+		if (!$this->QandA_ID_Array)
 		{
-			if (is_array($question_IDs) && (count($question_IDs) < 1))
+			throw new exception ("No QandA_ID_Array");
+		}
+		
+		foreach ($this->QandA_ID_Array as $qanda_IDs)
+		{
+			$answers = Array();
+			$question = get_question_from_ID($qanda_IDs[0]);
+			
+			if ($qanda_IDs[1] && is_array($qanda_IDs[1]))
 			{
-				throw new exception("Could not generate test, number of requested questions too low or missing");
-			}
-			// we know what questions we want;
-			foreach($question_IDs as $question_ID)
-			{
-				try {
-					$all_questions[] = get_question_from_ID($question_ID);
-				} catch (Exception $e) {
+				foreach ($qanda_IDs[1] as $answer_ID)
+				{
+					$answers[] = get_answer_from_ID($answer_ID);
 				}
 			}
+			
+			$this->add_question($question, $answers);
 		}
-		else
-		{
-			
-			// get all the applicable questions
-			
-			$terms_array = array();
-			
-			if ($difficulty == "beginner")
-			{
-				$terms_array["difficulty"] = "Beginner";
-			}
-			elseif ($difficulty == "expert")
-			{
-				$terms_array["difficulty"] = "Expert";
-			}
-			elseif ($difficulty == "intermediate") // default
-			{
-				$terms_array["difficulty"] = "Intermediate";
-			}
-			
-			$this->difficulty = $difficulty;
-			
-			// we want only WFTDA 5 questions and questions tagged with "Test Question" to be shown
-			$terms_array["rule-set"] = "WFTDA6";
-			$terms_array["tag"] = "Test Question";
-			
-			$all_questions = get_questions($terms_array);
-		}
-			
-		// clean the input
-		settype($opt_number_of_questions, "integer");
+	}
+	
+	public function add_question($question, $answers)
+	{
+		// add a question to the test
+		// $answers is an array of Answers in the order we'd like them shown in.
 		
-		if ($opt_number_of_questions < 1)
-		{
-			$opt_number_of_questions = 1;
-		}
+		// save the question
+		$this->Questions[$question->get_ID()] = $question;
 		
-		if ($opt_number_of_questions > count($all_questions))
-		{
-			$opt_number_of_questions = count($all_questions);
-		}
+		// save the answers
+		$this->Answers[$question->get_ID()] = $answers;
 		
-		// randomly get a subsection of the array the correct length
+		// incriment the question count 
+		$this->number_of_questions++;
 		
-		$random_questions_array_keys = array_rand($all_questions, $opt_number_of_questions);
-		if (is_array($random_questions_array_keys))
-		{
-			foreach ($random_questions_array_keys as $random_question_array_key)
-			{
-				$test_questions[] = $all_questions[$random_question_array_key];
-			}
-		}
-		else
-		{
-			$test_questions[] = $all_questions[$random_questions_array_keys];
-		}		
-		
-		$this->Questions = $test_questions;
-		$this->number_of_questions = $opt_number_of_questions;
-		
+	}
+
+	public function set_ID($req_ID)
+	{
+		$this->ID = $req_ID;
+	}
+
+	public function set_Timestamp_created($req)
+	{
+		$this->Timestamp_created = $req;
+	}
+	
+	public function set_Timestamp_edited($req)
+	{
+		$this->Timestamp_edited = $req;
+	}
+	public function set_Author_ID($req_ID)
+	{
+		$this->Author_ID = $req_ID;
+	}
+
+	public function set_Title($req_Title)
+	{
+		$this->title = $req_Title;
+	}
+
+	public function set_Description($req_description)
+	{
+		$this->description = $req_description;
+	}
+
+	public function set_Status($req_status)
+	{
+		$this->status = $req_status;
+	}
+
+	public function set_link_hash($req_link_hash)
+	{
+		$this->link_hash = $req_link_hash;
+	}
+	
+	public function set_Views_Count($req)
+	{
+		$this->count_view = $req;
+	}
+	
+	public function set_Complete_Count($req)
+	{
+		$this->count_completed = $req;
+	}
+	
+	public function set_Average_Rating($req)
+	{
+		$this->average_score = $req;
 	}
 	
 	public function set_seed($req_seed)
 	{
 		$this->seed = $req_seed;
+	}
+	
+	public function set_pass_percentage($req_pass_percentage)
+	{
+		settype($req_pass_percentage, "integer");
+		$this->pass_percentage = $req_pass_percentage;
+	}
+	
+	public function set_output_format($req_output_format)
+	{
+		$this->output_format = $req_output_format;
+	}
+	
+	public function get_seed()
+	{
+		return $this->seed;
+	}
+
+	public function set_QandA_ID_Array($req_array)
+	{
+		return $this->QandA_ID_Array = $req_array;
 	}
 	
 	public function get_difficulty()
@@ -131,30 +187,109 @@ class test
 		return false;
 	}
 	
-	public function set_pass_percentage($req_pass_percentage)
-	{
-		settype($req_pass_percentage, "integer");
-		$this->pass_percentage = $req_pass_percentage;
-	}
-	
 	public function get_ID()
 	{
 		return $this->ID;
 	}
 	
+	public function get_Timestamp_created()
+	{
+		return $this->Timestamp_created;
+	}
+	
+	public function get_Timestamp_edited()
+	{
+		return $this->Timestamp_edited;
+	}
+
+	public function get_Author_ID()
+	{
+		return $this->Author_ID;
+	}
+
+	public function get_Title()
+	{
+		return $this->title;
+	}
+
+	public function get_Description()
+	{
+		return $this->description;
+	}
+
+	public function get_Status()
+	{
+		// only three values it can be
+		if (($this->status == "private") || ($this->status == "public"))
+			return $this->status;
+		else
+			return "draft";
+	}
+
+	public function get_link_hash()
+	{
+		return $this->link_hash;
+	}
+	
+	
 	public function get_Questions()
 	{
+		$this->load_questions_and_answers();
 		return $this->Questions;
+	}
+	
+	public function get_Answers($question_ID)
+	{
+		$this->load_questions_and_answers();
+		return $this->Answers[$question_ID];
+	}
+	
+	
+	public function get_Question_Count()
+	{
+		$this->load_questions_and_answers();
+		return (integer)$this->number_of_questions;
+	}
+	
+	public function get_Views_Count()
+	{
+		return (integer)$this->count_view;
+	}
+	
+	public function get_Complete_Count()
+	{
+		return (integer)$this->count_completed;
+	}
+	
+	public function get_Average_Rating()
+	{
+		return (integer)$this->average_score;
 	}
 	
 	public function get_pass_mark()
 	{
-		return round($this->number_of_questions * ($this->pass_percentage / 100));
+		return round($this->get_Question_Count() * ($this->pass_percentage / 100));
 	}
 	
-	public function set_output_format($req_output_format)
+	public function get_question_and_answers_IDs($return_string = true)
 	{
-		$this->output_format = $req_output_format;
+		$this->load_questions_and_answers();
+		if ($this->Questions)
+		{
+			foreach ($this->Questions as $question)
+			{
+				$answers = $this->Answers[$question->get_ID()];
+				$answer_IDs = Array();
+				foreach ($answers as $answer)
+				{
+					$answer_IDs[] = $answer->get_ID();
+				}
+				
+				$result[] = Array(0 => $question->get_ID(), 1 => $answer_IDs);
+			}
+		}
+		
+		return $result;
 	}
 	
 	public function get_output_format()
@@ -168,6 +303,9 @@ class test
 	
 	public function get_formatted_output($type = false)
 	{
+		// incriment view count on test
+		
+		$this->load_questions_and_answers();
 		/*
 		 * Make a "Test" object which can produce its output in many formats:
 		 * 		- HTML
@@ -207,7 +345,14 @@ class test
 	
 	private function get_formatted_output_HTML()
 	{
-		$out = '
+		if ($this->title)
+		{
+			$out .= "<h3>" . htmlentities(stripslashes($this->title)) . "</h3>";
+		}
+		if ($this->description){
+			$out .= "<p>" . htmlentities(stripslashes($this->description)) . "</p>";
+		}
+		$out .= '
 		
 		<p>
 			<strong>Name:</strong>___________________________________________
@@ -245,7 +390,7 @@ class test
 				$i = 0;
 				foreach ($this->Questions as $question)
 				{
-					$answers = $question->get_Answers(4, $this->seed);
+					$answers = $this->Answers[$question->get_ID()];
 					$i++;
 					
 					$out .= "
@@ -305,7 +450,14 @@ class test
 
 	private function get_formatted_output_interactiveHTML()
 	{
-		$out = '
+		if ($this->title)
+		{
+			$out .= "<h3>" . htmlentities(stripslashes($this->title)) . "</h3>";
+		}
+		if ($this->description){
+			$out .= "<p>" . htmlentities(stripslashes($this->description)) . "</p>";
+		}
+		$out .= '
 		
 		<table style="width: 100%; margin: 0 0 1em;">
 			<tr>
@@ -330,7 +482,7 @@ class test
 				$i = 0;
 				foreach ($this->Questions as $question)
 				{
-					$answers = $question->get_Answers(4, $this->seed);
+					$answers = $this->Answers[$question->get_ID()];
 					$i++;
 					
 					$out .= "
@@ -397,7 +549,7 @@ class test
 			You can only have your test marked once, so be sure to double-check all of your answers! Your responses will be saved when you have your test marked.
 		</p>
 		<p>
-			Link to this test (<a onclick=\"shorten_link();\">shorten using bit.ly</a>): <input id=\"link_to_test\" name=\"link_to_test\" type=\"text\" value=\"" . $this->return_test_URL() . "\"> <span id=\"loading_bitly\" style=\"display:none\">Loading...</span>
+			Link to this test, answers are randomised every time (<a onclick=\"shorten_link();\">shorten using bit.ly</a>): <input id=\"link_to_test\" name=\"link_to_test\" type=\"text\" value=\"" . $this->get_test_URL() . "\"> <span id=\"loading_bitly\" style=\"display:none\">Loading...</span>
 		</p>
 		";
 
@@ -441,7 +593,7 @@ class test
 		            "format": "json",
 		            "apiKey": "R_fdb4c15ca55edd5f58b4a83793197706",
 		            "login": "wardrox",
-		            "longUrl": "' . ($this->return_test_URL()) . '"
+		            "longUrl": "' . ($this->get_test_URL()) . '"
 		        },
 		        function(response)
 		        {
@@ -599,7 +751,7 @@ class test
 		return $out;
 	}
 	
-	public function return_test_URL()
+	public function get_test_URL()
 	{
 		/*
 		$test_number_of_questions = $_GET['n'];
@@ -608,6 +760,22 @@ class test
 		$test_output = $_GET['o'];
 		$test_question_IDs = explode(".", $_GET['q']);
 		 */
+		
+		// is this a saved test?
+		if ($this->ID)
+		{
+			if ($this->status == "private")
+			{
+				return get_site_URL() . "test/" . $this->ID . "/" . $this->link_hash;
+			}
+			else
+			{
+				return get_site_URL() . "test/" . $this->ID;
+			}
+		}
+		
+		$this->load_questions_and_answers();
+		
 		foreach ($this->Questions as $question)
 		{
 			$question_ID_array[] = $question->get_ID();

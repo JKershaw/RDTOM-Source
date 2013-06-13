@@ -94,7 +94,7 @@ function time_elapsed_string($ptime) {
 }
 
 function get_gravatar( $email, $s = 80, $d = 'mm', $r = 'g', $img = false, $atts = array() ) {
-    $url = 'http://www.gravatar.com/avatar/';
+    $url = get_http_or_https() . '://www.gravatar.com/avatar/';
     $url .= md5( strtolower( trim( $email ) ) );
     $url .= "?s=$s&d=$d&r=$r";
     if ( $img ) {
@@ -104,5 +104,17 @@ function get_gravatar( $email, $s = 80, $d = 'mm', $r = 'g', $img = false, $atts
         $url .= ' />';
     }
     return $url;
+}
+
+function curPageURL() {
+ $pageURL = 'http';
+ if ($_SERVER["HTTPS"] == "on") {$pageURL .= "s";}
+ $pageURL .= "://";
+ if ($_SERVER["SERVER_PORT"] != "80") {
+  $pageURL .= $_SERVER["SERVER_NAME"].":".$_SERVER["SERVER_PORT"].$_SERVER["REQUEST_URI"];
+ } else {
+  $pageURL .= $_SERVER["SERVER_NAME"].$_SERVER["REQUEST_URI"];
+ }
+ return $pageURL;
 }
 ?>

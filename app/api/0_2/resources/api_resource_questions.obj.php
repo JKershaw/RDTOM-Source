@@ -20,7 +20,27 @@ class api_resource_questions extends api_resource
 		
 		if ($parameters['search'])
 		{
-			$questions = get_questions_search($parameters['search']);
+			// are they searching for a given difficulty?
+			if (in_array($parameters['search'], Array("difficulty:beginner", "difficulty:intermediate", "difficulty:expert")))
+			{
+				// user wants a difficulty
+				$terms_array["rule-set"] = "WFTDA6";
+				$terms_array["tag"] = "Test Question";
+				
+				if ($parameters['search'] == "difficulty:beginner")
+					$terms_array["difficulty"] = "Beginner";
+				if ($parameters['search'] == "difficulty:intermediate")
+					$terms_array["difficulty"] = "Intermediate";
+				if ($parameters['search'] == "difficulty:expert")
+					$terms_array["difficulty"] = "Expert";
+				
+				$questions = get_questions($terms_array);
+				
+			}
+			else
+			{
+				$questions = get_questions_search($parameters['search']);
+			}
 		}
 		else
 		{
@@ -70,8 +90,18 @@ class api_resource_questions extends api_resource
 				// the answers
 				$XML_answers = $XML_newquestion->addChild('answers');
 				
+				//if we're searching, get ALL answers
+				if ($parameters['search'])
+				{
+					$all_answers = $question->get_all_Answers();
+				}
+				else
+				{
+					$all_answers = $question->get_Answers();
+				}
+				
 				// save the answers
-				foreach ($question->get_Answers() as $answer)
+				foreach ($all_answers as $answer)
 				{
 					$XML_newanswer = $XML_answers->addChild('answer');
 					$XML_newanswer->addChild('id', $answer->get_ID());

@@ -27,7 +27,27 @@ function get_answers_from_question_ID($req_ID)
 	}
 	else
 	{
-		throw new exception("Whoops, no answers found in the database for question (ID: " . $req_ID . ")");
+		throw new exception("Whoops, no answers found in the database for question");
+	}
+}
+
+function get_answer_from_ID($req_ID)
+{
+	global $myPDO;
+	
+	$statement = $myPDO->prepare("SELECT * FROM rdtom_answers WHERE ID = :ID");
+	$statement->execute(array(':ID' => $req_ID));
+	$result = $statement->fetch(PDO::FETCH_ASSOC);
+	
+	if ($result)
+	{
+		$out = get_answer_from_array($result);
+			
+		return $out;
+	}
+	else
+	{
+		throw new exception("Whoops, no answers found in the database with ID");
 	}
 }
 
@@ -42,7 +62,7 @@ function is_answer_correct_from_ID($req_ID)
 	
 	if ($result === false)
 	{
-		throw new Exception("database object error: no answer found with the ID " . $req_ID);
+		throw new Exception("database object error: no answer found with the ID " . (integer)$req_ID);
 	}
 	
 	if ($result == 1)

@@ -12,23 +12,7 @@
 // display the page
 ?>	
 		<div class="footer">
-		
-		<?php 
-		/*
-		<div class="layout_box" style="	margin: 20px 0; box-shadow: 3px 3px 5px #888; border: 1px solid red; min-height: 150px;">
-	
-			<img style="width:400px; max-width:90%; margin-right:20px; margin-bottom:20px; float:left;" src="http://rollerderbytestomatic.com/images/sponsors3_400.png" title="Thanks to our awsome sponsors: Wicked Skatewear, 5th Blocker Skates, Roller Derby City .com and Fast Girl Skates"/>
-	
-			<div id="competition_string">
-			<?php
-			echo get_competition_footer_string();
-			?>
-			</div>
-	
-		</div>
-		*/
-		?>
-		
+
 		<?php 
 		if (is_question()) 
 		{
@@ -109,24 +93,24 @@
 				<a href="https://play.google.com/store/apps/details?id=com.rollerderbytestomatic.lite"><img border="0" alt="Android app on Google Play" src="https://developer.android.com/images/brand/en_app_rgb_wo_45.png" /></a>
 				
 				<!-- iTunes -->
-				<a href="https://itunes.apple.com/us/app/roller-derby-test-omatic-lite/id642903652?ls=1&mt=8"><img border="0" alt="iOS app on iTunes" src="<?php echo get_site_URL(); ?>images/ios.png" /></a>
+				<a href="https://itunes.apple.com/us/app/roller-derby-test-omatic-lite/id642903652?ls=1&mt=8"><img border="0" alt="iOS app on iTunes" src="<?php echo get_site_URL(true); ?>images/ios.png" /></a>
 				
 				
 				<!-- Amazon -->
-				<a href="http://www.amazon.com/gp/product/B00CMNI6QI/ref=as_li_ss_il?ie=UTF8&camp=1789&creative=390957&creativeASIN=B00CMNI6QI&linkCode=as2&tag=rdtom-20"><img border="0" style="height: 45px;" alt="Android app on Amazon for Kindle"
-						src="<?php echo get_site_URL(); ?>images/amazon.png" /></a>
-				<img src="http://www.assoc-amazon.com/e/ir?t=rdtom-20&l=as2&o=1&a=B00CMNI6QI" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" />
+				<a href="<?php echo get_http_or_https(); ?>://www.amazon.com/gp/product/B00CMNI6QI/ref=as_li_ss_il?ie=UTF8&camp=1789&creative=390957&creativeASIN=B00CMNI6QI&linkCode=as2&tag=rdtom-20"><img border="0" style="height: 45px;" alt="Android app on Amazon for Kindle"
+						src="<?php echo get_site_URL(true); ?>images/amazon.png" /></a>
+				<img src="<?php echo get_http_or_https(); ?>://www.assoc-amazon.com/e/ir?t=rdtom-20&l=as2&o=1&a=B00CMNI6QI" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" />
 				
 			</p>	
 			
 			<div class="facebook_wrap_wide">
-				<iframe src="http://www.facebook.com/plugins/like.php?href=http://rollerderbytestomatic.com/"
+				<iframe src="<?php echo get_http_or_https(); ?>://www.facebook.com/plugins/like.php?href=http://rollerderbytestomatic.com/"
 				scrolling="no" frameborder="0"
 				style="border:none; width:450px; height:80px"></iframe>
 	       	</div>
         
 			<div class="facebook_wrap_narrow">
-        		<iframe src="http://www.facebook.com/plugins/like.php?href=http%3A%2F%2Frollerderbytestomatic.com%2F&amp;send=false&amp;layout=button_count&amp;width=100&amp;show_faces=false&amp;font&amp;colorscheme=light&amp;action=like&amp;height=21&amp;appId=131848900255414" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:100px; height:21px;"></iframe>
+        		<iframe src="<?php echo get_http_or_https(); ?>://www.facebook.com/plugins/like.php?href=http%3A%2F%2Frollerderbytestomatic.com%2F&amp;send=false&amp;layout=button_count&amp;width=100&amp;show_faces=false&amp;font&amp;colorscheme=light&amp;action=like&amp;height=21&amp;appId=131848900255414" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:100px; height:21px;"></iframe>
 			</div>
 			
 			<?php if (is_admin()) 
@@ -156,7 +140,7 @@
 			function ajax_update_forum_thread()
 			{
 				
-				$.post("<?php echo get_site_URL(); ?>ajax.php", { 
+				$.post("<?php echo get_site_URL(true); ?>ajax.php", { 
 					call: "latest_forum_thread"},
 					function(data) 
 					{

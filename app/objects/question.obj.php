@@ -114,9 +114,41 @@ class question
 		return $this->Notes;
 	}
 
-	public function get_Fixed_Answers()
+	public function get_Fixed_Answers($answer_IDs)
 	{
-
+		// can't simply do an in_array as we need to preserve the order
+		foreach ($answer_IDs as $answer_ID)
+		{	
+			foreach ($this->get_all_Answers() as $answer)
+			{
+				if ($answer->get_ID() == $answer_ID)
+				{
+					if ($answer->is_correct())
+					{
+						$correct_answers_count++;
+					}
+					else
+					{
+						$wrong_answers_count++;
+					}
+					$answers[] = $answer;
+				}
+			}
+		}
+		
+		// check we have wrong & right answers
+		if ($correct_answers_count < 1)
+		{
+			throw new exception ("No correct answers found");
+		}
+		if ($wrong_answers_count < 1)
+		{
+			throw new exception ("No incorrect answers found");
+		}
+		
+		// return
+		return $answers;
+		
 	}
 	
 	public function get_Answers($max_num_answers = 4, $random_seed = false)

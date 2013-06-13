@@ -220,13 +220,14 @@ if (is_logged_in())
 }
 else
 {
-
+	// only show this page if we're on SSL
+	force_secure();
 	
 	?>
 	<div id="form_login" <?php if ($sign_up_error) { echo "style=\"display: none;\""; }?>>
 		<h3>Login to your account</h3>
 		
-		<form method="post" action="<?php echo get_site_URL(); ?>profile" name="formlogin">
+		<form method="post" action="<?php echo get_site_URL(true); ?>profile" name="formlogin">
 		<input type="hidden"  name="loginform" id="loginform" value="yes"></input>
 		<p>
 			Name:<br />
@@ -251,7 +252,7 @@ else
 	
 	<div id="form_signup" <?php if (!$sign_up_error) { echo "style=\"display: none;\""; }?>>
 		<h3>Sign up</h3>
-		<form method="post" action="<?php echo get_site_URL(); ?>profile" name="formsignup">
+		<form method="post" action="<?php echo get_site_URL(true); ?>profile" name="formsignup">
 			<input type="hidden" id="signupform" name="signupform"  value="yes"></input>
 		<p>		
 			Name: <br />
