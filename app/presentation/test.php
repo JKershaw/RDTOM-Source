@@ -799,17 +799,20 @@ elseif ($url_array[1] == "generate")
 		{
 			$parameters['seed'] = $_REQUEST['s'];
 		}
+		
+		
+		// get the test
+		$test = get_test_from_parameters($parameters);
+		
+		// display the test
+		echo $test->get_formatted_output();
 	}
 	else
 	{
-		throw new exception ("No details given to generate test from.");
+		echo "<p>You need to give details on the kind of test you would like to generate.</p>
+		<p><a href=\"" . get_site_URL() . "test/\">Click here to generate a Rules Test</a></p>";
 	}
 	
-	// get the test
-	$test = get_test_from_parameters($parameters);
-	
-	// display the test
-	echo $test->get_formatted_output();
 
 }
 else

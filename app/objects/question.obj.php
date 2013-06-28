@@ -292,15 +292,15 @@ class question
 				$section_array = explode(".", $this->get_Section());
 				if (count($section_array) == 1)
 				{
-					return "http://wftda.com/rules/20130101/section/" . $section_array[0];
+					return "http://wftda.com/rules/20130615/section/" . $section_array[0];
 				}
 				elseif (count($section_array) <= 3)
 				{
-					return "http://wftda.com/rules/20130101/section/" . $section_array[0] . "." . $section_array[1];
+					return "http://wftda.com/rules/20130615/section/" . $section_array[0] . "." . $section_array[1];
 				}
 				else
 				{
-					return "http://wftda.com/rules/20130101/section/" . $section_array[0] . "." . $section_array[1] . "." . $section_array[2];
+					return "http://wftda.com/rules/20130615/section/" . $section_array[0] . "." . $section_array[1] . "." . $section_array[2];
 				}
 			}
 		}

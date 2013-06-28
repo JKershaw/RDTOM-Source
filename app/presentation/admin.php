@@ -685,7 +685,8 @@ include("header.php");
 		<p id="viewallreportslink"><a onclick="$('#viewallreportslink').hide(); $('#viewallreportslist').show();">View all reports</a></p>
 		<p id="viewallreportslist" style="display:none">
 		<?php 
-			$reports = $mydb->get_reports();
+	
+			//$reports = $mydb->get_reports();
 			
 			if ($reports)
 			{

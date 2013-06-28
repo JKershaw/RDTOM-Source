@@ -206,7 +206,7 @@ function populate_test(&$test, $opt_number_of_questions = 45, $difficulty = "int
 				$terms_array["difficulty"] = "Intermediate";
 			}
 			
-			$this->difficulty = $difficulty;
+			//$test->set_difficulty = $difficulty;
 			
 			// we want only WFTDA 5 questions and questions tagged with "Test Question" to be shown
 			$terms_array["rule-set"] = "WFTDA6";
