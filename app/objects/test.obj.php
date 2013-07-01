@@ -62,7 +62,11 @@ class test
 			{
 				foreach ($qanda_IDs[1] as $answer_ID)
 				{
+					try {
+						
 					$answers[] = get_answer_from_ID($answer_ID);
+					} catch (Exception $e) {
+					}
 				}
 			}
 			
@@ -263,7 +267,14 @@ class test
 	
 	public function get_Average_Rating()
 	{
-		return (integer)$this->average_score;
+		if ($this->average_score != null)
+		{
+			return $this->average_score;
+		}
+		else
+		{
+			return -1;
+		}
 	}
 	
 	public function get_pass_mark()
@@ -350,7 +361,7 @@ class test
 			$out .= "<h3>" . htmlentities(stripslashes($this->title)) . "</h3>";
 		}
 		if ($this->description){
-			$out .= "<p>" . htmlentities(stripslashes($this->description)) . "</p>";
+			$out .= "<p>" . nl2br(htmlentities(stripslashes($this->description))) . "</p>";
 		}
 		$out .= '
 		
@@ -455,9 +466,10 @@ class test
 			$out .= "<h3>" . htmlentities(stripslashes($this->title)) . "</h3>";
 		}
 		if ($this->description){
-			$out .= "<p>" . htmlentities(stripslashes($this->description)) . "</p>";
+			$out .= "<p>" . nl2br(htmlentities(stripslashes($this->description))) . "</p>";
 		}
 		$out .= '
+
 		
 		<table style="width: 100%; margin: 0 0 1em;">
 			<tr>
@@ -538,16 +550,98 @@ class test
 				<td style="width: 25%; text-align: center;" id="text_finalscore2"></td>
 				<td style="text-align: left;" id="text_passorfail2"></td>
 			</tr>
-		</table>';
-		
-		
-		$out .= "
+		</table>
 
-		<p id=\"mark_test_button\">
-			<a class=\"button\" onclick=\"mark_test();\">I've finished! Mark my test, please.</a>
+		<p id="mark_test_button">
+			<a class="button" onclick"mark_test();">I\'ve finished! Mark my test, please.</a>
 			<br /><br />
 			You can only have your test marked once, so be sure to double-check all of your answers! Your responses will be saved when you have your test marked.
 		</p>
+		';
+		
+		if ($this->ID > 0)
+		{
+			if (is_logged_in())
+			{
+				global $user;
+				$rating = get_test_rating($this->ID, $user->get_ID());
+			}
+			else
+			{
+				$rating = get_test_rating($this->ID, false, get_ip());
+			}
+			
+			if ($rating == null)
+			{
+				$rating = 0;
+			}
+			$out .= '
+			<div style="margin: 0 0 1em;">
+				<p style="display: inline;">
+				Rate this test: 
+				</p>
+				<ul style="list-style-type: none; display: inline; padding: 0;" id="star_ratings" class="star_ratings">
+					<li style="color: grey; font-size:20px; cursor:pointer; display: inline;" class="star_1">&#9733;</li>
+					<li style="color: grey; font-size:20px; cursor:pointer; display: inline;" class="star_2">&#9733;</li>
+					<li style="color: grey; font-size:20px; cursor:pointer; display: inline;" class="star_3">&#9733;</li>
+					<li style="color: grey; font-size:20px; cursor:pointer; display: inline;" class="star_4">&#9733;</li>
+					<li style="color: grey; font-size:20px; cursor:pointer; display: inline;" class="star_5">&#9733;</li>
+				</ul>
+			</div>
+			
+			<script type="text/javascript">
+			// star rating script
+			
+			var star_rating = ' . $rating . ';
+			
+			$(".star_ratings li").hover(
+				function() {
+					mouseover_star($(".star_ratings li").index(this) + 1);
+				},
+				function() {
+					mouseover_star(star_rating);
+				}
+			);
+			
+			$(".star_ratings li").click(
+				function() {
+					star_rating = $(".star_ratings li").index(this) + 1;
+					mouseover_star(star_rating);
+					$.post("ajax.php", { 
+											call: "save_test_rating", 
+											test_ID: ' . $this->ID . ',
+											rating: star_rating
+											},
+											function(data) {
+												
+											}
+					);					
+				}
+			);
+	
+	
+			$(function() {
+				mouseover_star(star_rating);
+			});
+			
+			function mouseover_star(star_count)
+			{
+				for (var i=5;i>0;i--)
+				{ 
+					if (star_count < i)
+					{
+						$(".star_" + i).css("color", "grey");
+					}
+					else
+					{
+						$(".star_" + i).css("color", "#FF9900");
+					}
+				}
+			}
+			</script>
+			';
+		}
+		$out .= "
 		<p>
 			Link to this test, answers are randomised every time (<a onclick=\"shorten_link();\">shorten using bit.ly</a>): <input id=\"link_to_test\" name=\"link_to_test\" type=\"text\" value=\"" . $this->get_test_URL() . "\"> <span id=\"loading_bitly\" style=\"display:none\">Loading...</span>
 		</p>
@@ -571,12 +665,11 @@ class test
 				}
 			}
 		}
-
-		$out .="
-		<script type=\"text/javascript\">
+		$out .='
 		
-		";
-		$out .= '
+		<script type="text/javascript">
+		// code shortening script
+		
 		var has_been_shortened = false;
 		
 		function shorten_link()
@@ -735,7 +828,15 @@ class test
 			$.post(\"ajax.php\", { 
 						call: \"save_responses\", 
 						q_array: data_q_array,
-						a_array: data_a_array
+						a_array: data_a_array";
+		if($this->ID)
+		{
+			$out .= ",
+						test_id: " .$this->ID;
+		}
+		
+		$out .=
+		"
 						},
 						function(data) {
 							//alert(data);

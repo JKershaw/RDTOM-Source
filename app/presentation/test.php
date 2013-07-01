@@ -249,11 +249,13 @@ elseif ($url_array[1] == "builder")
 			var is_WFTDA6 = false;
 			for (var key in question.terms) 
 			{
+				console.debug(question.id + " - " + JSON.stringify(question.terms));
 				
 				if (question.terms.hasOwnProperty(key)) 
 				{
 					if (question.terms[key] instanceof Array)
 					{
+						console.debug(question.id + " - " + JSON.stringify(question.terms[key]));
 						$(question.terms[key]).each(function( index, item ) {
 							if (item == "WFTDA6")
 							{
@@ -261,11 +263,19 @@ elseif ($url_array[1] == "builder")
 							}
 						});				
 					}
+					else
+					{
+						if (question.terms[key] == "WFTDA6")
+						{
+							is_WFTDA6 = true;
+						}
+					}
 				}
 			}
 	
 			if (!is_WFTDA6)
 			{
+				console.debug("Question " + question.id + " is not WFTDA 6");
 				return;
 			}
 	
@@ -593,7 +603,17 @@ elseif ($url_array[1] == "builder")
 				saving = false;
 
 				var currentdate = new Date(); 
-				$('#last_saved').html("Last saved at " + currentdate.getHours() + ":"  + currentdate.getMinutes());
+				var mins = currentdate.getMinutes();
+				if (mins < 10)
+				{
+					mins = "0" + mins;
+				}
+				var hours = currentdate.getHours();
+				if (hours < 10)
+				{
+					hours = "0" + mins;
+				}
+				$('#last_saved').html("Last saved at " + hours + ":"  + mins);
 
 				console.debug(data);
 				var data_as_int = parseInt(data);
@@ -730,10 +750,10 @@ elseif ($url_array[1] == "builder")
 				<table style="width: 100%; text-align: left; background-color: #eee;">
 					<tr>
 						<th>Title</th>
-						<th>Status</th>
-						<th>Views</th>
-						<th>Completes</th>
-						<th>Rating</th>
+						<th style="text-align:center">Status</th>
+						<th style="text-align:center">Views</th>
+						<th style="text-align:center">Completes</th>
+						<th style="text-align:center">Rating</th>
 					</tr>
 					<?php 
 					$tests = get_tests_from_Author_ID($user->get_ID());
@@ -741,25 +761,34 @@ elseif ($url_array[1] == "builder")
 					{
 						foreach ($tests as $tmp_test)
 						{
+							if ($tmp_test->get_Average_Rating() > 0)
+							{
+								$average_rating = number_format($tmp_test->get_Average_Rating(), 1);
+							}
+							else
+							{
+								$average_rating = "-";
+							}
+							
 							echo "
 							<tr style=\"padding: 5px\">
 								<td>
 									<a href=\"" . get_site_URL() . "test/builder/" . $tmp_test->get_ID() . "\">" . htmlentities(stripslashes($tmp_test->get_Title()))  . "</a> 
 								</td>
-								<td>
+								<td style=\"text-align:center\">
 									<a href=\"" . $tmp_test->get_test_URL() . "\">" . htmlentities(stripslashes($tmp_test->get_Status())) . "</a>
 							
-							</td>
-								<td> - </td>
-								<td> - </td>
-								<td> - </td>
+								</td>
+								<td style=\"text-align:center\">" . number_format($tmp_test->get_Views_Count()) . "</td>
+								<td style=\"text-align:center\">" . number_format($tmp_test->get_Complete_Count()) . "</td>
+								<td style=\"text-align:center\">" . $average_rating . "</td>
 							</tr>";
 						}
 					}
 					?>
 				</table>
 			</p>
-			<p><a href="<?php echo get_site_URL(); ?>test/builder/new">Make a new test</a></p>
+			<p><a class="button mobilebutton" href="<?php echo get_site_URL(); ?>test/builder/new">Make a new test</a></p>
 			<?php 
 		}
 		?>
@@ -818,43 +847,58 @@ elseif ($url_array[1] == "generate")
 else
 {
 	// get the test
-	$test = get_test_from_ID($url_array[1]);
+	try 
+	{
+		$test = get_test_from_ID($url_array[1]);
 	
-	// can it be viewed?
-	if ($test->get_Status() == "draft")
-	{
-		if (is_logged_in() && ($user->get_ID() == $test->get_Author_ID()))
+		// can it be viewed?
+		if ($test->get_Status() == "draft")
 		{
+			if (is_logged_in() && ($user->get_ID() == $test->get_Author_ID()))
+			{
+				// display the test
+				echo $test->get_formatted_output($_REQUEST['o']);
+			}
+			else 
+			{
+				echo"<p>This test is set to Draft. Only the Author can view it.</p>";
+			}
+		}
+		elseif ($test->get_Status() == "private")
+		{
+			// increase the view count
+			$test->set_Views_Count($test->get_Views_Count() + 1);
+			set_test($test);
+			
+			// use strlower as the URL is always converted to lower case
+			if ((is_logged_in() && ($user->get_ID() == $test->get_Author_ID())) || (strtolower($url_array[2]) == strtolower($test->get_link_hash())))
+			{
+				// display the test
+				echo $test->get_formatted_output($_REQUEST['o']);
+			}
+			else 
+			{
+				echo"<p>This test is set to Private. You can only view the test if you have the private link.</p>";
+				
+			}
 			// display the test
-			echo $test->get_formatted_output($_REQUEST['o']);
-		}
-		else 
-		{
-			echo"<p>This test is set to Draft. Only the Author can view it.";
-		}
-	}
-	elseif ($test->get_Status() == "private")
-	{
-		// use strlower as the URL is always converted to lower case
-		if ((is_logged_in() && ($user->get_ID() == $test->get_Author_ID())) || (strtolower($url_array[2]) == strtolower($test->get_link_hash())))
-		{
-			// display the test
-			echo $test->get_formatted_output($_REQUEST['o']);
-		}
-		else 
-		{
-			echo"<p>This test is set to Private. You can only view the test if you have the private link.";
 			
 		}
-		// display the test
-		
-	}
-	else
-	{
-		// display the test
-		echo $test->get_formatted_output($_REQUEST['o']);
-	}
+		else
+		{
+			// increase the view count
+			$test->set_Views_Count($test->get_Views_Count() + 1);
+			set_test($test);
+			
+			// display the test
+			echo $test->get_formatted_output($_REQUEST['o']);
+		}
 	
+	} 
+	catch (Exception $e) 
+	{
+		echo"<p>Sorry, we couldn't find your test. please check your link.</p>";
+	}
 
 }
 include("footer.php");

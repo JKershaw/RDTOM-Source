@@ -252,7 +252,8 @@ function set_test($req_test)
 	
 	if (!is_logged_in() || ($req_test->get_Author_ID() != $user->get_ID()))
 	{
-		throw new exception ("Only the Author can edit the test");
+		// TODO this, need to allow for view count
+		//throw new exception ("Only the Author can edit the test");
 	}
 	
 	if ($req_test->get_ID() <= 0)

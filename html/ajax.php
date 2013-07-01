@@ -121,6 +121,9 @@ try
 		case "save_test":
 			$out = ajax_save_test();	
 		break;
+		case "save_test_rating":
+			$out = ajax_save_test_rating();	
+		break;	
 	}
 	
 	echo $out;
@@ -240,6 +243,15 @@ function ajax_save_responses()
 			$mydb->set_response($response);
 		
 		}
+	}
+	
+	if ($_POST['test_id'] && $_POST['test_id'] > 0)
+	{
+		$test = get_test_from_ID($_POST['test_id']);
+		
+		// increase the taken count
+		$test->set_Complete_Count($test->get_Complete_Count() + 1);
+		set_test($test);
 	}
 	
 }
@@ -732,7 +744,16 @@ function ajax_save_test()
 					status: $('input:radio[name=test_status]:checked').val(),
 					link_hash: link_hash 
 		 */
-		$test = new test();
+		// editing a test
+		if ($_POST['id'] > 0)
+		{
+			$test = get_test_from_ID($_POST['id']);
+		}
+		else
+		{
+			// saving a new test
+			$test = new test();
+		}
 		
 		// build the test object
 		$test->set_ID($_POST['id']);
@@ -772,6 +793,19 @@ function ajax_save_test()
 	else
 	{
 		return -1;
+	}
+}
+
+function ajax_save_test_rating()
+{
+	if (is_logged_in())
+	{
+		global $user;
+		set_test_rating($_POST['test_ID'], $_POST['rating'], $user->get_ID());
+	}
+	else
+	{
+		set_test_rating($_POST['test_ID'], $_POST['rating'], -1);
 	}
 }
 ?>
