@@ -13,7 +13,7 @@ include("header.php");
 ?>
 	<h3>About RDTOM</h3>
 	<p>
-		This site is made and maintained by me, Sausage Roller. I skate with New Wheeled Order, the <a href="http://manchesterrolerderby">Manchester Roller Derby</a> league men's team. I'll be adding more features as I go (things like individual score tracking, difficulty, tests and what-not) so you should check back every so often. Full source code for the website can be <a href="https://github.com/RDTOM/RDTOM-Source">found on GitHub</a>.
+		This site is made and maintained by me, Sausage Roller. I skate with New Wheeled Order, the <a href="http://manchesterrollerderby.com">Manchester Roller Derby</a> league men's team. I'll be adding more features as I go (things like individual score tracking, difficulty, tests and what-not) so you should check back every so often. Full source code for the website can be <a href="https://github.com/RDTOM/RDTOM-Source">found on GitHub</a>.
 	</p>
 	<p>
 		We have an API <a href="<?php echo get_site_URL(); ?>api/">you can access here</a>.
