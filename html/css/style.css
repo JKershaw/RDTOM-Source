@@ -251,13 +251,13 @@ ol
 .topicslist_topic
 {
 	border-bottom: 1px dotted #C1C1C1;
-	padding: 10px 0;
 	clear: both;
 	width: 100%;
 	position: relative;
 	
 	list-style: none;
 	margin:0px;
+	padding: 0px;
 }
 
 .threads
@@ -282,7 +282,7 @@ ol
 
 .threadslist_thread_wrap, .topicslist_topic_wrap, .topicslist_divider_wrap
 {
-	padding: 5px 10px;
+	padding: 5px;
 }
 
 .latest_post_string
@@ -290,6 +290,8 @@ ol
 	font-size: 12px;
 	font-weight: normal;
 	font-style: italic;
+	overflow: hidden;
+	padding: 5px 0 0 0;
 }
 
 .posts
