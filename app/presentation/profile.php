@@ -256,15 +256,15 @@ else
 			<input type="hidden" id="signupform" name="signupform"  value="yes"></input>
 		<p>		
 			Name: <br />
-			<input class="input_text" type="text" id="name" name = "name">
+			<input class="input_text" type="text" id="signup_name" name = "name">
 		</p>
 		<p>		
-			Password (8 character minimum): <br />
-			<input class="input_text" type="password" id="password" name = "password"> 
+			Password: <br />
+			<input class="input_text" type="password" id="signup_password" name = "password"> <span id="password_extra"></span>
 		</p>
 		<p>		
-			Email (optional, needed if you forget your password): <br />
-			<input class="input_text" type="text" id="email" name = "email"> 
+			Email: <br />
+			<input class="input_text" type="text" id="signup_email" name = "email"> <span style="font-style:italic; color:#777">Optional</span>
 		</p>
 		<p>
 			<a class="button"  onClick="document.formsignup.submit()">Sign up</a>
@@ -285,6 +285,17 @@ else
 	        	$('#form_signup').show();
 	        }
 	    }
+
+	    $('#signup_password').on('input', function() {
+	    	 if ( $('#signup_password').val().length < 8)
+	    	 {
+	    		 $('#password_extra').html("<span style='color: red;'>Must be at least 8 characters</span>");
+	    	 }
+	    	 else
+	    	 {
+	    		 $('#password_extra').html("");
+	    	 }
+	    });
 	</script>
 	<?php 
 }

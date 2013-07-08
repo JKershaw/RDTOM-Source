@@ -58,15 +58,15 @@ function user_sign_up($req_username, $req_password, $req_email)
 	
 	$req_email = trim($req_email);
 	$req_username = trim($req_username);
-	
-	// is name, email and password valid? Will throw exception if not
-	is_valid_username($req_username);
-	
+
 	// is the password valid?
 	if (strlen($req_password) < 8)
 	{
 		throw new exception ("You need to have a password which is 8 or more characters long.");
 	}
+	
+	// is name, email and password valid? Will throw exception if not
+	is_valid_username($req_username);
 	
 	//is the email taken?
 	if ($req_email)
