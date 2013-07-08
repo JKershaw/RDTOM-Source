@@ -30,11 +30,18 @@ if (!$url_array[1])
 	// show the parameter selection form
 	?>
 	
-	<h3>Create a random test:</h3>
-	<p>Note: For feedback, feature requests, questions and bug reports; please <a href="<? echo get_site_URL()?>forum">visit the forum</a>. I take no responsibility for anything you choose to do with these tests.</p>
-	<form id="submittestparameters" name="submittestparameters" method="get" action="<? echo get_site_URL()?>test/generate/">
+	<p>Click the button to randomly generate an online rules test with its difficulty balanced to be similar to the <a href="http://wftda.com/resources/wftda-rules-test.pdf" >WFTDA's sample test</a>.</p>
 	
-	<div id="test_customisation">
+	<p>
+		<a class="button mobilebutton" onclick="document.submittestparameters.submit();" >Generate Rules Test</a>
+	</p>
+	
+	
+	<p id="test_customisation_link"><a onclick="$('#test_customisation_link').hide();$('#test_customisation').show()">Customise the test</a></p>
+	
+	<div id="test_customisation" style="display:none">
+		<form id="submittestparameters" name="submittestparameters" method="get" action="<? echo get_site_URL()?>test/generate/">
+	
 		<p><strong>Difficulty</strong></p>
 		<p>
 			<input type="radio" name="d" value="wftda" checked> Balanced - Roughly the same difficulty as the WFTDA sample test<br />
@@ -94,7 +101,7 @@ if (!$url_array[1])
 			<input type="text" size="5" id="p"  name="p" value="80" />&#37; (<span id="test_number_of_questions_span">36 / 45</span>)
 		</p>
 		
-		<p><strong>Type of test to generate</strong></p>
+		<p><strong>Output format</strong></p>
 		
 		<p>
 			<input type="radio" name="o" value="interactiveHTML" checked> Interactive (can be filled in online) </checkbox><br />
@@ -105,13 +112,10 @@ if (!$url_array[1])
 			<input DISABLED type="radio" name="test_output" value="pdf"> Pdf file (experimental)</checkbox>
 			 -->
 		</p>
+		
+		</form>
+	
 	</div>
-	<p>
-		<a class="button mobilebutton" onclick="document.submittestparameters.submit();" >Generate Random Test</a>
-	</p>
-	</form>
-	<p>
-	</p>
 	<?php 
 }
 elseif ($url_array[1] == "builder")
