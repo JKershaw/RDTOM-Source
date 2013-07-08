@@ -73,6 +73,21 @@ table
 	margin-top:100px;
 	margin-bottom:20px;
 }
+
+.footer_block
+{
+	float:left;
+	width: 33.3333%;
+	border-top: 1px solid #EEE;
+	padding-top: 12px;
+}
+
+
+.footer_block > p
+{
+	margin: 0 1em 1em 0;
+}
+
 .print_footer 
 {
 	display: none;
@@ -173,7 +188,7 @@ ol
 
 .layout_box
 {
-	border: 1px solid gray; 
+	border: 1px solid #eee; 
 	padding: 20px 20px 6px;
 }
 
@@ -420,6 +435,12 @@ ol
 		margin-top:20px;
 	}
 	
+
+	.footer_block
+	{
+		float:none;
+		width: auto;
+	}
 	ol
 	{
 		list-style-type: none;

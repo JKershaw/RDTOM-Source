@@ -12,96 +12,104 @@
 // display the page
 ?>	
 		<div class="footer">
+			<?php 
+				if (is_question()) 
+				{
+					?>
+					<p id="remebered_string_p" <?php if (!is_remebering_results()) { echo " style=\"display:none;\""; } ?>>
+						<span id="remebered_string"><?php echo get_remebered_string(); ?></span>
+					</p>
+					<?php 
+				} 
+			?>
+			
+			<div class="footer_block">
 
-		<?php 
-		if (is_question()) 
-		{
-			?>
-			<p id="remebered_string_p" <?php if (!is_remebering_results()) { echo " style=\"display:none;\""; } ?>>
-				<span id="remebered_string"><?php echo get_remebered_string(); ?></span>
-			</p>
-			<?php 
-		} 
-		else 
-		{
-			?>		
-			<p>
-				<a href="<?php echo get_site_URL(); ?>">Answer more questions</a> 
-			</p>
-			<?php 
-		} 
-		
-		if (is_logged_in()) 
-		{
-			?>		
-			<p>
-				You are logged in as <strong><?php echo htmlentities(stripslashes($user->get_Name()))?></strong>, <a href="<?php echo get_site_URL(); ?>profile">view your profile</a>.
-			</p>
-			<?php 
-		} 
-		else 
-		{
-			?>
-			<p>
-				<a href="<?php echo get_site_URL(); ?>profile">Log in or sign up</a>. When logged in the site will track which sections of the rules you're good at, and which you need to brush up on.
-			</p>	
-			<?php 
-		}
-		?>		
-			
-		<?php if (is_question()) 
-		{
-			?>		
+				<?php 
+				if (is_question()) 
+				{
+					?>		
+					<p>
+						<a class="report_link" onclick="allow_keypress = false;$('#hidden_report_form').slideToggle();">Report this question</a> 
+					</p>
+					<?php 
+				} 
+				else
+				{
+					?>		
+					<p>
+						<a href="<?php echo get_site_URL(); ?>">Answer more questions</a> 
+					</p>
+					<?php 
+				} 
+				
+				if (is_logged_in()) 
+				{
+					?>		
+					<p>
+						You are logged in as <strong><?php echo htmlentities(stripslashes($user->get_Name()))?></strong>, <a href="<?php echo get_site_URL(); ?>profile">view your profile</a>.
+					</p>
+					<?php 
+				} 
+				else 
+				{
+					?>
+					<p>
+						<a href="<?php echo get_site_URL(); ?>profile">Log in or sign up</a>. When logged in the site will track which sections of the rules you're good at, and which you need to brush up on.
+					</p>	
+					<?php 
+				}
+				?>	
+
+				<p><a href="<?php echo get_site_URL(); ?>test/">Generate a Rules Test</a></p>
+				
+				
+				<?php if (is_view_only_changes())
+				{ ?>
+					<p>
+						You are being given questions which <strong>only</strong> relate to rules which have been <a href="http://wftda.com/rules/change-summary/rules-2013-01-01" target="_blank">updated in the WFTDA 2013 rule set</a>. <a href="<?php echo get_site_URL(); ?>changes">Click here to be tested on all the rules.</a>
+					</p>	
+				<?php 
+				} 
+				else
+				{
+				?>
+					<p>
+						<a href="<?php echo get_site_URL(); ?>changes">Click here to be tested on <strong>only</strong> the rules which have been updated with the new WFTDA 2013 rule set</a>
+					</p>	
+					<?php 
+				}
+				?>	
+			</div>
+
+			<div class="footer_block">
+				<p><a href="<?php echo get_site_URL(); ?>about/">About, Disclaimer &amp; Privacy Policy</a></p>
+				<p><a href="<?php echo get_site_URL(); ?>forum">Forum:</a> <span id="footer_forum_thread"></span></p>
+				<p><a href="<?php echo get_site_URL(); ?>search">Search</a></p>
+				<p><a href="<?php echo get_site_URL(); ?>cat">Meow</a></p> 
+				
+			</div>
+
+			<div class="footer_block">
+				<p>Get the Test O'Matic App!</p>
 				<p>
-					<a class="report_link" onclick="allow_keypress = false;$('#hidden_report_form').slideToggle();">Report this question</a> 
-				</p>
-			<?php 
-		} 
-		?>		
+					<!-- Google Play -->
+					<a href="https://play.google.com/store/apps/details?id=com.rollerderbytestomatic.lite"><img border="0" alt="Android app on Google Play" src="https://developer.android.com/images/brand/en_app_rgb_wo_45.png" /></a>
+					<br />
+					<!-- iTunes -->
+					<a href="https://itunes.apple.com/us/app/roller-derby-test-omatic-lite/id642903652?ls=1&mt=8"><img border="0" alt="iOS app on iTunes" src="<?php echo get_site_URL(true); ?>images/ios.png" /></a>
+					<br />
+					<!-- Amazon 
+					<a href="<?php echo get_http_or_https(); ?>://www.amazon.com/gp/product/B00CMNI6QI/ref=as_li_ss_il?ie=UTF8&camp=1789&creative=390957&creativeASIN=B00CMNI6QI&linkCode=as2&tag=rdtom-20"><img border="0" style="height: 45px;" alt="Android app on Amazon for Kindle"
+							src="<?php echo get_site_URL(true); ?>images/amazon.png" /></a>
+					<img src="<?php echo get_http_or_https(); ?>://www.assoc-amazon.com/e/ir?t=rdtom-20&l=as2&o=1&a=B00CMNI6QI" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" />
+					-->
+				</p>	
+				<p><span style="font-weight:bold; color:yellow; background-color: #333; padding:0 3px;">NEW!</span> Also available: <a href="<?php echo get_site_URL(); ?>minimumskills">Minimum Skills app</a></p>
 		
-		<p><span style="font-weight:bold; color:yellow; background-color: #333; padding:0 3px;">NEW!</span> <a href="<?php echo get_site_URL(); ?>minimumskills">Get the Minimum Skills app</a></p>
-		
-		
-		<?php if (is_view_only_changes())
-		{ ?>
-			<p>
-				You are being given questions which <strong>only</strong> relate to rules which have been <a href="http://wftda.com/rules/change-summary/rules-2013-01-01" target="_blank">updated in the WFTDA 2013 rule set</a>. <a href="<?php echo get_site_URL(); ?>changes">Click here to be tested on all the rules.</a>
-			</p>	
-		<?php 
-		} 
-		else
-		{
-		?>
-			<p>
-				<a href="<?php echo get_site_URL(); ?>changes">Click here to be tested on <strong>only</strong> the rules which have been updated with the new WFTDA 2013 rule set</a>
-			</p>	
-			<?php 
-		}
-		?>	
-		
-			<p>
-				<a href="<?php echo get_site_URL(); ?>test/">Generate a Rules Test</a> | 
-				<a href="<?php echo get_site_URL(); ?>search">Search</a> | 
-				<a href="<?php echo get_site_URL(); ?>about/">About, Disclaimer &amp; Privacy Policy</a> |
-				<a href="<?php echo get_site_URL(); ?>cat">Meow</a> | 
-				<a href="<?php echo get_site_URL(); ?>forum">Forum:</a> <span id="footer_forum_thread"></span>
-			</p>
-		
+			</div>
+	
 			
-			<p>
-				<!-- Google Play -->
-				<a href="https://play.google.com/store/apps/details?id=com.rollerderbytestomatic.lite"><img border="0" alt="Android app on Google Play" src="https://developer.android.com/images/brand/en_app_rgb_wo_45.png" /></a>
-				
-				<!-- iTunes -->
-				<a href="https://itunes.apple.com/us/app/roller-derby-test-omatic-lite/id642903652?ls=1&mt=8"><img border="0" alt="iOS app on iTunes" src="<?php echo get_site_URL(true); ?>images/ios.png" /></a>
-				
-				
-				<!-- Amazon -->
-				<a href="<?php echo get_http_or_https(); ?>://www.amazon.com/gp/product/B00CMNI6QI/ref=as_li_ss_il?ie=UTF8&camp=1789&creative=390957&creativeASIN=B00CMNI6QI&linkCode=as2&tag=rdtom-20"><img border="0" style="height: 45px;" alt="Android app on Amazon for Kindle"
-						src="<?php echo get_site_URL(true); ?>images/amazon.png" /></a>
-				<img src="<?php echo get_http_or_https(); ?>://www.assoc-amazon.com/e/ir?t=rdtom-20&l=as2&o=1&a=B00CMNI6QI" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" />
-				
-			</p>	
 			
 			<div class="facebook_wrap_wide">
 				<iframe src="<?php echo get_http_or_https(); ?>://www.facebook.com/plugins/like.php?href=http://rollerderbytestomatic.com/"
@@ -123,7 +131,7 @@
 						{
 							?>, <a href="<?php echo get_site_URL(); ?>admin/edit/<?php echo $question->get_ID(); ?>#edit_question">Edit question</a><?php 
 						}
-						echo ", " . tracker_get_query_string(); ?>
+						?>
 					</p>
 				<?php 
 			} 
@@ -131,6 +139,8 @@
 			
 			
 		</div>
+		
+		
 		<div class="print_footer">
 			<p>This page was generated by the Roller Derby Test O'Matic</p>
 		</div>
