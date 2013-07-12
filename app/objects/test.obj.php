@@ -356,6 +356,8 @@ class test
 	
 	private function get_formatted_output_HTML()
 	{
+        $out = "";
+
 		if ($this->title)
 		{
 			$out .= "<h3>" . htmlentities(stripslashes($this->title)) . "</h3>";
@@ -461,6 +463,8 @@ class test
 
 	private function get_formatted_output_interactiveHTML()
 	{
+        $out = "";
+
 		if ($this->title)
 		{
 			$out .= "<h3>" . htmlentities(stripslashes($this->title)) . "</h3>";
@@ -516,7 +520,7 @@ class test
 								
 								if ($answer->is_correct())
 								{
-									$correct_string .= "<span style=\"display:none;\" id=\"question_" . $question->get_ID() . "_correct_answer\" class=\"correct_answer\"><br />The correct answer is <strong>" . chr(65+ $answer_count) . "</strong></span>";
+									$correct_string = "<span style=\"display:none;\" id=\"question_" . $question->get_ID() . "_correct_answer\" class=\"correct_answer\"><br />The correct answer is <strong>" . chr(65+ $answer_count) . "</strong></span>";
 								}
 								
 								$answer_count++;
@@ -553,7 +557,7 @@ class test
 		</table>
 
 		<p id="mark_test_button">
-			<a class="button" onclick"mark_test();">I\'ve finished! Mark my test, please.</a>
+			<a class="button" onClick="mark_test();">I\'ve finished! Mark my test, please.</a>
 			<br /><br />
 			You can only have your test marked once, so be sure to double-check all of your answers! Your responses will be saved when you have your test marked.
 		</p>
@@ -647,7 +651,8 @@ class test
 		</p>
 		";
 
-		
+        $QandA_ID_array_string = "";
+
 		// generate the data array to use for checking & formatting etc.
 		foreach($QandA_ID_array as $Question_ID => $A_ID_array)
 		{
@@ -754,6 +759,7 @@ class test
 		
 		function mark_test()
 		{
+		    console.debug('mark_test begun');
 			correct_count = 0;
 			
 			for(var question_ID in QandA_ID_array)
@@ -762,7 +768,6 @@ class test
 				for(var answer_ID in QandA_ID_array[question_ID])
 				{
 					$('#answer_' + question_ID + '_' + answer_ID).css('color','black');
-					
 				}
 				
 				
