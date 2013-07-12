@@ -156,7 +156,7 @@ if (is_logged_in())
 				{
 					echo $question->get_ID();
 				}
-				?>"></input>
+				?>">
 				
 				<table>	
 					<tr>
@@ -181,7 +181,7 @@ if (is_logged_in())
 						}
 						
 						echo $section_value;
-						?>"></input> <span id="section_question_string"></span><?php 
+						?>"> <span id="section_question_string"></span><?php
 						if ($section_value)
 						{
 							$section_array = explode(".", $section_value);

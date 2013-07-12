@@ -37,7 +37,7 @@ ol{margin-top:18px;margin-bottom:24px;}
 .test_table ol{margin-left:50px;}
 @media screen and (max-width:480px){body{width:90%;max-width:470px;margin:0 5px;font-size:14px;}
 h1{font-size:1.2em;margin:0.5em 0 0;text-align:left;}
-h2{text-align:left;font-style:italics;font-size:1em;font-weight:normal;margin-bottom:1em;}
+h2{text-align:left;font-size:1em;font-weight:normal;margin-bottom:1em;}
 h3{font-size:1em;}
 .footer{margin-top:20px;}
 ol{list-style-type:none;padding:0;}

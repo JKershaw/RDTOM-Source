@@ -125,7 +125,7 @@ if (!$url_array[1])
 		<h3>To have your password reset, please enter your email address. You'll be emailed details on what to do next.</h3>
 		
 		<form method="post" action="<?php echo get_site_URL(); ?>passwordreset" name="formforgottenemail">
-			<input type="hidden"  name="forgottenemailform" id="forgottenemailform" value="yes"></input>
+			<input type="hidden"  name="forgottenemailform" id="forgottenemailform" value="yes">
 			<p>
 				Email or Name:<br />
 				<input class="input_text" type="text" id="email" name = "email">
@@ -158,8 +158,8 @@ else
 		<h3>Please enter your new password:</h3>
 		
 		<form method="post" action="<?php echo get_site_URL(); ?>passwordreset/<?php echo $url_array[1]; ?>" name="formforgottenemailnewpassword">
-			<input type="hidden" name="forgottenemailnewpasswordform" id="forgottenemailnewpasswordform" value="yes"></input>
-			<input type="hidden" name="token" id="token" value="<?php echo $url_array[1]; ?>"></input>
+			<input type="hidden" name="forgottenemailnewpasswordform" id="forgottenemailnewpasswordform" value="yes">
+			<input type="hidden" name="token" id="token" value="<?php echo $url_array[1]; ?>">
 			<p>
 				Password:<br />
 				<input class="input_text" type="password" id="password" name ="password">

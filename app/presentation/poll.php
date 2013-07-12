@@ -23,7 +23,7 @@ foreach($poll_questions as $poll_question_id => $poll_question_text)
 	echo "<a style=\"font-size: 14px; line-height: 30px;\" id=\"poll_question" . $poll_question_id . "\" onclick=\"selected_answer(" . $poll_question_id . ")\">" . $poll_question_text . "</a></br>";
 }
 ?>
-<span style="font-size: 14px; line-height: 30px;">Other: <input type="text" id="text_other"  name="text_other"  style="width: 80%;"></input></span>
+<span style="font-size: 14px; line-height: 30px;">Other: <input type="text" id="text_other"  name="text_other"  style="width: 80%;"></span>
 </p>
 
 <p><a onclick="save_answers()">Save Answers</a> <br /><span style="font-size:10px">If you have already voted once, your vote won't count. <a onclick="get_results()">View Results</a>.</span></p>

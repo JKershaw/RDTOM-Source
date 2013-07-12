@@ -100,7 +100,7 @@ if (is_logged_in())
 	</p>
 	
 	<form method="post" action="<?php echo get_site_URL(); ?>profile" name="formlogout">
-		<input type="hidden" name="logoutform" id="logoutform" value="yes" ></input>
+		<input type="hidden" name="logoutform" id="logoutform" value="yes" >
 	</form>
 	
 	<div class="layout_box" id="layout_box_stats">
@@ -119,14 +119,14 @@ if (is_logged_in())
 	<div class="layout_box" id="layout_box_profile" style="display:none;">
 		<h3>Update your password</h3>
 		<form method="post" action="<?php echo get_site_URL(); ?>profile#update" name="formpasswordupdate">
-			<input type="hidden" name="formpasswordupdate" id="formpasswordupdate" value="yes" ></input>
+			<input type="hidden" name="formpasswordupdate" id="formpasswordupdate" value="yes" >
 			<p>
 				Old password: <br />
-				<input class="input_text" type="password" name="oldpassword" id="oldpassword"></input>
+				<input class="input_text" type="password" name="oldpassword" id="oldpassword">
 			</p>
 			<p>
 				New password (8 character minimum): <br />
-				<input class="input_text" type="password" name="newpassword" id="newpassword"></input>
+				<input class="input_text" type="password" name="newpassword" id="newpassword">
 			</p>
 			<p>
 				<a class="button" onClick="document.formpasswordupdate.submit()">Update password</a>
@@ -136,10 +136,10 @@ if (is_logged_in())
 		<h3>Update your email</h3>
 		
 		<form method="post" action="<?php echo get_site_URL(); ?>profile#update" name="formemailupdate">
-			<input type="hidden" name="formemailupdate" id="formemailupdate" value="yes" ></input>
+			<input type="hidden" name="formemailupdate" id="formemailupdate" value="yes" >
 			<p>
 				New email address: <br />
-				<input class="input_text" type="text" name="email" id="email" value="<?php echo htmlentities(stripslashes($user->get_Email())); ?>"></input>
+				<input class="input_text" type="text" name="email" id="email" value="<?php echo htmlentities(stripslashes($user->get_Email())); ?>">
 			</p>
 			<p>
 				<a class="button" onClick="document.formemailupdate.submit()">Update email</a>
@@ -149,10 +149,10 @@ if (is_logged_in())
 		<h3>Update your name</h3>
 		
 		<form method="post" action="<?php echo get_site_URL(); ?>profile#update" name="formnameupdate">
-			<input type="hidden" name="formnameupdate" id="formnameupdate" value="yes" ></input>
+			<input type="hidden" name="formnameupdate" id="formnameupdate" value="yes" >
 			<p>
 				New name: <br />
-				<input class="input_text" type="text" name="name" id="name" value="<?php echo htmlentities(stripslashes($user->get_Name())); ?>"></input>
+				<input class="input_text" type="text" name="name" id="name" value="<?php echo htmlentities(stripslashes($user->get_Name())); ?>">
 			</p>
 			<p>
 				<a class="button" onClick="document.formnameupdate.submit()">Update name</a>
@@ -164,7 +164,7 @@ if (is_logged_in())
 		
 		<form method="post" action="<?php echo get_site_URL(); ?>profile#update" name="disassociateform">
 			<p>
-				<input type="hidden" name="disassociateform"  id="disassociateform" value="yes" ></input>
+				<input type="hidden" name="disassociateform"  id="disassociateform" value="yes" >
 				<a class="button" onClick="if (confirm('Are you sure you want the site to forget every answer you have given? This CAN NOT be undone.')){ document.disassociateform.submit() }">Disassociate Answers</a>
 			</p>
 		</form>
@@ -228,7 +228,7 @@ else
 		<h3>Login to your account</h3>
 		
 		<form method="post" action="<?php echo get_site_URL(true); ?>profile" name="formlogin">
-		<input type="hidden"  name="loginform" id="loginform" value="yes"></input>
+		<input type="hidden"  name="loginform" id="loginform" value="yes">
 		<p>
 			Name:<br />
 			<input class="input_text" type="text" id="name" name = "name">
@@ -253,7 +253,7 @@ else
 	<div id="form_signup" <?php if (!$sign_up_error) { echo "style=\"display: none;\""; }?>>
 		<h3>Sign up</h3>
 		<form method="post" action="<?php echo get_site_URL(true); ?>profile" name="formsignup">
-			<input type="hidden" id="signupform" name="signupform"  value="yes"></input>
+			<input type="hidden" id="signupform" name="signupform"  value="yes">
 		<p>		
 			Name: <br />
 			<input class="input_text" type="text" id="signup_name" name = "name">
