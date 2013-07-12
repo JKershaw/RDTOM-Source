@@ -341,7 +341,6 @@ function return_stats_user_progress($user = false)
 		}
 		if ($week_key < ($current_week_value-1))
 		{
-			// TODO make this work
 			//$week_string = ($current_week_value - $week_key) . " weeks ago";
 		}
 		

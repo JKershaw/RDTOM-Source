@@ -58,7 +58,6 @@ function get_question_random()
 	{
 
 		// code from http://jan.kneschke.de/projects/mysql/order-by-rand/
-		// TODO AB test this to get average time taken to run query
 		/*
 		$query = "
 		SELECT * FROM rdtom_questions
