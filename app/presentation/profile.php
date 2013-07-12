@@ -165,7 +165,7 @@ if (is_logged_in())
 		<form method="post" action="<?php echo get_site_URL(); ?>profile#update" name="disassociateform">
 			<p>
 				<input type="hidden" name="disassociateform"  id="disassociateform" value="yes" ></input>
-				<a class="button" onClick="if (confirm('Are you sure you want the site to forget every answer you have given? This CAN NOT be undone.')){ document.disassociateform.submit() };">Disassociate Answers</a>
+				<a class="button" onClick="if (confirm('Are you sure you want the site to forget every answer you have given? This CAN NOT be undone.')){ document.disassociateform.submit() }">Disassociate Answers</a>
 			</p>
 		</form>
 		

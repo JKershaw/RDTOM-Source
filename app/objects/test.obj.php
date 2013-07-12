@@ -188,7 +188,6 @@ class test
 		{
 			return "mixed";
 		}
-		return false;
 	}
 	
 	public function get_ID()

@@ -622,12 +622,7 @@ elseif ($url_array[1] == "builder")
 				console.debug(data);
 				var data_as_int = parseInt(data);
 				
-				if (data_as_int > 0)
-				{
-					test_id = data_as_int;
-					load_test(data_as_int);
-				}
-				else
+				if (data_as_int <= 0)
 				{
 					alert ("Error saving");
 				}
@@ -640,19 +635,6 @@ elseif ($url_array[1] == "builder")
 				alert("Error saving. Try again? Sorry I can't be more help, this isn't supposed to happen."); 
 			});
 	
-		}
-	
-		function load_test(id)
-		{
-			console.log("loading test ID " + id);
-			
-			if (id == -1)
-			{
-				alert("Test not loaded. It may not have saved. Make sure you're logged in.");
-				
-				return;
-			}
-			// instead of ajax loading, we're going to just go to a specific URL to load a test
 		}
 
 

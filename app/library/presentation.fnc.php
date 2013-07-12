@@ -305,11 +305,6 @@ function get_CSS_embed($type = false)
 		}
 	}
 	return "<link rel=\"stylesheet\" href=\"" . get_site_URL(true) . "css/style.css?v=" . filemtime("css/style.css") . "\" type=\"text/css\" >";
-	
-	
-	return ;	
-	
-
 }
 
 function is_error()

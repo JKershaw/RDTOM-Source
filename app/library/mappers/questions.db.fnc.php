@@ -143,7 +143,7 @@ function get_question_random_simple()
 	// if we've asked every question, ask them again
 	// delete_session('random_questions_asked');
 	
-	return $questions[array_rand($questions)];;
+	return $questions[array_rand($questions)];
 }
 
 function get_question_random_changed()

@@ -1197,7 +1197,7 @@ include("header.php");
 			$.post("ajax.php", { 
 				call: "set_admin_relationship", 
 				termID: term_id,
-				questionID: question_id,
+				questionID: question_id
 				},
 				
 				function(data) {

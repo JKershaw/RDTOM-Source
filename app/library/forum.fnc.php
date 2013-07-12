@@ -148,7 +148,10 @@ class forum
 			}
 			
 			// make the new thread
-			$slug = str_replace(" ", "-", ereg_replace("[^A-Za-z0-9 ]", "", strtolower(substr($_POST['new_thread_title'], 0, 100))));
+			$slug = str_replace(" ", "-",
+                        preg_replace('/[^\p{L}\p{N}\s]/u', '',
+                                strtolower(
+                                        substr($_POST['new_thread_title'], 0, 100))));
 			
 			// is this a unique slug?
 			if (get_thread_from_slug($slug))
