@@ -8,7 +8,7 @@
 
 
 // display the page
-set_page_title("Test O'Matic Presents: Minimum Skills");
+set_page_title("Test O'Matic Presents: <br />Minimum Skills");
 set_page_subtitle("The minimum skills app, available on <a href='https://play.google.com/store/apps/details?id=com.rollerderbytestomatic.ms'>Android</a> and <a href='https://itunes.apple.com/us/app/minimum-skills/id655072717?mt=8'>iOS</a>");
 include("header.php");
 ?>
@@ -37,6 +37,7 @@ include("header.php");
 		
 	</p>
 	
+	<p>I'd love to hear from you if you have any questions or comments. To get in touch <a href="http://rollerderbytestomatic.com/forum/minimum-skills">head over to the forum</a>.</p>
 	
 	<p>The App is based on the 2013 WFTDA Minimum Skills Requirements, and breaks all you need to know down into the following categories:</p>
 
