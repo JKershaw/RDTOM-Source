@@ -12,70 +12,77 @@ if ($_POST['loginform'] == "yes")
 		$error_string = $e->getMessage();
 	}
 }
-elseif (($_POST['logoutform'] == "yes") && is_logged_in())
-{
-	user_log_out();
-	$profile_message = "You have logged out. Bye!";
-}
 elseif ($_POST['signupform'] == "yes")
 {
-	try 
-	{
-		user_sign_up($_POST['name'], $_POST['password'], $_POST['email']);
-		$profile_message = "Your account has been made, please log in now and experience the joy* of a Roller Derby Test O'Matic account (*joy not guaranteed).";
-	}
-	catch (Exception $e) 
-	{
-		$error_string = $e->getMessage();
-		$sign_up_error = true;
-	}
+    try
+    {
+        user_sign_up($_POST['name'], $_POST['password'], $_POST['email']);
+        $profile_message = "Your account has been made, please log in now and experience the joy* of a Roller Derby Test O'Matic account (*joy not guaranteed).";
+    }
+    catch (Exception $e)
+    {
+        $error_string = $e->getMessage();
+        $sign_up_error = true;
+    }
 }
-elseif ($_POST['disassociateform'] == "yes")
+elseif(is_logged_in())
 {
-	$mydb->responses_disassociate($user->get_ID());
-	$profile_message = "Answers disassociated! The site may take a little while to update, be patient.";
-	
-}
-elseif ($_POST['formpasswordupdate'] == "yes")
-{
-	try 
-	{
-		user_update_password($_POST['oldpassword'], $_POST['newpassword']);
-		$profile_message = "Your password has been updated.";
-	}
-	catch (Exception $e) 
-	{
-		$profile_message = $e->getMessage();
-	}
-	
-}
-elseif ($_POST['formnameupdate'] == "yes")
-{
-	try 
-	{
-		user_update_name($_POST['name']);
-		$profile_message = "Your name has been updated.";
-	}
-	catch (Exception $e) 
-	{
-		$profile_message = $e->getMessage();
-	}
-	
-}
-elseif ($_POST['formemailupdate'] == "yes")
-{
-	try 
-	{
-		user_update_email($_POST['email']);
-		$profile_message = "Your email has been updated.";
-	}
-	catch (Exception $e) 
-	{
-		$profile_message = $e->getMessage();
-	}
-	
-}
+    if ($_POST['logoutform'] == "yes")
+    {
+        user_log_out();
+        $profile_message = "You have logged out. Bye!";
+    }
 
+    elseif ($_POST['disassociateform'] == "yes")
+    {
+        $mydb->responses_disassociate($user->get_ID());
+        $profile_message = "Answers disassociated! The site may take a little while to update, be patient.";
+
+    }
+    elseif ($_POST['formpasswordupdate'] == "yes")
+    {
+        try
+        {
+            user_update_password($_POST['oldpassword'], $_POST['newpassword']);
+            $profile_message = "Your password has been updated.";
+        }
+        catch (Exception $e)
+        {
+            $profile_message = $e->getMessage();
+        }
+
+    }
+    elseif ($_POST['formnameupdate'] == "yes")
+    {
+        try
+        {
+            user_update_name($_POST['name']);
+            $profile_message = "Your name has been updated.";
+        }
+        catch (Exception $e)
+        {
+            $profile_message = $e->getMessage();
+        }
+
+    }
+    elseif ($_POST['formemailupdate'] == "yes")
+    {
+        try
+        {
+            user_update_email($_POST['email']);
+            $profile_message = "Your email has been updated.";
+        }
+        catch (Exception $e)
+        {
+            $profile_message = $e->getMessage();
+        }
+
+    }
+}
+else
+{
+    $error_string = "You need to be logged in to do that.";
+}
 // show the page
 set_up_stats_header();
 set_page_subtitle("Turn left and view your profile.");

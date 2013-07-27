@@ -532,7 +532,7 @@ function return_user_responses()
 	{
 		return $user_responses;
 	}
-	else
+	elseif (is_logged_in())
 	{
 		$cached_user_responses = cache_get("user_responses_" . $user->get_ID());
 		if(!$cached_user_responses)
