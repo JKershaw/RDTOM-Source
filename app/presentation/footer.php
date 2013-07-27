@@ -120,7 +120,11 @@
 			<div class="facebook_wrap_narrow">
         		<iframe src="<?php echo get_http_or_https(); ?>://www.facebook.com/plugins/like.php?href=http%3A%2F%2Frollerderbytestomatic.com%2F&amp;send=false&amp;layout=button_count&amp;width=100&amp;show_faces=false&amp;font&amp;colorscheme=light&amp;action=like&amp;height=21&amp;appId=131848900255414" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:100px; height:21px;"></iframe>
 			</div>
-			
+
+            <p style="text-align:center;">
+                <a href="http://jkershaw.com/freelance-web-developer-hire-me/">Site built by John Kershaw (Sausage Roller), who you should hire.</a>
+            </p>
+
 			<?php if (is_admin()) 
 			{
 				?>		
