@@ -216,6 +216,11 @@ function populate_test(&$test, $opt_number_of_questions = 45, $difficulty = "int
 			
 			// randomly get an assortment of questions
 
+            if ($opt_number_of_questions > count($all_questions))
+            {
+                $opt_number_of_questions = count($all_questions);
+            }
+
 			// randomly get a subsection of the array the correct length
 			$random_questions_array_keys = array_rand($all_questions, $opt_number_of_questions);
 			if (is_array($random_questions_array_keys))
