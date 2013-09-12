@@ -34,8 +34,7 @@ if (!$error_string && ($_POST['forgottenemailform'] == "yes"))
 	}
 	else 
 	{
-		try 
-		{
+
 			// step 2
 			
 			// fetch the forgetful user, will throw error if user not found
@@ -43,22 +42,39 @@ if (!$error_string && ($_POST['forgottenemailform'] == "yes"))
 			// is the thing used an email address?
 			if (filter_var($_POST['email'], FILTER_VALIDATE_EMAIL ))
 			{
-				$forgetful_user = $mydb->get_user_from_email($_POST['email']);
+                try
+                {
+				    $forgetful_user = $mydb->get_user_from_email($_POST['email']);
+                }
+                catch (Exception $e)
+                {
+                    $error_string = "Sorry, that email address is not associated with any account. Please try again.";
+                }
 			}
 			else
 			{
-				$forgetful_user = $mydb->get_user_from_name($_POST['email']);
+                try
+                {
+                    $forgetful_user = $mydb->get_user_from_name($_POST['email']);
+                }
+                catch (Exception $e)
+                {
+                    $error_string = "Sorry, that name is not associated with any account. Please try again.";
+                }
 			}
-			
-			
+
 			// function to save the reset token in the database & email the user
-			set_up_reset_token($forgetful_user);
-			
-		}
-		catch (Exception $e) 
-		{
-			$error_string = "Sorry, that email address or username is not associated with any account. Please try again.";
-		}
+        if($forgetful_user)
+        {
+            try
+            {
+                set_up_reset_token($forgetful_user);
+            }
+            catch (Exception $e)
+            {
+                $error_string = "Sorry, we were not able to send you an email with your password rest info in. This could be caused by you not registering an email address on sign up (and, to be fair, the email bit is optional). If you think your account might not have an email address associated, send a message to contact@rollerderbytestomatic.com and we can sort it out.";
+            }
+        }
 	}
 }
 
@@ -122,7 +138,7 @@ if (!$url_array[1])
 		// step 1
 		?>
 
-		<h3>To have your password reset, please enter your email address. You'll be emailed details on what to do next.</h3>
+		<h3>To have your password reset, please enter your email address or user name. You'll be emailed details on what to do next.</h3>
 		
 		<form method="post" action="<?php echo get_site_URL(); ?>passwordreset" name="formforgottenemail">
 			<input type="hidden"  name="forgottenemailform" id="forgottenemailform" value="yes">
