@@ -192,7 +192,10 @@ class test
 	
 	public function get_ID()
 	{
-		return $this->ID;
+        if ($this->ID)
+		    return $this->ID;
+        else
+            return -1;
 	}
 	
 	public function get_Timestamp_created()
@@ -648,6 +651,9 @@ class test
 		<p>
 			Link to this test, answers are randomised every time (<a onclick=\"shorten_link();\">shorten using bit.ly</a>): <input id=\"link_to_test\" name=\"link_to_test\" type=\"text\" value=\"" . $this->get_test_URL() . "\"> <span id=\"loading_bitly\" style=\"display:none\">Loading...</span>
 		</p>
+		<p>
+		    <a href=\"" . $this->get_test_URL(true) . "\">Edit and save this test</a>
+		</p>
 		";
 
         $QandA_ID_array_string = "";
@@ -856,7 +862,7 @@ class test
 		return $out;
 	}
 	
-	public function get_test_URL()
+	public function get_test_URL($edit = false)
 	{
 		/*
 		$test_number_of_questions = $_GET['n'];
@@ -886,7 +892,16 @@ class test
 			$question_ID_array[] = $question->get_ID();
 		}
 		$question_IDs = implode(".", $question_ID_array);
-		
-		return get_site_URL() . "test/generate/?n=" . $this->number_of_questions . "&d=" . $this->get_difficulty() . "&p=" . $this->pass_percentage . "&o=" . $this->get_output_format() . "&q=" . $question_IDs . "&s=" . $this->seed;
+
+        if ($edit)
+        {
+            $base = "test/builder/new/";
+        }
+        else
+        {
+            $base = "test/generate/";
+        }
+		return get_site_URL() . $base . "?n=" . $this->number_of_questions . "&d=" . $this->get_difficulty() . "&p=" . $this->pass_percentage . "&o=" . $this->get_output_format() . "&q=" . $question_IDs . "&s=" . $this->seed;
 	}
 }
+

@@ -134,6 +134,36 @@ elseif ($url_array[1] == "builder")
 					throw new exception ("You must be the author of the test in order to edit it");
 				}
 			}
+            else
+            {
+                // we have a new test, check for existing parameters for the new test
+                if ($_REQUEST['n'])
+                {
+                    $parameters = Array (
+                        'number_of_questions' => $_REQUEST['n'],
+                        'difficulty' => $_REQUEST['d'],
+                        'pass_percentage' => $_REQUEST['p'],
+                        'output_format' => $_REQUEST['o']
+                    );
+
+                    // optional parameters
+                    // specific questions
+                    if ($_REQUEST['q'])
+                    {
+                        $parameters['question_IDs'] = explode(".", $_REQUEST['q']);
+                    }
+
+                    // seed
+                    if ($_REQUEST['s'])
+                    {
+                        $parameters['seed'] = $_REQUEST['s'];
+                    }
+
+                    // get the test
+                    $test = get_test_from_parameters($parameters);
+
+                }
+            }
 			?>
 			
 		<p><a href="<?php echo get_site_URL(); ?>test/builder/">Back to tests overview</a></p>
@@ -382,7 +412,7 @@ elseif ($url_array[1] == "builder")
 				}
 				else
 				{
-					//remeber if this answer is correct. We'll need this info later.
+					//remember if this answer is correct. We'll need this info later.
 					correct_answer_ids["" + answer.id] = false;
 					
 					if (wrong_answers_count >= 3 || (check_chosen_answers && !answer.chosen))
