@@ -478,7 +478,7 @@ else
 <h3>Notes on new Questions</h3>
 
 <p>
-This is the page where you can submit questions to the Test O'Matic. Submitted questions must be for the WFTDA 1st January 2013 rule set (<a href="http://wftda.com/rules/20130101">available here</a>). 
+This is the page where you can submit questions to the Test O'Matic. Submitted questions must be for the latest WFTDA rule set (<a href="http://wftda.com/rules/">available here</a>).
 </p>
 <p>
 Your question will become a Draft question once submitted. It will be reviewed, possibly edited, and then most likely added to the database of questions. Your user name will be attached to the question as the Author Name automatically. If you would like different attribution (for example, you would like the site to credit a "Source", perhaps a league name, rather than an "Author") please <a href="mailto:contact@rollerderbytestomatic.com ?Subject=Roller%20Derby%20Test%20O'Matic">email me</a>.

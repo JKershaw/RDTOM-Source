@@ -62,29 +62,15 @@
 				?>	
 
 				<p><a href="<?php echo get_site_URL(); ?>test/">Generate a Rules Test</a></p>
-				
-				
-				<?php if (is_view_only_changes())
-				{ ?>
-					<p>
-						You are being given questions which <strong>only</strong> relate to rules which have been <a href="http://wftda.com/rules/change-summary/rules-2013-01-01" target="_blank">updated in the WFTDA 2013 rule set</a>. <a href="<?php echo get_site_URL(); ?>changes">Click here to be tested on all the rules.</a>
-					</p>	
-				<?php 
-				} 
-				else
-				{
-				?>
-					<p>
-						<a href="<?php echo get_site_URL(); ?>changes">Click here to be tested on <strong>only</strong> the rules which have been updated with the new WFTDA 2013 rule set</a>
-					</p>	
-					<?php 
-				}
-				?>	
+
+                <p>
+                    Experimental features: <a href="<?php echo get_site_URL(); ?>submit">Submit your own Question</a>, <a href="<?php echo get_site_URL(); ?>test/builder">build your own Test</a>, <a href="<?php echo get_site_URL(); ?>stats">view site stats</a>
+                </p>
 			</div>
 
 			<div class="footer_block">
-				<p><a href="<?php echo get_site_URL(); ?>about/">About, Disclaimer &amp; Privacy Policy</a></p>
-				<p><a href="<?php echo get_site_URL(); ?>forum">Forum:</a> <span id="footer_forum_thread"></span></p>
+                <p><a href="<?php echo get_site_URL(); ?>forum">Forum:</a> <span id="footer_forum_thread"></span></p>
+				<p><a href="<?php echo get_site_URL(); ?>about">About, Disclaimer &amp; Privacy Policy</a></p>
 				<p><a href="<?php echo get_site_URL(); ?>search">Search</a></p>
 				<p><a href="<?php echo get_site_URL(); ?>cat">Meow</a></p> 
 				
