@@ -129,7 +129,7 @@ elseif ($url_array[1] == "builder")
 			{
 				$test = get_test_from_ID($url_array[2]);
 				// is the user the author?
-				if ($user->get_ID() != $test->get_Author_ID())
+				if (($user->get_ID() != $test->get_Author_ID()) && !is_admin())
 				{
 					throw new exception ("You must be the author of the test in order to edit it");
 				}
@@ -656,6 +656,12 @@ elseif ($url_array[1] == "builder")
 				{
 					alert ("Error saving");
 				}
+                else
+                {
+                    // remember the ID so we don't make a new test next time we save
+                    test_id = data_as_int;
+                    console.debug(test_id);
+                }
 				
 				
 			})
@@ -736,7 +742,8 @@ elseif ($url_array[1] == "builder")
 					$answers_object = "answers: {answer: [{" . implode("}, {", $answer_objects) . "}]}";
 					
 					// the question object
-					
+					//preg_replace('/(\r\n|\n|\r)/','<br/>',addslashes($question->get_Text()))
+
 					$question_object = "{id: \"" . $question->get_ID() . "\", text: \"" . addslashes($question->get_Text()) . "\", sections: {section:\"" . addslashes($question->get_Section()) . "\"}, " . $answers_object . "}";
 					
 					echo "
