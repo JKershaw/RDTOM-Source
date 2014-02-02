@@ -1,7 +1,5 @@
 Roller Derby Test O'Matic - Online quiz for roller derby players
 
-Copyright 2013 by the contributors
-
 This program is written to be used as the foundation of the Roller Derby Test O'Matic project (RDTOM). The project consists of one central location. Whilst the code is open and you are welcome to view it, you are not permitted to deploy this code on any live server without prior permission.
 
 Permission to deploy code found in this project must be obtained by contacting John Kershaw at contact@rollerderbytestomatic.com
