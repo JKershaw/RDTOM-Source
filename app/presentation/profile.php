@@ -12,77 +12,70 @@ if ($_POST['loginform'] == "yes")
 		$error_string = $e->getMessage();
 	}
 }
+elseif (($_POST['logoutform'] == "yes") && is_logged_in())
+{
+	user_log_out();
+	$profile_message = "You have logged out. Bye!";
+}
 elseif ($_POST['signupform'] == "yes")
 {
-    try
-    {
-        user_sign_up($_POST['name'], $_POST['password'], $_POST['email']);
-        $profile_message = "Your account has been made, please log in now and experience the joy* of a Roller Derby Test O'Matic account (*joy not guaranteed).";
-    }
-    catch (Exception $e)
-    {
-        $error_string = $e->getMessage();
-        $sign_up_error = true;
-    }
+	try 
+	{
+		user_sign_up($_POST['name'], $_POST['password'], $_POST['email']);
+		$profile_message = "Your account has been made, please log in now and experience the joy* of a Roller Derby Test O'Matic account (*joy not guaranteed).";
+	}
+	catch (Exception $e) 
+	{
+		$error_string = $e->getMessage();
+		$sign_up_error = true;
+	}
 }
-elseif(is_logged_in())
+elseif ($_POST['disassociateform'] == "yes")
 {
-    if ($_POST['logoutform'] == "yes")
-    {
-        user_log_out();
-        $profile_message = "You have logged out. Bye!";
-    }
-
-    elseif ($_POST['disassociateform'] == "yes")
-    {
-        $mydb->responses_disassociate($user->get_ID());
-        $profile_message = "Answers disassociated! The site may take a little while to update, be patient.";
-
-    }
-    elseif ($_POST['formpasswordupdate'] == "yes")
-    {
-        try
-        {
-            user_update_password($_POST['oldpassword'], $_POST['newpassword']);
-            $profile_message = "Your password has been updated.";
-        }
-        catch (Exception $e)
-        {
-            $profile_message = $e->getMessage();
-        }
-
-    }
-    elseif ($_POST['formnameupdate'] == "yes")
-    {
-        try
-        {
-            user_update_name($_POST['name']);
-            $profile_message = "Your name has been updated.";
-        }
-        catch (Exception $e)
-        {
-            $profile_message = $e->getMessage();
-        }
-
-    }
-    elseif ($_POST['formemailupdate'] == "yes")
-    {
-        try
-        {
-            user_update_email($_POST['email']);
-            $profile_message = "Your email has been updated.";
-        }
-        catch (Exception $e)
-        {
-            $profile_message = $e->getMessage();
-        }
-
-    }
+	$mydb->responses_disassociate($user->get_ID());
+	$profile_message = "Answers disassociated! The site may take a little while to update, be patient.";
+	
 }
-else
+elseif ($_POST['formpasswordupdate'] == "yes")
 {
-    $error_string = "You need to be logged in to do that.";
+	try 
+	{
+		user_update_password($_POST['oldpassword'], $_POST['newpassword']);
+		$profile_message = "Your password has been updated.";
+	}
+	catch (Exception $e) 
+	{
+		$profile_message = $e->getMessage();
+	}
+	
 }
+elseif ($_POST['formnameupdate'] == "yes")
+{
+	try 
+	{
+		user_update_name($_POST['name']);
+		$profile_message = "Your name has been updated.";
+	}
+	catch (Exception $e) 
+	{
+		$profile_message = $e->getMessage();
+	}
+	
+}
+elseif ($_POST['formemailupdate'] == "yes")
+{
+	try 
+	{
+		user_update_email($_POST['email']);
+		$profile_message = "Your email has been updated.";
+	}
+	catch (Exception $e) 
+	{
+		$profile_message = $e->getMessage();
+	}
+	
+}
+
 // show the page
 set_up_stats_header();
 set_page_subtitle("Turn left and view your profile.");
@@ -107,7 +100,7 @@ if (is_logged_in())
 	</p>
 	
 	<form method="post" action="<?php echo get_site_URL(); ?>profile" name="formlogout">
-		<input type="hidden" name="logoutform" id="logoutform" value="yes" >
+		<input type="hidden" name="logoutform" id="logoutform" value="yes" ></input>
 	</form>
 	
 	<div class="layout_box" id="layout_box_stats">
@@ -126,14 +119,14 @@ if (is_logged_in())
 	<div class="layout_box" id="layout_box_profile" style="display:none;">
 		<h3>Update your password</h3>
 		<form method="post" action="<?php echo get_site_URL(); ?>profile#update" name="formpasswordupdate">
-			<input type="hidden" name="formpasswordupdate" id="formpasswordupdate" value="yes" >
+			<input type="hidden" name="formpasswordupdate" id="formpasswordupdate" value="yes" ></input>
 			<p>
 				Old password: <br />
-				<input class="input_text" type="password" name="oldpassword" id="oldpassword">
+				<input class="input_text" type="password" name="oldpassword" id="oldpassword"></input>
 			</p>
 			<p>
 				New password (8 character minimum): <br />
-				<input class="input_text" type="password" name="newpassword" id="newpassword">
+				<input class="input_text" type="password" name="newpassword" id="newpassword"></input>
 			</p>
 			<p>
 				<a class="button" onClick="document.formpasswordupdate.submit()">Update password</a>
@@ -143,10 +136,10 @@ if (is_logged_in())
 		<h3>Update your email</h3>
 		
 		<form method="post" action="<?php echo get_site_URL(); ?>profile#update" name="formemailupdate">
-			<input type="hidden" name="formemailupdate" id="formemailupdate" value="yes" >
+			<input type="hidden" name="formemailupdate" id="formemailupdate" value="yes" ></input>
 			<p>
 				New email address: <br />
-				<input class="input_text" type="text" name="email" id="email" value="<?php echo htmlentities(stripslashes($user->get_Email())); ?>">
+				<input class="input_text" type="text" name="email" id="email" value="<?php echo htmlentities(stripslashes($user->get_Email())); ?>"></input>
 			</p>
 			<p>
 				<a class="button" onClick="document.formemailupdate.submit()">Update email</a>
@@ -156,10 +149,10 @@ if (is_logged_in())
 		<h3>Update your name</h3>
 		
 		<form method="post" action="<?php echo get_site_URL(); ?>profile#update" name="formnameupdate">
-			<input type="hidden" name="formnameupdate" id="formnameupdate" value="yes" >
+			<input type="hidden" name="formnameupdate" id="formnameupdate" value="yes" ></input>
 			<p>
 				New name: <br />
-				<input class="input_text" type="text" name="name" id="name" value="<?php echo htmlentities(stripslashes($user->get_Name())); ?>">
+				<input class="input_text" type="text" name="name" id="name" value="<?php echo htmlentities(stripslashes($user->get_Name())); ?>"></input>
 			</p>
 			<p>
 				<a class="button" onClick="document.formnameupdate.submit()">Update name</a>
@@ -171,8 +164,8 @@ if (is_logged_in())
 		
 		<form method="post" action="<?php echo get_site_URL(); ?>profile#update" name="disassociateform">
 			<p>
-				<input type="hidden" name="disassociateform"  id="disassociateform" value="yes" >
-				<a class="button" onClick="if (confirm('Are you sure you want the site to forget every answer you have given? This CAN NOT be undone.')){ document.disassociateform.submit() }">Disassociate Answers</a>
+				<input type="hidden" name="disassociateform"  id="disassociateform" value="yes" ></input>
+				<a class="button" onClick="if (confirm('Are you sure you want the site to forget every answer you have given? This CAN NOT be undone.')){ document.disassociateform.submit() };">Disassociate Answers</a>
 			</p>
 		</form>
 		
@@ -235,7 +228,7 @@ else
 		<h3>Login to your account</h3>
 		
 		<form method="post" action="<?php echo get_site_URL(true); ?>profile" name="formlogin">
-		<input type="hidden"  name="loginform" id="loginform" value="yes">
+		<input type="hidden"  name="loginform" id="loginform" value="yes"></input>
 		<p>
 			Name:<br />
 			<input class="input_text" type="text" id="name" name = "name">
@@ -260,7 +253,7 @@ else
 	<div id="form_signup" <?php if (!$sign_up_error) { echo "style=\"display: none;\""; }?>>
 		<h3>Sign up</h3>
 		<form method="post" action="<?php echo get_site_URL(true); ?>profile" name="formsignup">
-			<input type="hidden" id="signupform" name="signupform"  value="yes">
+			<input type="hidden" id="signupform" name="signupform"  value="yes"></input>
 		<p>		
 			Name: <br />
 			<input class="input_text" type="text" id="signup_name" name = "name">

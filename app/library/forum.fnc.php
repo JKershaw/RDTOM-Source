@@ -148,10 +148,7 @@ class forum
 			}
 			
 			// make the new thread
-			$slug = str_replace(" ", "-",
-                        preg_replace('/[^\p{L}\p{N}\s]/u', '',
-                                strtolower(
-                                        substr($_POST['new_thread_title'], 0, 100))));
+			$slug = str_replace(" ", "-", ereg_replace("[^A-Za-z0-9 ]", "", strtolower(substr($_POST['new_thread_title'], 0, 100))));
 			
 			// is this a unique slug?
 			if (get_thread_from_slug($slug))
@@ -363,11 +360,7 @@ class topic
 					<br /><i>" . htmlentities($this->data['Blurb']) . "</i>";
 					if ($latest_post)
 					{
-						$out .= "<br />
-						<div class=\"latest_post_string\">
-							<span style=\"float:left\">" . $latest_post->get_latest_post_string($hide_title) . "</span>
-							<span style=\"float:right\">" . number_format($this->get_thread_count()) . " thread" .  ($this->get_thread_count() != 1 ? "s" : "") . ", " . number_format($this->get_post_count()) . " post" .  ($this->get_post_count() != 1 ? "s" : "") . "</span>
-						</div>";
+						$out .= $latest_post->get_latest_post_string();
 					}
 					$out .= "</li>
 				</div>";
@@ -444,16 +437,6 @@ class topic
 	{
 		return $this->data['ID'];
 	}
-	
-	public function get_post_count()
-	{
-		return count(get_posts_from_topic_id($this->data['ID']));
-	}
-	
-	public function get_thread_count()
-	{
-		return count(get_threads_from_topic_id($this->data['ID']));
-	}
 }
 
 class thread
@@ -476,11 +459,7 @@ class thread
 				<a href=\"" . $this->get_URL() . "\">" . htmlentities(stripslashes($this->data['Title'])) . "</a>";
 				if ($latest_post)
 				{
-					$out .= "<br />
-						<div class=\"latest_post_string\">
-							<span style=\"float:left\">" . $latest_post->get_latest_post_string($hide_title) . "</span>
-							<span style=\"float:right\">" . number_format($this->get_post_count()) . " post" .  ($this->get_post_count() != 1 ? "s" : "") . "</span>
-						</div>";
+					$out .= "<br />" . $latest_post->get_latest_post_string($hide_title);
 				}
 				$out .= "
 			</div>
@@ -557,11 +536,6 @@ class thread
 	{
 		return get_latest_posts_from_thread_id($this->data['ID']);
 	}
-	
-	public function get_post_count()
-	{
-		return count(get_posts_from_thread_id($this->data['ID']));
-	}
 }
 
 class post
@@ -636,11 +610,11 @@ class post
 		$parent_thread = $this->get_parent_thread();
 		if ($hide_title)
 		{
-			return "Latest post by <strong>" . htmlentities($this->get_author_name()) . "</strong>, " . $this->get_freshness_html();
+			return "<div class=\"latest_post_string\">Latest post by <strong>" . htmlentities($this->get_author_name()) . "</strong>, " . $this->get_freshness_html() . "</div>";
 		}
 		else
 		{
-			return "Latest post by <strong>" . htmlentities($this->get_author_name()) . "</strong> in <a href=\"" . $parent_thread->get_URL() . "\">" . htmlentities(stripslashes($parent_thread->get_Title())) . "</a>, " . $this->get_freshness_html();
+			return "<div class=\"latest_post_string\">Latest post by <strong>" . htmlentities($this->get_author_name()) . "</strong> in <a href=\"" . $parent_thread->get_URL() . "\">" . htmlentities(stripslashes($parent_thread->get_Title())) . "</a>, " . $this->get_freshness_html() . "</div>";
 		}
 		
 	}
@@ -867,23 +841,6 @@ function get_posts_from_thread_id($ID)
 	global $myPDO;
 	$statement = $myPDO->prepare("SELECT * FROM rdtom_forum_posts WHERE Thread_ID = :Thread_ID ORDER BY Timestamp Asc");
 	$statement->execute(array(':Thread_ID' => $ID));
-	$results = $statement->fetchAll();
-	
-	$out = Array();
-	
-	foreach ($results as $result)
-	{
-		$out[] = new post($result);
-	}
-	
-	return $out;
-}
-
-function get_posts_from_topic_id($ID)
-{
-	global $myPDO;
-	$statement = $myPDO->prepare("SELECT * FROM rdtom_forum_posts WHERE Topic_ID = :Topic_ID ORDER BY Timestamp Asc");
-	$statement->execute(array(':Topic_ID' => $ID));
 	$results = $statement->fetchAll();
 	
 	$out = Array();

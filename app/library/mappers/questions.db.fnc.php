@@ -58,6 +58,7 @@ function get_question_random()
 	{
 
 		// code from http://jan.kneschke.de/projects/mysql/order-by-rand/
+		// TODO AB test this to get average time taken to run query
 		/*
 		$query = "
 		SELECT * FROM rdtom_questions
@@ -143,7 +144,7 @@ function get_question_random_simple()
 	// if we've asked every question, ask them again
 	// delete_session('random_questions_asked');
 	
-	return $questions[array_rand($questions)];
+	return $questions[array_rand($questions)];;
 }
 
 function get_question_random_changed()

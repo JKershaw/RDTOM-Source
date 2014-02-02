@@ -14,15 +14,14 @@ function return_stats_user_totals()
 	$total_response_count = count($user_responses);
 	
 	$total_response_count_string = number_format($total_response_count);
-	$out = "<p>You have answered a total of <strong>" . $total_response_count_string . "</strong> question";
+	$out .= "<p>You have answered a total of <strong>" . $total_response_count_string . "</strong> question";
 	if ($total_response_count != 1)
 	{
 		$out .= "s";
 	}
-	$out .= ".</p>";
-
-    $all_time_correct_count = 0;
-    $all_time_incorrect_count = 0;
+	$out .= ".</p>";		
+	
+	
 	// total correct %
 	foreach ($user_responses as $user_response)
 	{
@@ -270,7 +269,7 @@ function return_stats_user_progress($user = false)
 
 	add_google_chart_drawChart($drawChart_string);
    	
-	$out = '<p>Your average success rate:</p><div id="chart_progress' . $user_ID . '" style="width: 100%; height: 200px;">Loading ...</div>';
+	$out .= '<p>Your average success rate:</p><div id="chart_progress' . $user_ID . '" style="width: 100%; height: 200px;">Loading ...</div>';
 	
 	
 	/*
@@ -342,6 +341,7 @@ function return_stats_user_progress($user = false)
 		}
 		if ($week_key < ($current_week_value-1))
 		{
+			// TODO make this work
 			//$week_string = ($current_week_value - $week_key) . " weeks ago";
 		}
 		
@@ -519,7 +519,7 @@ function return_chart_24hour_responses()
 
 	add_google_chart_drawChart($drawChart_string);
    	
-	$out = '<div id="chart_24responses" style="width: 100%; height: 200px;"></div>';
+	$out .= '<div id="chart_24responses" style="width: 100%; height: 200px;"></div>';
 	
 	return $out;
 }
@@ -532,7 +532,7 @@ function return_user_responses()
 	{
 		return $user_responses;
 	}
-	elseif (is_logged_in())
+	else
 	{
 		$cached_user_responses = cache_get("user_responses_" . $user->get_ID());
 		if(!$cached_user_responses)
@@ -545,6 +545,8 @@ function return_user_responses()
 		
 		return $cached_user_responses;
 	}
+	
+	return $user_responses;
 }
 
 function return_user_questions_sections($user_ID = false)

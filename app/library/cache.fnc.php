@@ -33,8 +33,13 @@ function cache_get($key)
 	{
 		return false;
 	}
-	$theData = fread($fh, filesize("../filecache/" . $key));
+	@$theData = fread($fh, filesize("../filecache/" . $key));
 	fclose($fh);
+	
+	if (!$theData)
+	{
+		return false;
+	}
 	
 	$theData = unserialize($theData);
 	

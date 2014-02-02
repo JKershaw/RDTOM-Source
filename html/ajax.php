@@ -343,7 +343,7 @@ function ajax_count_minutly_responses()
 }
 
 /*
- * Highest minutly rate
+ * TODO Highest minutly rate
  * 
  * SELECT count(ID) as count, MINUTE(FROM_UNIXTIME(`Timestamp`)) as minute, 
 HOUR(FROM_UNIXTIME(`Timestamp`)) as hour, DAYOFYEAR(FROM_UNIXTIME(`Timestamp`)) as day 

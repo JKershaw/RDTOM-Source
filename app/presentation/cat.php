@@ -82,7 +82,7 @@ function answer_question(type, answerID)
 }
 
 // nothing worse than getting the same cat over and over!
-var recent_cats = new Array();
+var recent_cats = Array();
 
 function get_random_cat(cat_array)
 {

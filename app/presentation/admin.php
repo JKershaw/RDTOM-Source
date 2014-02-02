@@ -352,7 +352,7 @@ include("header.php");
 			{
 				echo $question->get_ID();
 			}
-			?>"> (<a onClick="$('#term_checkbox\\[2\\]').prop('checked', true);$('#term_checkbox\\[1\\]').prop('checked', false);$('#question_id').val('');setdefaultanswers('pen');">6-ify penalty</a>)</td>
+			?>"></input> (<a onClick="$('#term_checkbox\\[2\\]').prop('checked', true);$('#term_checkbox\\[1\\]').prop('checked', false);$('#question_id').val('');setdefaultanswers('pen');">6-ify penalty</a>)</td>
 				</tr>
 				<tr>
 					<td style="width:200px">Question:</td>
@@ -376,7 +376,7 @@ include("header.php");
 					}
 					
 					echo $section_value;
-					?>"> <?php
+					?>"></input> <?php 
 					if ($section_value)
 					{
 						$section_array = explode(".", $section_value);
@@ -1197,7 +1197,7 @@ include("header.php");
 			$.post("ajax.php", { 
 				call: "set_admin_relationship", 
 				termID: term_id,
-				questionID: question_id
+				questionID: question_id,
 				},
 				
 				function(data) {
