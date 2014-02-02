@@ -108,7 +108,7 @@
 			</div>
 
             <p style="text-align:center;">
-                <a href="http://jkershaw.com/freelance-web-developer-hire-me/">Site built by John Kershaw (Sausage Roller), who you should hire.</a>
+                Site built by John Kershaw (Sausage Roller), who you should hire.
             </p>
 
 			<?php if (is_admin()) 
