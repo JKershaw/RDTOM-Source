@@ -14,6 +14,6 @@ ln -s RDTOM-Source/html/ html
 
 to create the alias directories.
 
-Finally, create your config.ini
+Finally, create your config.ini, logs and filecache folders.
 
 To get the latest you can now simply run a git pull.
