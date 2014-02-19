@@ -55,7 +55,7 @@
 				{
 					?>
 					<p>
-						<a href="<?php echo get_site_URL(); ?>profile">Log in or sign up</a>. When logged in the site will track which sections of the rules you're good at, and which you need to brush up on.
+						<a href="<?php echo get_site_URL(); ?>profile">Log in or sign up</a> to track your stats.
 					</p>	
 					<?php 
 				}
@@ -64,7 +64,7 @@
 				<p><a href="<?php echo get_site_URL(); ?>test/">Generate a Rules Test</a></p>
 
                 <p>
-                    Experimental features: <a href="<?php echo get_site_URL(); ?>submit">Submit your own Question</a>, <a href="<?php echo get_site_URL(); ?>test/builder">build your own Test</a>, <a href="<?php echo get_site_URL(); ?>stats">view site stats</a>
+                    Experimental features: <!--<a href="<?php echo get_site_URL(); ?>submit">Submit your own Question</a>, --><a href="<?php echo get_site_URL(); ?>test/builder">Build your own Test</a>, <a href="<?php echo get_site_URL(); ?>stats">view site stats</a>
                 </p>
 			</div>
 
@@ -77,6 +77,7 @@
 			</div>
 
 			<div class="footer_block">
+				<p>Officially licensed by the <a href="http://wftda.com/">WFTDA</a></p>
 				<p>Get the Test O'Matic App!</p>
 				<p>
 					<!-- Google Play -->
@@ -108,7 +109,7 @@
 			</div>
 
             <p style="text-align:center;">
-                Site built by John Kershaw (Sausage Roller), who you should hire.
+                Site built by <a href="http://jkershaw.com/">John Kershaw</a> (aka Sausage Roller).
             </p>
 
 			<?php if (is_admin()) 
