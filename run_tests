@@ -1,4 +1,14 @@
-echo "No tests run"
+set -e
+
+for D in tests/unit/*; do
+    if [ -f "${D}" ]; then
+			DIR="$D.php"
+			echo "testing $DIR"
+			phpunit $DIR
+	fi
+done
+
+echo "PHP Unit tests completed"
 
 if [ $# -gt 0  ]; then
 	MESSAGE="$@"
