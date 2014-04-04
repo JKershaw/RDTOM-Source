@@ -11,7 +11,7 @@ function save_log($log_name, $request_string, $question_ID = null)
 	$stringData = date("[d-m-Y H:i:s]") . " [" . get_ip() . "] " . $request_string . "\n";
 	
 	// save the log
-	file_put_contents($filename, $stringData, FILE_APPEND);  
+	@file_put_contents($filename, $stringData, FILE_APPEND);  
 	
 	// if it's a report, also save it in the database
 	if ($log_name == "report")
