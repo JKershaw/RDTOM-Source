@@ -1,0 +1,12 @@
+echo "No tests run"
+
+if [ $# -gt 0  ]; then
+	MESSAGE="$@"
+	echo "Committing with message '$MESSAGE'"
+	git pull
+	git add -A
+	git commit -am "$MESSAGE"
+	git push
+else
+  echo "No commit message, no commit"
+fi

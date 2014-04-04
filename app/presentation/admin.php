@@ -202,14 +202,12 @@ if ($_GET['update_report'])
 
 
 // is a question being edited
-if (($url_array[1] == "edit") && !$question_deleted)
-{
+if (($url_array[1] == "edit") && !$question_deleted) {
 	$question = get_question_from_ID($url_array[2]);
 	try {	
 		$answers = $question->get_all_Answers();
 	} 
-		catch (Exception $e) 
-	{
+	catch (Exception $e) {
 		$message .= $e->getMessage();
 	}
 }
@@ -260,27 +258,6 @@ if ($_GET['recompute'])
 		$message .= " Relationships rebuilt!";
 
 	}	
-	/*
-	if ($_GET['recompute'] == "tagastest")
-	{	
-		// tag everything as a test question
-		
-		// delete all existing tags
-		$tag_question_term = $mydb->get_term_from_taxonomy_and_name("tag", "Test Question");
-		$mydb->remove_relationship_given_Term_ID($tag_question_term->get_ID());
-		
-		$message .= " Test Question tag removed from all questions!";
-		
-		$all_questions = get_questions();
-		
-		foreach($all_questions as $question)
-		{
-			$mydb->add_relationship($question->get_ID(), $tag_question_term->get_ID());
-		}
-		$message .= " Test Question tag added to all questions!";
-		
-	}
-	*/
 }
 // get the open reports (and the value for the menu)
 $reports_open = $mydb->get_reports(REPORT_OPEN);
@@ -306,7 +283,6 @@ include("header.php");
 		<a class="button" onclick="show_page('reports');">Reports<?php echo $reports_menu_string; ?></a>
 		<a class="button" onClick="show_page('all_questions');">All Questions</a>
 		<a class="button" onClick="show_page('logs');">Logs</a>
-		<!-- <a class="button" onClick="show_page('competition');">Competition</a> -->
 		<a class="button" onClick="show_page('recompute');">Recompute</a>
 		<a class="button" onClick="show_page('test');">Test</a>
 		<a class="button" onClick="show_page('admin');">Admin</a>
@@ -837,108 +813,8 @@ include("header.php");
 				    		unarchive();
 					    }
 				    }});
-
 			}
-			
-			//http://rollerderbytestomatic.com/cron.php?force=unarchive_responses
 		</script>
-		<?php 
-		
-		/*
-		$language_term = $mydb->get_term_from_taxonomy_and_name("language", "English");
-				
-		$all_questions = get_questions();
-		foreach ($all_questions as $tmp_question)
-		{
-		$mydb->add_relationship($tmp_question->get_ID(), $language_term->get_ID());
-		}
-		//print_r(get_questions_search('passed'));
-		
-		*/
-		/*
-		$all_questions = get_questions();
-		
-		foreach ($all_questions as $question)
-		{
-			try {
-				$question->get_answers();
-			} catch (Exception $e) {
-				echo $question->get_ID() . " ";
-			}
-			
-			
-		}
-		*/
-		/*
-		$all_users = $mydb->get_users();
-		
-		for ($i = 0; $i < 10; $i++)
-		{
-			$tmp_user = array_pop($all_users);
-			echo "<br />" . $tmp_user->get_Name() . "<br />" .  return_stats_user_progress($tmp_user);
-		}
-		*/
-		
-		/*
-		$params = array(
-				"tag" => "Test Question",
-				"rule-set" => "WFTDA6"
-		);
-		
-		print_r($params);
-		echo "<br />";
-		try {
-			
-			$questions = get_questions($params);
-		
-			foreach ($questions as $question)
-			{
-				echo " " . $question->get_ID();
-			}
-		} catch (Exception $e) {
-			echo "No questions found";
-		}
-		echo "<br />";
-		
-		$params = array(
-				"tag" => "Test Question"
-		);
-		
-		print_r($params);
-		echo "<br />";
-		try {
-			
-			$questions = get_questions($params);
-		
-			foreach ($questions as $question)
-			{
-				echo " " . $question->get_ID();
-			}
-		} catch (Exception $e) {
-			echo "No questions found";
-		}
-		echo "<br />";
-		
-		$params = array(
-				"rule-set" => "WFTDA6"
-		);
-		
-		print_r($params);
-		echo "<br />";
-		try {
-			
-			$questions = get_questions($params);
-		
-			foreach ($questions as $question)
-			{
-				echo " " . $question->get_ID();
-			}
-		} catch (Exception $e) {
-			echo "No questions found";
-		}
-		echo "<br />";
-		*/
-		?>
 
 	</div>
 	
@@ -1119,12 +995,7 @@ include("header.php");
 			
 			if (page_name == "all_questions")
 			{
-
-				
 	    		$('#layout_box_all_questions').fadeIn();
-	    		//$('#viewalllink').hide(); 
-	    		//$('#viewalllist').show(); 
-	    		//get_all_questions_list();
 			}
 			else
 			{
