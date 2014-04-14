@@ -17,6 +17,8 @@ sudo cp -rf ./* /var/
 echo "renaming html to www"
 sudo cp -rf /var/html/* /var/www/
 
+echo "Have yet to add any integration tests..."
+
 if [ $# -gt 0  ]; then
 	MESSAGE="$@"
 	echo "Committing with message '$MESSAGE'"
