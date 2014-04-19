@@ -70,7 +70,7 @@ class api_controller extends abstract_api_controller
 			try {
 				echo json_encode($this->out_XML);
 				
-			} catch (exception e) {
+			} catch (Exception $e) {
 				echo "Something is iffy here:";
 				echo $this->out_XML;
 			}
