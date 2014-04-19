@@ -67,7 +67,13 @@ class api_controller extends abstract_api_controller
 		{
 			// JSON
 			header('Content-Type: application/json');
-			echo json_encode($this->out_XML);
+			try {
+				echo json_encode($this->out_XML);
+				
+			} catch (exception e) {
+				echo "Something is iffy here:";
+				echo $this->out_XML;
+			}
 		}
 		elseif ($this->request['format'] == "jsonp")
 		{
