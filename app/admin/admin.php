@@ -35,6 +35,10 @@ if ($_POST) {
 if ($_GET['clone_question']) {
 	include (__DIR__ . "/lib/questionClone.php");
 }
+// Upgrade from WFTDA 6 to 7
+if ($_GET['clone_wftda6_to_7']) {
+	include (__DIR__ . "/lib/questionCloneAll.php");
+}
 
 //update reports when needed
 if ($_GET['update_report']) {
