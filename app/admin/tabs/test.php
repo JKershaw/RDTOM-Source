@@ -1,7 +1,5 @@
 <div class="layout_box" id="layout_box_test" style="display:none;">
 	
-	
-				
 		I wonder if this'll change stuff?
 		
 		
