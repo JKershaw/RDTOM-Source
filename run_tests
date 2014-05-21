@@ -12,12 +12,12 @@ echo "PHP Unit tests completed"
 
 #sudo /etc/init.d/apache2 restart
 
-echo "Copying files"
-sudo cp -rf ./* /var/
-echo "renaming html to www"
-sudo cp -rf /var/html/* /var/www/
+#echo "Copying files"
+#sudo cp -rf ./* /var/
+#echo "renaming html to www"
+#sudo cp -rf /var/html/* /var/www/
 
-echo "Have yet to add any integration tests..."
+#echo "Have yet to add any integration tests..."
 
 if [ $# -gt 0  ]; then
 	MESSAGE="$@"
