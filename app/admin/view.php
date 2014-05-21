@@ -10,11 +10,11 @@ if ($message) {
 		
 <p>
 	<a class="button" onclick="show_page('edit_question');">Edit Question</a>
-	<a class="button" onclick="show_page('reports');">Reports<?php echo $reports_menu_string; ?></a>
 	<a class="button" onClick="show_page('all_questions');">All Questions</a>
+	<a class="button" onclick="show_page('reports');">Reports<?php echo $reports_menu_string; ?></a>
 	<a class="button" onClick="show_page('logs');">Logs</a>
-	<a class="button" onClick="show_page('recompute');">Recompute</a>
-	<a class="button" onClick="show_page('test');">Test</a>
+<!-- 	<a class="button" onClick="show_page('recompute');">Recompute</a>
+	<a class="button" onClick="show_page('test');">Test</a> -->
 </p>
 
 <?php include(__DIR__ . "/tabs/editQuestion.php"); ?>
