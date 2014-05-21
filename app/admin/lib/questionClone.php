@@ -1,6 +1,6 @@
 <?php
 
-$questionToBeCloned = get_question_from_ID($_POST['clone_question']);
+$questionToBeCloned = get_question_from_ID($_GET['clone_question']);
 
 // Adding a new question
 // try to save the question
