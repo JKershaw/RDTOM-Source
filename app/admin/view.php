@@ -108,7 +108,7 @@ if ($message) {
 		
 		function show_page(page_name) {
 
-			$('#layout_box').hide();
+			$('.layout_box').hide();
 	    	$('#layout_box_' . page_name).fadeIn();
 			
 			window.location.hash='#'+page_name;
