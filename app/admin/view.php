@@ -15,7 +15,7 @@
 		<a class="button" onClick="show_page('admin');">Admin</a>
 	</p>
 
-	<?php include("/tabs/editQuestion.php"); ?>
+	<?php include(__DIR__ . "/tabs/editQuestion.php"); ?>
 		
 	
 	<div class="layout_box" id="layout_box_all_questions" style="display:none;">
