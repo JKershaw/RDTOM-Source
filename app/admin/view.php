@@ -19,8 +19,6 @@ if ($message) {
 
 <?php include(__DIR__ . "/tabs/editQuestion.php"); ?>
 
-<?php include(__DIR__ . "/tabs/reports.php"); ?>
-
 <?php include(__DIR__ . "/tabs/allQuestions.php"); ?>
 
 <?php include(__DIR__ . "/tabs/logs.php"); ?>
@@ -28,6 +26,8 @@ if ($message) {
 <?php include(__DIR__ . "/tabs/recompute.php"); ?>
 
 <?php include(__DIR__ . "/tabs/test.php"); ?>
+
+<?php include(__DIR__ . "/tabs/reports.php"); ?>
 
 	
 	<script type="text/javascript">
