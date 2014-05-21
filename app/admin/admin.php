@@ -24,7 +24,7 @@ if ($_POST)
 	{
 		if (strtolower($_POST['question_text']) == "delete")
 		{
-			include("./lib/questionDelete.php");
+			include(__DIR__ . "/lib/questionDelete.php");
 		}
 		else
 		{
