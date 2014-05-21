@@ -1,24 +1,22 @@
 <?php
-
 $terms_array = array("rule-set" => "WFTDA6");
 $allQuestions = get_questions($terms_array);
 
-foreach($allQuestions as $id => $questionToBeCloned) {
-
+foreach ($allQuestions as $id => $questionToBeCloned) {
+	
 	// Clone
 	$new_question_id = clone_question($mydb, $questionToBeCloned);
-
+	
 	// save a comment
 	$comment_text = "Question Cloned from \n\n" . $questionToBeCloned;
 	$comment = new comment(-1, $user->get_ID(), $new_question_id, gmmktime(), $comment_text, QUESTION_CHANGED);
 	set_comment($comment);
-
+	
 	// Edit existing question
 	updateToWFTDA7($mydb, $user, $questionToBeCloned);
 }
 
 $message.= "WOAH! ";
-
 
 function clone_question($mydb, $questionToBeCloned) {
 	
@@ -42,6 +40,16 @@ function clone_question($mydb, $questionToBeCloned) {
 
 function updateToWFTDA7($mydb, $user, $question) {
 	
+	//remove all tags
+	$mydb->remove_relationship_given_Question_ID($question->get_ID());
+	
+	//add back all but rule-set tags
+	foreach ($questionToBeCloned->get_terms() as $term_ID => $term) {
+		if ($term->get_taxonomy() != "rule-set") {
+			$mydb->add_relationship($question->get_ID(), $term->get_ID());
+		}
+	}
+	
 	// add the WFTDA 7 tag
 	$WFTDA7_term_ID = "23";
 	$mydb->add_relationship($question->get_ID(), $WFTDA7_term_ID);
@@ -53,7 +61,7 @@ function updateToWFTDA7($mydb, $user, $question) {
 		$section_parts = explode(".", $section);
 		
 		$section_parts[0] = intval($section_parts[0]) - 1;
-
+		
 		$section = implode(".", $section_parts);
 	}
 	
