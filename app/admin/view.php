@@ -108,10 +108,8 @@ if ($message) {
 		
 		function show_page(page_name) {
 
-			console.debug("showing", page_name, '#layout_box_' . page_name);
-
 			$('.layout_box').hide();
-	    	$('#layout_box_' . page_name).show();
+	    	$('#layout_box_' . $page_name).show();
 			
 			window.location.hash='#'+page_name;
 	    	
