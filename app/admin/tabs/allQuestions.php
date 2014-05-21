@@ -7,6 +7,7 @@
 			<a class="current_ruleset_selector current_ruleset_selector_WFTDA5" onClick="change_current_ruleset('WFTDA5');">WFTDA5</a> 
 			<a class="current_ruleset_selector current_ruleset_selector_WFTDA6" onClick="change_current_ruleset('WFTDA6');">WFTDA6</a> 
 			<a class="current_ruleset_selector current_ruleset_selector_WFTDA6_Draft" onClick="change_current_ruleset('WFTDA6_Draft');">WFTDA6_Draft</a></p>
+			<a class="current_ruleset_selector current_ruleset_selector_WFTDA7" onClick="change_current_ruleset('WFTDA7');">WFTDA7</a></p>
 		
 		<p><a onclick="$('.extra_all').toggle();">Toggle all</a></p>
 		
