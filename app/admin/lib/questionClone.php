@@ -49,13 +49,11 @@ function updateToWFTDA7($mydb, $user, $question) {
 	$section = $question->get_Section();
 	
 	if (strpos($section, '.') !== false) {
-		$section_parts = explode($section, ".");
+		$section_parts = explode(".", $section);
 		
-		if (intval($section_parts[0]) > 1) {
-			$section_parts[0] = intval($section_parts[0]) - 1;
-		}
+		$section_parts[0] = intval($section_parts[0]) - 1;
 
-		$section = implode($section_parts, ".");
+		$section = implode(".", $section_parts);
 	}
 	
 	edit_question($question->get_ID(), $question->get_Text(), $section, $question->get_Notes());
