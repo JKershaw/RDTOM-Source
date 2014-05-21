@@ -14,5 +14,4 @@ $mydb->remove_question_and_answers($_POST['question_id']);
 
 // Stuff neded in the view and elsewhere
 $message = "The question has been deleted. ";
-$question_deleted = true;
 ?>
