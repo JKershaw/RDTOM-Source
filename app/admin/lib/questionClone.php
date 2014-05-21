@@ -42,6 +42,6 @@ function clone_question($questionToBeCloned) {
 
 function updateToWFTDA7($question){
 	$WFTDA7_term_ID = "23";
-	$mydb->add_relationship($question->get_ID, $WFTDA7_term_ID);
+	$mydb->add_relationship($question->get_ID(), $WFTDA7_term_ID);
 }
 ?>
