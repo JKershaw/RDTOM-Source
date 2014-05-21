@@ -116,10 +116,10 @@ if ($message) {
 		}
 
 		// if there's a hash location for a page, go there
-		if (location.href.indexOf("#") != -1) 
-		{
-	        show_page(location.href.substr(location.href.indexOf("#") + 1));
-	    }
+		// if (location.href.indexOf("#") != -1) 
+		// {
+	 //        show_page(location.href.substr(location.href.indexOf("#") + 1));
+	 //    }
 
 		function toggle_term_relationship(term_id, question_id)
 		{
@@ -148,4 +148,5 @@ if ($message) {
 			
 		}
 		</script>
+		
 <?php include(__DIR__ . "/../presentation/footer.php");  ?>
