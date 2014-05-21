@@ -1,1 +1,1 @@
-<?php include("../admin/admin.php");  ?>
+<?php include(__DIR__ . "/../admin/admin.php");  ?>
