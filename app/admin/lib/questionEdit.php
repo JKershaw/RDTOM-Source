@@ -1,6 +1,9 @@
 <?php
 
 // editing a post
+$tmp_question = get_question_from_ID($_POST['question_id']);
+
+$old_question_string = (string)$tmp_question;
 
 // save all the answers submitted into an array
 foreach ($_POST['answer'] as $id => $answer) {
@@ -10,14 +13,11 @@ foreach ($_POST['answer'] as $id => $answer) {
     }
 }
 
-$tmp_question = get_question_from_ID($_POST['question_id']);
-
-$old_question_string = (string)$tmp_question;
 
 // have the answers changed? There may not be any answers.
 if ($temp_answer_array && ($tmp_question->is_answers_different($temp_answer_array))) {
     
-    // delete existing post & questions
+    // delete existing questions
     $mydb->remove_answers_given_questionID($tmp_question->get_ID());
     $message = "Answers deleted! ";
     

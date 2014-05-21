@@ -6,19 +6,19 @@ $question_id = add_question($_POST['question_text'], $_POST['question_section'],
 
 // save all the answers
 foreach ($_POST['answer'] as $id => $answer) {
-    if (trim($answer)) {
-        $is_correct = $_POST['correct'][$id] == 1;
-        add_answer($question_id, $answer, $is_correct);
-    }
+	if (trim($answer)) {
+		$is_correct = $_POST['correct'][$id] == 1;
+		add_answer($question_id, $answer, $is_correct);
+	}
 }
 $message.= "New question saved! ";
 
 // build new relationships
 if ($_POST['term_checkbox']) {
-    foreach ($_POST['term_checkbox'] as $term_ID => $data) {
-        $mydb->add_relationship($question_id, $term_ID);
-    }
-    $message.= "Relationships Built! ";
+	foreach ($_POST['term_checkbox'] as $term_ID => $data) {
+		$mydb->add_relationship($question_id, $term_ID);
+	}
+	$message.= "Relationships Built! ";
 }
 
 // do we need to rebuild the holes map
@@ -26,8 +26,8 @@ $tmp_question = get_question_from_ID($question_id);
 
 // rebuild the holes map, if the new question falls into the parameters defined in default_terms_array
 if ($tmp_question->is_default_terms_array()) {
-    rebuild_questions_holes_map();
-    $message.= "Holes map rebuilt! ";
+	rebuild_questions_holes_map();
+	$message.= "Holes map rebuilt! ";
 }
 
 // save a comment
