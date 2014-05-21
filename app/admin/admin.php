@@ -6,8 +6,6 @@
  * Built to help Roller Derby players learn the rules
  */
 
-// TODO validate every question - make sure it has answers & correct meta data
-
 // if the user isn't an admin, show an error message
 if (!is_admin())
 {
@@ -26,19 +24,7 @@ if ($_POST)
 	{
 		if (strtolower($_POST['question_text']) == "delete")
 		{
-			// save a comment
-			$comment_text = "Question Deleted \n\n" . get_question_from_ID($_POST['question_id']);
-			
-			// make a new comment
-			$comment = new comment(-1, $user->get_ID(), $_POST['question_id'], gmmktime(), $comment_text, QUESTION_DELETED);
-			
-			// save the comment
-			set_comment($comment);
-			
-			// delete the question
-			$mydb->remove_question_and_answers($_POST['question_id']);
-			$message .= "Deleted. ";
-			$question_deleted = true;
+			include("./lib/questionDelete.php");
 		}
 		else
 		{
