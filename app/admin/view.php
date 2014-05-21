@@ -1,144 +1,36 @@
 <?php 
 
-	include(__DIR__ . "/../presentation/header.php"); 
-		if ($message)
-			echo "<div class=\"message\">" . $message . "</div>";
-		?>
+include(__DIR__ . "/../presentation/header.php"); 
+
+if ($message) {
+	echo "<div class=\"message\">" . $message . "</div>";
+}
+
+?>
 		
-	<p>
-		<a class="button" onclick="show_page('edit_question');">Edit Question</a>
-		<a class="button" onclick="show_page('reports');">Reports<?php echo $reports_menu_string; ?></a>
-		<a class="button" onClick="show_page('all_questions');">All Questions</a>
-		<a class="button" onClick="show_page('logs');">Logs</a>
-		<a class="button" onClick="show_page('recompute');">Recompute</a>
-		<a class="button" onClick="show_page('test');">Test</a>
-		<a class="button" onClick="show_page('admin');">Admin</a>
-	</p>
+<p>
+	<a class="button" onclick="show_page('edit_question');">Edit Question</a>
+	<a class="button" onclick="show_page('reports');">Reports<?php echo $reports_menu_string; ?></a>
+	<a class="button" onClick="show_page('all_questions');">All Questions</a>
+	<a class="button" onClick="show_page('logs');">Logs</a>
+	<a class="button" onClick="show_page('recompute');">Recompute</a>
+	<a class="button" onClick="show_page('test');">Test</a>
+</p>
 
-	<?php include(__DIR__ . "/tabs/editQuestion.php"); ?>
+<?php include(__DIR__ . "/tabs/editQuestion.php"); ?>
 
-	<?php include(__DIR__ . "/tabs/allQuestions.php"); ?>
-		
-	
-	<div class="layout_box" id="layout_box_recompute" style="display:none;">
-	
-		<p><a href="<?php echo get_site_URL() ?>admin/?recompute=difficulty#recompute">Recalculate difficulty terms for all questions</a></p>
+<?php include(__DIR__ . "/tabs/reports.php"); ?>
 
-	</div>
-	
-	<div class="layout_box" id="layout_box_test" style="display:none;">
-	
-	
-				
-		I wonder if this'll change stuff?
-		
-		
-		<div id="unarchiving_status"><a onclick="start_unarchiving();">Start unarchiving</a></div> 
-		<div id="unarchiving_count"></div> 
-		
-		
-		<script type="text/javascript">
-			var total_count;
-			var start;
-			var d = new Date();
-			var timeout_count = 0;
-			
-			function start_unarchiving()
-			{
-				$("#unarchiving_status").html("Started");
-				$("#unarchiving_count").html("0");
+<?php include(__DIR__ . "/tabs/allQuestions.php"); ?>
 
-				start = d.getTime();
-				total_count = 0;
-				unarchive();
-			}
+<?php include(__DIR__ . "/tabs/logs.php"); ?>
 
-			function unarchive()
-			{
-				$("#unarchiving_status").html("Calling");
-				$.ajax({  
-				    url: "http://rollerderbytestomatic.com/cron.php?force=unarchive_responses",  
-				    dataType: "jsonp", 
-				    timeout: 30000,
-				    error: function(xhr, textStatus, errorThrown){
-				    	$("#unarchiving_status").html("Done!" + textStatus);
-				    	if (textStatus == "parsererror")
-				    	{
-				    		
-				    		total_count = total_count + 10;
-				    		d = new Date();
-				    		var average_time = Math.floor((((d.getTime() - start) / 1000) / total_count) * 1000)/1000;
-				    		var response_time = Math.floor(((d.getTime() - start) / 1000) / (total_count / 10) * 1000)/1000;
-				    		var hourly_rate = Math.round(3600 / (((d.getTime() - start) / 1000) / total_count));
-				    		
-				    		$("#unarchiving_count").html("Unarchived: " + total_count + " in " + ((d.getTime() - start) / 1000) + " seconds<br />Average: " + average_time + " seconds<br />Response time: "  + response_time + " seconds<br >Hourly rate: " + hourly_rate + "<br />Timeouts: " + timeout_count);
-				    		unarchive();
-				    	}
-				    	else
-				    	{
-				    		$("#unarchiving_status").html("Error " + textStatus);
-				    		timeout_count = timeout_count + 1;
-				    		unarchive();
-					    }
-				    }});
-			}
-		</script>
+<?php include(__DIR__ . "/tabs/recompute.php"); ?>
 
-	</div>
+<?php include(__DIR__ . "/tabs/test.php"); ?>
+
 	
-	<div class="layout_box" id="layout_box_logs" style="display:none;">
-	
-		<p>
-		<?php 
-		// list files in the log directory
-		// create an array to hold directory list
-		$results = array();
-
-		// create a handler for the directory
-		$handler = @opendir("../logs/");
-
-		if ($handler)
-		{
-			// open directory and walk through the filenames
-			while ($file = readdir($handler)) 
-			{
-				// if file isn't this directory or its parent, add it to the results
-				if ($file != "." && $file != "..") 
-				{
-					// show the link to the log file
-					$file_string_array[$file] = "<a href=\"" . get_site_URL() . "logs/" . $file . "\">" . $file . "</a>";
-				}
-			}
-			
-			sort($file_string_array);
-			echo implode("<br />", $file_string_array);
-	
-			 // tidy up: close the handler
-			closedir($handler);		
-		}
-		?>
-		</p>
-		
-
-	</div>
-	
-	<div class="layout_box" id="layout_box_competition" style="display:none;">
-	
-		<p id="viewcompetitionlink"><a onclick="$('#viewcompetitionlink').hide(); $('#viewcompetition').show(); get_competition_list();">Load competition results</a></p>
-		<p id="viewcompetition" style="display:none">
-		</p>
-
-	</div>
-	
-	<div class="layout_box" id="layout_box_admin" style="display:none;">
-	
-		<p>
-			<a href="admin/?action=logout">Log out</a>
-		</p>
-
-	</div>
-
-		<script type="text/javascript">
+	<script type="text/javascript">
 
 
 		
@@ -173,33 +65,10 @@
 				}
 			);	
 		}
-
-		
-		function get_competition_list()
-		{
-			$("#viewcompetition").html("<p>Loading...</p>");
-
-			$.post("ajax.php", { 
-				call: "get_competition_list" 
-				},
-				
-				function(data) {
-
-					$("#viewcompetition").html(data);
-					
-				}
-			);	
-		}
 		
 		function newquestionvalidation(formname)
 		{
-			var error_string;
-			
-			var fields = $("input[name='correct']").serializeArray(); 
-			if (fields.length == 0) 
-			{ 
-				//error_string = 'No correct answer given'; 
-			} 	
+			var error_string;	
 
 			if ($("#question_section").val().length == 0)
 			{
@@ -278,24 +147,6 @@
 			else
 			{
 	    		$('#layout_box_logs').hide();
-			}
-			
-			if (page_name == "competition")
-			{
-	    		$('#layout_box_competition').fadeIn();
-			}
-			else
-			{
-	    		$('#layout_box_competition').hide();
-			}
-			
-			if (page_name == "admin")
-			{
-	    		$('#layout_box_admin').fadeIn();
-			}
-			else
-			{
-	    		$('#layout_box_admin').hide();
 			}
 			
 			if (page_name == "test")
