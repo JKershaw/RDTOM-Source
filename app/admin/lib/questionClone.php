@@ -2,12 +2,12 @@
 
 $questionToBeCloned = get_question_from_ID($_GET['clone_question']);
 
-$new_question_id = clone_question($questionToBeCloned);
+$new_question_id = clone_question($mydb, $questionToBeCloned);
 
 $message.= "The question has been cloned.";
 
 if ($_GET['updateToWFTDA7']) {
-	updateToWFTDA7($questionToBeCloned);
+	updateToWFTDA7($mydb, $questionToBeCloned);
 	$message.= "Updated to WFTDA 7";
 }
 
@@ -20,7 +20,7 @@ $comment = new comment(-1, $user->get_ID(), $new_question_id, gmmktime(), $comme
 // save the comment
 set_comment($comment);
 
-function clone_question($questionToBeCloned) {
+function clone_question($mydb, $questionToBeCloned) {
 
 	// save the new question
 	$new_question_id = add_question($questionToBeCloned->get_Text(), $questionToBeCloned->get_Section(), $questionToBeCloned->get_Notes());
@@ -40,7 +40,7 @@ function clone_question($questionToBeCloned) {
 	return $new_question_id;
 }
 
-function updateToWFTDA7($question){
+function updateToWFTDA7($mydb, $question){
 	$WFTDA7_term_ID = "23";
 	$mydb->add_relationship($question->get_ID(), $WFTDA7_term_ID);
 }
