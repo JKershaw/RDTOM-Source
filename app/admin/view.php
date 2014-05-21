@@ -19,6 +19,8 @@ if ($message) {
 
 <?php include(__DIR__ . "/tabs/editQuestion.php"); ?>
 
+<?php include(__DIR__ . "/tabs/reports.php"); ?>
+
 <?php include(__DIR__ . "/tabs/allQuestions.php"); ?>
 
 <?php include(__DIR__ . "/tabs/logs.php"); ?>
@@ -27,13 +29,9 @@ if ($message) {
 
 <?php include(__DIR__ . "/tabs/test.php"); ?>
 
-<?php include(__DIR__ . "/tabs/reports.php"); ?>
-
 	
 	<script type="text/javascript">
 
-
-		
 		function get_all_questions_list()
 		{
 			$("#viewalllist").html("<p>Loading...</p>");
@@ -108,66 +106,12 @@ if ($message) {
 		}
 
 		
-		function show_page(page_name)
-		{
+		function show_page(page_name) {
+
+			$('#layout_box').hide();
+	    	$('#layout_box_' . page_name).fadeIn();
 			
-			
-			if (page_name == "edit_question")
-			{
-	    		$('#layout_box_edit_question').fadeIn();
-			}
-			else
-			{
-	    		$('#layout_box_edit_question').hide();
-			}
-			
-			if (page_name == "reports")
-			{
-	    		$('#layout_box_reports').fadeIn();
-			}
-			else
-			{
-	    		$('#layout_box_reports').hide();
-			}
-			
-			if (page_name == "all_questions")
-			{
-	    		$('#layout_box_all_questions').fadeIn();
-			}
-			else
-			{
-	    		$('#layout_box_all_questions').hide();
-	    		
-			}
-			
-			if (page_name == "logs")
-			{
-	    		$('#layout_box_logs').fadeIn();
-			}
-			else
-			{
-	    		$('#layout_box_logs').hide();
-			}
-			
-			if (page_name == "test")
-			{
-	    		$('#layout_box_test').fadeIn();
-			}
-			else
-			{
-	    		$('#layout_box_test').hide();
-			}
-			
-			if (page_name == "recompute")
-			{
-	    		$('#layout_box_recompute').fadeIn();
-			}
-			else
-			{
-	    		$('#layout_box_recompute').hide();
-			}
-			
-	    	window.location.hash='#'+page_name;
+			window.location.hash='#'+page_name;
 	    	
 		}
 
