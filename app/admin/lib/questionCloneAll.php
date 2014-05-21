@@ -44,7 +44,7 @@ function updateToWFTDA7($mydb, $user, $question) {
 	$mydb->remove_relationship_given_Question_ID($question->get_ID());
 	
 	//add back all but rule-set tags
-	foreach ($questionToBeCloned->get_terms() as $term_ID => $term) {
+	foreach ($question->get_terms() as $term_ID => $term) {
 		if ($term->get_taxonomy() != "rule-set") {
 			$mydb->add_relationship($question->get_ID(), $term->get_ID());
 		}
