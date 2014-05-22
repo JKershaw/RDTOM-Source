@@ -41,9 +41,9 @@ if ($_GET['clone_question']) {
 // }
 
 //Remove all occurances of the word Major in the answers
-if ($_GET['removeAllMajor']) {
-	include (__DIR__ . "/lib/removeAllMajor.php");
-}
+// if ($_GET['removeAllMajor']) {
+// 	include (__DIR__ . "/lib/removeAllMajor.php");
+// }
 
 //update reports when needed
 if ($_GET['update_report']) {
