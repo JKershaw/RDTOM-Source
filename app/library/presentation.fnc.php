@@ -32,7 +32,7 @@ function is_admin()
 	global $user;
 	if ($user)
 	{
-		if (($user->get_Name() == "Sausage Roller") || ($user->get_Name() == "Cornish Knocker"))
+		if (($user->get_Name() == "Sausage Roller") || ($user->get_Name() == "Laddie"))
 		{
 			return true;
 		}
