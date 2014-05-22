@@ -6,7 +6,19 @@ var browser = new Browser({
 	site: "http://localhost/"
 });
 
+visit_static_page("stats", browser);
+visit_static_page("admin", browser);
+//visit_static_page("profile", browser);
+visit_static_page("passwordreset", browser);
+visit_static_page("test", browser);
 visit_static_page("about", browser);
+visit_static_page("cat", browser);
+visit_static_page("forum", browser);
+visit_static_page("search", browser);
+visit_static_page("minimumskills", browser);
+visit_static_page("question", browser);
+
+//visit_static_page("questions", browser);
 
 function visit_static_page(pageURI, browser) {
 	describe("Given I visit the " + pageURI + " page", function (done) {

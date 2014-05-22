@@ -71,9 +71,9 @@ else
 		case "test":
 			include("presentation/test.php");
 			break;	
-		case "submit":
-			include("presentation/submit.php");
-			break;	
+		// case "submit":
+		// 	include("presentation/submit.php");
+		// 	break;	
 		case "about":
 			include("presentation/about.php");
 			break;	
@@ -89,7 +89,6 @@ else
 		case "minimumskills":
 			include("presentation/minimumskills.php");
 			break;		
-			
 		case "question":
 			set_up_question($url_array[1]);
 			include("presentation/question.php");
