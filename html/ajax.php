@@ -532,7 +532,7 @@ function ajax_get_admin_questions_list()
 			$div_class_array_string = implode(" ", $div_class_array);
 			
 			$out .= "<div style=\"clear:left\" class=\" question_string " . $div_class_array_string . "\">
-			<a onclick=\"$('#extra_" . $question->get_ID() . "').toggle();\">+</a> " 
+			<!-- <a onclick=\"$('#extra_" . $question->get_ID() . "').toggle();\">+</a> --> " 
 				. $question->get_Section() 
 				. " <a href=\"" . get_site_URL() . "admin/edit/" . $question->get_ID() . "#edit_question\">" 
 				. htmlentities(stripslashes($question->get_Text())) . "</a>

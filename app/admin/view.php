@@ -32,37 +32,6 @@ if ($message) {
 	
 	<script type="text/javascript">
 
-		function get_all_questions_list()
-		{
-			$("#viewalllist").html("<p>Loading...</p>");
-
-			$.post("ajax.php", { 
-				call: "get_admin_questions_list" 
-				},
-				
-				function(data) {
-
-					$("#viewalllist").html(data);
-					
-				}
-			);	
-		}
-		function get_search_questions_list()
-		{
-			$("#viewalllist").html("<p>Loading...</p>");
-
-			$.post("ajax.php", { 
-				call: "get_admin_questions_list", 
-				search: $("#questions_search").val()
-				},
-				
-				function(data) {
-
-					$("#viewalllist").html(data);
-					
-				}
-			);	
-		}
 		
 		function newquestionvalidation(formname)
 		{

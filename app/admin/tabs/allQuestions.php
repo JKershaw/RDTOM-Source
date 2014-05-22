@@ -1,22 +1,58 @@
 <div class="layout_box" id="layout_box_all_questions" style="display:none;">
 		
-		
 		<p>Search: <input type="text" id="questions_search" name="questions_search"/> <a onClick="get_search_questions_list();">Search</a></p>
-		<p>Section: <input type="text" id="filter_section" name="filter_section"/></p>
-		<p>Rule set: 
+		
+		<p id="viewalllink"><a onclick="get_all_questions_list();">Load all questions</a></p>
+		
+		<p>Filter by rule set: 
 			<a class="current_ruleset_selector current_ruleset_selector_WFTDA5" onClick="change_current_ruleset('WFTDA5');">WFTDA5</a> 
 			<a class="current_ruleset_selector current_ruleset_selector_WFTDA6" onClick="change_current_ruleset('WFTDA6');">WFTDA6</a> 
 			<a class="current_ruleset_selector current_ruleset_selector_WFTDA6_Draft" onClick="change_current_ruleset('WFTDA6_Draft');">WFTDA6_Draft</a>
-			<a class="current_ruleset_selector current_ruleset_selector_WFTDA7" onClick="change_current_ruleset('WFTDA7');">WFTDA7</a></p>
-		
-		<p><a onclick="$('.extra_all').toggle();">Toggle all</a></p>
-		
-		<p id="viewalllink"><a onclick="$('#viewalllink').hide(); $('#viewalllist').show(); get_all_questions_list();">Load all questions</a></p>
-		
-		<p id="viewalllist" style="display:none">
+			<a class="current_ruleset_selector current_ruleset_selector_WFTDA7" onClick="change_current_ruleset('WFTDA7');">WFTDA7</a>
 		</p>
 		
+		<p>Filter by section: <input type="text" id="filter_section" name="filter_section"/></p>
+		
+		
+		<p id="viewalllist"></p>
+		
 		<script type="text/javascript">
+
+
+		function get_all_questions_list()
+		{
+			$("#viewalllist").html("<p>Loading...</p>");
+
+			$.post("ajax.php", { 
+				call: "get_admin_questions_list" 
+				},
+				
+				function(data) {
+
+					$("#viewalllist").html(data);
+					
+				}
+			);	
+		}
+
+
+		function get_search_questions_list()
+		{
+			$("#viewalllist").html("<p>Loading...</p>");
+
+			$.post("ajax.php", { 
+				call: "get_admin_questions_list", 
+				search: $("#questions_search").val()
+				},
+				
+				function(data) {
+
+					$("#viewalllist").html(data);
+					
+				}
+			);	
+		}
+
 		var filter_string;
 		var current_ruleset = "question_string";
 
