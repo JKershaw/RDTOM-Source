@@ -28,7 +28,7 @@ include("header.php");
 	
 	<h3>Disclaimer</h3>
 	<p>
-		This site isn't endorsed or affiliated with the WFTDA ... or anyone for that matter. 
+		This site is officially licensed by the WFTDA. 
 		I made it to help me learn the rules of Roller Derby and if you find it useful, hurray!
 		The questions were correct (to the best of my knowledge) when I wrote them. However you should never trust things you read on the internet so be sure to check <a href="http://wftda.com/rules">WFTDA.com/rules</a>.
 	</p>

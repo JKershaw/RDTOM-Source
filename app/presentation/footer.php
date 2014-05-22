@@ -61,17 +61,20 @@
 				}
 				?>	
 
-				<p><a href="<?php echo get_site_URL(); ?>test/">Generate a Rules Test</a></p>
+				<p>
+					<a href="<?php echo get_site_URL(); ?>test/">Generate a Rules Test</a>
+				</p>
 
                 <p>
-                    Experimental features: <!--<a href="<?php echo get_site_URL(); ?>submit">Submit your own Question</a>, --><a href="<?php echo get_site_URL(); ?>test/builder">Build your own Test</a>, <a href="<?php echo get_site_URL(); ?>stats">view site stats</a>
+                    <a href="<?php echo get_site_URL(); ?>test/builder">Build your own Test</a>
                 </p>
 			</div>
 
 			<div class="footer_block">
                 <p><a href="<?php echo get_site_URL(); ?>forum">Forum:</a> <span id="footer_forum_thread"></span></p>
 				<p><a href="<?php echo get_site_URL(); ?>about">About, Disclaimer &amp; Privacy Policy</a></p>
-				<p><a href="<?php echo get_site_URL(); ?>search">Search</a></p>
+				<!-- <p><a href="<?php echo get_site_URL(); ?>search">Search</a></p> -->
+				<p><a href="<?php echo get_site_URL(); ?>stats">view site stats</a></p>
 				<p><a href="<?php echo get_site_URL(); ?>cat">Meow</a></p> 
 				
 			</div>
@@ -92,7 +95,7 @@
 					<img src="<?php echo get_http_or_https(); ?>://www.assoc-amazon.com/e/ir?t=rdtom-20&l=as2&o=1&a=B00CMNI6QI" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" />
 					-->
 				</p>	
-				<p><span style="font-weight:bold; color:yellow; background-color: #333; padding:0 3px;">NEW!</span> Also available: <a href="<?php echo get_site_URL(); ?>minimumskills">Minimum Skills app</a></p>
+				<p>Also available: <a href="<?php echo get_site_URL(); ?>minimumskills">Minimum Skills app</a></p>
 		
 			</div>
 	
