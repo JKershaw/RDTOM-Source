@@ -103,12 +103,6 @@ try
 		case "get_admin_questions_list":
 			$out = ajax_get_admin_questions_list();	
 		break;
-		case "get_competition_string":
-			$out = ajax_competition_string();	
-		break;
-		case "get_competition_list":
-			$out = ajax_get_admin_competition_list();	
-		break;
 		case "set_admin_relationship":
 			$out = ajax_get_admin_set_relationship();	
 		break;

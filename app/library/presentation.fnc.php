@@ -21,12 +21,6 @@ function is_admin_page()
 	return ($url_array[0] == "admin");
 }
 
-function is_competition_page()
-{
-	global $url_array;
-	return ($url_array[0] == "competition");
-}
-
 function is_admin()
 {
 	global $user;
@@ -428,138 +422,6 @@ function get_recent_questions()
 	return $out;
 }
 
-// have one million questions been answered?
-function is_one_million()
-{
-	return true;
-	// global $mydb, $competition_value;
-	// return ($mydb->get_response_count() >= $competition_value);
-}
-
-function time_string_to_million()
-{
-	global $mydb, $competition_value;
-	
-	$per_day_rate = $mydb->get_response_count_since(gmmktime() - 86400);
-	$per_hour_rate = round($per_day_rate / 24);
-	
-	$questions_remaining = $competition_value  - $mydb->get_response_count();
-	
-	
-	if ($questions_remaining > 0)
-	{
-		$hours_remaining = round($questions_remaining / $per_hour_rate);
-		
-		if ($hours_remaining < 1)
-		{
-			$out .= "Less than 1 hour";
-		}
-		else
-		{
-			if ($hours_remaining > 24)
-			{
-				// more than 1 day
-				$days_remaining = floor($questions_remaining / $per_day_rate);
-				
-				if ($days_remaining == 1)
-				{
-					$out .= "1 day, ";
-				}
-				else
-				{
-					$out .= $days_remaining . " days, ";
-				}
-				
-				$hours_remaining = $hours_remaining - ($days_remaining*24);
-			}
-				
-			if ($hours_remaining == 1)
-			{
-				$out .= "1 hour";
-			}
-			else
-			{
-				$out .= $hours_remaining . " hours";
-			}	
-		}	
-	}
-	else
-	{
-		$out .= "No time remaining.";
-	}
-	
-	//echo "$questions_remaining, $per_day_rate, $hours_remaining";
-	
-	return $out;
-}
-/*
-function is_competiton_on()
-{
-	// end of competition timestamp = 1344406639
-	//return false;
-	
-	if ((1344406639 - gmmktime()) > 0)
-	{
-		return true;
-	}
-	else
-	{
-		return false;
-	}
-	
-	
-}*/
-function time_string_to_competition_end()
-{
-	//$timestamp_of_millionth = 1343197039;
-	
-	$timestamp_end_of_competition = 1344406639 - gmmktime();
-	
-	if ($timestamp_end_of_competition > 0)
-	{
-		$hours_remaining = round($timestamp_end_of_competition / (60*60));
-		
-		if ($hours_remaining < 1)
-		{
-			$out .= "Less than 1 hour";
-		}
-		else
-		{
-			if ($hours_remaining > 24)
-			{
-				// more than 1 day
-				$days_remaining = floor($timestamp_end_of_competition / (60*60*24));
-				
-				if ($days_remaining == 1)
-				{
-					$out .= "1 day, ";
-				}
-				else
-				{
-					$out .= $days_remaining . " days, ";
-				}
-				
-				$hours_remaining = $hours_remaining - ($days_remaining*24);
-			}
-				
-			if ($hours_remaining == 1)
-			{
-				$out .= "1 hour";
-			}
-			else
-			{
-				$out .= $hours_remaining . " hours";
-			}	
-		}	
-	}
-	else
-	{
-		$out .= "No time remaining.";
-	}
-	
-	
-	return $out;
-}
 
 function get_formatted_admin_report($report)
 {
@@ -577,21 +439,6 @@ function get_formatted_admin_report_links($report)
 		 <a href="' . get_site_URL() . 'admin/?update_report=' . $report->get_ID() . '&new_status=clarified">clarified</a>, 
 		 <a href="' . get_site_URL() . 'admin/?update_report=' . $report->get_ID() . '&new_status=noaction">no action taken</a>';
 	
-	return $out;
-}
-
-function get_competition_footer_string()
-{
-	
-	$out .= "
-		<p style=\"font-size:14px;\">
-			<strong>Competition!</strong>
-		</p>
-		<p style=\"width: 100%;\">
-			The competition has now closed and the prizes have been drawn! Congratulations to <strong>Brazen Hussy</strong> who won the Grand Prize, the two runner's-up; <strong>therev71</strong> and <strong>Olivia</strong>. A video of the draw can be found on the <a href=\"http://rollerderbytestomatic.com/competition\">competition details page</a>.
-		</p> 
-	";
-
 	return $out;
 }
 

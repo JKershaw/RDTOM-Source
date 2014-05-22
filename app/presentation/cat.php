@@ -1,5 +1,4 @@
 <?php 
-// The page for RDTOM competitions
 
 // show the page
 set_page_subtitle("Turn left and get a happy cat.");

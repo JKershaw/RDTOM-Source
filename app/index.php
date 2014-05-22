@@ -68,9 +68,6 @@ else
 		case "passwordreset":
 			include("presentation/passwordreset.php");
 			break;	
-		case "competition":
-			include("presentation/competition.php");
-			break;	
 		case "test":
 			include("presentation/test.php");
 			break;	

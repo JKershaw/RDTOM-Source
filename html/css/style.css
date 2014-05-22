@@ -172,19 +172,6 @@ ol
 {
 	display: none;
 }
-	
-.competition_number_wrap
-{
-	text-align:center; 
-	font-size:60px; 
-	margin-bottom:20px;
-}
-
-.competition_number
-{
-	font-size:100px;
-}
-	
 
 .layout_box
 {
@@ -478,17 +465,7 @@ ol
 	{
 		display: none;
 	}
-	
-	.competition_number_wrap
-	{
-		font-size:10px; 
-	}
-	
-	.competition_number
-	{
-		font-size:30px;
-	}
-	
+
 	.layout_box
 	{
 		border: 1px solid gray; 

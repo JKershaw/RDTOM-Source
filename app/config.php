@@ -55,15 +55,6 @@ $responses_needed_for_section_breakdown = 50;
 // When requesting a password reset, how many seconds is the token valid for?
 $password_reset_token_expire = 86400;
 
-// the competition value
-$competition_value = 1000000;
-
-// minimum questions needed to answer to be eligable
-$competition_min_questions = 50;
-
-// minimum correct percentage
-$competition_min_perc = 80;
-
 // the current site URL (different on development & test servers so goes in the config file
 $site_URL = $ini_array["site_URL"];
 
