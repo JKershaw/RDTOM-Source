@@ -74,7 +74,7 @@
                 <p><a href="<?php echo get_site_URL(); ?>forum">Forum:</a> <span id="footer_forum_thread"></span></p>
 				<p><a href="<?php echo get_site_URL(); ?>about">About, Disclaimer &amp; Privacy Policy</a></p>
 				<!-- <p><a href="<?php echo get_site_URL(); ?>search">Search</a></p> -->
-				<p><a href="<?php echo get_site_URL(); ?>stats">view site stats</a></p>
+				<p><a href="<?php echo get_site_URL(); ?>stats">Site stats</a></p>
 				<p><a href="<?php echo get_site_URL(); ?>cat">Meow</a></p> 
 				
 			</div>
