@@ -234,6 +234,24 @@ class question
 	}
 	
 	public function get_WFTDA_Link() {
+
+		// if there's a section
+		if ($this->get_Section() && $this->is_taxonomy_and_value("rule-set", "WFTDA7")) {
+			
+			// if it looks like a valid WFTDA rule
+			if (preg_match("@^([1-9][\.]?)+@", $this->get_Section())) {
+				
+				// get the first two values
+				$section_array = explode(".", $this->get_Section());
+				if (count($section_array) == 1) {
+					return "http://wftda.com/rules/20140301/section/" . $section_array[0];
+				} elseif (count($section_array) <= 3) {
+					return "http://wftda.com/rules/20140301/section/" . $section_array[0] . "." . $section_array[1];
+				} else {
+					return "http://wftda.com/rules/20140301/section/" . $section_array[0] . "." . $section_array[1] . "." . $section_array[2];
+				}
+			}
+		}
 		
 		// if there's a section
 		if ($this->get_Section() && $this->is_taxonomy_and_value("rule-set", "WFTDA6")) {
@@ -252,6 +270,8 @@ class question
 				}
 			}
 		}
+
+		
 		
 		return false;
 	}

@@ -148,7 +148,7 @@ function populate_test(&$test, $opt_number_of_questions = 45, $difficulty = "int
 			// 45% Beginner, 45% Intermediate, 10% Expert
 			
 			// get the questions
-			$terms_array["rule-set"] = "WFTDA6";
+			$terms_array["rule-set"] = "WFTDA7";
 			$terms_array["tag"] = "Test Question";
 			$all_questions = get_questions($terms_array);
 			
@@ -209,7 +209,7 @@ function populate_test(&$test, $opt_number_of_questions = 45, $difficulty = "int
 			//$test->set_difficulty = $difficulty;
 			
 			// we want only WFTDA 5 questions and questions tagged with "Test Question" to be shown
-			$terms_array["rule-set"] = "WFTDA6";
+			$terms_array["rule-set"] = "WFTDA7";
 			$terms_array["tag"] = "Test Question";
 			
 			$all_questions = get_questions($terms_array);

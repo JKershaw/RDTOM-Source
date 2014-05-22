@@ -12,7 +12,7 @@ include("header.php");
 <p style="text-align: center; display:none" class="small_p" id="search_filters">
 	<?php 
 	// the filters ticked by default
-	$default_ticked = Array("WFTDA6");
+	$default_ticked = Array("WFTDA7");
 	
 	$current_taxonomy = "";
 	$breakdown_string_array = Array();
@@ -26,7 +26,7 @@ include("header.php");
 		}
 		
 		// don't care about some specific names
-		if ($term->get_Name() == "WFTDA6_Draft")
+		if ($term->get_Name() == "WFTDA7_Draft")
 		{
 			continue;
 		}

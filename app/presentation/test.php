@@ -280,10 +280,9 @@ elseif ($url_array[1] == "builder")
 		// add a question to the Find a Question list
 		function append_question(question)
 		{
-			var is_WFTDA6 = false;
+			var is_WFTDA7 = false;
 			for (var key in question.terms) 
 			{
-				console.debug(question.id + " - " + JSON.stringify(question.terms));
 				
 				if (question.terms.hasOwnProperty(key)) 
 				{
@@ -291,9 +290,9 @@ elseif ($url_array[1] == "builder")
 					{
 						console.debug(question.id + " - " + JSON.stringify(question.terms[key]));
 						$(question.terms[key]).each(function( index, item ) {
-							if (item == "WFTDA6")
+							if (item == "WFTDA7")
 							{
-								is_WFTDA6 = true;
+								is_WFTDA7 = true;
 							}
 						});				
 					}
@@ -301,15 +300,15 @@ elseif ($url_array[1] == "builder")
 					{
 						if (question.terms[key] == "WFTDA6")
 						{
-							is_WFTDA6 = true;
+							is_WFTDA7 = true;
 						}
 					}
 				}
 			}
 	
-			if (!is_WFTDA6)
+			if (!is_WFTDA7)
 			{
-				console.debug("Question " + question.id + " is not WFTDA 6");
+				console.debug("Question " + question.id + " is not WFTDA 7");
 				return;
 			}
 	

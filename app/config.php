@@ -1,29 +1,28 @@
 <?php
+
 /*
  * Parse the ini file
- */
+*/
 define('DEBUG', false);
 
-if(DEBUG == true)
-{
-    ini_set('display_errors', 'On');
-    error_reporting(E_ALL);
-}
-else
-{
-    ini_set('display_errors', 'Off');
-    error_reporting(E_ALL ^ E_NOTICE);
+if (DEBUG == true) {
+	ini_set('display_errors', 'On');
+	error_reporting(E_ALL);
+} else {
+	ini_set('display_errors', 'Off');
+	error_reporting(E_ALL ^ E_NOTICE);
 }
 
 try {
 	$ini_array = parse_ini_file("config.ini");
-} catch (Exception $e) {
+}
+catch(Exception $e) {
 	echo "There is no config.ini file.";
 }
 
 /*
  * Database connection details, stored in the ini files for security
- */
+*/
 
 $database_username = $ini_array["database_username"];
 $database_userpassword = $ini_array["database_userpassword"];
@@ -34,7 +33,7 @@ $database_salt = $ini_array["database_salt"];
 
 /*
  * Email details
- */
+*/
 
 $smtp_username = $ini_array["smtp_username"];
 $smtp_userpassword = $ini_array["smtp_userpassword"];
@@ -42,7 +41,7 @@ $smtp_host = $ini_array["smtp_host"];
 
 /*
  * Other values which don't need to be kept as secure
- */
+*/
 
 // when getting random questions, how many does the site remeber to avoid dupes?
 $random_questions_to_remeber = 100;
@@ -64,11 +63,12 @@ $password_reset_token_expire = 86400;
 
 // the competition value
 $competition_value = 1000000;
+
 // minimum questions needed to answer to be eligable
 $competition_min_questions = 50;
+
 // minimum correct percentage
 $competition_min_perc = 80;
-
 
 // the current site URL (different on development & test servers so goes in the config file
 $site_URL = $ini_array["site_URL"];
@@ -79,13 +79,13 @@ $email_from_name = "Roller Derby Test O'Matic";
 
 /*
  * When fetching questions, this is the deafult search parameter
- */
+*/
 
-$default_terms_array = array("rule-set" => "WFTDA6");
+$default_terms_array = array("rule-set" => "WFTDA7");
 
 /*
  * DEFINITIONS - THESE NEVER CHANGE
- */
+*/
 
 // Report status
 define("REPORT_OPEN", 0);
@@ -95,20 +95,19 @@ define("REPORT_CLARIFIED", 3);
 define("REPORT_NOACTION", 4);
 
 // Question comment types
-define("QUESTION_COMMENT", 0);		// A comment left by a user on a Question
-define("QUESTION_CHANGED", 1);		// A change in the Question
-define("QUESTION_DELETED", 2);		// A Question was deleted
-
-
+define("QUESTION_COMMENT", 0);
+ // A comment left by a user on a Question
+define("QUESTION_CHANGED", 1);
+ // A change in the Question
+define("QUESTION_DELETED", 2);
+ // A Question was deleted
 
 // number of answers listed on the admin page
-define("NUMBER_OF_ANSWERS" , 10);
-
+define("NUMBER_OF_ANSWERS", 10);
 
 /*
  * Questions in the online poll
- */
-
+*/
 
 $poll_questions[1] = "Questions for officials (refs & NSOs)";
 $poll_questions[2] = "More detailed stats showing what sections you're good/bad at";

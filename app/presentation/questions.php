@@ -43,7 +43,7 @@ if ($url_array[1] == "test")
 			{
 				if ($_GET['test'] == "yes")
 				{
-					$questions = get_questions(array("rule-set" => "WFTDA6", "tag" => "Test Question"));
+					$questions = get_questions(array("rule-set" => "WFTDA7", "tag" => "Test Question"));
 				}
 				else
 				{
