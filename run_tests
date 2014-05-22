@@ -27,11 +27,12 @@ echo "creating Logs directory"
 sudo mkdir /var/www/logs/
 sudo chmod 775 /var/www/logs/
 
-sudo /etc/init.d/apache2 start
 
 echo "~~~~~~~~~~~~~~~~~~~~~~~~~"
 echo "Running Mocha Acceptance tests"
 echo "~~~~~~~~~~~~~~~~~~~~~~~~~"
+
+sudo /etc/init.d/apache2 start
 
 mocha tests/acceptance/tests/ --recursive --ui tdd --reporter spec --timeout 60000 --bail
 

@@ -1,11 +1,5 @@
 AddHandler php5-script .php
 
-<FilesMatch "\.(gif|css)$">
-Header set Expires "15 Apr 2022 20:00:00 GMT"
-Header unset ETag
-FileETag None
-</FilesMatch>
-
 <IfModule mod_headers.c>
   <FilesMatch "\.(js|css|xml|gz)$">
     Header append Vary: Accept-Encoding
