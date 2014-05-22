@@ -15,12 +15,19 @@ done
 
 echo "PHP Unit tests completed"
 
-echo "Copying files"
-sudo cp -rf ./* /var/
-echo "renaming html to www"
-sudo cp -rf /var/html/* /var/www/
+echo "Set up local server"
 
-sudo /etc/init.d/apache2 restart
+sudo cp -rf ./* /var/
+
+echo "renaming html to www"
+sudo rm -rf /var/www/
+sudo mv -f /var/html/ /var/www/
+
+echo "creating Logs directory"
+sudo mkdir /var/www/logs/
+sudo chmod 775 /var/www/logs/
+
+sudo /etc/init.d/apache2 start
 
 echo "~~~~~~~~~~~~~~~~~~~~~~~~~"
 echo "Running Mocha Acceptance tests"

@@ -3,15 +3,15 @@
 /*
  * Parse the ini file
 */
-define('DEBUG', false);
+// define('DEBUG', false);
 
-if (DEBUG == true) {
-	ini_set('display_errors', 'On');
-	error_reporting(E_ALL);
-} else {
+// if (DEBUG == true) {
+ 	// ini_set('display_errors', 'On');
+ 	// error_reporting(E_ALL);
+// } else {
 	ini_set('display_errors', 'Off');
 	error_reporting(E_ALL ^ E_NOTICE);
-}
+//}
 
 try {
 	$ini_array = parse_ini_file("config.ini");

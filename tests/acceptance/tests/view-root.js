@@ -3,7 +3,7 @@ var expect = require('chai').expect,
 	Browser = require('zombie');
 
 var browser = new Browser({
-	site: "http://localhost/html/"
+	site: "http://localhost/"
 });
 
 describe("Given I visit the home page", function (done) {
@@ -12,7 +12,7 @@ describe("Given I visit the home page", function (done) {
 		browser.visit('/', done);
 	});
 
-	it("Then the page loads", function () {
-		expect(browser.text('body')).to.exist;
+	it("I can see a random question", function () {
+		expect(browser.text('body')).to.contain("Random question");
 	});
 });
