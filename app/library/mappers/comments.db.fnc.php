@@ -64,14 +64,7 @@ function set_comment($req_comment)
 	$statement->bindValue(':Type', $req_comment->get_Type());
 
 	$statement->execute();
-	/*
-	if ($statement->execute())
-	{
-		echo "true";
-	}
-	else
-	 print_r($statement->errorInfo());
-	 */
+
 }
 
 function get_comments_from_question_ID($req_ID)
