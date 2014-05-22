@@ -94,10 +94,6 @@ function set_up_url_array()
 	{
 		$url_array[0] = "stats";
 	}
-	elseif ($url_array[0] == "poll.php")
-	{
-		$url_array[0] = "poll";
-	}
 	elseif ($url_array[0] == "allquestions.php")
 	{
 		$url_array[0] = "questions";

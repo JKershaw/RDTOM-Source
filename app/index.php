@@ -56,9 +56,6 @@ else
 		case "questions":
 			include("presentation/questions.php");
 			break;	
-		case "poll":
-			include("presentation/poll.php");
-			break;	
 		case "stats":
 			include("presentation/stats.php");
 			break;	
