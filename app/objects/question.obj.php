@@ -50,8 +50,13 @@ class question
 		$source_terms = $this->get_terms("author-id");
 		if ($source_terms) {
 			foreach ($source_terms as $source_term) {
-				$tmp_user = $mydb->get_user_from_ID($source_term->get_Name());
-				return $tmp_user->get_Name();
+				try {
+					$tmp_user = $mydb->get_user_from_ID($source_term->get_Name());
+					return $tmp_user->get_Name();
+				}
+				catch(Exception $e) {
+					return false;
+				}
 			}
 		}
 		return false;
@@ -218,6 +223,7 @@ class question
 					
 					//shuffle($this->answers);
 					
+					
 				} else {
 					
 					//echo "-";
@@ -234,7 +240,7 @@ class question
 	}
 	
 	public function get_WFTDA_Link() {
-
+		
 		// if there's a section
 		if ($this->get_Section() && $this->is_taxonomy_and_value("rule-set", "WFTDA7")) {
 			
@@ -270,8 +276,6 @@ class question
 				}
 			}
 		}
-
-		
 		
 		return false;
 	}
@@ -438,6 +442,7 @@ class question
 						//echo "Holes map not built because there are terms which do not match in the $taxonomy taxonomy ($value != " . $term->get_Name() . ")";
 						//break 2;
 						
+						
 					}
 				}
 			}
@@ -462,7 +467,7 @@ class question
 	}
 	
 	public function get_reports($report_status = REPORT_OPEN) {
-		return get_reports_from_question_ID($this->get_ID(), $report_status);
+		return get_reports_from_question_ID($this->get_ID() , $report_status);
 	}
 	
 	public function get_comments() {
