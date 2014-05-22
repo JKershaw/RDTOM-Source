@@ -32,7 +32,13 @@ echo "~~~~~~~~~~~~~~~~~~~~~~~~~"
 echo "Running Mocha Acceptance tests"
 echo "~~~~~~~~~~~~~~~~~~~~~~~~~"
 
-sudo /etc/init.d/apache2 start
+sudo service apache2 restart
+sudo service mysql restart
+
+echo "Dropping and re-populating local database"
+mysql -u root -e "drop database rdtom_local"; 
+mysql -u root -e "create database rdtom_local"; 
+mysql -u root rdtom_local < tests/acceptance/sample.sql
 
 mocha tests/acceptance/tests/ --recursive --ui tdd --reporter spec --timeout 60000 --bail
 
