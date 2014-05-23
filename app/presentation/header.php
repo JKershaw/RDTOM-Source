@@ -32,8 +32,8 @@
 		
 		<meta name="Description" content="<?php echo get_page_description(); ?>">
 	
-		<script src="<?php echo get_http_or_https(); ?>://ajax.googleapis.com/ajax/libs/jquery/1.8/jquery.min.js" type="text/javascript"></script>
-   		<script src="<?php echo get_http_or_https(); ?>://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+		<script src="<?echo get_site_URL(true); ?>js/jquery_1_8_3.min.js" type="text/javascript"></script>
+   		<script src="<?echo get_site_URL(true); ?>js/jquery-ui_1_10_3.js" type="text/javascript"></script>
    		
 	<style>
   #result_questions, #test_questions { list-style-type: none; margin: 0; padding: 0; float: left;  border: 1px solid #AAF; min-height:40px; background-color: #DDF; width:438px;}
