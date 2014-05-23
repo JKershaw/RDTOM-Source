@@ -18,8 +18,6 @@ visit_static_page("search", browser);
 visit_static_page("minimumskills", browser);
 visit_static_page("question", browser);
 
-//visit_static_page("questions", browser);
-
 function visit_static_page(pageURI, browser) {
 	describe("Given I visit the " + pageURI + " page", function (done) {
 

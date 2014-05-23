@@ -52,10 +52,6 @@ else
 	// show the page
 	switch ($url_array[0]) 
 	{	
-	
-		case "questions":
-			include("presentation/questions.php");
-			break;	
 		case "stats":
 			include("presentation/stats.php");
 			break;	
