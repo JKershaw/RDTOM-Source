@@ -38,7 +38,7 @@
 			{
 				echo $question->get_ID();
 			}
-			?>"></input> (<a onClick="$('#term_checkbox\\[2\\]').prop('checked', true);$('#term_checkbox\\[1\\]').prop('checked', false);$('#question_id').val('');setdefaultanswers('pen');">6-ify penalty</a>)</td>
+			?>"></input> </td>
 				</tr>
 				<tr>
 					<td style="width:200px">Question:</td>
