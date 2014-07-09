@@ -221,6 +221,11 @@ function get_http_or_https()
 
 function force_secure()
 {
+	// for testing, we don't care about secure when on localhost
+	if ($site_URL != "http://localhost/") {
+		return true;
+	}
+	
 	// if we want to force HTTPS
 	// if HTTPS is already on, everything is fine
 	if ($_SERVER["HTTPS"] == "on")
