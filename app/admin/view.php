@@ -69,7 +69,7 @@ if ($message) {
 				$("input[name='answer[1]']").val("No Impact/No Penalty");
 				$("input[name='answer[2]']").val("Penalty");
 				$("input[name='answer[3]']").val("Expulsion");
-				<?php for ($i = 3; $i < NUMBER_OF_ANSWERS; $i++) { ?>
+				<?php for ($i = 4; $i < NUMBER_OF_ANSWERS; $i++) { ?>
 				$("input[name='answer[<?php echo $i ?>]']").val("");	
 				<?php } ?>
 			}
