@@ -509,8 +509,12 @@ function get_admin_terms_checkboxes($term, $question = false)
 			// special case where we want the Author
 			if ($term->get_taxonomy() == "author-id")
 			{
-				$tmp_user = $mydb->get_user_from_ID($term->get_Name());
-				$display_name = $tmp_user->get_Name();
+				try {
+					$tmp_user = $mydb->get_user_from_ID($term->get_Name());
+					$display_name = $tmp_user->get_Name();
+				} catch(exception $e){
+					$display_name = "USER NOT FOUND";
+				}
 			}
 			else
 			{

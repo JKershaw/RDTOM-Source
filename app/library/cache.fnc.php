@@ -9,15 +9,20 @@ function cache_set($key, $string, $timeout = 86400)
 	$data['timeout'] = $timeout;
 	$data['data'] = serialize($string);
 	
-	//save_log("cache", "ADD " . $key . ": Timestamp = " . $data['timestamp'] . ", Timeout = " . $data['timeout'] . ", Current timestamp = " . time());
-	
-	$fh = fopen("../filecache/" . $key, 'w') or die("can't open file: " . "/filecache/" . $key);
+	$filename = "../filecache/" . $key;
+
+	if (!is_writable($filename)) {
+		return false;
+	}
+
+	$fh = fopen($filename, 'w');
 
 	// save it
 	$stringData = serialize($data);
 	fwrite($fh, $stringData);
 	
 	fclose($fh);
+
 	
 	return true;
 	
