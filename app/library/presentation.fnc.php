@@ -82,7 +82,6 @@ function is_remebering_results()
 	if (count(get_session('random_questions_asked')) > 0)
 	{
 		return true;
-		
 	}
 	else
 	{
@@ -103,14 +102,6 @@ function get_remebered_string()
 	
 	if (count($random_questions_asked) > 0)
 	{
-		/*
-		$result .= "The site is remembering the last <strong>" . count($random_questions_asked) . "</strong> question";
-		if (count($random_questions_asked)!=1) 
-		{ 
-			$result .= "s";
-		}
-		$result .= " you've answered. ";
-		*/
 		
 		// add the success percentage
 		if (count($random_questions_results) > 0)
@@ -225,7 +216,7 @@ function force_secure()
 	if ($site_URL != "http://localhost/") {
 		return true;
 	}
-	
+
 	// if we want to force HTTPS
 	// if HTTPS is already on, everything is fine
 	if ($_SERVER["HTTPS"] == "on")
@@ -250,22 +241,6 @@ function is_secure_https()
 	{
 		return false;
 	}
-}
-
-function get_CSS_URL($type = false)
-{
-	if ($type)
-	{
-		if ($type == "print")
-		{
-			return get_site_URL(true) . "css/print.css?v=" . filemtime("css/print.css");
-		}
-		if ($type == "minify")
-		{
-			return get_site_URL(true) . "css/style-min.css?v=" . filemtime("css/style-min.css");
-		}
-	}
-	return get_site_URL() . "css/style.css?v=" . filemtime("css/style.css");
 }
 
 function get_CSS_embed($type = false)
@@ -304,10 +279,6 @@ function get_CSS_embed($type = false)
 		}
 	}
 	return "<link rel=\"stylesheet\" href=\"" . get_site_URL(true) . "css/style.css?v=" . filemtime("css/style.css") . "\" type=\"text/css\" >";
-	
-	
-	return ;	
-	
 
 }
 
@@ -602,10 +573,6 @@ function get_admin_terms_checkboxes_ajax($term, $question)
 			{
 				$display_name = $term->get_Name();
 			}
-			
-			//$bonus = "";
-			//if (!$style && ($term->get_ID() == 3))
-			//	$bonus = "xx";
 				
 			$out .= "<a $style id=\"term_" . $term->get_ID() . "_" . $question->get_ID() . "\" onclick=\"toggle_term_relationship(" . $term->get_ID() . ", " . $question->get_ID() . ")\">" . htmlentities(stripslashes($display_name)) . "</a> ";
 		}

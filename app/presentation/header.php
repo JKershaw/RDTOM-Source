@@ -16,7 +16,6 @@
 		<title>Roller Derby Test O'Matic</title>
 		
 		<?
-		//echo get_CSS_embed("minify"); 
 		echo get_CSS_embed(); 
 		echo get_CSS_embed("print"); 
 		?>
