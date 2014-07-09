@@ -1,4 +1,4 @@
-Roller Derby test O'Matic
+Roller Derby Test O'Matic
 ============
 
 [![Build Status](https://travis-ci.org/JKershaw/RDTOM-Source.svg?branch=master)](https://travis-ci.org/JKershaw/RDTOM-Source)
