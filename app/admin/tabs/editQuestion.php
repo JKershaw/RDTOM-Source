@@ -1,39 +1,21 @@
+<?php 
+	if ($question){
+		$sectionHeader = "Edit question #" . $question->get_ID() . ":";
+		$formPostAction = get_site_URL() . "admin/edit/" . $question->get_ID();
+	} else {
+		$sectionHeader = "Add question:";
+		$formPostAction = get_site_URL() . "admin/";
+	}
+?>
 <div class="layout_box" id="layout_box_edit_question">	
-		<h3><?php 
-			if ($question)
-			{
-				echo "Edit";
-			}
-			else 
-			{
-				echo "Add";
-			}
-			?> question<?php 
-			if ($question)
-			{
-				echo " #" . $question->get_ID();
-			}
-			?>:</h3>
+	<h3><?php echo $sectionHeader; ?></h3>
 
-		<form id="editquestionform" name="editquestionform" method="post" action="<?php 
-			if ($question)
-			{
-				echo get_site_URL() . "admin/edit/" . $question->get_ID();
-			}
-			else
-			{
-				echo get_site_URL() . "admin/";
-			}
+	<form id="editquestionform" name="editquestionform" method="post" action="<?php echo $formPostAction; ?>">
+		<table>
 		
-			?>">
-		
-			
-		
-			<table>
-			
-				<tr>
-					<td style="width:200px">ID:</td>
-					<td><input type="text"  id="question_id" name="question_id" value = "<?php 
+			<tr>
+				<td style="width:200px">ID:</td>
+				<td><input type="text"  id="question_id" name="question_id" value = "<?php 
 			if ($question)
 			{
 				echo $question->get_ID();
