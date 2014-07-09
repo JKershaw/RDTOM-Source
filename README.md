@@ -1,5 +1,7 @@
-RDTOM-Source
+Roller Derby test O'Matic
 ============
+
+[![Build Status](https://travis-ci.org/JKershaw/RDTOM-Source.svg?branch=master)](https://travis-ci.org/JKershaw/RDTOM-Source)
 
 The source code used by the Roller Derby Test O'Matic website.
 
