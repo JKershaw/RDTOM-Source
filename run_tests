@@ -1,17 +1,6 @@
 set -e
 
-echo "~~~~~~~~~~~~~~~~~~~~~~~~~"
-echo "Running PHP Unit tests"
-echo "~~~~~~~~~~~~~~~~~~~~~~~~~"
-
-
-for D in tests/unit/*; do
-    if [ -f "${D}" ]; then
-			DIR="$D.php"
-			echo "testing $DIR"
-			phpunit $DIR
-	fi
-done
+sudo ./run_phpunit_tests
 
 echo "PHP Unit tests completed"
 
