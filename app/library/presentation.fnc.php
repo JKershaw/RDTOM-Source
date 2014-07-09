@@ -558,11 +558,6 @@ function get_admin_terms_checkboxes_ajax($term, $question)
 					if ($question_term->get_ID() == $term->get_ID())
 					{
 						$style = "style=\"font-weight: bold;\"";
-						
-					}
-					else
-					{
-						
 					}
 				}
 			}

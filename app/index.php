@@ -99,4 +99,12 @@ else
 //Output the buffer
 while (@ob_end_flush());
 
+// save the fact a request has come in
+
+ # Require the datadogstatsd.php library file
+require 'library/php-datadogstatsd/libraries/datadogstatsd.php';
+
+DataDogStatsD::configure($datadog_apiKey, $datadog_appKey);
+DataDogStatsD::increment('request');
+
 ?>
