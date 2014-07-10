@@ -13,6 +13,9 @@ $page_timer_start = ((float)$usec + (float)$sec);
 // include needed files
 include('include.php');
 
+//start the session
+session_start();
+
 // start the output buffer
 ob_start ();
 
