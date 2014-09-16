@@ -143,7 +143,7 @@ class api_controller extends abstract_api_controller
 		</ul>
 		</p>
 		
-		<p>The only Resources available are Question, and Questions. Question will return a random question (or a specific question, if you use the ID parameter). Questions will list all questions given the current defaults (as of 3rd April 2013 this is simply any question tagged as WFTDA6).</p>
+		<p>The only Resources available are Question, and Questions. Question will return a random question (or a specific question, if you use the ID parameter). Questions will list all questions given the current defaults.</p>
 ";
 	}
 }
