@@ -4,7 +4,7 @@ machine:
 
 test:
   post:
-    - ./run_tests
+    - ./run_phpunit_tests
 
 deployment:
   master:
