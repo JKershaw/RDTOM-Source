@@ -1,9 +1,5 @@
 set -e
 
-sudo ./run_phpunit_tests
-
-echo "PHP Unit tests completed"
-
 sudo ./copy_files_to_localhost
 
 echo "Files copied to localhost"
@@ -20,7 +16,7 @@ mysql -u root -e "drop database rdtom_local";
 mysql -u root -e "create database rdtom_local"; 
 mysql -u root rdtom_local < tests/acceptance/sample.sql
 
-mocha tests/acceptance/tests/ --recursive --ui tdd --reporter spec --timeout 60000 --bail
+php codecept.phar run
 
 sudo /etc/init.d/apache2 stop
 
