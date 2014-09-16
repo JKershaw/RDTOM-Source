@@ -1,0 +1,13 @@
+machine:
+  environment:
+    ENVIRONMENT: development
+
+test:
+  post:
+    - ./run_tests
+
+deployment:
+  master:
+    branch: master
+    commands:
+      - ./deploy.sh
