@@ -1,1 +1,0 @@
-ssh jkershaw.com@jkershaw.com
