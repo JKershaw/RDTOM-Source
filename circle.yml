@@ -6,14 +6,13 @@ machine:
 
 dependencies:
   post:
-    - sudo service apache2 stop
     - cp ~/RDTOM-Source/config/custom.ini /etc/apache2/sites-available
     - a2ensite custom.ini
     - sudo service apache2 restart
 
 test:
   post:
-    - php codecept.phar run acceptance --steps --debug
+    - php codecept.phar run acceptance --steps
     - ./show_output
 
 deployment:
