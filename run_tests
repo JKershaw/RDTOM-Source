@@ -7,7 +7,7 @@ echo "Files copied to localhost"
 sudo service apache2 restart
 sudo service mysql restart
 
-php codecept.phar run acceptance --steps
+php codecept.phar run acceptance --steps --debug
 
 sudo /etc/init.d/apache2 stop
 
