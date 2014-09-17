@@ -108,25 +108,4 @@ function generatealphaneumericSalt($max = 50) {
 	} while ($i < $max);
 	return $salt;
 }
-
-function toggle_view_only_changes()
-{
-	// view only questions tagged as changes betwen rule sets?
-	$new_value = "yes";
-	
-	if ($_COOKIE["rdtom_changes"] == "yes")
-	{
-		$new_value = "no";
-	}
-	
-	$expire=time()+60*60*24*30;
-	setcookie("rdtom_changes", $new_value, $expire);
-	
-	$_COOKIE["rdtom_changes"] = $new_value;
-}
-
-function is_view_only_changes()
-{
-	return ($_COOKIE["rdtom_changes"] == "yes");
-}
 ?>

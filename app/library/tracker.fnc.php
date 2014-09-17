@@ -3,21 +3,8 @@
 
 function tracker_add_query($query, $time_taken)
 {
-	//if (!is_admin())
-	//	return;
-		
 	global $tracker;
 	$tracker['queries'][] = array("query" => $query, "time" => $time_taken);
-}
-
-function set_up_tracker()
-{
-	// starts before we've set the user
-	//if (function_exists("is_admin") && is_admin())
-	//{
-		//global $page_timer_start;
-		
-	//}
 }
 
 function tracker_get_query_string()

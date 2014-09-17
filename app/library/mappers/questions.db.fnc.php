@@ -41,11 +41,6 @@ function get_question_random()
 {
 	//throw new exception("Woah, either the site ran out of questions, or the database is being updated. Try reloading the page, or <a href=\"http://rollerderbytestomatic.com/forget\">click here to make the site forget which questions you have answered</a>.");
 	global $mydb, $myPDO, $remeber_in_session, $random_question_find_attempts;
-
-	if (is_view_only_changes())
-	{
-		return get_question_random_changed();
-	}
 			
 	// if the holes table is being rebuilt, cheat
 	if (!$mydb->does_table_exist("rdtom_questions_holes_map"))
@@ -145,19 +140,6 @@ function get_question_random_simple()
 	// delete_session('random_questions_asked');
 	
 	return $questions[array_rand($questions)];;
-}
-
-function get_question_random_changed()
-{
-	// get random question from default taxonomies
-	global $mydb, $myPDO, $remeber_in_session, $random_question_find_attempts;
-
-	// load all applicable questions
-	$all_questions = get_questions(array("rule-set" => "WFTDA6", "tag" => "Changed Rule"));
-		
-	// return a question at random
-	return $all_questions[array_rand($all_questions, 1)];
-	
 }
 
 function get_questions($terms_array = false, $sort = true)

@@ -42,10 +42,6 @@ else
 		case "forget":
 			forget_remebered_questions();
 			break;	
-			
-		case "changes":
-			toggle_view_only_changes();
-			break;	
 		
 		case "report":
 			report_question();
@@ -79,9 +75,6 @@ else
 		case "forum":
 			include("presentation/forum.php");
 			break;	
-		case "search":
-			include("presentation/search.php");
-			break;	
 		case "minimumskills":
 			include("presentation/minimumskills.php");
 			break;		
@@ -96,6 +89,7 @@ else
 			
 	}
 }
+
 //Output the buffer
 while (@ob_end_flush());
 
