@@ -34,13 +34,6 @@ $smtp_userpassword = $ini_array["smtp_userpassword"];
 $smtp_host = $ini_array["smtp_host"];
 
 /*
- * DataDog Metrics
-*/
-
-$datadog_apiKey = $ini_array["datadog_apiKey"];
-$datadog_appKey = $ini_array["datadog_appKey"];
-
-/*
  * Other values which don't need to be kept as secure
 */
 
