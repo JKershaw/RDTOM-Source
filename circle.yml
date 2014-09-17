@@ -6,8 +6,8 @@ machine:
 
 dependencies:
   pre:
-    - cp ~/RDTOM-Source/config/httpd.conf /etc/apache2/sites-available
-    - a2ensite httpd.conf
+    - cp ~/RDTOM-Source/config/dev.rollerderbytestomatic.com /etc/apache2/sites-available
+    - a2ensite dev.rollerderbytestomatic.com
     - sudo service apache2 restart
 
 test:
