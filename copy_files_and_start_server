@@ -1,0 +1,4 @@
+./copy_files_to_localhost
+
+sudo service apache2 restart
+sudo service mysql restart

@@ -1,7 +1,7 @@
 <?php
 
 ini_set('display_errors', 'Off');
-error_reporting(E_ALL ^ E_NOTICE);
+error_reporting(E_ERROR);
 
 /*
  * Parse the ini file
