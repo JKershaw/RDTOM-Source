@@ -9,9 +9,17 @@ dependencies:
      - a2ensite custom.ini
      - sudo service apache2 restart
 
+dependencies:
+  post:
+    - cp ~/RDTOM-Source/config/localhost /etc/apache2/sites-available
+    - a2ensite localhost
+    - sudo service apache2 restart
+
 test:
   post:
-    - ./run_tests
+    - sudo service apache2 restart	
+    - php codecept.phar run acceptance --steps
+    - ./show_output
 
 deployment:
   master:
