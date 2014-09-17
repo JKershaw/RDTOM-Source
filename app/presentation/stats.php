@@ -167,17 +167,6 @@ include("header.php");
 					}
 				);
 			}
-			
-			//function ajax_update_graph(req_graph_name)
-			//{
-			//	$.post("ajax.php", { 
-			//		call: req_graph_name},
-			//		function(data) {
-			//			$("#" + req_graph_name).html('<img style="max-width:100%" src="' + data + '" />');		
-			//			//setTimeout("ajax_update_graph('" + req_graph_name + "')", 60000);
-			//		}
-			//	);
-			//}
 		
 			function addCommas(nStr)
 			{
@@ -219,9 +208,6 @@ include("header.php");
 			{
 				ajax_update_value(key);
 			}
-
-			// update the graph
-			//ajax_update_graph("graph_url_24_hour_responses");
 			
 		</script>
 <?php 

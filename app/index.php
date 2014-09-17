@@ -70,9 +70,6 @@ else
 		case "test":
 			include("presentation/test.php");
 			break;	
-		// case "submit":
-		// 	include("presentation/submit.php");
-		// 	break;	
 		case "about":
 			include("presentation/about.php");
 			break;	
