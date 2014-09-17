@@ -7,12 +7,6 @@ sudo service mysql restart
 
 php codecept.phar run acceptance --steps
 
-for filename in tests/_output/*; do
-    echo "\033[32;1m$filename\033[0m"
-    cat "$filename"
-    echo
-done
-
 sudo /etc/init.d/apache2 stop
 
 if [ $# -gt 0  ]; then
