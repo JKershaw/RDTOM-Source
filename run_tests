@@ -8,6 +8,8 @@ sudo service mysql restart
 
 php codecept.phar run acceptance --steps
 
+./show_output
+
 sudo service apache2 stop
 
 if [ $# -gt 0  ]; then
