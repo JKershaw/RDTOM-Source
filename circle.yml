@@ -12,8 +12,9 @@ dependencies:
 
 test:
   post:
-    - sudo service apache2 restart	
     - php codecept.phar run unit --steps
+    - php codecept.phar run functional --steps
+    - php codecept.phar run acceptance --steps
     - ./show_output
 
 deployment:
