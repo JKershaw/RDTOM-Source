@@ -2,11 +2,18 @@ set -e
 
 echo "Set up local server"
 
-sudo cp -rf ./* /var/
+echo "Wiping local files"
 
-echo "renaming html to www"
-sudo rm -rf /var/www/
-sudo mv -f /var/html/ /var/www/
+sudo rm -rf /var/www
+sudo mkdir /var/www/
+
+echo "Copying new files"
+
+sudo cp -rf ./* /var/www/
+
+#echo "renaming html to www"
+#sudo rm -rf /var/www/
+#sudo mv -f /var/html/ /var/www/
 
 echo "creating Logs directory"
 sudo mkdir /var/www/logs/

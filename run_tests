@@ -4,19 +4,10 @@ sudo ./copy_files_to_localhost
 
 echo "Files copied to localhost"
 
-echo "~~~~~~~~~~~~~~~~~~~~~~~~~"
-echo "Running Mocha Acceptance tests"
-echo "~~~~~~~~~~~~~~~~~~~~~~~~~"
-
 sudo service apache2 restart
 sudo service mysql restart
 
-echo "Dropping and re-populating local database"
-mysql -u root -e "drop database rdtom_local"; 
-mysql -u root -e "create database rdtom_local"; 
-mysql -u root rdtom_local < tests/acceptance/sample.sql
-
-php codecept.phar run
+php codecept.phar run acceptance --steps
 
 sudo /etc/init.d/apache2 stop
 
