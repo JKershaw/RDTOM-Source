@@ -3,6 +3,11 @@ machine:
     version: 5.5.7
   environment:
     ENVIRONMENT: development
+dependencies:
+   post:
+     - cp ~/RDTOM-Source/config/custom.ini /etc/apache2/sites-available
+     - a2ensite custom.ini
+     - sudo service apache2 restart
 
 test:
   post:
