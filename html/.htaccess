@@ -6,6 +6,8 @@ AddHandler php5-script .php
   </FilesMatch>
 </IfModule>
 
+ErrorDocument 404 /404
+
 RewriteEngine on
 
 RewriteRule ajax.php(.+)? ajax.php$1 [L]
@@ -21,6 +23,4 @@ RewriteRule allquestions.php(.+)? index.php$1 [L]
 RewriteRule ^api(.+)? index.php [NC,QSA,L]
 
 RewriteRule ^([^\.]+)?$ index.php [NC,QSA,L]
-
-ErrorDocument 404 /404
 
