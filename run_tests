@@ -1,13 +1,14 @@
-sudo ./copy_files_to_localhost
+php codecept.phar run unit --steps
+php codecept.phar run functional --steps
 
-echo "Files copied to localhost"
+./copy_files_to_localhost
 
 sudo service apache2 restart
 sudo service mysql restart
 
 php codecept.phar run acceptance --steps
 
-sudo /etc/init.d/apache2 stop
+sudo service apache2 stop
 
 if [ $# -gt 0  ]; then
 	MESSAGE="$@"
