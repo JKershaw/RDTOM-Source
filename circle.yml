@@ -13,7 +13,7 @@ dependencies:
 test:
   post:
     - php codecept.phar run acceptance --steps --debug
-    - show_output
+    - ./show_output
 
 deployment:
   master:
