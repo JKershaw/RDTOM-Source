@@ -8,7 +8,7 @@ dependencies:
   pre:
     - cp ~/RDTOM-Source/config/httpd.conf /etc/apache2/sites-available
     - a2ensite httpd.conf
-    - sudo service apache2 restart
+    - sudo service apache2 reload
 
 test:
   post:
