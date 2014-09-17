@@ -6,9 +6,5 @@ $I->seeLink('Log in or sign up');
 $I->click('Log in or sign up');
 
 $I->amOnPage('/profile');
-$I->fillField('name', 'Test User Who Does not exist');
-$I->fillField('password', 'Test Password');
-$I->click('Login');
-
-$I->see("Name and password combination not found", ".error_string");
+$I->see("Login to your account");
 ?>
