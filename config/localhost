@@ -3,9 +3,9 @@ Listen 8080
 <VirtualHost *:8080>
   LoadModule php5_module /home/ubuntu/.phpenv/versions/5.5.7/libexec/libphp5.so
 
-  ServerName dev.rollerderbytestomatic.com
+  ServerName localhost
   
-  DocumentRoot /home/ubuntu/RDTOM-Source
+  DocumentRoot /home/ubuntu/RDTOM-Source/html
   DirectoryIndex index.php
 
   <FilesMatch \.php$>
