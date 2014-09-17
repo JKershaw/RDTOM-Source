@@ -1,13 +1,5 @@
 <?php 
 /*
- * Roller Derby Test O'Matic
- * Created by John Kershaw
- * 
- * Built to help Roller Derby players learn the rules
- */
-				
-
-/*
  * /test 			= set parameters
  * /test/generate 	= generate a random test
  * /test/build 		= make test
@@ -106,11 +98,6 @@ if (!$url_array[1])
 		<p>
 			<input type="radio" name="o" value="interactiveHTML" checked> Interactive (can be filled in online) </checkbox><br />
 			<input type="radio" name="o" value="HTML"> Non-interactive (can be printed, answers are at the bottom of the page)</checkbox><br />
-			<!-- 
-			<input DISABLED type="radio" name="test_output" value="txt"> Basic Text .txt file (experimental)</checkbox><br />
-			<input DISABLED type="radio" name="test_output" value="doc"> Word / OpenOffice .doc file (experimental)</checkbox><br />
-			<input DISABLED type="radio" name="test_output" value="pdf"> Pdf file (experimental)</checkbox>
-			 -->
 		</p>
 		
 		</form>

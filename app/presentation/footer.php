@@ -1,16 +1,4 @@
-<?php 
-/*
- * Roller Derby Test O'Matic
- * Created by John Kershaw
- * 
- * Built to help Roller Derby players learn the rules
- */
 
-/*
- * useful NEW tag: <span style="font-weight:bold; color:yellow; background-color: #333; padding:0 3px;">NEW!</span> 
- */
-// display the page
-?>	
 		<div class="footer">
 			<?php 
 				if (is_question()) 

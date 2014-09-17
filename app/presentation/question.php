@@ -1,11 +1,4 @@
-<?php 
-/*
- * Roller Derby Test O'Matic
- * Created by John Kershaw
- * 
- * Built to help Roller Derby players learn the rules
- */
-				
+<?php 		
 // display the page
 include("header.php");
 ?>

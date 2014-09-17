@@ -1,11 +1,4 @@
 <?php 
-/*
- * Roller Derby Test O'Matic
- * Created by John Kershaw
- * 
- * Built to help Roller Derby players learn the rules
- */
-
 
 // display the page
 set_page_title("Test O'Matic Presents: <br />Minimum Skills");

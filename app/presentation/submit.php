@@ -1,11 +1,4 @@
 <?php 
-/*
- * Roller Derby Test O'Matic
- * Created by John Kershaw
- * 
- * Built to help Roller Derby players learn the rules
- */
-
 set_page_subtitle("Turn left and submit questions.");
 
 // display the page
