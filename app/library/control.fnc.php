@@ -75,22 +75,12 @@ function set_up_url_array()
 	}
 	
 	// Backwards compatability for URLs
-	// ?forget=yes
-	// ?report=yes
 	// all the .php files; stats.php, poll.php, allquestions.php
 	// ?question=123
 	// allquestions.php?hard=yes
 	// allquestions.php?easy=yes
 	
-	if ($url_array[0] == "?forget=yes")
-	{
-		$url_array[0] = "forget";
-	}
-	elseif ($url_array[0] == "?report=yes")
-	{
-		$url_array[0] = "report";
-	}
-	elseif ($url_array[0] == "stats.php")
+	if ($url_array[0] == "stats.php")
 	{
 		$url_array[0] = "stats";
 	}
