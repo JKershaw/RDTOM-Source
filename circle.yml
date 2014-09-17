@@ -3,22 +3,17 @@ machine:
     version: 5.5.7
   environment:
     ENVIRONMENT: development
-dependencies:
-   post:
-     - cp ~/RDTOM-Source/config/custom.ini /etc/apache2/sites-available
-     - a2ensite custom.ini
-     - sudo service apache2 restart
 
 dependencies:
   post:
-    - cp ~/RDTOM-Source/config/localhost /etc/apache2/sites-available
-    - a2ensite localhost
+    - cp ~/RDTOM-Source/config/dev.rollerderbytestomatic.com /etc/apache2/sites-available
+    - a2ensite dev.rollerderbytestomatic.com
     - sudo service apache2 restart
 
 test:
   post:
     - sudo service apache2 restart	
-    - php codecept.phar run acceptance --steps
+    - php codecept.phar run unit --steps
     - ./show_output
 
 deployment:
