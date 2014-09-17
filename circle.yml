@@ -5,7 +5,7 @@ machine:
     ENVIRONMENT: development
 
 dependencies:
-  pre:
+  post:
     - cp ~/RDTOM-Source/config/localhost /etc/apache2/sites-available
     - a2ensite localhost
     - sudo service apache2 restart
