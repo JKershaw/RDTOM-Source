@@ -272,11 +272,6 @@ function get_CSS_embed($type = false)
 				    </style>
 			";
 		}
-		if ($type == "minify")
-		{
-			return "<link rel=\"stylesheet\" href=\"" . get_site_URL(true) . "css/style-min.css?v=" . filemtime("css/style-min.css") . "\" type=\"text/css\" >";
-	
-		}
 	}
 	return "<link rel=\"stylesheet\" href=\"" . get_site_URL(true) . "css/style.css?v=" . filemtime("css/style.css") . "\" type=\"text/css\" >";
 
