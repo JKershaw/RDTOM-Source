@@ -14,10 +14,6 @@ dependencies:
     - a2enmod headers
     - sudo service apache2 restart
 
-database:
-  override:
-    - mysql -u ubuntu circle_test < tests/_data/dump.sql
-
 test:
   post:
     - php codecept.phar run unit --steps

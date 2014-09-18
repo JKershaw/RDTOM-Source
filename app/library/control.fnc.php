@@ -55,7 +55,7 @@ function set_up_database()
 	} 
 	catch (PDOException $e) 
 	{
-	    die('Connection failed: ' . $e->getMessage());
+	    die('PDO Connection failed: ' . $e->getMessage() . " [$database_username, $database_userpassword, $database_name, $database_host]");
 	}
 }
 
