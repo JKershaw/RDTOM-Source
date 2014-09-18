@@ -1,6 +1,7 @@
-Listen 80
+Listen 8080
+NameVirtualHost *
 
-<VirtualHost *:80>
+<VirtualHost *:8080>
 
   DocumentRoot /home/ubuntu/RDTOM-Source/html
   ServerName rdtom
