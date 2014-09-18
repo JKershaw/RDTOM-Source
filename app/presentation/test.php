@@ -25,14 +25,14 @@ if (!$url_array[1])
 	<p>Click the button to randomly generate an online rules test with its difficulty balanced to be similar to the <a href="http://wftda.com/resources/wftda-rules-test.pdf" >WFTDA's sample test</a>.</p>
 	
 	<p>
-		<a class="button mobilebutton" onclick="document.submittestparameters.submit();" >Generate Rules Test</a>
+		<a class="button mobilebutton" href="<?php echo get_site_URL()?>test/generate/?d=wftda&n=45&p=80&o=interactiveHTML" >Generate Rules Test</a>
 	</p>
 	
 	
 	<p id="test_customisation_link"><a onclick="$('#test_customisation_link').hide();$('#test_customisation').show()">Customise the test</a></p>
 	
 	<div id="test_customisation" style="display:none">
-		<form id="submittestparameters" name="submittestparameters" method="get" action="<? echo get_site_URL()?>test/generate/">
+		<form id="submittestparameters" name="submittestparameters" method="get" action="<?php echo get_site_URL()?>test/generate/">
 	
 		<p><strong>Difficulty</strong></p>
 		<p>
@@ -752,7 +752,7 @@ elseif ($url_array[1] == "builder")
 			// overview
 			?>
 			<h3>Test Builder</h3>
-			<p>For feedback, feature requests, questions and bug reports please <a href="<? echo get_site_URL()?>forum">visit the forum</a>. I take no responsibility for anything you choose to do with these tests.</p>
+			<p>For feedback, feature requests, questions and bug reports please <a href="<?php echo get_site_URL()?>forum">visit the forum</a>. I take no responsibility for anything you choose to do with these tests.</p>
 			
 			<h3>My tests</h3>
 			<p>
