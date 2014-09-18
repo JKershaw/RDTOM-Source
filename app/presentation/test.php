@@ -7,7 +7,7 @@
  */
 
 /*
- * Seelct if you want an interactive test or not
+ * Select if you want an interactive test or not
  * Select questions
  * Have "show answers" or "test complete" button
  * Mark questions as right or wrong, adjust question formatting to fit
