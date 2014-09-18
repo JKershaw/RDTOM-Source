@@ -11,11 +11,10 @@ Listen 8080
     SetHandler application/x-httpd-php
   </FilesMatch>
 
-  <Directory "/home/ubuntu/RDTOM-Source/html">
-  	AllowOverride All
-  </Directory>
-
-  <Directory />
-  	AllowOverride All
+  <Directory /home/ubuntu/RDTOM-Source/html>
+    Options Indexes FollowSymLinks MultiViews
+    AllowOverride All
+    Order allow,deny
+    allow from all
   </Directory>
 </VirtualHost>
