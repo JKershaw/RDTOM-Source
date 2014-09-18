@@ -11,4 +11,4 @@ modules:
         - AcceptanceHelper
     config:
         PhpBrowser:
-            url: 'http://dev.rollerderbytestomatic.com/'
+            url: 'http://localhost/'
