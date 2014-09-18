@@ -1,9 +1,12 @@
+echo "======================================="
+
 set -e
 
-php codecept.phar run unit --steps
-php codecept.phar run functional --steps
+sudo rm -rf /etc/apache2/sites-available/rdtom.conf
+sudo a2dissite rdtom
 
-./copy_files_to_localhost
+sudo cp tests/config/rdtom.conf /etc/apache2/sites-available
+sudo a2ensite rdtom
 
 sudo service apache2 restart
 sudo service mysql restart
@@ -11,7 +14,7 @@ sudo service mysql restart
 php codecept.phar run unit --steps
 php codecept.phar run acceptance --steps
 
-./show_output
+#./show_output
 
 sudo service apache2 stop
 

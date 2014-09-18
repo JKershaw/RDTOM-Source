@@ -6,8 +6,8 @@ machine:
 
 dependencies:
   post:
-    - cp ~/RDTOM-Source/tests/config/localhost /etc/apache2/sites-available
-    - sudo a2ensite localhost
+    - cp ~/RDTOM-Source/tests/config/rdtom /etc/apache2/sites-available
+    - sudo a2ensite rdtom
     - sudo service apache2 restart
 
 test:
