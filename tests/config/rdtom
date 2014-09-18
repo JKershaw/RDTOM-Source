@@ -1,7 +1,11 @@
 Listen 8080
 
 <VirtualHost *:8080>
-	ServerName rdtom
-	ServerAlias localhost
-	DocumentRoot /home/ubuntu/RDTOM-Source/html
+  ServerName rdtom
+  ServerAlias localhost
+  DocumentRoot /home/ubuntu/RDTOM-Source/html
+
+  <FilesMatch \.php$>
+    SetHandler application/x-httpd-php
+  </FilesMatch>
 </VirtualHost>
