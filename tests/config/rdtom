@@ -5,10 +5,12 @@ Listen 8080
 
   DocumentRoot /home/ubuntu/RDTOM-Source/html
   ServerName rdtom
+  DirectoryIndex index.php
 
   <FilesMatch \.php$>
     SetHandler application/x-httpd-php
   </FilesMatch>
+
   <Directory "/home/ubuntu/RDTOM-Source/html">
   	Require all granted 
   	AllowOverride All
