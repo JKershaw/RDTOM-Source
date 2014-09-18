@@ -9,10 +9,9 @@ machine:
 dependencies:
   post:
     - a2dissite default
+    - sudo service apache2 restart
     - cp ~/RDTOM-Source/tests/config/rdtom /etc/apache2/sites-available
     - a2ensite rdtom
-    - a2enmod rewrite
-    - a2enmod headers
     - sudo service apache2 restart
 
 test:
