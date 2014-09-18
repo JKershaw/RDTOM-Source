@@ -11,7 +11,7 @@ settings:
 modules:
     config:
         Db:
-            dsn: 'mysql:host=localhost;dbname=rdtom_local'
-            user: 'root'
+            dsn: 'mysql:host=127.0.0.1;dbname=rdtom_local'
+            user: 'ubuntu'
             password: ''
             dump: tests/_data/dump.sql
