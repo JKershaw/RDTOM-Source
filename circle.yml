@@ -4,7 +4,7 @@ machine:
   environment:
     ENVIRONMENT: development
   hosts:
-    rdtom: 127.0.0.1:8080
+    rdtom: 127.0.0.1
 
 dependencies:
   post:
