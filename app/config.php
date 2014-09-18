@@ -6,6 +6,15 @@ error_reporting(E_ERROR);
  * Parse the ini file
 */
 
+//default params
+
+$database_username = "ubuntu";
+$database_userpassword = "";
+$database_name = "circle_test";
+$database_host = ini_get("mysql.default_host");
+
+$site_URL = "http://rdtom/";
+
 try {
 	$ini_array = parse_ini_file("config.ini");
 	
@@ -21,29 +30,16 @@ try {
 	$database_salt = $ini_array["database_salt"];
 	
 	$site_URL = $ini_array["site_URL"];
-
+	
 	$smtp_username = $ini_array["smtp_username"];
 	$smtp_userpassword = $ini_array["smtp_userpassword"];
 	$smtp_host = $ini_array["smtp_host"];
 }
 catch(Exception $e) {
-
+	
 	/*
-	* We must be on a test server with no ini file
+	 * We must be on a test server with no ini file
 	*/
-	
-	$database_username = "ubuntu";
-	$database_userpassword = "";
-	$database_name = "circle_test";
-	$database_host = ini_get("mysql.default_host");
-	
-	$database_salt = "salt";
-
-	$site_URL = "http://rdtom/";
-	
-	$smtp_username = "";
-	$smtp_userpassword = "";
-	$smtp_host = "";
 }
 
 /*
