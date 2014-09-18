@@ -10,6 +10,8 @@ dependencies:
   post:
     - a2dissite default
     - rm /etc/apache2/sites-available/default
+    - a2dissite default-ssl
+    - rm /etc/apache2/sites-available/default-ssl
     - sudo service apache2 reload
     - ls /etc/apache2/sites-available
     - cp ~/RDTOM-Source/tests/config/rdtom /etc/apache2/sites-available
