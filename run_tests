@@ -8,6 +8,7 @@ php codecept.phar run functional --steps
 sudo service apache2 restart
 sudo service mysql restart
 
+php codecept.phar run unit --steps
 php codecept.phar run acceptance --steps
 
 ./show_output

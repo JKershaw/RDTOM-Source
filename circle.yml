@@ -4,10 +4,16 @@ machine:
   environment:
     ENVIRONMENT: development
 
+dependencies:
+  post:
+    - cp ~/RDTOM-Source/tests/config/dev.rollerderbytestomatic.com /etc/apache2/sites-available
+    - a2ensite dev.rollerderbytestomatic.com
+    - sudo service apache2 restart
+
 test:
   post:
     - php codecept.phar run unit --steps
-    - php codecept.phar run functional --steps
+    - php codecept.phar run acceptance --steps
     - ./show_output
 
 deployment:
