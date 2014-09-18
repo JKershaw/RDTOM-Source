@@ -6,34 +6,24 @@ error_reporting(E_ERROR);
  * Parse the ini file
 */
 
-try {
-	$ini_array = parse_ini_file("config.ini");
-	
-	/*
-	 * Database connection details, stored in the ini files for security
-	*/
-	
-	$database_username = $ini_array["database_username"];
-	$database_userpassword = $ini_array["database_userpassword"];
-	$database_name = $ini_array["database_name"];
-	$database_host = $ini_array["database_host"];
-	
-	$database_salt = $ini_array["database_salt"];
-	
-	$site_URL = $ini_array["site_URL"];
-	
-	$smtp_username = $ini_array["smtp_username"];
-	$smtp_userpassword = $ini_array["smtp_userpassword"];
-	$smtp_host = $ini_array["smtp_host"];
-}
-catch(Exception $e) {
-	
-	/*
-	 * We must be on a test server with no ini file
-	*/
+$ini_array = parse_ini_file("config.ini");
 
-	echo "No ini file found";
-}
+/*
+ * Database connection details, stored in the ini files for security
+*/
+
+$database_username = $ini_array["database_username"];
+$database_userpassword = $ini_array["database_userpassword"];
+$database_name = $ini_array["database_name"];
+$database_host = $ini_array["database_host"];
+
+$database_salt = $ini_array["database_salt"];
+
+$site_URL = $ini_array["site_URL"];
+
+$smtp_username = $ini_array["smtp_username"];
+$smtp_userpassword = $ini_array["smtp_userpassword"];
+$smtp_host = $ini_array["smtp_host"];
 
 if (!$database_username) {
 	
