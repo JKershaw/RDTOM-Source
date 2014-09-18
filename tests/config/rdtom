@@ -1,5 +1,9 @@
 Listen 8080
 
+<Directory />
+    AllowOverride All
+</Directory>
+
 <VirtualHost *:8080>
   LoadModule php5_module /home/ubuntu/.phpenv/versions/PHP_VERSION/libexec/libphp5.so
 
