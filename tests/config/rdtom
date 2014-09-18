@@ -1,7 +1,7 @@
-NameVirtualHost *:8080
+Listen 8080
 
 <VirtualHost *:8080>
-ServerName rdtom
-ServerAlias localhost
-DocumentRoot /home/ubuntu/RDTOM-Source/html
+	ServerName rdtom
+	ServerAlias localhost
+	DocumentRoot /home/ubuntu/RDTOM-Source/html
 </VirtualHost>
