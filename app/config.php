@@ -1,5 +1,4 @@
 <?php
-
 ini_set('display_errors', 'Off');
 error_reporting(E_ERROR);
 
@@ -9,29 +8,43 @@ error_reporting(E_ERROR);
 
 try {
 	$ini_array = parse_ini_file("config.ini");
+	
+	/*
+	 * Database connection details, stored in the ini files for security
+	*/
+	
+	$database_username = $ini_array["database_username"];
+	$database_userpassword = $ini_array["database_userpassword"];
+	$database_name = $ini_array["database_name"];
+	$database_host = $ini_array["database_host"];
+	
+	$database_salt = $ini_array["database_salt"];
+	
+	$site_URL = $ini_array["site_URL"];
+
+	$smtp_username = $ini_array["smtp_username"];
+	$smtp_userpassword = $ini_array["smtp_userpassword"];
+	$smtp_host = $ini_array["smtp_host"];
 }
 catch(Exception $e) {
-	echo "There is no config.ini file.";
+
+	/*
+	* We must be on a test server with no ini file
+	*/
+	
+	$database_username = "ubuntu";
+	$database_userpassword = "";
+	$database_name = "circle_test";
+	$database_host = "127.0.0.1";
+	
+	$database_salt = "salt";
+
+	$site_URL = "http://rdtom/";
+	
+	$smtp_username = "";
+	$smtp_userpassword = "";
+	$smtp_host = "";
 }
-
-/*
- * Database connection details, stored in the ini files for security
-*/
-
-$database_username = $ini_array["database_username"];
-$database_userpassword = $ini_array["database_userpassword"];
-$database_name = $ini_array["database_name"];
-$database_host = $ini_array["database_host"];
-
-$database_salt = $ini_array["database_salt"];
-
-/*
- * Email details
-*/
-
-$smtp_username = $ini_array["smtp_username"];
-$smtp_userpassword = $ini_array["smtp_userpassword"];
-$smtp_host = $ini_array["smtp_host"];
 
 /*
  * Other values which don't need to be kept as secure
@@ -55,9 +68,6 @@ $responses_needed_for_section_breakdown = 50;
 // When requesting a password reset, how many seconds is the token valid for?
 $password_reset_token_expire = 86400;
 
-// the current site URL (different on development & test servers so goes in the config file
-$site_URL = $ini_array["site_URL"];
-
 // when emailing, this is the from account
 $email_from_address = "auto@rollerderbytestomatic.com";
 $email_from_name = "Roller Derby Test O'Matic";
@@ -66,7 +76,9 @@ $email_from_name = "Roller Derby Test O'Matic";
  * When fetching questions, this is the deafult search parameter
 */
 
-$default_terms_array = array("rule-set" => "WFTDA7");
+$default_terms_array = array(
+	"rule-set" => "WFTDA7"
+);
 
 /*
  * DEFINITIONS - THESE NEVER CHANGE
@@ -81,11 +93,14 @@ define("REPORT_NOACTION", 4);
 
 // Question comment types
 define("QUESTION_COMMENT", 0);
- // A comment left by a user on a Question
+
+// A comment left by a user on a Question
 define("QUESTION_CHANGED", 1);
- // A change in the Question
+
+// A change in the Question
 define("QUESTION_DELETED", 2);
- // A Question was deleted
+
+// A Question was deleted
 
 // number of answers listed on the admin page
 define("NUMBER_OF_ANSWERS", 10);
