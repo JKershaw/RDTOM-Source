@@ -6,15 +6,6 @@ error_reporting(E_ERROR);
  * Parse the ini file
 */
 
-//default params
-
-$database_username = "ubuntu";
-$database_userpassword = "";
-$database_name = "circle_test";
-$database_host = ini_get("mysql.default_host");
-
-$site_URL = "http://rdtom/";
-
 try {
 	$ini_array = parse_ini_file("config.ini");
 	
@@ -40,6 +31,20 @@ catch(Exception $e) {
 	/*
 	 * We must be on a test server with no ini file
 	*/
+
+	echo "No ini file found";
+}
+
+if (!$database_username) {
+	
+	//default params
+	
+	$database_username = "ubuntu";
+	$database_userpassword = "";
+	$database_name = "circle_test";
+	$database_host = ini_get("mysql.default_host");
+	
+	$site_URL = "http://rdtom/";
 }
 
 /*
