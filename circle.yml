@@ -15,7 +15,7 @@ dependencies:
 test:
   post:
     - php codecept.phar run unit --steps
-    - php codecept.phar run acceptance --steps
+    - php codecept.phar run acceptance --steps --debug
     - ./show_output
 
 deployment:
