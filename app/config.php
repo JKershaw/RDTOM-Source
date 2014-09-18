@@ -42,7 +42,7 @@ if (!$database_username) {
 	$database_username = "ubuntu";
 	$database_userpassword = "";
 	$database_name = "circle_test";
-	$database_host = ini_get("mysql.default_host");
+	$database_host = "127.0.0.1";
 	
 	$site_URL = "http://rdtom/";
 }
