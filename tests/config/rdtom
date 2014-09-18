@@ -4,9 +4,12 @@ Listen 8080
   LoadModule php5_module /home/ubuntu/.phpenv/versions/5.5.7/libexec/libphp5.so
 
   DocumentRoot /home/ubuntu/RDTOM-Source/html
-
   ServerName rdtom
+  
   <FilesMatch \.php$>
     SetHandler application/x-httpd-php
   </FilesMatch>
+  <Directory "/home/sausage/workspace/RDTOM-Source/html">
+  	Require all granted 
+  </Directory>
 </VirtualHost>
