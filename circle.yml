@@ -1,6 +1,6 @@
 machine:
   php:
-    version: 5.5.7
+    version: 5.3.10
   environment:
     ENVIRONMENT: development
   hosts:
