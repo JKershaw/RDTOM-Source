@@ -3,12 +3,13 @@ machine:
     version: 5.5.7
   environment:
     ENVIRONMENT: development
+  hosts:
+    rdtom: 127.0.0.1
 
 dependencies:
   post:
     - sudo cp ~/RDTOM-Source/tests/config/rdtom /etc/apache2/sites-available
     - sudo a2ensite rdtom
-    - sudo echo "127.0.0.1 rdtom" >> /etc/hosts
     - sudo service apache2 restart
 
 test:
