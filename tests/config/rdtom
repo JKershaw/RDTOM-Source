@@ -1,6 +1,6 @@
 Listen 8080
 
-  <Directory />
+  <Directory *>
     Options Indexes FollowSymLinks MultiViews
     AllowOverride All
     Order allow,deny
