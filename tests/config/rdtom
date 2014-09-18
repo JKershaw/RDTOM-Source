@@ -1,10 +1,15 @@
 Listen 8080
 
 <VirtualHost *:8080>
-  ServerName rdtom
+
   DocumentRoot /home/ubuntu/RDTOM-Source/html
+  ServerName rdtom
 
   <FilesMatch \.php$>
     SetHandler application/x-httpd-php
   </FilesMatch>
+  <Directory "/home/sausage/workspace/RDTOM-Source/html">
+  	Require all granted 
+  	AllowOverride All
+  </Directory>
 </VirtualHost>
