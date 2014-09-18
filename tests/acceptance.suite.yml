@@ -11,4 +11,4 @@ modules:
         - AcceptanceHelper
     config:
         PhpBrowser:
-            url: 'http://rdtom/'
+            url: 'http://rdtom:8080'
