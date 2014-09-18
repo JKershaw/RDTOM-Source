@@ -1,12 +1,5 @@
 Listen 8080
 
-  <Directory *>
-    Options Indexes FollowSymLinks MultiViews
-    AllowOverride All
-    Order allow,deny
-    allow from all
-  </Directory>
-
 <VirtualHost *:8080>
   LoadModule php5_module /home/ubuntu/.phpenv/versions/PHP_VERSION/libexec/libphp5.so
 
