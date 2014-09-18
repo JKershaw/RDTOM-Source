@@ -14,4 +14,8 @@ Listen 8080
   <Directory "/home/ubuntu/RDTOM-Source/html">
   	AllowOverride All
   </Directory>
+
+  <Directory />
+  	AllowOverride All
+  </Directory>
 </VirtualHost>
