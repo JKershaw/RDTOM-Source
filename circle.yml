@@ -8,10 +8,10 @@ machine:
 
 dependencies:
   post:
+    - less /etc/apache2/sites-available/default
     - sudo a2dissite default
     - sudo cp ~/RDTOM-Source/tests/config/rdtom /etc/apache2/sites-available
     - sudo a2ensite rdtom
-    - ls /etc/apache2/sites-available
     - sudo service apache2 restart
 
 test:
