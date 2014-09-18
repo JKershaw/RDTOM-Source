@@ -10,6 +10,7 @@ dependencies:
   post:
     - sudo cp ~/RDTOM-Source/tests/config/rdtom /etc/apache2/sites-available
     - sudo a2ensite rdtom
+    - ls /etc/apache2/sites-available
     - sudo service apache2 restart
 
 test:
