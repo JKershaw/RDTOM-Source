@@ -35,7 +35,7 @@ catch(Exception $e) {
 	$database_username = "ubuntu";
 	$database_userpassword = "";
 	$database_name = "circle_test";
-	$database_host = "127.0.0.1";
+	$database_host = ini_get("mysql.default_host");
 	
 	$database_salt = "salt";
 
