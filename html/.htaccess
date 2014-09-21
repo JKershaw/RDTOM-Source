@@ -8,9 +8,9 @@ RewriteEngine on
 
 RewriteRule ^([^\.]+)?$ index.php [NC,QSA,L]
 
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^(.*)$ index.php [NC,QSA,L]
+#RewriteCond %{REQUEST_FILENAME} !-f
+#RewriteCond %{REQUEST_FILENAME} !-d
+#RewriteRule ^(.*)$ index.php [NC,QSA,L]
 
 #RewriteRule ajax.php(.+)? ajax.php$1 [L]
 #RewriteRule cron.php(.+)? cron.php$1 [L]
