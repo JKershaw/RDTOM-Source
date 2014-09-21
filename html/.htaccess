@@ -6,6 +6,8 @@ AddHandler php5-script .php
 
 RewriteEngine on
 
+RewriteRule ^([^\.]+)?$ index.php [NC,QSA,L]
+
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^(.*)$ index.php [NC,QSA,L]
@@ -18,7 +20,6 @@ RewriteRule ^(.*)$ index.php [NC,QSA,L]
 
 #RewriteRule ^api(.+)? index.php [NC,QSA,L]
 
-#RewriteRule ^([^\.]+)?$ index.php [NC,QSA,L]
 
 ErrorDocument 404 /404
 
