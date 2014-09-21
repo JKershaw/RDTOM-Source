@@ -11,6 +11,6 @@ $I->see("Click the button to randomly generate an online rules test");
 $I->click("Generate Rules Test");
 
 // CircleCi can't handle this yet
-// $I->see("Pass mark");
-// $I->click("I've finished! Mark my test, please.");
+$I->see("Pass mark");
+$I->click("I've finished! Mark my test, please.");
 ?>
