@@ -2,6 +2,9 @@ echo "======================================="
 
 set -e
 
+sudo a2enmod rewrite
+sudo a2enmod headers
+
 sudo rm -rf /etc/apache2/sites-available/rdtom.conf
 sudo a2dissite rdtom
 
