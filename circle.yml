@@ -10,7 +10,7 @@ dependencies:
   post:
     - a2enmod rewrite
     - a2enmod headers
-    - cp ~/RDTOM-Source/tests/config/rdtom.conf /etc/apache2/sites-available
+    - cp ~/RDTOM-Source/tests/config/rdtom /etc/apache2/sites-available
     - a2ensite rdtom
     - service apache2 restart
 
