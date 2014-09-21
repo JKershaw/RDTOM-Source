@@ -6,16 +6,12 @@ AddHandler php5-script .php
   </FilesMatch>
 </IfModule>
 
-RewriteEngine on
-
-RewriteRule ajax.php(.+)? ajax.php$1 [L]
-RewriteRule cron.php(.+)? cron.php$1 [L]
-RewriteRule css/(.+)? css/$1 [L]
-RewriteRule images/(.+)? images/$1 [L]
-RewriteRule js/(.+)? js/$1 [L]
-
-RewriteRule ^api(.+)? index.php [NC,QSA,L]
-
-RewriteRule ^([^\.]+)?$ index.php [NC,QSA,L]
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteBase /
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule . /index.php [L]
+</IfModule>
 
 ErrorDocument 404 /404
