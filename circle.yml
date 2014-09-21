@@ -8,10 +8,10 @@ machine:
 
 dependencies:
   post:
-    - a2enmod rewrite
-    - a2enmod headers
-    - cp ~/RDTOM-Source/tests/config/rdtom /etc/apache2/sites-available
-    - a2ensite rdtom
+    - sudo a2enmod rewrite
+    - sudo a2enmod headers
+    - sudo cp ~/RDTOM-Source/tests/config/rdtom /etc/apache2/sites-available
+    - sudo a2ensite rdtom
     - sudo service apache2 restart
 
 database:
