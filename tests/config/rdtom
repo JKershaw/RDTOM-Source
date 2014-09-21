@@ -12,9 +12,7 @@ Listen 8080
   </FilesMatch>
 
   <Directory /home/ubuntu/RDTOM-Source/html/*>
-    Options Indexes FollowSymLinks MultiViews
+    Require all granted 
     AllowOverride All
-    Order allow,deny
-    allow from all
   </Directory>
 </VirtualHost>

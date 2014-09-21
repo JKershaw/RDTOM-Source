@@ -34,7 +34,7 @@ if (!$database_username) {
 	$database_name = "circle_test";
 	$database_host = "127.0.0.1";
 	
-	$site_URL = "http://rdtom/";
+	$site_URL = "http://rdtom:8080/";
 }
 
 /*
