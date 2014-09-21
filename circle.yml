@@ -12,7 +12,7 @@ dependencies:
     - a2enmod headers
     - cp ~/RDTOM-Source/tests/config/rdtom /etc/apache2/sites-available
     - a2ensite rdtom
-    - service apache2 restart
+    - sudo service apache2 restart
 
 database:
   override:
