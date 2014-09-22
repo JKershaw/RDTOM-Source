@@ -7,12 +7,9 @@
 class_name: AcceptanceTester
 modules:
     enabled:
-        - PhpBrowser
         - WebDriver
         - AcceptanceHelper
     config:
-        PhpBrowser:
-            url: 'http://rdtom:8080'
         WebDriver:
             url: 'http://rdtom:8080'
             browser: phantomjs

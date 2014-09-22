@@ -7,8 +7,6 @@ machine:
     rdtom: 127.0.0.1
 
 dependencies:
-  pre: 
-    - phantomjs --webdriver=4444 &
   post:
     - sudo a2enmod rewrite
     - sudo a2enmod headers
