@@ -5,7 +5,7 @@ machine:
     ENVIRONMENT: development
   hosts:
     rdtom: 127.0.0.1
-  override: 
+  pre: 
     - phantomjs webdriver=4444:
         background: true
 
