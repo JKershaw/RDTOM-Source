@@ -8,6 +8,7 @@ machine:
 
 dependencies:
   post:
+    - phantomjs --webdriver=4444 &
     - sudo a2enmod rewrite
     - sudo a2enmod headers
     - sudo cp ~/RDTOM-Source/tests/config/rdtom /etc/apache2/sites-available
