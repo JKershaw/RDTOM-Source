@@ -6,8 +6,7 @@ machine:
   hosts:
     rdtom: 127.0.0.1
   pre: 
-    - phantomjs webdriver=4444:
-        background: true
+    - phantomjs webdriver=4444
 
 dependencies:
   post:
