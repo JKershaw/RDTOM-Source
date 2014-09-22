@@ -5,8 +5,9 @@ machine:
     ENVIRONMENT: development
   hosts:
     rdtom: 127.0.0.1
-  pre: 
-    - phantomjs --webdriver=4444
+  post: 
+    - phantomjs --webdriver=4444:
+      background: true
 
 dependencies:
   post:
