@@ -5,10 +5,12 @@ machine:
     ENVIRONMENT: development
   hosts:
     rdtom: 127.0.0.1
+  post:
+    - phantomjs --webdriver=4444
+        background: true
 
 dependencies:
   post:
-    - phantomjs --webdriver=4444 &
     - sudo a2enmod rewrite
     - sudo a2enmod headers
     - sudo cp ~/RDTOM-Source/tests/config/rdtom /etc/apache2/sites-available
