@@ -36,5 +36,4 @@ $I->see('"status_code":"200"');
 $I->amOnPage('/api/0.1/jsonp/questions/?callback=my_function');
 $I->see('"status_code":"200"');
 
-
 ?>
