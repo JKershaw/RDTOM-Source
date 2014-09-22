@@ -18,7 +18,7 @@ sudo a2ensite rdtom
 sudo service apache2 restart
 sudo service mysql restart
 
-php codecept.phar run acceptance --steps
+php codecept.phar run acceptance --debug --steps --fail-fast --colors
 
 #./show_output
 
