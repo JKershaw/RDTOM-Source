@@ -5,10 +5,9 @@ machine:
     ENVIRONMENT: development
   hosts:
     rdtom: 127.0.0.1
-  post: 
+  override: 
     - phantomjs webdriver=4444:
         background: true
-    - sleep 5
 
 dependencies:
   post:
