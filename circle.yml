@@ -24,6 +24,7 @@ database:
 test:
   post:
     - php codecept.phar run unit --steps
+    - php codecept.phar run api --steps --debug
     - php codecept.phar run acceptance --steps --debug
     - ./show_output
 
