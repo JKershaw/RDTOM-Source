@@ -17,7 +17,7 @@ $I->amOnPage('/api/0.1/json/question/');
 $I->see('"status_code":"200"');
 
 $I->amOnPage('/api/0.1/json/question/?ID=704');
-$I->see('{"api_version":"0.1","status_code":"200","resource":{"question":{"id":"704","text":"True or False: \"Sausage Roller\" is a really clever and funny name for a Merby (Men\'s Derby) skater.","wftda_link":{},"notes":"NB: A \"sausage roll\" is a tasty snack popular in the UK. It\'s sausage meat rolled and baked in pastry. Yum.","sections":{"section":"N\/A"},"answers":{"answer":[{"id":"3052","text":"False","correct":"false"},{"id":"3051","text":"True","correct":"true"}]}}}}');
+$I->see('{"api_version":"0.1","status_code":"200","resource":{"question":{"id":"704",');
 
 $I->amOnPage('/api/0.1/jsonp/question/');
 $I->see('<status_message>No JSONP callback specified</status_message>');
@@ -26,7 +26,7 @@ $I->amOnPage('/api/0.1/jsonp/question/?callback=my_function');
 $I->see('"status_code":"200"');
 
 $I->amOnPage('/api/0.1/jsonp/question/?callback=my_function&ID=704');
-$I->see('my_function ({"api_version":"0.1","status_code":"200","resource":{"question":{"id":"704","text":"True or False: \"Sausage Roller\" is a really clever and funny name for a Merby (Men\'s Derby) skater.","wftda_link":{},"notes":"NB: A \"sausage roll\" is a tasty snack popular in the UK. It\'s sausage meat rolled and baked in pastry. Yum.","sections":{"section":"N\/A"},"answers":{"answer":[{"id":"3052","text":"False","correct":"false"},{"id":"3051","text":"True","correct":"true"}]}}}}, \'\');');
+$I->see('my_function ({"api_version":"0.1","status_code":"200","resource":{"question":{"id":"704",');
 
 
 // Resource Questions
