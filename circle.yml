@@ -8,7 +8,8 @@ machine:
 
 dependencies:
   post:
-    - phantomjs --webdriver=4444
+    - phantomjs: 
+        webdriver: 4444
         background: true
     - sudo a2enmod rewrite
     - sudo a2enmod headers
