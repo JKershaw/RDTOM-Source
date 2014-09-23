@@ -5,6 +5,7 @@ $I->amOnPage('');
 $I->see('Log in or sign up');
 $I->click('Log in or sign up');
 
+
 //incorrect details
 $I->see("Login to your account");
 $I->dontSee("If you already have an account");
