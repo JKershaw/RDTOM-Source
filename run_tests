@@ -2,10 +2,6 @@ echo "======================================="
 
 set -e
 
-php codecept.phar build
-
-echo "======================================="
-
 # Run unit tests
 php codecept.phar run unit --steps
 
