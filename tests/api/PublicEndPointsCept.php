@@ -2,6 +2,9 @@
 $I = new AcceptanceTester($scenario);
 $I->wantTo('Test public end points');
 
+$I->amOnPage('/robots.txt');
+$I->see("User-agent");
+
 $I->amOnPage('/js/jquery_1_8_3.min.js');
 $I->see("jQuery");
 
