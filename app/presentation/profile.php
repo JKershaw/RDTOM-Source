@@ -241,7 +241,7 @@ else
 			<input type="checkbox" name="remeber" id="remeber" value="Yes" /> remember me (don't select this if you're on a public computer)
 		</p>
 		<p>
-			<a class="button" onClick="document.formlogin.submit()">Login</a>
+			<a class="button" onclick="document.formlogin.submit()">Login</a>
 		</p>
 		</form>
 		
@@ -267,7 +267,7 @@ else
 			<input class="input_text" type="text" id="signup_email" name = "email"> <span style="font-style:italic; color:#777">Optional</span>
 		</p>
 		<p>
-			<a class="button"  onClick="document.formsignup.submit()">Sign up</a>
+			<a class="button" onclick="document.formsignup.submit()">Sign up</a>
 		</p>
 		</form>
 		<p>
