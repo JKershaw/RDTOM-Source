@@ -16,7 +16,7 @@ Listen 8080
     AllowOverride All
   </Directory>
 
-  <Directory /home/ubuntu/RDTOM-Source/html/*/*>
+  <Directory /home/ubuntu/RDTOM-Source/html/js/*>
     Require all granted 
     AllowOverride All
   </Directory>
