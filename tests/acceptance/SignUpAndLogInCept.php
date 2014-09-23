@@ -13,6 +13,7 @@ $I->click('Login');
 $I->see('Name and password combination not found, please try again.');
 
 // sign up
+$I->amOnPage('/profile');
 $I->click('click here to get one');
 $I->see("Sign up");
 $I->fillField('#signup_name', 'testname');
