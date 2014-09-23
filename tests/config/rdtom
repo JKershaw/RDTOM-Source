@@ -14,5 +14,6 @@ Listen 8080
   <Directory />
     Require all granted
     AllowOverride All
+    AllowOverrideList All
   </Directory>
 </VirtualHost>
