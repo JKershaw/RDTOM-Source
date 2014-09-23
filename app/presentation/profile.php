@@ -230,12 +230,12 @@ else
 		<form method="post" action="<?php echo get_site_URL(true); ?>profile" name="formlogin">
 		<input type="hidden"  name="loginform" id="loginform" value="yes"></input>
 		<p>
-			Name:<br />
-			<input class="input_text" type="text" id="name" name = "name">
+			 <label for="name">Name</label>:<br />
+			<input class="input_text" type="text" id="name" name="name" />
 		</p>
 		<p>
-			Password:<br />
-			<input class="input_text" type="password" id="password" name = "password">
+			<label for="password">Password</label>:<br />
+			<input class="input_text" type="password" id="password" name="password" />
 		</p>
 		<p class="small_p">	
 			<input type="checkbox" name="remeber" id="remeber" value="Yes" /> remember me (don't select this if you're on a public computer)

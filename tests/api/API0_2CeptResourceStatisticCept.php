@@ -2,7 +2,6 @@
 $I = new AcceptanceTester($scenario);
 $I->wantTo('Test API 0.2 - Statistic');
 
-// Resource Questions
 $I->amOnPage('/api/0.2/xml/Statistic/?developer=test&application=testingScript&search=sausage');
 $I->see('<status_code>416</status_code>');
 $I->see('Statistic ID not found');
