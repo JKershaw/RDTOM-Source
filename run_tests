@@ -2,8 +2,12 @@ echo "======================================="
 
 set -e
 
+# Run unit tests
 php codecept.phar run unit --steps
 
+echo "======================================="
+echo "Setting up server"
+#Set up server ready for tests
 sudo a2enmod rewrite
 sudo a2enmod headers
 
@@ -17,6 +21,17 @@ sudo a2ensite rdtom
 
 sudo service apache2 restart
 sudo service mysql restart
+
+# clear the database
+echo "======================================="
+echo "Dropping the database"
+mysql -u root -e "drop database circle_test" || true
+echo "Creating new database"
+mysql -u root -e "create database circle_test" 
+echo "Populating database"
+mysql -u root circle_test < tests/_data/dump.sql
+
+echo "======================================="
 
 #php codecept.phar run api --steps --fail-fast
 

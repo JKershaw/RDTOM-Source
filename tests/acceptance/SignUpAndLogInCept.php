@@ -20,6 +20,9 @@ $I->fillField('#signup_password', 'password');
 $I->click('Sign up');
 $I->see('Your account has been made, please log in now ');
 
+// reload the page to get around weird PhantomJS bug
+$I->amOnPage('/profile');
+
 // sign in
 $I->see("Login to your account");
 $I->fillField('name', 'testname');
