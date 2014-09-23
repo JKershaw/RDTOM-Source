@@ -16,6 +16,7 @@ $I->see('Name and password combination not found, please try again.');
 $I->amOnPage('/profile');
 $I->click('click here to get one');
 $I->see("Sign up");
+$I->wait(1);
 $I->fillField('#signup_name', 'testname');
 $I->fillField('#signup_password', 'password');
 $I->click('Sign up');
