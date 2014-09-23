@@ -230,11 +230,11 @@ else
 		<form method="post" action="<?php echo get_site_URL(true); ?>profile" name="formlogin">
 		<input type="hidden"  name="loginform" id="loginform" value="yes"></input>
 		<p>
-			 <label for="name">Name</label>:<br />
+			Name:<br />
 			<input class="input_text" type="text" id="name" name="name" />
 		</p>
 		<p>
-			<label for="password">Password</label>:<br />
+			Password:<br />
 			<input class="input_text" type="password" id="password" name="password" />
 		</p>
 		<p class="small_p">	
@@ -246,7 +246,7 @@ else
 		</form>
 		
 		<p>
-			Roller Derby Test O'Matic accounts are free, <a onclick="$('#form_login').hide();$('#form_signup').fadeIn();">click here to get one</a>.
+			Roller Derby Test O'Matic accounts are free, <a onclick="$('#form_login').hide();$('#form_signup').show();">click here to get one</a>.
 		</p>
 	</div>
 	
@@ -271,7 +271,7 @@ else
 		</p>
 		</form>
 		<p>
-			If you already have an account <a onclick="$('#form_signup').hide();$('#form_login').fadeIn();">click here to login</a>.
+			If you already have an account <a onclick="$('#form_signup').hide();$('#form_login').show();">click here to login</a>.
 		</p>
 	</div>
 	<p><a href="<?php echo get_site_URL(); ?>passwordreset">Forgotten your password?</a></p>
