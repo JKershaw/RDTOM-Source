@@ -256,11 +256,11 @@ else
 			<input type="hidden" id="signupform" name="signupform"  value="yes"></input>
 		<p>		
 			Name: <br />
-			<input class="input_text" type="text" id="signup_name" name = "name">
+			<input class="input_text" type="text" id="signup_name" name = "name" />
 		</p>
 		<p>		
 			Password: <br />
-			<input class="input_text" type="password" id="signup_password" name = "password"> <span id="password_extra"></span>
+			<input class="input_text" type="password" id="signup_password" name = "password" /> <span id="password_extra"></span>
 		</p>
 		<p>		
 			Email: <br />
