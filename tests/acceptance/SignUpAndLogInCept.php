@@ -14,7 +14,7 @@ $I->click('Login');
 $I->see('Name and password combination not found, please try again.');
 
 // sign up
-$I->wait(1);
+$I->wait(10);
 $I->click('click here to get one');
 $I->see("Sign up");
 $I->dontSee("Login to your account");
