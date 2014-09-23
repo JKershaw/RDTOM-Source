@@ -33,7 +33,7 @@ mysql -u root circle_test < tests/_data/dump.sql
 
 echo "======================================="
 
-#php codecept.phar run api --steps --fail-fast
+php codecept.phar run api --steps --fail-fast
 
 #php codecept.phar run acceptance --steps --fail-fast
 
