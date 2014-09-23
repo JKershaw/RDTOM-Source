@@ -2,7 +2,7 @@ Listen 8080
 
   LoadModule php5_module /home/ubuntu/.phpenv/versions/PHP_VERSION/libexec/libphp5.so
 
-  DocumentRoot /home/ubuntu/RDTOM-Source/html
+  DocumentRoot "/home/ubuntu/RDTOM-Source/html"
   ServerName rdtom
   DirectoryIndex index.php
 
@@ -10,7 +10,8 @@ Listen 8080
     SetHandler application/x-httpd-php
   </FilesMatch>
 
-  <Directory />
+  <Directory "/home/ubuntu/RDTOM-Source/html">
     Require all granted 
     AllowOverride All
+    Allow from All
   </Directory>
