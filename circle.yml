@@ -13,7 +13,7 @@ dependencies:
   post:
     - sudo a2enmod rewrite
     - sudo a2enmod headers
-    - sudo a2enmod authz_default_module
+    - sudo a2enmod authz
     - sudo cp ~/RDTOM-Source/tests/config/rdtom /etc/apache2/sites-available
     - sudo a2ensite rdtom
     - sudo service apache2 restart
