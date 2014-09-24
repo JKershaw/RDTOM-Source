@@ -1,5 +1,6 @@
 <?php
 
+include __DIR__ . "/classes/presentation/ColourFromPercentageCalculator.class.php";
 
 function report_question()
 {
@@ -47,20 +48,8 @@ function forget_remebered_questions()
 
 function get_colour_from_percentage($perc_value)
 {
-	if ($perc_value >= 80)
-	{
-		$perc_colour = "#008000";
-	}
-	elseif ($perc_value >= 70)
-	{
-		$perc_colour = "#CC6600";
-	}
-	else
-	{
-		$perc_colour = "#FF0000";
-	}
-	
-	return $perc_colour;
+	$ColourFromPercentageCalculator = new ColourFromPercentageCalculator();
+	return $ColourFromPercentageCalculator->calculate($perc_value)
 }
 
 function compare_questions($req_question1, $req_question2)
