@@ -8,7 +8,6 @@ include("header.php");
 <p id="version_0_0_link"><a onclick="ajax_load_api_documentation('0.0');">Version 0.0</a> (Depreciated)</p>
 <p id="version_0_1_link"><a onclick="ajax_load_api_documentation('0.1');">Version 0.1</a> (Stable)</p>
 <p id="version_0_2_link"><a onclick="ajax_load_api_documentation('0.2');">Version 0.2</a> (Stable)</p>
-<p id="version_1_0_link"><a onclick="ajax_load_api_documentation('1.0');">Version 1.0</a> (In development/unreliable/subject to change)</p>
 
 <span id="version_body"></span>
 
