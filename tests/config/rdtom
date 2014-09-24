@@ -12,6 +12,7 @@ Listen 8080
   </FilesMatch>
 
   <Directory /home/ubuntu/RDTOM-Source/html/*>
+    AuthType None
     Require all granted
     AllowOverride All
   </Directory>
