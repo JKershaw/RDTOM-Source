@@ -27,6 +27,7 @@ test:
     - php codecept.phar run api --steps --debug
     - php codecept.phar run acceptance --steps --debug
     - ./show_output
+    - sudo tail -100 /var/log/apache2/error.log
 
 deployment:
   master:
