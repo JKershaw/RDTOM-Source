@@ -1,6 +1,5 @@
 <?php
-
-include_once(__DIR__ . "/../../app/library/classes/presentation/RememberedStringGenerator.class.php");
+include_once (__DIR__ . "/../../app/library/classes/presentation/RememberedStringGenerator.class.php");
 
 class RememberedStringGeneratorTest extends \PHPUnit_Framework_TestCase
 {
@@ -21,7 +20,7 @@ class RememberedStringGeneratorTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($GeneratedRememberedString, $ExpectedRememberedString);
     }
     
-    public function testOneQuestionAnsweredCorrectly() {
+    public function testQuestionsAnsweredCorrectly() {
         $ExpectedRememberedString = "You have a current success rate of <span style=\"font-weight:bold; color:#008000\">100%</span> (1 correct out of 1). <a href=\"http://siteurl.com/forget\">Forget</a>";
         
         $questionsAnsweredResults = [true];
@@ -29,9 +28,8 @@ class RememberedStringGeneratorTest extends \PHPUnit_Framework_TestCase
         $GeneratedRememberedString = $this->RememberedStringGenerator->generate($questionsAnsweredResults);
         
         $this->assertEquals($GeneratedRememberedString, $ExpectedRememberedString);
-    }
-    
-    public function testTwoQuestionsAnsweredCorrectly() {
+
+
         $ExpectedRememberedString = "You have a current success rate of <span style=\"font-weight:bold; color:#008000\">100%</span> (2 correct out of 2). <a href=\"http://siteurl.com/forget\">Forget</a>";
         
         $questionsAnsweredResults = [true, true];
@@ -40,4 +38,24 @@ class RememberedStringGeneratorTest extends \PHPUnit_Framework_TestCase
         
         $this->assertEquals($GeneratedRememberedString, $ExpectedRememberedString);
     }
+    
+    public function testQuestionsAnsweredDifferently() {
+        $ExpectedRememberedString = "You have a current success rate of <span style=\"font-weight:bold; color:#FF0000\">50%</span> (1 correct out of 2). <a href=\"http://siteurl.com/forget\">Forget</a>";
+    
+        $questionsAnsweredResults = [true, false];
+    
+        $GeneratedRememberedString = $this->RememberedStringGenerator->generate($questionsAnsweredResults);
+    
+        $this->assertEquals($GeneratedRememberedString, $ExpectedRememberedString);
+
+
+        // $ExpectedRememberedString = "You have a current success rate of <span style=\"font-weight:bold; color:#FF0000\">50%</span> (1 correct out of 2). <a href=\"http://siteurl.com/forget\">Forget</a>";
+    
+        // $questionsAnsweredResults = [true, false];
+    
+        // $GeneratedRememberedString = $this->RememberedStringGenerator->generate($questionsAnsweredResults);
+    
+        // $this->assertEquals($GeneratedRememberedString, $ExpectedRememberedString);
+    }
+    
 }
