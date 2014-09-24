@@ -49,12 +49,12 @@ class RememberedStringGenerator
     // method declaration
     public function generate($questionsAnsweredResults) {
 
-        if (count($questionsAnsweredResults) == 1) {
-            return "You have a current success rate of 100% (1 correct out of 1). Forget";
-        } elseif (count($questionsAnsweredResults) == 2) {
-            return "You have a current success rate of 100% (2 correct out of 2). Forget";
-        } else {
+        $questionsAnswered = count($questionsAnsweredResults);
+
+        if ($questionsAnswered <= 0) {
             return "You've not answered any questions recently.";
         }
+
+        return "You have a current success rate of 100% ($questionsAnswered correct out of $questionsAnswered). Forget";
     }
 }
