@@ -11,6 +11,7 @@ machine:
 
 dependencies:
   post:
+    - apachectl -V
     - sudo a2enmod rewrite
     - sudo a2enmod headers
     - sudo a2enmod authn_default

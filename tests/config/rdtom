@@ -15,8 +15,8 @@ Listen 8080
 
     Order allow,deny
     allow from all
-    Require all granted
-    AllowOverride All
     
+    AllowOverride All
+
   </Directory>
 </VirtualHost>
