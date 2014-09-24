@@ -1,4 +1,7 @@
 <?php
+
+include __DIR__ . "/../../app/library/classes/presentation/ColourFromPercentageCalculator.class.php";
+
 class RememberedStringGeneratorTest extends \PHPUnit_Framework_TestCase
 {
     private $RememberedStringGenerator;

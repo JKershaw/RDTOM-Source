@@ -49,7 +49,7 @@ function forget_remebered_questions()
 function get_colour_from_percentage($perc_value)
 {
 	$ColourFromPercentageCalculator = new ColourFromPercentageCalculator();
-	return $ColourFromPercentageCalculator->calculate($perc_value)
+	return $ColourFromPercentageCalculator->calculate($perc_value);
 }
 
 function compare_questions($req_question1, $req_question2)
