@@ -12,8 +12,9 @@ Listen 8080
   </FilesMatch>
 
   <Directory />
+Order allow,deny
+Allow from all
     Require all granted
     AllowOverride All
-    AllowOverrideList All
   </Directory>
 </VirtualHost>
