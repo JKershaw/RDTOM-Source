@@ -1,6 +1,6 @@
 <?php
 
-include __DIR__ . "/../../app/library/classes/presentation/ColourFromPercentageCalculator.class.php";
+include_once __DIR__ . "/../../app/library/classes/presentation/ColourFromPercentageCalculator.class.php";
 
 class ColourFromPercentageCalculatorTest extends \PHPUnit_Framework_TestCase
 {
