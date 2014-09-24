@@ -11,10 +11,12 @@ machine:
 
 dependencies:
   post:
+    - sudo a2enmod:
+        background: true
     - sudo a2enmod rewrite
     - sudo a2enmod headers
-    - sudo a2enmod &
     - sudo a2enmod authn_default
+    - sudo a2enmod authn_digest
     - sudo cp ~/RDTOM-Source/tests/config/rdtom /etc/apache2/sites-available
     - sudo a2ensite rdtom
     - sudo service apache2 restart
