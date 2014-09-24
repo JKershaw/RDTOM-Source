@@ -6,14 +6,6 @@ AddHandler php5-script .php
 
 RewriteEngine on
 
-RewriteCond %{REQUEST_URI} "/js/" [OR]
-RewriteCond %{REQUEST_URI} "/css/"[OR]
-RewriteCond %{REQUEST_URI} "/images/"[OR]
-RewriteCond %{REQUEST_URI} "/robots.txt"[OR]
-RewriteCond %{REQUEST_URI} "/cron.php"[OR]
-RewriteCond %{REQUEST_URI} "/ajax.php"
-RewriteRule (.*) $1 [L]
-
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteRule ^(.*)$ index.php [NC,QSA,L]
 
