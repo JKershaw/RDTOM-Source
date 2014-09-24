@@ -1,5 +1,7 @@
 AddHandler php5-script .php
 
+AuthType None
+
 <FilesMatch "\.(js|css|xml|gz)$">
   Header append Vary: Accept-Encoding
 </FilesMatch>
