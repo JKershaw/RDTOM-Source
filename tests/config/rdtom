@@ -11,8 +11,7 @@ Listen 8080
     SetHandler application/x-httpd-php
   </FilesMatch>
 
-  <Directory /home/ubuntu/RDTOM-Source/html>
-    AuthType None
+  <Directory /home/ubuntu/RDTOM-Source/html/*>
     Require all granted
     AllowOverride All
   </Directory>
