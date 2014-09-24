@@ -26,6 +26,7 @@ $I->fillField('#signup_name', $test_name);
 $I->fillField('#signup_password', $test_password);
 $I->click('Sign up');
 $I->see('Your account has been made, please log in now ');
+$I->wait(1); // Sometimes the mySQL DB lags
 
 // sign in
 $I->see("Login to your account");
