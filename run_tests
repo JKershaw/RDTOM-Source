@@ -1,17 +1,20 @@
-echo "======================================="
-
 set -e
+
+if [ $# -gt 0  ]; then
+    echo "======================================="
+	git pull
+fi
+
+echo "======================================="
 
 # Run unit tests
 php codecept.phar run unit --steps
 
 echo "======================================="
 echo "Setting up server"
-#Set up server ready for tests
+
 sudo a2enmod rewrite
 sudo a2enmod headers
-
-phantomjs --webdriver=4444 & 
 
 sudo rm -rf /etc/apache2/sites-available/rdtom.conf
 sudo a2dissite rdtom
@@ -21,6 +24,8 @@ sudo a2ensite rdtom
 
 sudo service apache2 restart
 sudo service mysql restart
+
+phantomjs --webdriver=4444 & 
 
 # clear the database
 echo "======================================="
