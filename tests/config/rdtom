@@ -1,5 +1,7 @@
 Listen 8080
 
+#For apache2 2.2
+
 <VirtualHost *:8080>
   LoadModule php5_module /home/ubuntu/.phpenv/versions/5.4.4/libexec/libphp5.so
 
@@ -12,11 +14,8 @@ Listen 8080
   </FilesMatch>
 
   <Directory /home/ubuntu/RDTOM-Source/html/*>
-
     Order allow,deny
     allow from all
-    
     AllowOverride All
-
   </Directory>
 </VirtualHost>
