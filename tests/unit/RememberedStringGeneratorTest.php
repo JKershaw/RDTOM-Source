@@ -58,7 +58,6 @@ class RememberedStringGeneratorTest extends \PHPUnit_Framework_TestCase
 				
 	}
 
-
 	public function testStreak() {
 		$ExpectedRememberedString = "You have a current success rate of <span style=\"font-weight:bold; color:#008000\">100%</span> (5 correct out of 5). You are on a winning streak of <strong>5</strong>. <a href=\"http://siteurl.com/forget\">Forget</a>";
 		$questionsAnsweredResults = [true, true, true, true, true];
@@ -68,8 +67,13 @@ class RememberedStringGeneratorTest extends \PHPUnit_Framework_TestCase
 		$ExpectedRememberedString = "You have a current success rate of <span style=\"font-weight:bold; color:#008000\">87.5%</span> (7 correct out of 8). You are on a winning streak of <strong>6</strong>. <a href=\"http://siteurl.com/forget\">Forget</a>";
 		$questionsAnsweredResults = [true, false, true, true, true, true, true, true];
 		$GeneratedRememberedString = $this->RememberedStringGenerator->generate($questionsAnsweredResults);
-		$this->assertEquals($GeneratedRememberedString, $ExpectedRememberedString);
+		$this->assertEquals($GeneratedRememberedString, $ExpectedRememberedString);		
+	}
 
-				
+	public function testStreakEnded() {
+		$ExpectedRememberedString = "You have a current success rate of <span style=\"font-weight:bold; color:#CC6600\">77.78%</span> (7 correct out of 9). <span style=\"color:#FF0000\">You just ended your streak of <strong>6</strong></span>. <a href=\"http://siteurl.com/forget\">Forget</a>";
+		$questionsAnsweredResults = [true, false, true, true, true, true, true, true, false];
+		$GeneratedRememberedString = $this->RememberedStringGenerator->generate($questionsAnsweredResults);
+		$this->assertEquals($GeneratedRememberedString, $ExpectedRememberedString);		
 	}
 }

@@ -5,6 +5,7 @@ class RememberedStringGenerator
 {
 	private $site_url;
 	private $ColourFromPercentageCalculator;
+	private $showStreakWhenStreakLength = 4;
 	
 	function __construct($site_url) {
 		$this->site_url = $site_url;
@@ -27,10 +28,14 @@ class RememberedStringGenerator
 		
 		$forgetString = " <a href=\"" . $this->site_url . "forget\">Forget</a>";
 		
-		if ($currentStreak > 4) {
+		if ($currentStreak > $this->showStreakWhenStreakLength) {
 			$streakString = " You are on a winning streak of <strong>" . $currentStreak . "</strong>.";
 		} else {
-			$streakString = "";
+			if ($this->hasStreakEndedSpecification($questionsAnsweredResults)) {
+				$streakString = " <span style=\"color:#FF0000\">You just ended your streak of <strong>6</strong></span>.";
+			} else {
+				$streakString = "";
+			}
 		}
 		
 		return $currentSuccessString . $streakString . $forgetString;
@@ -59,11 +64,11 @@ class RememberedStringGenerator
 		}
 	}
 	
-	private function calculateStreak($questionsAnsweredResults) {
+	private function calculateStreak($questionsAnsweredResults, $offset = 0) {
 		
 		$current_streak = 0;
 		
-		for ($i = count($questionsAnsweredResults) - 1; $i >= 0; $i--) {
+		for ($i = count($questionsAnsweredResults) - 1 - $offset; $i >= 0; $i--) {
 			if ($questionsAnsweredResults[$i]) {
 				$current_streak++;
 			} else {
@@ -72,5 +77,14 @@ class RememberedStringGenerator
 		}
 		
 		return $current_streak;
+	}
+
+	private function hasStreakEndedSpecification($questionsAnsweredResults) {
+
+		$wasLastAnswerWrong = $questionsAnsweredResults[count($questionsAnsweredResults) -1] === false;
+
+		$priorStreakLength = $this->calculateStreak($questionsAnsweredResults, 1);
+
+		return ($priorStreakLength > $this->showStreakWhenStreakLength) && $wasLastAnswerWrong;
 	}
 }
