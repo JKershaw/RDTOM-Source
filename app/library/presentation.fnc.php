@@ -78,20 +78,6 @@ function get_page_title()
 	}
 }
 
-function is_remebering_results()
-{
-
-	if (count(get_session('random_questions_asked')) > 0)
-	{
-		return true;
-	}
-	else
-	{
-		return false;
-	}
-	
-}
-
 function get_remebered_string()
 {
 	global $random_questions_to_remeber;

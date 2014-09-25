@@ -4,7 +4,7 @@
 				if (is_question()) 
 				{
 					?>
-					<p id="remebered_string_p" <?php if (!is_remebering_results()) { echo " style=\"display:none;\""; } ?>>
+					<p id="remebered_string_p">
 						<span id="remebered_string"><?php echo get_remebered_string(); ?></span>
 					</p>
 					<?php 

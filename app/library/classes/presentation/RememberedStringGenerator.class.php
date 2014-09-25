@@ -21,7 +21,7 @@ class RememberedStringGenerator
 		$currentStreak = $this->calculateStreak($questionsAnsweredResults);
 		
 		if ($questionsAnswered <= 0) {
-			return "You've not answered any questions recently.";
+			return "";
 		}
 		
 		$currentSuccessString = "You have a current success rate of <span style=\"font-weight:bold; color:" . $percentageColour . "\">" . $percentageCorrect . "%</span> (" . $questionsAnsweredCorrectly . " correct out of " . $questionsAnswered . ").";

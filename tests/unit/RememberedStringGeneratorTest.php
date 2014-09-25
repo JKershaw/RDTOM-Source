@@ -11,7 +11,7 @@ class RememberedStringGeneratorTest extends \PHPUnit_Framework_TestCase
 	}
 	
 	public function testNoQuestionsAnswered() {
-		$ExpectedRememberedString = "You've not answered any questions recently.";
+		$ExpectedRememberedString = "";
 		
 		$questionsAnsweredResults = null;
 		
