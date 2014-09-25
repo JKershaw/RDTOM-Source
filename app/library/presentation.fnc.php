@@ -1,5 +1,7 @@
 <?php
 
+include_once (__DIR__ . "/classes/presentation/RememberedStringGenerator.class.php");
+
 // presentation functions
 
 // True or False
@@ -93,6 +95,9 @@ function is_remebering_results()
 function get_remebered_string()
 {
 	global $random_questions_to_remeber;
+
+	$RememberedStringGenerator = new RememberedStringGenerator(get_site_URL());
+
 	// generate a string recapping the remebered data
 
 	$correct_count = 0;
