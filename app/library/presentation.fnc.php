@@ -133,6 +133,8 @@ function get_remebered_string()
 			$current_streak = 0;
 			$lost_streak = true;
 		}
+
+		// Excluding the most recent result, are you on a streak?
 		
 		for ($i = count($random_questions_results)-2; $i>=0; $i--)
 		{

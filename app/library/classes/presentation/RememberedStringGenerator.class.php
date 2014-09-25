@@ -15,16 +15,25 @@ class RememberedStringGenerator
 		
 		$questionsAnswered = count($questionsAnsweredResults);
 		$questionsAnsweredCorrectly = $this->calculateCorrectCount($questionsAnsweredResults);
-		
 		$percentageCorrect = $this->calculatePercentage($questionsAnswered, $questionsAnsweredCorrectly);
-		
 		$percentageColour = $this->ColourFromPercentageCalculator->calculate($percentageCorrect);
+		$currentStreak = $this->calculateStreak($questionsAnsweredResults);
 		
 		if ($questionsAnswered <= 0) {
 			return "You've not answered any questions recently.";
 		}
 		
-		return "You have a current success rate of <span style=\"font-weight:bold; color:" . $percentageColour . "\">" . $percentageCorrect . "%</span> (" . $questionsAnsweredCorrectly . " correct out of " . $questionsAnswered . "). <a href=\"" . $this->site_url . "forget\">Forget</a>";
+		$currentSuccessString = "You have a current success rate of <span style=\"font-weight:bold; color:" . $percentageColour . "\">" . $percentageCorrect . "%</span> (" . $questionsAnsweredCorrectly . " correct out of " . $questionsAnswered . ").";
+		
+		$forgetString = " <a href=\"" . $this->site_url . "forget\">Forget</a>";
+		
+		if ($currentStreak > 4) {
+			$streakString = " You are on a winning streak of <strong>" . $currentStreak . "</strong>.";
+		} else {
+			$streakString = "";
+		}
+		
+		return $currentSuccessString . $streakString . $forgetString;
 	}
 	
 	private function calculateCorrectCount($questionsAnsweredResults) {
@@ -48,5 +57,20 @@ class RememberedStringGenerator
 		} else {
 			return 0;
 		}
+	}
+	
+	private function calculateStreak($questionsAnsweredResults) {
+		
+		$current_streak = 0;
+		
+		for ($i = count($questionsAnsweredResults) - 1; $i >= 0; $i--) {
+			if ($questionsAnsweredResults[$i]) {
+				$current_streak++;
+			} else {
+				break;
+			}
+		}
+		
+		return $current_streak;
 	}
 }
