@@ -10,6 +10,11 @@ if (!is_random_question()) {
 
 $question_text = htmlentities(stripslashes($question->get_Text()));
 
+if ($report_string)
+{
+	echo "<h3 class=\"error_string\">Your report has been filed. Thanks very much for your help!</h3>";
+}
+
 ?>
 
 <h3><?php echo $page_title; ?></h3>
@@ -106,10 +111,6 @@ $question_text = htmlentities(stripslashes($question->get_Text()));
 
 				}
 			);
-
-			
-
-			
 		}
 	}
 	

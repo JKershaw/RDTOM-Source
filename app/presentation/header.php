@@ -52,9 +52,4 @@ if ($error_string)
 {
 	echo "<p class=\"error_string\">" . $error_string . "</p>";
 }
-// if report
-elseif ($report_string)
-{
-	echo "<h3 class=\"error_string\">Your report has been filed. Thanks very much for your help!</h3>";
-}
 ?>
