@@ -1,34 +1,35 @@
 <?php 		
 // display the page
 include("header.php");
+
+$page_title = "Random question:";
+
+if (!is_random_question()) {
+	$page_title = "Question #" . $question->get_ID() . ":";
+}
+
+$question_text = htmlentities(stripslashes($question->get_Text()));
+
 ?>
 
-<h3><?php 
-if (is_random_question())
-{
-	echo "Random question:";
-}
-else
-{	
-	echo "Question #" . $question->get_ID() . ":";
-}
-?></h3>
+<h3><?php echo $page_title; ?></h3>
 
-<p>
-	<?php echo htmlentities(stripslashes($question->get_Text())); ?>
-</p>
+<p><?php echo $question_text; ?></p>
 
 <ol type="A">
 	<?php 
-
-	foreach ($answers as $answer)
-	{
+	foreach ($answers as $answer) {
 		$quick_answer[] = $answer->get_ID();
+
+		$correct_class = "correct_answer_link";
+
+		if (!$answer->is_correct()) {
+			$correct_class = "wrong_answer_link";
+		}
 		
-		echo "<li>";
-		echo "<a  class=\"mobilebutton\"  onclick=\"select_answer(" . $answer->get_ID() . ");\">" . htmlentities(stripslashes($answer->get_Text())) . "</a>";
-		if ($answer->is_correct())
-		{
+		echo "<li>
+			<a class=\"mobilebutton $correct_class\"  onclick=\"select_answer(" . $answer->get_ID() . ");\">" . htmlentities(stripslashes($answer->get_Text())) . "</a>";
+		if ($answer->is_correct()) {
 			$section_string = "";
 			
 			if ($question->get_WFTDA_Link())

@@ -188,9 +188,8 @@ function echo_error_page($error_string) {
 	<?php
 	} else {
 ?>
-		<p>For some reason the site has generated an error. It's been logged and will be delt with accordingly (Being a broken website, Major!). You can try doing what you just did again and see if it's only a temporary bug.<p>
-		<p id="p_link"><a onclick="$('#p_link').hide(); $('#p_error').show();">Click to see the error details</a></p>
-		<p id="p_error" style="display:none"><?php
+		<p>For some reason the site has generated an error:<p>
+		<p id="p_error"><?php
 		echo $error_string; ?></p>	
 	<?php
 	}
