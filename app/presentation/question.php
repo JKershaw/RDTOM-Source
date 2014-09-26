@@ -106,8 +106,8 @@ if ($report_string)
 				function(data) {
 					$("#remebered_string_p").show();
 					$("#remebered_string").hide();
-					$("#remebered_string").html(data);
-					$("#remebered_string").fadeIn();
+					$("#remebered_string").show();
+					$("#remebered_string").html(data).fadeIn();
 
 				}
 			);
