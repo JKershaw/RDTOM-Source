@@ -105,7 +105,8 @@ if ($report_string)
 				return_remebered_questions_string: true},
 				function(data) {
 					$("#remebered_string").html(data);
-					$("#remebered_string").fadeIn();
+					//$("#remebered_string").fadeIn();
+					$("#remebered_string").show();
 					$("#remebered_string_p").show();
 				}
 			);
