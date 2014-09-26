@@ -1,12 +1,5 @@
 <?php
 
-function waitFor($I, $name) {
-	$I->waitForElementChange($name, function (\WebDriverElement $el) {
-		return $el->isDisplayed();
-	}
-	, 100);
-	$I->waitForElementVisible($name, 1);
-}
 
 $I = new AcceptanceTester($scenario);
 $I->wantTo('Answer a question correctly');
@@ -19,7 +12,6 @@ $I->dontSee('You have a current success rate of 100% (1 correct out of 1)', "#re
 $I->dontSee('You Win!');
 
 $I->click(".correct_answer_link");
-waitFor($I, "#remebered_string");
 
 $I->see('You have a current success rate of 100% (1 correct out of 1)', "#remebered_string_p");
 $I->see('You Win!', ".correct_answer_win");
@@ -31,7 +23,6 @@ $I->see('You have a current success rate of 100% (1 correct out of 1)', "#remebe
 $I->dontSee('Wrong!');
 
 $I->click(".wrong_answer_link");
-waitFor($I, "#remebered_string");
 
 $I->see('You have a current success rate of 50% (1 correct out of 2)', "#remebered_string_p");
 $I->see('Wrong!', ".wrong_answer");
@@ -39,19 +30,14 @@ $I->see('Wrong!', ".wrong_answer");
 // Get a streak going
 $I->click("New Question");
 $I->click(".correct_answer_link");
-waitFor($I, "#remebered_string");
 $I->click("New Question");
 $I->click(".correct_answer_link");
-waitFor($I, "#remebered_string");
 $I->click("New Question");
 $I->click(".correct_answer_link");
-waitFor($I, "#remebered_string");
 $I->click("New Question");
 $I->click(".correct_answer_link");
-waitFor($I, "#remebered_string");
 $I->click("New Question");
 $I->click(".correct_answer_link");
-waitFor($I, "#remebered_string");
 
 $I->see('You are on a winning streak of 5', "#remebered_string_p");
 $I->see('You have a current success rate of 85.71% (6 correct out of 7)', "#remebered_string_p");
@@ -59,7 +45,6 @@ $I->see('You have a current success rate of 85.71% (6 correct out of 7)', "#reme
 // Break the streak
 $I->click("New Question");
 $I->click(".wrong_answer_link");
-waitFor($I, "#remebered_string");
 
 $I->see('You just ended your streak of 5', "#remebered_string_p");
 $I->see('You have a current success rate of 75% (6 correct out of 8)', "#remebered_string_p");

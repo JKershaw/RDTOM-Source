@@ -21,8 +21,6 @@ dependencies:
 
 database:
   override:
-    - mysql -u ubuntu -e "drop database circle_test" || true
-    - mysql -u ubuntu -e "create database circle_test" 
     - mysql -u ubuntu circle_test < tests/_data/dump.sql
 
 test:
