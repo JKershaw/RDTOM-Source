@@ -40,7 +40,7 @@ echo "======================================="
 
 #php codecept.phar run api --steps --fail-fast
 
-#php codecept.phar run acceptance --steps --fail-fast
+php codecept.phar run acceptance --steps --fail-fast
 
 #./show_output
 
