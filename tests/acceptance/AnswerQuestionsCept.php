@@ -34,12 +34,24 @@ $I->see('Wrong!', ".wrong_answer");
 // Get a streak going
 $I->click("New Question");
 $I->click(".correct_answer_link");
+$I->waitForElementChange('#remebered_string', function(\WebDriverElement $el) {
+    return $el->isDisplayed();
+}, 100);
 $I->click("New Question");
 $I->click(".correct_answer_link");
+$I->waitForElementChange('#remebered_string', function(\WebDriverElement $el) {
+    return $el->isDisplayed();
+}, 100);
 $I->click("New Question");
 $I->click(".correct_answer_link");
+$I->waitForElementChange('#remebered_string', function(\WebDriverElement $el) {
+    return $el->isDisplayed();
+}, 100);
 $I->click("New Question");
 $I->click(".correct_answer_link");
+$I->waitForElementChange('#remebered_string', function(\WebDriverElement $el) {
+    return $el->isDisplayed();
+}, 100);
 $I->click("New Question");
 $I->click(".correct_answer_link");
 $I->waitForElementChange('#remebered_string', function(\WebDriverElement $el) {
