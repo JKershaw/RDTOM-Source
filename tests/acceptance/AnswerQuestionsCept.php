@@ -13,7 +13,9 @@ $I->dontSee('You Win!');
 
 $I->click(".correct_answer_link");
 
-$I->waitForElementVisible('#remebered_string_p', 10);
+$I->waitForElementChange('#remebered_string', function(\WebDriverElement $el) {
+    return $el->isDisplayed();
+}, 100);
 
 $I->see('You have a current success rate of 100% (1 correct out of 1)', "#remebered_string_p");
 $I->see('You Win!', ".correct_answer_win");
@@ -33,23 +35,33 @@ $I->see('Wrong!', ".wrong_answer");
 $I->click("New Question");
 $I->click(".correct_answer_link");
 
-$I->waitForElementVisible('#remebered_string_p', 10);
+$I->waitForElementChange('#remebered_string', function(\WebDriverElement $el) {
+    return $el->isDisplayed();
+}, 100);
 $I->click("New Question");
 $I->click(".correct_answer_link");
 
-$I->waitForElementVisible('#remebered_string_p', 10);
+$I->waitForElementChange('#remebered_string', function(\WebDriverElement $el) {
+    return $el->isDisplayed();
+}, 100);
 $I->click("New Question");
 $I->click(".correct_answer_link");
 
-$I->waitForElementVisible('#remebered_string_p', 10);
+$I->waitForElementChange('#remebered_string', function(\WebDriverElement $el) {
+    return $el->isDisplayed();
+}, 100);
 $I->click("New Question");
 $I->click(".correct_answer_link");
 
-$I->waitForElementVisible('#remebered_string_p', 10);
+$I->waitForElementChange('#remebered_string', function(\WebDriverElement $el) {
+    return $el->isDisplayed();
+}, 100);
 $I->click("New Question");
 $I->click(".correct_answer_link");
 
-$I->waitForElementVisible('#remebered_string_p', 10);
+$I->waitForElementChange('#remebered_string', function(\WebDriverElement $el) {
+    return $el->isDisplayed();
+}, 100);
 
 $I->see('You are on a winning streak of 5', "#remebered_string_p");
 $I->see('You have a current success rate of 85.71% (6 correct out of 7)', "#remebered_string_p");
@@ -69,7 +81,9 @@ $I->dontSee('You Win!');
 
 $I->click(".correct_answer_link");
 
-$I->waitForElementVisible('#remebered_string_p', 10);
+$I->waitForElementChange('#remebered_string', function(\WebDriverElement $el) {
+    return $el->isDisplayed();
+}, 100);
 
 $I->see('You have a current success rate of 100% (1 correct out of 1)', "#remebered_string_p");
 $I->see('You Win!', ".correct_answer_win");
