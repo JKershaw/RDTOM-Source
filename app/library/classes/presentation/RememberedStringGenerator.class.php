@@ -32,7 +32,8 @@ class RememberedStringGenerator
 			$streakString = " You are on a winning streak of <strong>" . $currentStreak . "</strong>.";
 		} else {
 			if ($this->hasStreakEndedSpecification($questionsAnsweredResults)) {
-				$streakString = " <span style=\"color:#FF0000\">You just ended your streak of <strong>6</strong></span>.";
+				$priorStreakLength = $this->calculateStreak($questionsAnsweredResults, 1);
+				$streakString = " <span style=\"color:#FF0000\">You just ended your streak of <strong>" . $priorStreakLength . "</strong></span>.";
 			} else {
 				$streakString = "";
 			}
@@ -69,11 +70,10 @@ class RememberedStringGenerator
 		$current_streak = 0;
 		
 		for ($i = count($questionsAnsweredResults) - 1 - $offset; $i >= 0; $i--) {
-			if ($questionsAnsweredResults[$i]) {
-				$current_streak++;
-			} else {
-				break;
+			if ($questionsAnsweredResults[$i] === false) {
+				return $current_streak;
 			}
+			$current_streak++;
 		}
 		
 		return $current_streak;

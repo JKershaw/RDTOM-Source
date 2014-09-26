@@ -74,6 +74,11 @@ class RememberedStringGeneratorTest extends \PHPUnit_Framework_TestCase
 		$ExpectedRememberedString = "You have a current success rate of <span style=\"font-weight:bold; color:#CC6600\">77.78%</span> (7 correct out of 9). <span style=\"color:#FF0000\">You just ended your streak of <strong>6</strong></span>. <a href=\"http://siteurl.com/forget\">Forget</a>";
 		$questionsAnsweredResults = [true, false, true, true, true, true, true, true, false];
 		$GeneratedRememberedString = $this->RememberedStringGenerator->generate($questionsAnsweredResults);
-		$this->assertEquals($GeneratedRememberedString, $ExpectedRememberedString);		
+		$this->assertEquals($GeneratedRememberedString, $ExpectedRememberedString);	
+
+		$ExpectedRememberedString = "You have a current success rate of <span style=\"font-weight:bold; color:#CC6600\">75%</span> (6 correct out of 8). <span style=\"color:#FF0000\">You just ended your streak of <strong>5</strong></span>. <a href=\"http://siteurl.com/forget\">Forget</a>";
+		$questionsAnsweredResults = [true, false, true, true, true, true, true, false];
+		$GeneratedRememberedString = $this->RememberedStringGenerator->generate($questionsAnsweredResults);
+		$this->assertEquals($GeneratedRememberedString, $ExpectedRememberedString);	
 	}
 }
