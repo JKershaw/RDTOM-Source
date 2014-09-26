@@ -104,9 +104,9 @@ if ($report_string)
 				response_ID: selected,
 				return_remebered_questions_string: true},
 				function(data) {
-					$("#remebered_string_p").show();
 					$("#remebered_string").hide();
 					$("#remebered_string").html(data).fadeIn();
+					$("#remebered_string_p").show();
 
 				}
 			);
