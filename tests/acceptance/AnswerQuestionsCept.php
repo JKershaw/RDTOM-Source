@@ -28,6 +28,10 @@ $I->dontSee('Wrong!');
 
 $I->click(".wrong_answer_link");
 
+$I->waitForElementChange('#remebered_string', function(\WebDriverElement $el) {
+    return $el->isDisplayed();
+}, 100);
+
 $I->see('You have a current success rate of 50% (1 correct out of 2)', "#remebered_string_p");
 $I->see('Wrong!', ".wrong_answer");
 
