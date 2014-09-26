@@ -28,7 +28,7 @@ $I->click('Sign up');
 $I->see('Your account has been made, please log in now ');
 
 // sign in
-$I->amOnPage('/profile');
+$I->dontSee("If you already have an account");
 $I->see("Login to your account");
 $I->fillField('name', $test_name);
 $I->fillField('password', $test_password);
