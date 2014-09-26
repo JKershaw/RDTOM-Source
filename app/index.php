@@ -38,6 +38,12 @@ if (strtolower($url_array[0]) == "api") {
 	
 	// do we want to perform some function or other, then show the default page?
 	switch ($url_array[0]) {
+		case "forget":
+			forget_remebered_questions();
+			header('Location: ' . get_site_URL());
+			die();
+			break;
+
 		case "report":
 			report_question();
 			break;
@@ -84,12 +90,6 @@ if (strtolower($url_array[0]) == "api") {
 		case "question":
 			set_up_question($url_array[1]);
 			include ("presentation/question.php");
-			break;
-
-		case "forget":
-			forget_remebered_questions();
-			header('Location: ' . get_site_URL());
-			die();
 			break;
 
 		default:
