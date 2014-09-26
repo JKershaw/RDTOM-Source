@@ -70,6 +70,10 @@ $I->see('You have a current success rate of 85.71% (6 correct out of 7)', "#reme
 $I->click("New Question");
 $I->click(".wrong_answer_link");
 
+$I->waitForElementChange('#remebered_string', function(\WebDriverElement $el) {
+    return $el->isDisplayed();
+}, 100);
+
 $I->see('You just ended your streak of 5', "#remebered_string_p");
 $I->see('You have a current success rate of 75% (6 correct out of 8)', "#remebered_string_p");
 
