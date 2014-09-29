@@ -1,4 +1,7 @@
 <?php
+
+include_once __DIR__ . "/classes/storage/FileCache.class.php";
+
 function cache_set($key, $string, $timeout = 86400) {
 
 	$key = preg_replace("/[^a-zA-Z0-9]/", "", $key);
