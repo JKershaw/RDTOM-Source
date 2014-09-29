@@ -1,6 +1,7 @@
 <?php
 
 include("ColourFromPercentageCalculator");
+include("Session");
 
 function report_question()
 {
@@ -42,8 +43,9 @@ function report_question()
 
 function forget_remebered_questions()
 {
-	delete_session('random_questions_results');
-	delete_session('random_questions_asked');
+	$session = new Session();
+	$session->forget("random_questions_results");
+	$session->forget("random_questions_asked");
 }
 
 function get_colour_from_percentage($perc_value)

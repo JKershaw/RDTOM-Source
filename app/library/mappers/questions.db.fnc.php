@@ -1,4 +1,6 @@
 <?php
+include("Session");
+
 function get_question_from_array($req_array)
 {
 	return new question(
@@ -41,6 +43,7 @@ function get_question_random()
 {
 	//throw new exception("Woah, either the site ran out of questions, or the database is being updated. Try reloading the page, or <a href=\"http://rollerderbytestomatic.com/forget\">click here to make the site forget which questions you have answered</a>.");
 	global $mydb, $myPDO, $remeber_in_session, $random_question_find_attempts;
+	$session = new Session();
 			
 	// if the holes table is being rebuilt, cheat
 	if (!$mydb->does_table_exist("rdtom_questions_holes_map"))
@@ -97,8 +100,8 @@ function get_question_random()
 			// if the question hasn't already been asked recently OR we're not remebering things in the session, return it
 			if (!$remeber_in_session || 
 				(
-				!get_session('random_questions_asked') || 
-				(get_session('random_questions_asked') && !in_array($question->get_ID(), get_session('random_questions_asked'))))
+				!$session->get('random_questions_asked') || 
+				($session->get('random_questions_asked') && !in_array($question->get_ID(), $session->get('random_questions_asked'))))
 				)
 			{
 				return $question;
@@ -118,6 +121,7 @@ function get_question_random_simple()
 {
 	// get random question from default taxonomies
 	global $default_terms_array, $random_question_find_attempts, $remeber_in_session;
+	$session = new Session();
 	$questions = get_questions($default_terms_array);
 	
 	for($i=0;$i<$random_question_find_attempts;$i++)
@@ -128,16 +132,13 @@ function get_question_random_simple()
 		// if the question hasn't already been asked recently OR we're not remebering things in the session, return it
 		if (!$remeber_in_session || 
 			(
-			!get_session('random_questions_asked') || 
-			(get_session('random_questions_asked') && !in_array($question->get_ID(), get_session('random_questions_asked'))))
+			!$session->get('random_questions_asked') || 
+			($session->get('random_questions_asked') && !in_array($question->get_ID(), $session->get('random_questions_asked'))))
 			)
 		{
 			return $question;
 		}
 	}
-	
-	// if we've asked every question, ask them again
-	// delete_session('random_questions_asked');
 	
 	return $questions[array_rand($questions)];;
 }

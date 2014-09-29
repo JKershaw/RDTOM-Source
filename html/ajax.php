@@ -10,6 +10,7 @@
 // include needed files
 include ('../app/include.php');
 include_once ("FileCache");
+include_once ("Session");
 
 // process and return the ajax request
 try {
@@ -151,6 +152,7 @@ catch(Exception $e) {
 function ajax_save_response() {
 	global $mydb, $remeber_in_session, $random_questions_to_remeber;
 	$fileCache = new FileCache();
+	$session = new Session();
 	
 	// saving the response
 	
@@ -184,8 +186,8 @@ function ajax_save_response() {
 	// remeber what question was answered
 	if ($remeber_in_session) {
 		
-		$random_questions_asked = get_session('random_questions_asked');
-		$random_questions_results = get_session('random_questions_results');
+		$random_questions_asked = $session->get('random_questions_asked');
+		$random_questions_results = $session->get('random_questions_results');
 		
 		// if we know the last 100, forget one
 		if (count($random_questions_asked) >= $random_questions_to_remeber) {
@@ -197,8 +199,8 @@ function ajax_save_response() {
 		$random_questions_results[] = $response_is_correct;
 		
 		// save to the session
-		set_session('random_questions_asked', $random_questions_asked);
-		set_session('random_questions_results', $random_questions_results);
+		$session->set('random_questions_asked', $random_questions_asked);
+		$session->set('random_questions_results', $random_questions_results);
 	}
 	
 	if ($_POST['return_remebered_questions_string']) {
@@ -254,13 +256,15 @@ function ajax_save_responses() {
 }
 
 function ajax_remebered_questions_count() {
-	$result = count(get_session('random_questions_asked'));
+	$session = new Session();
+	$result = count($session->get('random_questions_asked'));
 	settype($result, "integer");
 	return $result;
 }
 
 function ajax_remebered_questions_percentage() {
-	$random_questions_results = get_session('random_questions_results');
+	$session = new Session();
+	$random_questions_results = $session->get('random_questions_results');
 	if (count($random_questions_results) > 0) {
 		foreach ($random_questions_results as $tmp_result) {
 			if ($tmp_result) {

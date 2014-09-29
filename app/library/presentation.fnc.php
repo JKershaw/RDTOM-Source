@@ -1,5 +1,6 @@
 <?php
 include_once("RememberedStringGenerator");
+include("Session");
 
 // presentation functions
 
@@ -68,8 +69,9 @@ function get_page_subtitle() {
 }
 
 function get_remebered_string() {
+	$session = new Session();
 	$siteUrl = get_site_URL();
-	$questionsAnsweredResults = get_session('random_questions_results');
+	$questionsAnsweredResults = $session->get('random_questions_results');
 	
 	$RememberedStringGenerator = new RememberedStringGenerator($siteUrl);
 	$generatedRememberedString = $RememberedStringGenerator->generate($questionsAnsweredResults);

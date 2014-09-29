@@ -1,10 +1,12 @@
 <?php
 
 include("CookieTokenHandler");
+include("Session");
 
 function user_log_in($req_username, $req_password, $rememberMe = false) {
 	global $mydb, $user;
 	$cookieTokenHandler = new CookieTokenHandler();
+	$session = new Session();
 	
 	// log the user in if everything is fine, setting up cookies, session vars and the like
 	$user = $mydb->get_user_from_name_and_password($req_username, $req_password);
@@ -14,7 +16,7 @@ function user_log_in($req_username, $req_password, $rememberMe = false) {
 	}
 	
 	// logged in
-	set_session('rdtom_userID', $user->get_ID());
+	$session->set('rdtom_userID', $user->get_ID());
 	
 	// does the user want to be remebered?
 	if ($rememberMe) {
@@ -33,6 +35,7 @@ function user_log_in($req_username, $req_password, $rememberMe = false) {
 function user_log_out() {
 	global $mydb, $user;
 	$cookieTokenHandler = new CookieTokenHandler();
+	$session = new Session();
 	
 	// delete token if one exists
 	if ($user) {
@@ -43,7 +46,7 @@ function user_log_out() {
 	$cookieTokenHandler->set("");
 	
 	// clear the user values
-	delete_session('rdtom_userID');
+	$session->forget('rdtom_userID');
 	
 	$user = false;
 	unset($user);
@@ -206,10 +209,11 @@ function set_up_logged_in_user() {
 	global $mydb, $user;
 
 	$cookieTokenHandler = new CookieTokenHandler();
+	$session = new Session();
 	
 	// do we have a session variable?
-	if (get_session('rdtom_userID')) {
-		$user = $mydb->get_user_from_ID(get_session('rdtom_userID'));
+	if ($session->get('rdtom_userID')) {
+		$user = $mydb->get_user_from_ID($session->get('rdtom_userID'));
 	} elseif ($cookieTokenHandler->get()) {
 		
 		// is it valid?
@@ -218,7 +222,7 @@ function set_up_logged_in_user() {
 			
 			// we have a valid token, so remeber the user
 			$user = $tmp_user;
-			set_session('rdtom_userID', $user->get_ID());
+			$session->set('rdtom_userID', $user->get_ID());
 		}
 	}
 }
