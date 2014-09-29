@@ -19,7 +19,6 @@ include ('library/account.fnc.php');
 include ('library/stats.fnc.php');
 include ('library/email.fnc.php');
 include ('library/tracker.fnc.php');
-include ('library/sessions.fnc.php');
 include ('library/forum.fnc.php');
 
 // Data mapping files
