@@ -12,9 +12,9 @@ include_once("FileCache");
 // 	return $fileCache->get($key);
 // }
 
-function cache_delete($key) {
-	$fileCache = new FileCache();
-	$fileCache->forget($key);
-}
+// function cache_delete($key) {
+// 	$fileCache = new FileCache();
+// 	$fileCache->forget($key);
+// }
 
 ?>

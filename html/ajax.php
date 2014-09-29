@@ -131,6 +131,8 @@ catch (Exception $e)
 function ajax_save_response()
 {
 	global $mydb, $remeber_in_session, $random_questions_to_remeber;
+	$fileCache = new FileCache();
+	
 	// saving the response
 	
 	// clean the input
@@ -150,7 +152,7 @@ function ajax_save_response()
 	{
 		global $user;
 		$user_ID = $user->get_ID();
-		cache_delete("user_responses_" . $user->get_ID());
+		$fileCache->forget("user_responses_" . $user->get_ID());
 	}
 	else
 	{
@@ -205,6 +207,7 @@ function ajax_save_response()
 function ajax_save_responses()
 {
 	global $mydb;
+	$fileCache = new FileCache();
 	
 	// saving the responses
 	$answers_array = Array();
@@ -214,7 +217,7 @@ function ajax_save_responses()
 	{
 		global $user;
 		$user_ID = $user->get_ID();
-		cache_delete("user_responses_" . $user->get_ID());
+		$fileCache->forget("user_responses_" . $user->get_ID());
 	}
 	else
 	{
