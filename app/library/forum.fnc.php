@@ -923,3 +923,15 @@ function get_post_count_from_user_id($ID)
 function make_links_clickable($text){
     return preg_replace('!(((f|ht)tp(s)?://)[-a-zA-Z()0-9@:%_+.~#?&;//=]+)!i', '<a href="$1" rel="nofollow">$1</a>', $text);
 }
+
+function get_gravatar($email, $s = 80, $d = 'mm', $r = 'g', $img = false, $atts = array()) {
+	$url = get_http_or_https() . '://www.gravatar.com/avatar/';
+	$url.= md5(strtolower(trim($email)));
+	$url.= "?s=$s&d=$d&r=$r";
+	if ($img) {
+		$url = '<img src="' . $url . '"';
+		foreach ($atts as $key => $val) $url.= ' ' . $key . '="' . $val . '"';
+		$url.= ' />';
+	}
+	return $url;
+}

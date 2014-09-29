@@ -11,6 +11,8 @@ include ('library/exceptions.php');
 include ('config.php');
 
 // Library files
+include ('library/tracker.fnc.php');
+
 include ('library/functions.php');
 include ('library/presentation.fnc.php');
 include ('library/support.fnc.php');
@@ -18,8 +20,10 @@ include ('library/control.fnc.php');
 include ('library/account.fnc.php');
 include ('library/stats.fnc.php');
 include ('library/email.fnc.php');
-include ('library/tracker.fnc.php');
 include ('library/forum.fnc.php');
+include ('library/admin.fnc.php');
+include ('library/charts.fnc.php');
+include ('library/url.fnc.php');
 
 // Data mapping files
 include ('library/mappers/database.obj.php');
