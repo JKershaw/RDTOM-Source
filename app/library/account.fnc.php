@@ -79,6 +79,17 @@ function user_sign_up($req_username, $req_password, $req_email)
 		
 	// sign up
 	$mydb->add_user($req_username, $req_password, $req_email);
+
+	// wait for user to be found
+	while(!$newUser) {
+
+		$newUser = $mydb->get_user_from_name_and_password($req_username, $req_password);
+		if (!$newUser) {
+			usleep (100);
+		}
+	}
+
+	return true;
 	
 }
 
