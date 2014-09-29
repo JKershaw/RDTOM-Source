@@ -61,7 +61,7 @@ function __autoload($classname) {
 	}
 	
 	$classname = preg_replace("/[^a-z_]/", '', strtolower($classname));
-	$filename = "objects/" . $classname . ".obj.php";
+	$filename = "objects/" . $classname . ".class.php";
 	
 	include_once ($filename);
 }
