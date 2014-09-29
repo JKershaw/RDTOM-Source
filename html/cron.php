@@ -28,9 +28,6 @@ $cron_tasks = Array (
 					"function" => "rebuild_sitemap",
 					"seconds" => 86400),
 				Array (
-					"function" => "delete_old_cache_files",
-					"seconds" => 15000),
-				Array (
 					"function" => "stats_count_unique_IPs",
 					"seconds" => 3600),
 				Array (
@@ -140,30 +137,6 @@ function delete_old_usertokens()
 	global $mydb;
 	// delete tokens older than 90 days
 	$mydb->remove_old_token(gmmktime() - 7776000);
-}
-
-function delete_old_cache_files()
-{
-	
-	// create a handler for the directory
-	$handler = @opendir("../filecache");
-
-	if ($handler)
-	{
-		// open directory and walk through the filenames
-		while ($file = readdir($handler)) 
-		{
-			// if file isn't this directory or its parent, add it to the results
-			if ($file != "." && $file != "..") 
-			{
-				// get the cache, if the cache is out of date it'll be deleted
-				cache_get($file);
-			}
-		}
-
-		 // tidy up: close the handler
-		closedir($handler);		
-	}
 }
 
 function rebuild_sitemap()
