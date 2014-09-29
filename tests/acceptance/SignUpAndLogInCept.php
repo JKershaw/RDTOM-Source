@@ -25,16 +25,20 @@ $I->dontSee("Login to your account");
 $I->fillField('#signup_name', $test_name);
 $I->fillField('#signup_password', $test_password);
 $I->click('Sign up');
-$I->see('Your account has been made, please log in now ');
-
-// sign in
-$I->dontSee("If you already have an account");
-$I->see("Login to your account");
-$I->fillField('name', $test_name);
-$I->fillField('password', $test_password);
-$I->click('Login');
 
 // I'm now logged in
 $I->see('You have not answered any questions whilst logged in');
+
+// $I->see('Your account has been made, please log in now ');
+
+// // sign in
+// $I->dontSee("If you already have an account");
+// $I->see("Login to your account");
+// $I->fillField('name', $test_name);
+// $I->fillField('password', $test_password);
+// $I->click('Login');
+
+// // I'm now logged in
+// $I->see('You have not answered any questions whilst logged in');
 
 ?>

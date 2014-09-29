@@ -6,15 +6,13 @@ function user_log_in($req_username, $req_password, $remeber_me = false)
 	// log the user in if everything is fine, setting up cookies, session vars and the like
 	$user = $mydb->get_user_from_name_and_password($req_username, $req_password);
 	
-	if ($user)
-	{
-		// logged in
-		set_session('rdtom_userID', $user->get_ID());
-	}
-	else
+	if (!$user)
 	{
 		throw new exception("Name and password combination not found, please try again.");
 	}
+
+	// logged in
+	set_session('rdtom_userID', $user->get_ID());
 	
 	// does the user want to be remebered?
 	if ($remeber_me)
@@ -80,9 +78,8 @@ function user_sign_up($req_username, $req_password, $req_email)
 	// sign up
 	$mydb->add_user($req_username, $req_password, $req_email);
 
-	// wait for user to be found
-	while(!$mydb->is_user_name_taken($req_username)) {
-		sleep (1);
+	while(!$mydb->get_user_from_name_and_password($req_username, $req_password)) {
+		sleep(1);
 	}
 
 	return true;

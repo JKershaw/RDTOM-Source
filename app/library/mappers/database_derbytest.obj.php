@@ -532,7 +532,6 @@ class database_derbytest extends database
 		
 		// add the user
 		$query="
-			LOCK TABLES rdtom_users WRITE;
 			INSERT INTO rdtom_users 
 			(
 				name ,
@@ -548,9 +547,7 @@ class database_derbytest extends database
 				'" . $user_password_salt . "',  
 				'" . $user_email . "',  
 				'" . gmmktime() . "'
-			);
-			UNLOCK TABLES;
-				";
+			);";
 		
 		$this->run_multi_query($query);
 	}
