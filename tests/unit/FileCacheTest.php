@@ -68,11 +68,10 @@ class FileCache
 	}
 	
 	public function set($key, $value) {
-		$key = preg_replace("/[^a-zA-Z0-9]/", "", $key);
+		
+		$filename = $this->generateFileName($key);
 
 		$data['data'] = serialize($value);
-		
-		$filename = $this->cacheFolder . $key;
 		
 		$fh = fopen($filename, 'w');
 		
@@ -83,9 +82,8 @@ class FileCache
 	}
 	
 	public function get($key) {
-		$key = preg_replace("/[^a-zA-Z0-9]/", "", $key);
 
-		$filename = $this->cacheFolder . $key;
+		$filename = $this->generateFileName($key);
 		
 		@$fh = fopen($filename, 'r');
 		
@@ -95,5 +93,11 @@ class FileCache
 		
 		$theData = unserialize($theData);
 		return unserialize($theData['data']);
+	}
+
+	private function generateFileName($key) {
+		$key = preg_replace("/[^a-zA-Z0-9]/", "", $key);
+		$filename = $this->cacheFolder . $key . ".cache";
+		return $filename;
 	}
 }
