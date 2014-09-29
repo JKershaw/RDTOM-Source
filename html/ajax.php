@@ -8,6 +8,7 @@
 
 // include needed files
 include('../app/include.php');
+include_once("FileCache");
 
 // process and return the ajax request
 try 
@@ -294,7 +295,8 @@ function ajax_count_responses()
 
 function ajax_count_api()
 {
-	$api_calls = cache_get("api_calls");
+	$fileCache = new FileCache();
+	$api_calls = $fileCache->get("api_calls");
 	if ($api_calls)
 	{
 		return count($api_calls);
@@ -307,16 +309,17 @@ function ajax_count_api()
 
 function ajax_count_daily_responses()
 {
-	
-	$raw_data = cache_get("stats_hourly_posts");
-	$raw_data[24] = cache_get("response_count_last_hour");
+	$fileCache = new FileCache();
+	$raw_data = $fileCache->get("stats_hourly_posts");
+	$raw_data[24] = $fileCache->get("response_count_last_hour");
 	return array_sum($raw_data);
 	
 }
 
 function ajax_count_hourly_responses()
 {
-	return cache_get("response_count_last_hour");
+	$fileCache = new FileCache();
+	return $fileCache->get("response_count_last_hour");
 }
 
 function ajax_count_minutly_responses()
@@ -346,7 +349,8 @@ function ajax_count_answers()
 
 function ajax_count_unique_IPs()
 {
-	return cache_get("response_distinct_ip_count");
+	$fileCache = new FileCache();
+	return $fileCache->get("response_distinct_ip_count");
 }
 
 function ajax_count_users()
@@ -676,6 +680,7 @@ function ajax_stats_user_progress()
 
 function ajax_stats_user_section_totals()
 {
+	$fileCache = new FileCache();
 	$user_responses = return_user_responses();
 	$user_questions_sections = return_user_questions_sections();
 	
@@ -683,7 +688,7 @@ function ajax_stats_user_section_totals()
 	{
 		$data_array = process_sections_responses_into_data($user_responses, $user_questions_sections);
 	}
-	$average_responses = cache_get("last_10000_sections");
+	$average_responses = $fileCache->get("last_10000_sections");
 	
 	if ($data_array)
 	{

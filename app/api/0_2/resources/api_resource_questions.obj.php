@@ -5,12 +5,15 @@ class api_resource_questions extends api_resource
 {
 	protected function build_XML($parameters)
 	{
+
+		$fileCache = new FileCache();
+		
 		$cache_name = "questions_cache_" . md5(serialize($parameters));
 			
 		// is there a cached version?
 		if (!$parameters['nocache'])
 		{
-			$cached_questions_XML = cache_get($cache_name);
+			$cached_questions_XML = $fileCache->get($cache_name);
 		}
 		if ($cached_questions_XML)
 		{
@@ -132,7 +135,6 @@ class api_resource_questions extends api_resource
 		}
 		
 		// set the cache
-		$fileCache = new FileCache();
 		$fileCache->set($cache_name, $this->resource_XML->asXML(), 7200);
 	}
 }

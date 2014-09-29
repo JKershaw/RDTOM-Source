@@ -86,11 +86,13 @@ $api_status_codes = array(
 
 if ($url_array[1]) {
 	
+	$fileCache = new FileCache();
+	
 	// save a log of the API request
 	save_log("api", $_SERVER['REQUEST_URI']);
 	
 	// save a cache of the api request
-	$cached_api_calls = cache_get("api_calls");
+	$cached_api_calls = $fileCache->get("api_calls");
 	
 	// delete old api calls
 	if ($cached_api_calls) {
@@ -108,7 +110,6 @@ if ($url_array[1]) {
 	);
 	
 	// set the cache
-	$fileCache = new FileCache();
 	$fileCache->set("api_calls", $cached_api_calls);
 	
 	// process the request

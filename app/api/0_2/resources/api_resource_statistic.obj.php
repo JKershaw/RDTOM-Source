@@ -1,8 +1,12 @@
 <?php
+include_once("FileCache");
+
 class api_resource_statistic extends api_resource
 {
 	protected function build_XML($parameters)
 	{
+		$fileCache = new FileCache();
+
 		// name of stat goes here: 
 		$XML_newstatistic = $this->resource_XML->addChild('statistic');
 		
@@ -16,7 +20,7 @@ class api_resource_statistic extends api_resource
 			
 			// number of calls to the API in the past hour
 			case "api_calls_hourly":
-				$api_calls = cache_get("api_calls");
+				$api_calls = $fileCache->get("api_calls");
 				if ($api_calls)
 				{
 					$statistic_value = count($api_calls);
@@ -29,14 +33,14 @@ class api_resource_statistic extends api_resource
 			
 			// responses in the past 24 hours
 			case "responses_daily":
-				$raw_data = cache_get("stats_hourly_posts");
-				$raw_data[24] = cache_get("response_count_last_hour");
+				$raw_data = $fileCache->get("stats_hourly_posts");
+				$raw_data[24] = $fileCache->get("response_count_last_hour");
 				$statistic_value = array_sum($raw_data);
 			break;	
 			
 			// responses in the past 60 minutes
 			case "responses_hourly":
-				$statistic_value = cache_get("response_count_last_hour");
+				$statistic_value = $fileCache->get("response_count_last_hour");
 			break;	
 			
 			// responses in the past 60 seconds
@@ -64,7 +68,7 @@ class api_resource_statistic extends api_resource
 			
 			// total unique IPs in the responses
 			case "unique_IPs":
-				$statistic_value = cache_get("response_distinct_ip_count");
+				$statistic_value = $fileCache->get("response_distinct_ip_count");
 			break;
 			
 			// Throw an exception if ID not found

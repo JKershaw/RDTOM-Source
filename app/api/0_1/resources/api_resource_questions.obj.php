@@ -5,9 +5,13 @@ class api_resource_questions extends api_resource
 {
 	protected function build_XML($parameters)
 	{
+		$fileCache = new FileCache();
+
 		// is there a cached version?
 		$cache_name = "questions_cache_" . md5(serialize($parameters));
-		$cached_questions_XML = cache_get($cache_name);
+
+		$cached_questions_XML = $fileCache->get($cache_name);
+
 		if ($cached_questions_XML)
 		{
 			$this->resource_XML = new SimpleXMLElement($cached_questions_XML);;
@@ -66,7 +70,6 @@ class api_resource_questions extends api_resource
 		}
 		
 		// set the cache
-		$fileCache = new FileCache();
 		$fileCache->set($cache_name, $this->resource_XML->asXML(), 7200);
 	}
 }

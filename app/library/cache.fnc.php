@@ -7,10 +7,10 @@ include_once("FileCache");
 // 	$fileCache->set($key, $value, $ttl);
 // }
 
-function cache_get($key) {
-	$fileCache = new FileCache();
-	return $fileCache->get($key);
-}
+// function cache_get($key) {
+// 	$fileCache = new FileCache();
+// 	return $fileCache->get($key);
+// }
 
 function cache_delete($key) {
 	$fileCache = new FileCache();
