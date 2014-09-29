@@ -9,7 +9,7 @@ function cache_set($key, $value, $ttl = 86400) {
 
 function cache_get($key) {
 	$fileCache = new FileCache(time());
-	$fileCache->get($key);
+	return $fileCache->get($key);
 }
 
 function cache_delete($key) {
