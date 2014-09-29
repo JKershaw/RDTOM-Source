@@ -1,6 +1,6 @@
 <?php
 
-include __DIR__ . "/classes/presentation/ColourFromPercentageCalculator.class.php";
+include("ColourFromPercentageCalculator");
 
 function report_question()
 {
@@ -42,8 +42,8 @@ function report_question()
 
 function forget_remebered_questions()
 {
-	delete_session('random_questions_asked');
 	delete_session('random_questions_results');
+	delete_session('random_questions_asked');
 }
 
 function get_colour_from_percentage($perc_value)

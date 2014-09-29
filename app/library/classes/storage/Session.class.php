@@ -6,21 +6,21 @@ class Session
 	public function set($key, $value) {
 		session_start();
 		$_SESSION[$key] = $value;
-		$sessionCache[$key] = $value;
+		$this->sessionCache[$key] = $value;
 		session_write_close();
 	}
 	
 	public function get($key) {
 
-		if (isset($sessionCache[$key])) {
-			return $sessionCache[$key];
+		if (isset($this->sessionCache[$key])) {
+			return $this->sessionCache[$key];
 		}
 		
 		session_start();
 		if (isset($_SESSION[$key])) {
 			$value = $_SESSION[$key];
 		} else {
-			$value = false;
+			$value = null;
 		}
 		session_write_close();
 		
@@ -29,8 +29,8 @@ class Session
 	
 	public function forget($key) {
 		session_start();
-		$_SESSION[$key] = false;
 		unset($_SESSION[$key]);
+		unset($this->sessionCache[$key]);
 		session_write_close();
 	}
 }

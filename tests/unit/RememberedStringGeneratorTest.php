@@ -93,4 +93,14 @@ class RememberedStringGeneratorTest extends \PHPUnit_Framework_TestCase
 		$GeneratedRememberedString = $this->RememberedStringGenerator->generate($questionsAnsweredResults);
 		$this->assertEquals($GeneratedRememberedString, $ExpectedRememberedString);	
 	}
+	
+	public function testNoQuestionsAnsweredSoFalse() {
+		$ExpectedRememberedString = "";
+		
+		$questionsAnsweredResults = false;
+		
+		$GeneratedRememberedString = $this->RememberedStringGenerator->generate($questionsAnsweredResults);
+		
+		$this->assertEquals($GeneratedRememberedString, $ExpectedRememberedString);
+	}
 }

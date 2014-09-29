@@ -13,6 +13,10 @@ class RememberedStringGenerator
 	}
 	
 	public function generate($questionsAnsweredResults) {
+
+		if (!$questionsAnsweredResults) {
+			return;
+		}
 		
 		$questionsAnswered = count($questionsAnsweredResults);
 		$questionsAnsweredCorrectly = $this->calculateCorrectCount($questionsAnsweredResults);
