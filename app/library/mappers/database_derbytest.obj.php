@@ -532,7 +532,7 @@ class database_derbytest extends database
 		
 		// add the user
 		$query="
-			LOCK TABLE rdtom_users WRITE;
+			LOCK TABLES rdtom_users WRITE;
 			INSERT INTO rdtom_users 
 			(
 				name ,
