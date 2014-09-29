@@ -26,6 +26,7 @@ $I->fillField('#signup_name', $test_name);
 $I->fillField('#signup_password', $test_password);
 $I->click('Sign up');
 $I->see('Your account has been made, please log in now ');
+$I->wait(5);
 
 // sign in
 $I->dontSee("If you already have an account");
