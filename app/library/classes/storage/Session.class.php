@@ -1,13 +1,20 @@
 <?php
 class Session
 {
+	private $sessionCache;
+
 	public function set($key, $value) {
 		session_start();
 		$_SESSION[$key] = $value;
+		$sessionCache[$key] = $value;
 		session_write_close();
 	}
 	
 	public function get($key) {
+
+		if (isset($sessionCache[$key])) {
+			return $sessionCache[$key];
+		}
 		
 		session_start();
 		if (isset($_SESSION[$key])) {
