@@ -1,4 +1,7 @@
 <?php
+
+include_once __DIR__ . "/../../app/library/classes/storage/FileCache.class.php";
+
 class FileCacheTest extends \PHPUnit_Framework_TestCase
 {
 	
@@ -18,17 +21,22 @@ class FileCacheTest extends \PHPUnit_Framework_TestCase
 	}
 	
 	public function testSaveAndRetreiveMultipleValues() {
-	
+		
 		$expectedValue1 = "Testing a value1";
 		$key1 = "testKey1";
-		$expectedValue2 = "Testing a value2";
+		$expectedValue2 = array(
+			1,
+			2,
+			3,
+			4
+		);
 		$key2 = "testKey2";
-	
+		
 		$this->fileCache->set($key1, $expectedValue1);
 		$this->fileCache->set($key2, $expectedValue2);
 		$returnedValue1 = $this->fileCache->get($key1);
 		$returnedValue2 = $this->fileCache->get($key2);
-	
+		
 		$this->assertEquals($returnedValue1, $expectedValue1);
 		$this->assertEquals($returnedValue2, $expectedValue2);
 	}
@@ -44,60 +52,77 @@ class FileCacheTest extends \PHPUnit_Framework_TestCase
 		$this->assertEquals($returnedValue, $expectedValue);
 	}
 	
-
-	// Test fetch no key exists
-	// Fetch expired
-	// Delete cache
-	
-}
-
-class FileCache
-{
-	
-	private $cacheFolder;
-	private $now;
-	
-	function __construct($currentTime) {
-		$this->now = $currentTime;
-		$this->cacheFolder = __DIR__ . "/filecache/";
+	public function testSaveAndRetreiveWithInvalidKey() {
 		
-		// check if folder exists, create it if it doesn't
-		if (!is_dir($this->cacheFolder)) {
-			mkdir($this->cacheFolder);
-		}
+		$key = "This key doesn't exist";
+		$returnedValue = $this->fileCache->get($key);
+		
+		$this->assertEquals(false, $returnedValue);
 	}
 	
-	public function set($key, $value) {
+	public function testSaveAndRetreiveAndDeleteValue() {
 		
-		$filename = $this->generateFileName($key);
-
-		$data['data'] = serialize($value);
+		$expectedValue = "This is the value";
+		$key = "woahKey";
 		
-		$fh = fopen($filename, 'w');
+		$this->fileCache->set($key, $expectedValue);
+		$returnedValue = $this->fileCache->get($key);
 		
-		$serializedData = serialize($data);
-		fwrite($fh, $serializedData);
+		$this->assertEquals($returnedValue, $expectedValue);
 		
-		fclose($fh);
+		$this->fileCache->forget($key);
+		$returnedValue = $this->fileCache->get($key);
+		
+		$this->assertEquals($returnedValue, false);
 	}
 	
-	public function get($key) {
-
-		$filename = $this->generateFileName($key);
+	public function testForgetNonexistantKey() {
 		
-		@$fh = fopen($filename, 'r');
+		$key = "anotherKey, yo";
 		
-		@$theData = fread($fh, filesize($filename));
+		$this->fileCache->forget($key);
+		$returnedValue = $this->fileCache->get($key);
 		
-		fclose($fh);
-		
-		$theData = unserialize($theData);
-		return unserialize($theData['data']);
+		$this->assertEquals($returnedValue, false);
 	}
-
-	private function generateFileName($key) {
-		$key = preg_replace("/[^a-zA-Z0-9]/", "", $key);
-		$filename = $this->cacheFolder . $key . ".cache";
-		return $filename;
+	
+	public function testExpiredData() {
+	
+		$key = "this is the key";
+		$value = "here is some data";
+		$lifeSpan = 20;
+	
+		$age1FileCache = new FileCache(1);
+		$age1FileCache->set($key, $value, $lifeSpan);
+		$returnedValue = $age1FileCache->get($key);
+		$this->assertEquals($returnedValue, $value);
+	
+		$age15FileCache = new FileCache(15);
+		$returnedValue = $age15FileCache->get($key);
+		$this->assertEquals($returnedValue, $value);
+	
+		$age21FileCache = new FileCache(21);
+		$returnedValue = $age21FileCache->get($key);
+		$this->assertEquals($returnedValue, $value);
+	
+		$age22FileCache = new FileCache(22);
+		$returnedValue = $age22FileCache->get($key);
+		$this->assertEquals($returnedValue, false);
+	}
+	
+	public function testExpiredDataNoTTLGiven() {
+	
+		$key = "this is the key";
+		$value = "here is some data";
+	
+		$age1FileCache = new FileCache(1);
+		$age1FileCache->set($key, $value);
+		$returnedValue = $age1FileCache->get($key);
+		$this->assertEquals($returnedValue, $value);
+	
+		$age100000FileCache = new FileCache(100000);
+		$returnedValue = $age100000FileCache->get($key);
+		$this->assertEquals($returnedValue, false);
+	
 	}
 }
