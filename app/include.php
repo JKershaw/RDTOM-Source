@@ -25,6 +25,9 @@ include ('library/admin.fnc.php');
 include ('library/charts.fnc.php');
 include ('library/url.fnc.php');
 
+include ('library/ajax.fnc.php');
+include ('library/cron.fnc.php');
+
 // Data mapping files
 include ('library/mappers/database.obj.php');
 include ('library/mappers/database_derbytest.obj.php');

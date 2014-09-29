@@ -78,7 +78,6 @@ elseif ($_POST['formemailupdate'] == "yes")
 }
 
 // show the page
-set_up_stats_header();
 set_page_subtitle("Turn left and view your profile.");
 include("header.php"); 
 

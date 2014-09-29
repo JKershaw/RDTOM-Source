@@ -124,9 +124,6 @@ if (!$error_string && ($_POST['forgottenemailnewpasswordform'] == "yes"))
 }
 // show the page
 
-// show the stats (header info is needed, so call this now to inclue the main call later)
-set_up_stats_header();
-
 set_page_subtitle("Turn left and forget your password.");
 include("header.php"); 
 
