@@ -37,7 +37,8 @@ include ('library/mappers/test_ratings.db.fnc.php');
 
 $classesDir = array(
 	__DIR__ . '/library/classes/presentation/',
-	__DIR__ . '/library/classes/storage/'
+	__DIR__ . '/library/classes/storage/',
+	__DIR__ . '/objects/'
 );
 
 function __autoload($classname) {
@@ -59,10 +60,5 @@ function __autoload($classname) {
 			return;
 		}
 	}
-	
-	$classname = preg_replace("/[^a-z_]/", '', strtolower($classname));
-	$filename = "objects/" . $classname . ".class.php";
-	
-	include_once ($filename);
 }
 ?>

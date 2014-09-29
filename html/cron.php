@@ -14,6 +14,8 @@
  * An array holding the Cron jobs
  */
 
+include_once("FileCache");
+
 $cron_tasks = Array ( 
 				Array (
 					"function" => "stats_hourly_posts",
@@ -108,13 +110,15 @@ echo "Cron checked!";
 function stats_hourly_posts()
 {
 	global $mydb;
-	cache_set("stats_hourly_posts", $mydb->get_stats_hourly_posts(24));
+	$fileCache = new FileCache();
+	$fileCache->set("stats_hourly_posts", $mydb->get_stats_hourly_posts(24));
 }
 
 function response_count_last_hour()
 {
 	global $mydb;
-	cache_set("response_count_last_hour", $mydb->get_response_count_since(gmmktime() - 3600));
+	$fileCache = new FileCache();
+	$fileCache->set("response_count_last_hour", $mydb->get_response_count_since(gmmktime() - 3600));
 }
 
 function last_10000_sections()
@@ -128,7 +132,8 @@ function last_10000_sections()
 	if ($section_array && $recent_responses)
 	{
 		$data_array = process_sections_responses_into_data($recent_responses, $section_array);
-		cache_set("last_10000_sections", $data_array);
+		$fileCache = new FileCache();
+		$fileCache->set("last_10000_sections", $data_array);
 	}
 }
 
@@ -239,7 +244,8 @@ function rebuild_sitemap()
 function stats_count_unique_IPs()
 {
 	global $mydb;
-	cache_set("response_distinct_ip_count", $mydb->get_response_distinct_ip_count());
+	$fileCache = new FileCache();
+	$fileCache->set("response_distinct_ip_count", $mydb->get_response_distinct_ip_count());
 }
 
 function archive_responses()

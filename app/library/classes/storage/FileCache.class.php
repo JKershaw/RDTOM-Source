@@ -5,7 +5,10 @@ class FileCache
 	private $cacheFolder;
 	private $now;
 	
-	function __construct($currentTime) {
+	function __construct($currentTime = false) {
+		if (!$currentTime) {
+			$currentTime = time();
+		}
 		$this->now = $currentTime;
 		$this->cacheFolder = __DIR__ . "/filecache/";
 		

@@ -312,17 +312,6 @@ function ajax_count_daily_responses()
 	$raw_data[24] = cache_get("response_count_last_hour");
 	return array_sum($raw_data);
 	
-	/*
-	global $mydb;
-	
-	$daily_response_count = cache_get("daily_response_count");
-	if (!$daily_response_count)
-	{
-		$daily_response_count = $mydb->get_response_count_since(gmmktime() - 86400);
-		cache_set("daily_response_count", $daily_response_count, 600);
-	}
-	return $daily_response_count;*/
-	
 }
 
 function ajax_count_hourly_responses()

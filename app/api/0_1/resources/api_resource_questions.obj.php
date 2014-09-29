@@ -1,4 +1,6 @@
 <?php
+include_once("FileCache");
+
 class api_resource_questions extends api_resource
 {
 	protected function build_XML($parameters)
@@ -64,7 +66,8 @@ class api_resource_questions extends api_resource
 		}
 		
 		// set the cache
-		cache_set($cache_name, $this->resource_XML->asXML(), 7200);
+		$fileCache = new FileCache();
+		$fileCache->set($cache_name, $this->resource_XML->asXML(), 7200);
 	}
 }
 ?>

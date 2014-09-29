@@ -1,4 +1,6 @@
 <?php
+include_once("FileCache");
+
 function return_stats_user_totals()
 {
 	global $user, $mydb;
@@ -540,7 +542,9 @@ function return_user_responses()
 			$user_responses = $mydb->get_responses_from_User_ID($user->get_ID(), true);
 			$fetched_user_responses = true;
 			$cached_user_responses = $user_responses;
-			cache_set("user_responses_" . $user->get_ID(), $user_responses, 600);
+
+			$fileCache = new FileCache();
+			$fileCache->set("user_responses_" . $user->get_ID(), $user_responses, 600);
 		}
 		
 		return $cached_user_responses;
