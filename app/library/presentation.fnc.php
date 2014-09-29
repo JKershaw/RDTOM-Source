@@ -1,5 +1,5 @@
 <?php
-include_once (__DIR__ . "/classes/presentation/RememberedStringGenerator.class.php");
+include_once("RememberedStringGenerator");
 
 // presentation functions
 

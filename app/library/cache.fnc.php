@@ -1,6 +1,6 @@
 <?php
 
-include_once __DIR__ . "/classes/storage/FileCache.class.php";
+include_once("FileCache");
 
 function cache_set($key, $value, $ttl = 86400) {
 	$fileCache = new FileCache(time());

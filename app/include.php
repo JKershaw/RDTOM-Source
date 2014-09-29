@@ -35,30 +35,34 @@ include ('library/mappers/test_ratings.db.fnc.php');
 
 // Model (object) files autoload, phpMailer is also Autoloaded as used rarely
 
-// $classesDir = array(
-// 	__DIR__ . '/library/classes/presentation/',
-// 	__DIR__ . '/library/classes/storage/',
-// 	__DIR__ . '/objects/'
-// );
+$classesDir = array(
+	__DIR__ . '/library/classes/presentation/',
+	__DIR__ . '/library/classes/storage/'
+);
 
 function __autoload($classname) {
-	
 	
 	if ($classname == "PHPMailer") {
 		include_once ("library/phpmailer/class.phpmailer.php");
 		return;
 	}
-
 	
 	if (substr($classname, 0, 4) == "api_") {
 		include_once (api_resources_autoload($classname));
 		return;
 	}
-
+	
+	global $classesDir;
+	foreach ($classesDir as $directory) {
+		if (file_exists($directory . $classname . '.class.php')) {
+			require_once ($directory . $classname . '.class.php');
+			return;
+		}
+	}
+	
 	$classname = preg_replace("/[^a-z_]/", '', strtolower($classname));
-
 	$filename = "objects/" . $classname . ".obj.php";
-
+	
 	include_once ($filename);
 }
 ?>
