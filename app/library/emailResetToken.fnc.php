@@ -1,14 +1,23 @@
 <?php
 include ("Email");
 
+//TODO make this whole thing a new class; TokenResetHandler
+
 function set_up_reset_token($forgetful_user) {
 	global $mydb;
-	$email = new Email();
 	
 	$token_string = generatealphaneumericSalt(50);
 	
 	$mydb->set_password_reset_token($token_string, $forgetful_user->get_ID() , $forgetful_user->get_Email() , get_ip());
 	
+	sendTokenResetEmail($token_string, $forgetful_user);
+	
+	save_log("password_reset", "User Email: " . $forgetful_user->get_Email());
+}
+
+function sendTokenResetEmail($token_string, $forgetful_user){
+	$email = new Email();
+
 	$reset_link = get_site_URL() . "passwordreset/" . $token_string;
 	
 	$email_subject = "Roller Derby Test O'Matic password reset";
@@ -24,7 +33,4 @@ function set_up_reset_token($forgetful_user) {
 	If you didn't request to have your password reset then you can ignore this email. If you get this email a bunch of times then something is probably not right. If you're concerned about your account's security, please get in touch via contact@rollerderbytestomatic.com.";
 	
 	$email->send($forgetful_user->get_Email() , $email_subject, $email_body);
-	
-	// save a log
-	save_log("password_reset", "User Email: " . $forgetful_user->get_Email());
 }
