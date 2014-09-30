@@ -2,6 +2,7 @@
 
 include("CookieTokenHandler");
 include("Session");
+include("Email");
 
 function user_log_in($req_username, $req_password, $rememberMe = false) {
 	global $mydb, $user;
@@ -176,6 +177,7 @@ function is_logged_in() {
 
 function set_up_reset_token($forgetful_user) {
 	global $mydb;
+	$email = new Email();
 	
 	// has a token been set up in the last 5 mins? If so, error
 	
@@ -199,7 +201,7 @@ function set_up_reset_token($forgetful_user) {
 	<br />
 	If you didn't request to have your password reset then you can ignore this email. If you get this email a bunch of times then something is probably not right. If you're concerned about your account's security, please get in touch via contact@rollerderbytestomatic.com.";
 	
-	sent_auto_email($forgetful_user->get_Email() , $email_subject, $email_body);
+	$email->send($forgetful_user->get_Email(), $email_subject, $email_body);
 	
 	// save a log
 	save_log("password_reset", "User Email: " . $forgetful_user->get_Email());

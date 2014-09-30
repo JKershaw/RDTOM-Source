@@ -19,7 +19,6 @@ include ('library/support.fnc.php');
 include ('library/control.fnc.php');
 include ('library/account.fnc.php');
 include ('library/stats.fnc.php');
-include ('library/email.fnc.php');
 include ('library/forum.fnc.php');
 include ('library/admin.fnc.php');
 include ('library/charts.fnc.php');
@@ -43,6 +42,7 @@ include ('library/mappers/test_ratings.db.fnc.php');
 $classesDir = array(
 	__DIR__ . '/library/classes/presentation/',
 	__DIR__ . '/library/classes/storage/',
+	__DIR__ . '/library/classes/email/',
 	__DIR__ . '/objects/'
 );
 

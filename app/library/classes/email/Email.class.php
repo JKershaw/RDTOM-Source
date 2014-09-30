@@ -9,8 +9,12 @@ class Email
 	private $from_address;
 	private $from_name;
 	
-	function __construct($phpMail) {
-
+	function __construct($phpMail = false) {
+		
+		if (!$phpMail) {
+			$phpMail = new PHPMailer();
+		}
+		
 		global $smtp_username, $smtp_userpassword, $smtp_host, $email_from_address, $email_from_name;
 		
 		$this->phpMail = $phpMail;
