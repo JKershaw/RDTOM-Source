@@ -126,13 +126,6 @@ class database_derbytest extends database
 	{
 		settype($User_ID, "integer");
 		
-		$user = $this->get_user_from_ID($User_ID);
-		
-		if (!$user)
-		{
-			throw new exception ("No User given to responses_disassociate");
-		}
-		
 		$query = "
 		UPDATE 
 			rdtom_responses 

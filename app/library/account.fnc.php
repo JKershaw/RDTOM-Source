@@ -1,16 +1,17 @@
 <?php
-
-include("CookieTokenHandler");
-include("Session");
-include("Email");
+include ("CookieTokenHandler");
+include ("Session");
+include ("Email");
 
 function user_log_in($req_username, $req_password, $rememberMe = false) {
-	global $mydb, $user;
+	global $mydb;
 	$cookieTokenHandler = new CookieTokenHandler();
 	$session = new Session();
 	
 	// log the user in if everything is fine, setting up cookies, session vars and the like
-	$user = $mydb->get_user_from_name_and_password($req_username, $req_password);
+	set_global_user($mydb->get_user_from_name_and_password($req_username, $req_password));
+
+	$user = get_global_user();
 	
 	if (!$user) {
 		throw new exception("Name and password combination not found, please try again.");
@@ -26,7 +27,7 @@ function user_log_in($req_username, $req_password, $rememberMe = false) {
 		$token_string = generatealphaneumericSalt(100);
 		
 		// save it in the database
-		$mydb->add_token($token_string, $user->get_ID() , get_ip());
+		$mydb->add_token($token_string, get_global_user()->get_ID() , get_ip());
 		
 		// save it on the user's machine (last for a month)
 		$cookieTokenHandler->set($token_string);
@@ -34,23 +35,22 @@ function user_log_in($req_username, $req_password, $rememberMe = false) {
 }
 
 function user_log_out() {
-	global $mydb, $user;
+	global $mydb;
 	$cookieTokenHandler = new CookieTokenHandler();
 	$session = new Session();
+	$user = get_global_user();
 	
 	// delete token if one exists
 	if ($user) {
 		$mydb->remove_token($user->get_ID() , get_ip());
 	}
-
-
+	
 	$cookieTokenHandler->set("");
 	
 	// clear the user values
 	$session->forget('rdtom_userID');
 	
-	$user = false;
-	unset($user);
+	unset_global_user();
 	
 	forget_remebered_questions();
 }
@@ -103,7 +103,8 @@ function is_valid_username($req_username) {
 }
 
 function user_update_name($req_username) {
-	global $mydb, $user;
+	global $mydb;
+	$user = get_global_user();
 	
 	if (!is_logged_in()) {
 		throw new exception("You must be signed in to change your username.");
@@ -118,11 +119,12 @@ function user_update_name($req_username) {
 	$mydb->set_user_name($user->get_ID() , $req_username);
 	
 	// update the global object
-	$user = $mydb->get_user_from_ID($user->get_ID());
+	set_global_user($mydb->get_user_from_ID($user->get_ID()));
 }
 
 function user_update_email($req_email) {
-	global $mydb, $user;
+	global $mydb;
+	$user = get_global_user();
 	
 	if (!is_logged_in()) {
 		throw new exception("You must be signed in to change your email.");
@@ -141,11 +143,12 @@ function user_update_email($req_email) {
 	$mydb->set_user_email($user->get_ID() , $req_email);
 	
 	// update the global object
-	$user = $mydb->get_user_from_ID($user->get_ID());
+	set_global_user($mydb->get_user_from_ID($user->get_ID()));
 }
 
 function user_update_password($req_oldpassword, $req_newpassword) {
-	global $mydb, $user;
+	global $mydb;
+	$user = get_global_user();
 	
 	if (!is_logged_in()) {
 		throw new exception("You must be signed in to change your password.");
@@ -167,7 +170,7 @@ function user_update_password($req_oldpassword, $req_newpassword) {
 
 // to move to presentation file
 function is_logged_in() {
-	global $user;
+	$user = get_global_user();
 	if ($user) {
 		return true;
 	}
@@ -201,21 +204,21 @@ function set_up_reset_token($forgetful_user) {
 	<br />
 	If you didn't request to have your password reset then you can ignore this email. If you get this email a bunch of times then something is probably not right. If you're concerned about your account's security, please get in touch via contact@rollerderbytestomatic.com.";
 	
-	$email->send($forgetful_user->get_Email(), $email_subject, $email_body);
+	$email->send($forgetful_user->get_Email() , $email_subject, $email_body);
 	
 	// save a log
 	save_log("password_reset", "User Email: " . $forgetful_user->get_Email());
 }
 
 function set_up_logged_in_user() {
-	global $mydb, $user;
-
+	global $mydb;
+	
 	$cookieTokenHandler = new CookieTokenHandler();
 	$session = new Session();
 	
 	// do we have a session variable?
 	if ($session->get('rdtom_userID')) {
-		$user = $mydb->get_user_from_ID($session->get('rdtom_userID'));
+		set_global_user($mydb->get_user_from_ID($session->get('rdtom_userID')));
 	} elseif ($cookieTokenHandler->get()) {
 		
 		// is it valid?
@@ -223,14 +226,15 @@ function set_up_logged_in_user() {
 		if ($tmp_user) {
 			
 			// we have a valid token, so remeber the user
-			$user = $tmp_user;
+			set_global_user($tmp_user);
+			$user = get_global_user();
 			$session->set('rdtom_userID', $user->get_ID());
 		}
 	}
 }
 
 function is_admin() {
-	global $user;
+	$user = get_global_user();
 	if ($user) {
 		if (($user->get_Name() == "Sausage Roller") || ($user->get_Name() == "Laddie")) {
 			return true;
@@ -238,3 +242,20 @@ function is_admin() {
 	}
 	return false;
 }
+
+function set_global_user($userToSet){
+	global $user;
+	$user = $userToSet;
+}
+
+function unset_global_user(){
+	global $user;
+	$user = false;
+	unset($user);
+}
+
+function get_global_user(){
+	global $user;
+	return $user
+}
+

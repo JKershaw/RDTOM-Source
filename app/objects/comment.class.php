@@ -57,7 +57,7 @@ class comment
 	public function get_author_name()
 	{
 		global $mydb;
-		$user = $mydb->get_user_from_ID($this->User_ID);
-		return $user->get_Name();
+		$authorUser = $mydb->get_user_from_ID($this->User_ID);
+		return $authorUser->get_Name();
 	}
 }
