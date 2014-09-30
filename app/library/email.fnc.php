@@ -5,28 +5,18 @@ function sent_auto_email($to_email, $subject, $body) {
 	$mail = new PHPMailer();
 	
 	$mail->IsSMTP();
-	 // set mailer to use SMTP
 	
 	$mail->Host = $smtp_host;
-	
-	// specify main and backup server
 	$mail->SMTPAuth = true;
-	
-	// turn on SMTP authentication
 	$mail->Username = $smtp_username;
-	
-	// SMTP username
 	$mail->Password = $smtp_userpassword;
-	
-	// SMTP password
 	
 	$mail->From = $email_from_address;
 	$mail->FromName = $email_from_name;
-	
-	$mail->AddAddress($to_email);
-	
+
 	$mail->IsHTML(true);
 	
+	$mail->AddAddress($to_email);
 	$mail->Subject = $subject;
 	$mail->Body = $body;
 	

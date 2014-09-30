@@ -226,3 +226,13 @@ function set_up_logged_in_user() {
 		}
 	}
 }
+
+function is_admin() {
+	global $user;
+	if ($user) {
+		if (($user->get_Name() == "Sausage Roller") || ($user->get_Name() == "Laddie")) {
+			return true;
+		}
+	}
+	return false;
+}

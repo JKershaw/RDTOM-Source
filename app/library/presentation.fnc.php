@@ -15,16 +15,6 @@ function is_random_question() {
 	return $is_question && $question && $is_random_question;
 }
 
-function is_admin() {
-	global $user;
-	if ($user) {
-		if (($user->get_Name() == "Sausage Roller") || ($user->get_Name() == "Laddie")) {
-			return true;
-		}
-	}
-	return false;
-}
-
 // set functions
 function set_page_title($req_title) {
 	global $page_title;
