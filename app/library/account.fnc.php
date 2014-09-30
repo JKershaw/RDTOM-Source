@@ -256,6 +256,6 @@ function unset_global_user(){
 
 function get_global_user(){
 	global $user;
-	return $user
+	return $user;
 }
 
