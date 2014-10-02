@@ -28,7 +28,7 @@ class ResetPasswordTokenHandler
 		$this->randomStringGenerator = $randomStringGenerator;
 	}
 	
-	public function handle($forgetfulUser) {
+	public function setUp($forgetfulUser) {
 
 		$token = $this->randomStringGenerator->generate(50);
 

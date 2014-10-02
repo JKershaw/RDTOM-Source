@@ -14,6 +14,7 @@
  * 4. /passwordreset/[code] $_POST['forgottenemailnewpasswordform']
  *
 */
+include ("ResetPasswordTokenHandler");
 
 if ($url_array[1]) {
 	
@@ -54,7 +55,8 @@ if (!$error_string && ($_POST['forgottenemailform'] == "yes")) {
 		// function to save the reset token in the database & email the user
 		if ($forgetful_user) {
 			try {
-				set_up_reset_token($forgetful_user);
+				$resetPasswordTokenHandler = new ResetPasswordTokenHandler($mydb);
+				$resetPasswordTokenHandler->setUp($forgetfulUser);
 			}
 			catch(Exception $e) {
 				$error_string = "Sorry, we were not able to send you an email with your password rest info in. This could be caused by you not registering an email address on sign up (and, to be fair, the email bit is optional). If you think your account might not have an email address associated, send a message to contact@rollerderbytestomatic.com and we can sort it out.";
@@ -111,6 +113,7 @@ if (!$url_array[1]) {
 		
 		// step 1
 		
+		
 ?>
 
 		<h3>To have your password reset, please enter your email address or user name. You'll be emailed details on what to do next.</h3>
@@ -132,6 +135,7 @@ if (!$url_array[1]) {
 		
 		// step 2
 		
+		
 ?>
 		<h3>An email has been sent with instructions on how to reset your password.</h3>
 		
@@ -145,6 +149,7 @@ if (!$url_array[1]) {
 		
 		// step 3
 		// $url_array[1] is the password reset token
+		
 		
 ?>
 		<h3>Please enter your new password:</h3>
@@ -172,6 +177,7 @@ if (!$url_array[1]) {
 	} else {
 		
 		// step 4
+		
 		
 ?>
 		<h3>Your password has been reset!</h3>

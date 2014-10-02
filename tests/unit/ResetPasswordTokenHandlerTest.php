@@ -14,7 +14,7 @@ class ResetPasswordTokenHandlerTest extends \PHPUnit_Framework_TestCase
 		$siteURL = "http://test/";
 		
 		$resetPasswordTokenHandler = new ResetPasswordTokenHandler($fakeMydb, $siteURL, $fakeEmail, $fakeRandomStringGenerator);
-		$resetPasswordTokenHandler->handle($forgetfulUser);
+		$resetPasswordTokenHandler->setUp($forgetfulUser);
 		
 		// Assert that an email was sent, so we send in a stub of an email
 		$this->assertEquals($fakeEmail->sent, true);
