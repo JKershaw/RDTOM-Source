@@ -1,10 +1,11 @@
-<?php 
+<?php
+
 /*
  * /test 			= set parameters
  * /test/generate 	= generate a random test
  * /test/build 		= make test
  * /test/[number] 	= load saved test
- */
+*/
 
 /*
  * Select if you want an interactive test or not
@@ -12,27 +13,31 @@
  * Have "show answers" or "test complete" button
  * Mark questions as right or wrong, adjust question formatting to fit
  * Fill in all values at the top of the page.
- */
+*/
 
 // display the page
-include("header.php");
+include ("header.php");
+include ("RandomStringGenerator");
 
-if (!$url_array[1])
-{
+if (!$url_array[1]) {
+	
 	// show the parameter selection form
-	?>
+	
+?>
 	
 	<p>Click the button to randomly generate an online rules test with its difficulty balanced to be similar to the <a href="http://wftda.com/resources/wftda-rules-test.pdf" >WFTDA's sample test</a>.</p>
 	
 	<p>
-		<a class="button mobilebutton" href="<?php echo get_site_URL()?>test/generate/?d=wftda&n=45&p=80&o=interactiveHTML" >Generate Rules Test</a>
+		<a class="button mobilebutton" href="<?php
+	echo get_site_URL() ?>test/generate/?d=wftda&n=45&p=80&o=interactiveHTML" >Generate Rules Test</a>
 	</p>
 	
 	
 	<p id="test_customisation_link"><a onclick="$('#test_customisation_link').hide();$('#test_customisation').show()">Customise the test</a></p>
 	
 	<div id="test_customisation" style="display:none">
-		<form id="submittestparameters" name="submittestparameters" method="get" action="<?php echo get_site_URL()?>test/generate/">
+		<form id="submittestparameters" name="submittestparameters" method="get" action="<?php
+	echo get_site_URL() ?>test/generate/">
 	
 		<p><strong>Difficulty</strong></p>
 		<p>
@@ -103,57 +108,52 @@ if (!$url_array[1])
 		</form>
 	
 	</div>
-	<?php 
-}
-elseif ($url_array[1] == "builder")
-{
-	if (is_logged_in())
-	{
-		if ($url_array[2])
-		{
+	<?php
+} elseif ($url_array[1] == "builder") {
+	if (is_logged_in()) {
+		if ($url_array[2]) {
+			
+			$randomStringGenerator = new RandomStringGenerator();
+			$randomHash = $randomStringGenerator->generate(100);
+			
 			// editor
-			if ($url_array[2] != "new")
-			{
+			if ($url_array[2] != "new") {
 				$test = get_test_from_ID($url_array[2]);
+				
 				// is the user the author?
-				if (($user->get_ID() != $test->get_Author_ID()) && !is_admin())
-				{
-					throw new exception ("You must be the author of the test in order to edit it");
+				if (($user->get_ID() != $test->get_Author_ID()) && !is_admin()) {
+					throw new exception("You must be the author of the test in order to edit it");
+				}
+			} else {
+				
+				// we have a new test, check for existing parameters for the new test
+				if ($_REQUEST['n']) {
+					$parameters = Array(
+						'number_of_questions' => $_REQUEST['n'],
+						'difficulty' => $_REQUEST['d'],
+						'pass_percentage' => $_REQUEST['p'],
+						'output_format' => $_REQUEST['o']
+					);
+					
+					// optional parameters
+					// specific questions
+					if ($_REQUEST['q']) {
+						$parameters['question_IDs'] = explode(".", $_REQUEST['q']);
+					}
+					
+					// seed
+					if ($_REQUEST['s']) {
+						$parameters['seed'] = $_REQUEST['s'];
+					}
+					
+					// get the test
+					$test = get_test_from_parameters($parameters);
 				}
 			}
-            else
-            {
-                // we have a new test, check for existing parameters for the new test
-                if ($_REQUEST['n'])
-                {
-                    $parameters = Array (
-                        'number_of_questions' => $_REQUEST['n'],
-                        'difficulty' => $_REQUEST['d'],
-                        'pass_percentage' => $_REQUEST['p'],
-                        'output_format' => $_REQUEST['o']
-                    );
-
-                    // optional parameters
-                    // specific questions
-                    if ($_REQUEST['q'])
-                    {
-                        $parameters['question_IDs'] = explode(".", $_REQUEST['q']);
-                    }
-
-                    // seed
-                    if ($_REQUEST['s'])
-                    {
-                        $parameters['seed'] = $_REQUEST['s'];
-                    }
-
-                    // get the test
-                    $test = get_test_from_parameters($parameters);
-
-                }
-            }
-			?>
+?>
 			
-		<p><a href="<?php echo get_site_URL(); ?>test/builder/">Back to tests overview</a></p>
+		<p><a href="<?php
+			echo get_site_URL(); ?>test/builder/">Back to tests overview</a></p>
 		<h3>Test Editor</h3>
 		<div id="test_builder_wrap" style="width: 900px; border: 1px solid #AAA; overflow: auto;">
 			<div id="test_builder_questions" style="width:440px; float:left; border: 1px solid #AAA; overflow: auto; margin:2px; padding:2px;  min-height:175px;">
@@ -161,14 +161,29 @@ elseif ($url_array[1] == "builder")
 				<p style="text-align: center; margin: 10px;"><a class="button mobilebutton" onclick="save_test();" id="button_save">Save</a></p>
 				<p id="last_saved" class="small_p" style="display:none; text-align:center;"></p>
 				
-				<p><strong>Title</strong><br /><input type="text" id="test_title" name="test_title" style="font-size: 20px; width: 90%;" value="<?php if ($test) { echo htmlentities(stripslashes($test->get_Title())); } ?>"/></p>
+				<p><strong>Title</strong><br /><input type="text" id="test_title" name="test_title" style="font-size: 20px; width: 90%;" value="<?php
+			if ($test) {
+				echo htmlentities(stripslashes($test->get_Title()));
+			} ?>"/></p>
 				
-				<p><strong>Description</strong><br /><textarea id="test_description" style="width:90%" name="test_description" rows="5"><?php if ($test) { echo stripslashes($test->get_Description()); } ?></textarea></p>
+				<p><strong>Description</strong><br /><textarea id="test_description" style="width:90%" name="test_description" rows="5"><?php
+			if ($test) {
+				echo stripslashes($test->get_Description());
+			} ?></textarea></p>
 				
 				<p>
-					<input type="radio" name="test_status" value="draft" <?php if (($test && ($test->get_Status() == "draft")) || !$test) { echo 'checked="checked"'; } ?>>Draft - visible only to you<br />
-					<input type="radio" name="test_status" value="private" <?php if ($test && ($test->get_Status() == "private")) { echo 'checked="checked"'; } ?>>Private - visible only to people with a link<br />
-					<input type="radio" name="test_status" value="public" <?php if ($test && ($test->get_Status() == "public")) { echo 'checked="checked"'; } ?>>Public - visible to everyone<br />
+					<input type="radio" name="test_status" value="draft" <?php
+			if (($test && ($test->get_Status() == "draft")) || !$test) {
+				echo 'checked="checked"';
+			} ?>>Draft - visible only to you<br />
+					<input type="radio" name="test_status" value="private" <?php
+			if ($test && ($test->get_Status() == "private")) {
+				echo 'checked="checked"';
+			} ?>>Private - visible only to people with a link<br />
+					<input type="radio" name="test_status" value="public" <?php
+			if ($test && ($test->get_Status() == "public")) {
+				echo 'checked="checked"';
+			} ?>>Public - visible to everyone<br />
 				</p>
 				
 				<p><strong>Questions</strong> <i>- drag and drop to reorder</i></p>
@@ -193,10 +208,20 @@ elseif ($url_array[1] == "builder")
 		// the hidden parameters of the test
 		
 		// ID, if -1 it means we're unsaved
-		var test_id = <?php if ($test) { echo $test->get_ID(); } else { echo -1; }?>;
+		var test_id = <?php
+			if ($test) {
+				echo $test->get_ID();
+			} else {
+				echo -1;
+			} ?>;
 
 		// hash that goes at the end of the link for private links
-		var link_hash = "<?php if ($test) { echo $test->get_link_hash(); } else { echo generateSalt(100); }?>";
+		var link_hash = "<?php
+			if ($test) {
+				echo $test->get_link_hash();
+			} else {
+				echo $randomHash;
+			} ?>";
 		
 		$("#search_string").keypress(function(event) {
 		    if (event.which == 13) {
@@ -214,7 +239,8 @@ elseif ($url_array[1] == "builder")
 		  
 		function question_search()
 		{
-			load_questions_given_URI('<?php echo get_site_URL() ?>api/0.2/json/questions/?developer=RDTOM&application=testbuilderpage&search=' + $("#search_string").val());
+			load_questions_given_URI('<?php
+			echo get_site_URL() ?>api/0.2/json/questions/?developer=RDTOM&application=testbuilderpage&search=' + $("#search_string").val());
 		}
 		  
 		function questions_from_difficulty(difficulty)
@@ -222,13 +248,16 @@ elseif ($url_array[1] == "builder")
 			switch(difficulty)
 			{
 				case "beginner":
-					load_questions_given_URI('<?php echo get_site_URL() ?>api/0.2/json/questions/?developer=RDTOM&application=testbuilderpage&search=difficulty:beginner');
+					load_questions_given_URI('<?php
+			echo get_site_URL() ?>api/0.2/json/questions/?developer=RDTOM&application=testbuilderpage&search=difficulty:beginner');
 					break;
 				case "intermediate":
-					load_questions_given_URI('<?php echo get_site_URL() ?>api/0.2/json/questions/?developer=RDTOM&application=testbuilderpage&search=difficulty:intermediate');
+					load_questions_given_URI('<?php
+			echo get_site_URL() ?>api/0.2/json/questions/?developer=RDTOM&application=testbuilderpage&search=difficulty:intermediate');
 					break;
 				case "expert":
-					load_questions_given_URI('<?php echo get_site_URL() ?>api/0.2/json/questions/?developer=RDTOM&application=testbuilderpage&search=difficulty:expert');
+					load_questions_given_URI('<?php
+			echo get_site_URL() ?>api/0.2/json/questions/?developer=RDTOM&application=testbuilderpage&search=difficulty:expert');
 					break;
 			}
 		}
@@ -660,99 +689,94 @@ elseif ($url_array[1] == "builder")
 		}
 
 
-		<?php 
-		if ($test) {
-			// load the questions for a given test
-			if ($test->get_Questions())
-			{
-				// get the question
-				foreach ($test->get_Questions() as $question)
-				{
-					// order all the possible answers with the chosen ones first 
-					$chosen_answers = $test->get_Answers($question->get_ID());
+		<?php
+			if ($test) {
+				
+				// load the questions for a given test
+				if ($test->get_Questions()) {
 					
-					$all_answers = $question->get_all_Answers();
-					
-					$unchosen_answers = Array();
-					$answer_objects = Array();
-					
-					// get the unchosen answers
-					foreach ($all_answers as $all_answer)
-					{
-						if ($chosen_answers)
-						{
-							foreach ($chosen_answers as $chosen_answer)
-							{
-								// if we have found an All Answer which is a hosen answer, skip
-								if ($all_answer->get_ID() == $chosen_answer->get_ID())
-								{
-									continue 2;
+					// get the question
+					foreach ($test->get_Questions() as $question) {
+						
+						// order all the possible answers with the chosen ones first
+						$chosen_answers = $test->get_Answers($question->get_ID());
+						
+						$all_answers = $question->get_all_Answers();
+						
+						$unchosen_answers = Array();
+						$answer_objects = Array();
+						
+						// get the unchosen answers
+						foreach ($all_answers as $all_answer) {
+							if ($chosen_answers) {
+								foreach ($chosen_answers as $chosen_answer) {
+									
+									// if we have found an All Answer which is a hosen answer, skip
+									if ($all_answer->get_ID() == $chosen_answer->get_ID()) {
+										continue 2;
+									}
 								}
 							}
+							
+							$unchosen_answers[] = $all_answer;
 						}
 						
-						$unchosen_answers[] = $all_answer;
-					}
-					
-					// we ahve the answers for the question, so we can now build the object
-					if($chosen_answers)
-					foreach ($chosen_answers as $chosen_answer)
-					{
-						if ($chosen_answer->is_correct())
-						{
-							$correct = "true";
-						}
-						else
-						{
-							$correct = "false";
+						// we ahve the answers for the question, so we can now build the object
+						if ($chosen_answers) foreach ($chosen_answers as $chosen_answer) {
+							if ($chosen_answer->is_correct()) {
+								$correct = "true";
+							} else {
+								$correct = "false";
+							}
+							
+							$answer_objects[] = "chosen:true, correct:\"" . $correct . "\", id: \"" . $chosen_answer->get_ID() . "\", text: \"" . addslashes($chosen_answer->get_Text()) . "\"";
 						}
 						
-						$answer_objects[] = "chosen:true, correct:\"" . $correct . "\", id: \"" . $chosen_answer->get_ID() ."\", text: \"" . addslashes($chosen_answer->get_Text()) ."\"";
-					}
-					
-					if ($unchosen_answers)
-					foreach ($unchosen_answers as $unchosen_answer)
-					{
-						if ($unchosen_answer->is_correct())
-						{
-							$correct = "true";
-						}
-						else
-						{
-							$correct = "false";
+						if ($unchosen_answers) foreach ($unchosen_answers as $unchosen_answer) {
+							if ($unchosen_answer->is_correct()) {
+								$correct = "true";
+							} else {
+								$correct = "false";
+							}
+							
+							$answer_objects[] = "chosen:false, correct:\"" . $correct . "\", id: \"" . $unchosen_answer->get_ID() . "\", text: \"" . addslashes($unchosen_answer->get_Text()) . "\"";
 						}
 						
-						$answer_objects[] = "chosen:false, correct:\"" . $correct . "\", id: \"" . $unchosen_answer->get_ID() ."\", text: \"" . addslashes($unchosen_answer->get_Text()) ."\"";
-					}
-					
-					$answers_object = "answers: {answer: [{" . implode("}, {", $answer_objects) . "}]}";
-					
-					// the question object
-					//preg_replace('/(\r\n|\n|\r)/','<br/>',addslashes($question->get_Text()))
-
-					$question_object = "{id: \"" . $question->get_ID() . "\", text: \"" . addslashes($question->get_Text()) . "\", sections: {section:\"" . addslashes($question->get_Section()) . "\"}, " . $answers_object . "}";
-					
-					echo "
+						$answers_object = "answers: {answer: [{" . implode("}, {", $answer_objects) . "}]}";
+						
+						// the question object
+						//preg_replace('/(\r\n|\n|\r)/','<br/>',addslashes($question->get_Text()))
+						
+						$question_object = "{id: \"" . $question->get_ID() . "\", text: \"" . addslashes($question->get_Text()) . "\", sections: {section:\"" . addslashes($question->get_Section()) . "\"}, " . $answers_object . "}";
+						
+						echo "
 					
 					question = " . $question_object . ";
 					console.debug(question);
 					append_question_to_test(question, true);";
-				} // foreach question
-			}// if there are questions
-		} // if there's a test
-		?>
+					}
+					 // foreach question
+					
+				}
+				 // if there are questions
+				
+			}
+			 // if there's a test
+			
+?>
 		
 		</script>			
 			
 			
-			<?php 
-		}
-		else
-		{
+			<?php
+		} else {
+			
 			// overview
-			?>
+			
+?>
 			<h3>Test Builder</h3>
-			<p>For feedback, feature requests, questions and bug reports please <a href="<?php echo get_site_URL()?>forum">visit the forum</a>. I take no responsibility for anything you choose to do with these tests.</p>
+			<p>For feedback, feature requests, questions and bug reports please <a href="<?php
+			echo get_site_URL() ?>forum">visit the forum</a>. I take no responsibility for anything you choose to do with these tests.</p>
 			
 			<h3>My tests</h3>
 			<p>
@@ -764,25 +788,20 @@ elseif ($url_array[1] == "builder")
 						<th style="text-align:center">Completes</th>
 						<th style="text-align:center">Rating</th>
 					</tr>
-					<?php 
-					$tests = get_tests_from_Author_ID($user->get_ID());
-					if ($tests)
-					{
-						foreach ($tests as $tmp_test)
-						{
-							if ($tmp_test->get_Average_Rating() > 0)
-							{
-								$average_rating = number_format($tmp_test->get_Average_Rating(), 1);
-							}
-							else
-							{
-								$average_rating = "-";
-							}
-							
-							echo "
+					<?php
+			$tests = get_tests_from_Author_ID($user->get_ID());
+			if ($tests) {
+				foreach ($tests as $tmp_test) {
+					if ($tmp_test->get_Average_Rating() > 0) {
+						$average_rating = number_format($tmp_test->get_Average_Rating() , 1);
+					} else {
+						$average_rating = "-";
+					}
+					
+					echo "
 							<tr style=\"padding: 5px\">
 								<td>
-									<a href=\"" . get_site_URL() . "test/builder/" . $tmp_test->get_ID() . "\">" . htmlentities(stripslashes($tmp_test->get_Title()))  . "</a> 
+									<a href=\"" . get_site_URL() . "test/builder/" . $tmp_test->get_ID() . "\">" . htmlentities(stripslashes($tmp_test->get_Title())) . "</a> 
 								</td>
 								<td style=\"text-align:center\">
 									<a href=\"" . $tmp_test->get_test_URL() . "\">" . htmlentities(stripslashes($tmp_test->get_Status())) . "</a>
@@ -792,33 +811,29 @@ elseif ($url_array[1] == "builder")
 								<td style=\"text-align:center\">" . number_format($tmp_test->get_Complete_Count()) . "</td>
 								<td style=\"text-align:center\">" . $average_rating . "</td>
 							</tr>";
-						}
-					}
-					?>
+				}
+			}
+?>
 				</table>
 			</p>
-			<p><a class="button mobilebutton" href="<?php echo get_site_URL(); ?>test/builder/new">Make a new test</a></p>
-			<?php 
+			<p><a class="button mobilebutton" href="<?php
+			echo get_site_URL(); ?>test/builder/new">Make a new test</a></p>
+			<?php
 		}
-		?>
+?>
 		
 		
 		
 		
-		<?php 
-	}
-	else
-	{
-		?>
+		<?php
+	} else {
+?>
 		<p>You must be logged in to build a test.</p>
-		<?php 
+		<?php
 	}
-}
-elseif ($url_array[1] == "generate")
-{
-	if ($_REQUEST['n'])
-	{
-		$parameters = Array (
+} elseif ($url_array[1] == "generate") {
+	if ($_REQUEST['n']) {
+		$parameters = Array(
 			'number_of_questions' => $_REQUEST['n'],
 			'difficulty' => $_REQUEST['d'],
 			'pass_percentage' => $_REQUEST['p'],
@@ -827,74 +842,59 @@ elseif ($url_array[1] == "generate")
 		
 		// optional parameters
 		// specific questions
-		if ($_REQUEST['q'])
-		{
+		if ($_REQUEST['q']) {
 			$parameters['question_IDs'] = explode(".", $_REQUEST['q']);
 		}
 		
 		// seed
-		if ($_REQUEST['s'])
-		{
+		if ($_REQUEST['s']) {
 			$parameters['seed'] = $_REQUEST['s'];
 		}
-		
 		
 		// get the test
 		$test = get_test_from_parameters($parameters);
 		
 		// display the test
 		echo $test->get_formatted_output();
-	}
-	else
-	{
+	} else {
 		echo "<p>You need to give details on the kind of test you would like to generate.</p>
 		<p><a href=\"" . get_site_URL() . "test/\">Click here to generate a Rules Test</a></p>";
 	}
+} else {
 	
-
-}
-else
-{
 	// get the test
-	try 
-	{
+	try {
 		$test = get_test_from_ID($url_array[1]);
-	
+		
 		// can it be viewed?
-		if ($test->get_Status() == "draft")
-		{
-			if (is_logged_in() && ($user->get_ID() == $test->get_Author_ID()))
-			{
+		if ($test->get_Status() == "draft") {
+			if (is_logged_in() && ($user->get_ID() == $test->get_Author_ID())) {
+				
 				// display the test
 				echo $test->get_formatted_output($_REQUEST['o']);
+			} else {
+				echo "<p>This test is set to Draft. Only the Author can view it.</p>";
 			}
-			else 
-			{
-				echo"<p>This test is set to Draft. Only the Author can view it.</p>";
-			}
-		}
-		elseif ($test->get_Status() == "private")
-		{
+		} elseif ($test->get_Status() == "private") {
+			
 			// increase the view count
 			$test->set_Views_Count($test->get_Views_Count() + 1);
 			set_test($test);
 			
 			// use strlower as the URL is always converted to lower case
-			if ((is_logged_in() && ($user->get_ID() == $test->get_Author_ID())) || (strtolower($url_array[2]) == strtolower($test->get_link_hash())))
-			{
+			if ((is_logged_in() && ($user->get_ID() == $test->get_Author_ID())) || (strtolower($url_array[2]) == strtolower($test->get_link_hash()))) {
+				
 				// display the test
 				echo $test->get_formatted_output($_REQUEST['o']);
+			} else {
+				echo "<p>This test is set to Private. You can only view the test if you have the private link.</p>";
 			}
-			else 
-			{
-				echo"<p>This test is set to Private. You can only view the test if you have the private link.</p>";
-				
-			}
+			
 			// display the test
 			
-		}
-		else
-		{
+			
+		} else {
+			
 			// increase the view count
 			$test->set_Views_Count($test->get_Views_Count() + 1);
 			set_test($test);
@@ -902,13 +902,10 @@ else
 			// display the test
 			echo $test->get_formatted_output($_REQUEST['o']);
 		}
-	
-	} 
-	catch (Exception $e) 
-	{
-		echo"<p>Sorry, we couldn't find your test. please check your link.</p>";
 	}
-
+	catch(Exception $e) {
+		echo "<p>Sorry, we couldn't find your test. please check your link.</p>";
+	}
 }
-include("footer.php");
+include ("footer.php");
 ?>

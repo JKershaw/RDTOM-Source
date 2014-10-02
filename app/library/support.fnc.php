@@ -5,8 +5,6 @@
  * These are the functions which are essentially misc, and often not written by me
  */
 
-include("RandomStringGenerator");
-
 function get_average_of_array($tmp_raw_data, $float_width)
 {
 	
@@ -86,10 +84,5 @@ function formatXmlString($xml) {
   endwhile; 
   
   return $result;
-}
-
-function generateSalt($max = 50) {
-	$randomStringGenerator = new RandomStringGenerator();
-	return $randomStringGenerator->generate($max);
 }
 ?>

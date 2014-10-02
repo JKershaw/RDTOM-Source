@@ -3,6 +3,8 @@
  * A database object for dealing specifically with the Roller Derby Test O'Matic database
  */
 
+include("RandomStringGenerator");
+
 class database_derbytest extends database
 {
 
@@ -518,7 +520,8 @@ class database_derbytest extends database
 	
 	public function add_user($req_name, $req_password, $req_email)
 	{
-		$user_password_salt = generateSalt();
+		$randomStringGenerator = new RandomStringGenerator();
+		$user_password_salt = $randomStringGenerator->generate(50);
 		$user_password_hash = $this->get_user_password_hash_from_password($req_password, $user_password_salt);
 		$user_name = $this->mysql_res($req_name);
 		$user_email = $this->mysql_res($req_email);
@@ -547,7 +550,8 @@ class database_derbytest extends database
 	
 	public function set_user_password($req_user_ID, $req_password)
 	{
-		$user_password_salt = generateSalt();
+		$randomStringGenerator = new RandomStringGenerator();
+		$user_password_salt = $randomStringGenerator->generate(50);
 		$user_password_hash = $this->get_user_password_hash_from_password($req_password, $user_password_salt);
 		settype($req_user_ID, "integer");
 		
