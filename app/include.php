@@ -23,7 +23,6 @@ include ('library/forum.fnc.php');
 include ('library/admin.fnc.php');
 include ('library/charts.fnc.php');
 include ('library/url.fnc.php');
-include ('library/emailResetToken.fnc.php');
 
 include ('library/ajax.fnc.php');
 include ('library/cron.fnc.php');

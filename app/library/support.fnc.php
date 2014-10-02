@@ -89,10 +89,6 @@ function formatXmlString($xml) {
 }
 
 function generateSalt($max = 50) {
-	return generatealphaneumericSalt($max);
-}
-
-function generatealphaneumericSalt($max = 50) {
 	$randomStringGenerator = new RandomStringGenerator();
 	return $randomStringGenerator->generate($max);
 }

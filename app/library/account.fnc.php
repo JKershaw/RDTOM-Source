@@ -23,7 +23,7 @@ function user_log_in($req_username, $req_password, $rememberMe = false) {
 	if ($rememberMe) {
 		
 		// generate token
-		$token_string = generatealphaneumericSalt(100);
+		$token_string = generateSalt(100);
 		
 		// save it in the database
 		$mydb->add_token($token_string, get_global_user()->get_ID() , get_ip());

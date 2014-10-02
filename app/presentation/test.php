@@ -196,7 +196,7 @@ elseif ($url_array[1] == "builder")
 		var test_id = <?php if ($test) { echo $test->get_ID(); } else { echo -1; }?>;
 
 		// hash that goes at the end of the link for private links
-		var link_hash = "<?php if ($test) { echo $test->get_link_hash(); } else { echo generatealphaneumericSalt(100);; }?>";
+		var link_hash = "<?php if ($test) { echo $test->get_link_hash(); } else { echo generateSalt(100); }?>";
 		
 		$("#search_string").keypress(function(event) {
 		    if (event.which == 13) {
