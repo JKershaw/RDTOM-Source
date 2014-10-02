@@ -17,17 +17,16 @@ class ResetPasswordTokenHandler
 		$this->siteURL = $siteURL;
 	}
 	
-	public function sendPasswordResetToken($forgetfulUser, $token) {
-
-		// update database
-		$this->mydb->set_password_reset_token($token, $forgetfulUser->get_ID() , $forgetfulUser->get_Email());
-
-		// send email
-		$this->sendTokenResetEmail($token, $forgetfulUser);
-
+	public function handle($forgetfulUser, $token) {
+		$this->updateDatabase($forgetfulUser, $token);
+		$this->sendEmail($forgetfulUser, $token);
 	}
 	
-	private function sendTokenResetEmail($token, $forgetfulUser) {
+	private function updateDatabase($forgetfulUser, $token) {
+		$this->mydb->set_password_reset_token($token, $forgetfulUser->get_ID() , $forgetfulUser->get_Email());
+	}
+	
+	private function sendEmail($forgetfulUser, $token) {
 		
 		$reset_link = $this->siteURL . "passwordreset/" . $token;
 		

@@ -10,6 +10,6 @@ function set_up_reset_token($forgetfulUser) {
 	
 	$token = generatealphaneumericSalt(50);
 
-	$resetPasswordTokenHandler->sendPasswordResetToken($forgetfulUser, $token);
+	$resetPasswordTokenHandler->handle($forgetfulUser, $token);
 	
 }

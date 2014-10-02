@@ -13,7 +13,7 @@ class ResetPasswordTokenHandlerTest extends \PHPUnit_Framework_TestCase
 		$token_string = "3";
 
 		$resetPasswordTokenHandler = new ResetPasswordTokenHandler($fakeMydb, $siteURL, $fakeEmail);
-		$resetPasswordTokenHandler->sendPasswordResetToken($forgetfulUser, $token_string);
+		$resetPasswordTokenHandler->handle($forgetfulUser, $token_string);
 		
 		// Assert that an email was sent, so we send in a stub of an email
 		$this->assertEquals($fakeEmail->sent, true);
