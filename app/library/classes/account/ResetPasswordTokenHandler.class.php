@@ -1,23 +1,33 @@
 <?php
 include_once (__DIR__ . "/../email/Email.class.php");
+include_once (__DIR__ . "/../misc/RandomStringGenerator.class.php");
 
 class ResetPasswordTokenHandler
 {
 	private $email;
 	private $mydb;
+	private $randomStringGenerator;
 	
-	function __construct($mydb, $siteURL, $email = false) {
+	function __construct($mydb, $siteURL, $email = false, $randomStringGenerator = false) {
 		
 		if (!$email) {
 			$email = new Email();
+		}
+
+		if (!$randomStringGenerator) {
+			$randomStringGenerator = new RandomStringGenerator();
 		}
 		
 		$this->email = $email;
 		$this->mydb = $mydb;
 		$this->siteURL = $siteURL;
+		$this->randomStringGenerator = $randomStringGenerator;
 	}
 	
-	public function handle($forgetfulUser, $token) {
+	public function handle($forgetfulUser) {
+
+		$token = $this->randomStringGenerator->generate(50);
+
 		$this->updateDatabase($forgetfulUser, $token);
 		$this->sendEmail($forgetfulUser, $token);
 	}

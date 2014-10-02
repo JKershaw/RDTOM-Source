@@ -9,11 +9,12 @@ class ResetPasswordTokenHandlerTest extends \PHPUnit_Framework_TestCase
 		$fakeEmail = new fakeEmail();
 		$fakeMydb = new fakeMydb();
 		$forgetfulUser = new fakeUser();
+		$token_string = "random";
+		$fakeRandomStringGenerator = new fakeRandomStringGenerator($token_string);
 		$siteURL = "http://test/";
-		$token_string = "3";
-
-		$resetPasswordTokenHandler = new ResetPasswordTokenHandler($fakeMydb, $siteURL, $fakeEmail);
-		$resetPasswordTokenHandler->handle($forgetfulUser, $token_string);
+		
+		$resetPasswordTokenHandler = new ResetPasswordTokenHandler($fakeMydb, $siteURL, $fakeEmail, $fakeRandomStringGenerator);
+		$resetPasswordTokenHandler->handle($forgetfulUser);
 		
 		// Assert that an email was sent, so we send in a stub of an email
 		$this->assertEquals($fakeEmail->sent, true);
@@ -28,13 +29,11 @@ class ResetPasswordTokenHandlerTest extends \PHPUnit_Framework_TestCase
 	You can either click the link, or copy the URL into your browser's address bar.<br />
 	<br />
 	If you didn't request to have your password reset then you can ignore this email. If you get this email a bunch of times then something is probably not right. If you're concerned about your account's security, please get in touch via contact@rollerderbytestomatic.com.");
-
+		
 		//Assert the database was updated correctly
 		$this->assertEquals($fakeMydb->token_string, $token_string);
 		$this->assertEquals($fakeMydb->id, 10);
 		$this->assertEquals($fakeMydb->emailAddress, "testing@foo.bar");
-
-
 	}
 }
 
@@ -57,30 +56,45 @@ class fakeEmail
 	}
 }
 
-class fakeUser {
-
+class fakeUser
+{
+	
 	public function get_ID() {
 		return 10;
 	}
-
+	
 	public function get_Email() {
 		return "testing@foo.bar";
 	}
-
+	
 	public function get_Name() {
 		return "bob";
 	}
 }
 
-class fakeMydb {
-
+class fakeMydb
+{
+	
 	public $token_string;
 	public $id;
 	public $emailAddress;
-
-	public function set_password_reset_token($token_string, $id , $emailAddress) {
+	
+	public function set_password_reset_token($token_string, $id, $emailAddress) {
 		$this->token_string = $token_string;
 		$this->id = $id;
 		$this->emailAddress = $emailAddress;
+	}
+}
+
+class fakeRandomStringGenerator
+{
+	private $randomString;
+	
+	function __construct($str) {
+		$this->randomString = $str;
+	}
+	
+	public function generate($len) {
+		return $this->randomString;
 	}
 }
