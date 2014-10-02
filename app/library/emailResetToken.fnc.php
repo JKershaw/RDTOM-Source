@@ -1,24 +1,28 @@
 <?php
 include ("Email");
-
-//TODO make this whole thing a new class; TokenResetHandler
+include ("EmailResetTokenHandler");
 
 function set_up_reset_token($forgetful_user) {
+
 	global $mydb;
+
+	$siteURL = get_site_URL();
+
+	$emailResetTokenHandler = new EmailResetTokenHandler($mydb, $siteURL);
 	
-	$token_string = generatealphaneumericSalt(50);
+	$token = generatealphaneumericSalt(50);
 	
-	$mydb->set_password_reset_token($token_string, $forgetful_user->get_ID() , $forgetful_user->get_Email() , get_ip());
+	$mydb->set_password_reset_token($token, $forgetful_user->get_ID() , $forgetful_user->get_Email() , get_ip());
 	
-	sendTokenResetEmail($token_string, $forgetful_user);
+	sendTokenResetEmail($token, $forgetful_user);
 	
 	save_log("password_reset", "User Email: " . $forgetful_user->get_Email());
 }
 
-function sendTokenResetEmail($token_string, $forgetful_user){
+function sendTokenResetEmail($token, $forgetful_user){
 	$email = new Email();
 
-	$reset_link = get_site_URL() . "passwordreset/" . $token_string;
+	$reset_link = get_site_URL() . "passwordreset/" . $token;
 	
 	$email_subject = "Roller Derby Test O'Matic password reset";
 
@@ -26,7 +30,7 @@ function sendTokenResetEmail($token_string, $forgetful_user){
 	<br />
 	To reset your Roller Derby Test O'Matic account (your log-in name is " . $forgetful_user->get_Name() . ") password, go to the following URL:<br />
 	<br />
-	<a href='$reset_link'>" . $reset_link . "</a> <br />
+	<a href='" . $reset_link . "'>" . $reset_link . "</a> <br />
 	<br />
 	You can either click the link, or copy the URL into your browser's address bar.<br />
 	<br />
