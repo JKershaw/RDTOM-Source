@@ -8,7 +8,11 @@ class ResetPasswordTokenHandler
 	private $mydb;
 	private $randomStringGenerator;
 	
-	function __construct($mydb, $siteURL, $email = false, $randomStringGenerator = false) {
+	function __construct($mydb, $siteURL = false, $email = false, $randomStringGenerator = false) {
+		
+		if (!$siteURL) {
+			$siteURL = get_site_URL();
+		}
 		
 		if (!$email) {
 			$email = new Email();
