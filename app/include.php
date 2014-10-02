@@ -44,6 +44,8 @@ $classesDir = array(
 	__DIR__ . '/library/classes/presentation/',
 	__DIR__ . '/library/classes/storage/',
 	__DIR__ . '/library/classes/email/',
+	__DIR__ . '/library/classes/account/',
+	__DIR__ . '/library/classes/misc/',
 	__DIR__ . '/objects/'
 );
 
