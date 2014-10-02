@@ -38,14 +38,14 @@ if (!$error_string && ($_POST['forgottenemailform'] == "yes")) {
 		// is the thing used an email address?
 		if (filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)) {
 			try {
-				$forgetful_user = $mydb->get_user_from_email($_POST['email']);
+				$forgetfulUser = $mydb->get_user_from_email($_POST['email']);
 			}
 			catch(Exception $e) {
 				$error_string = "Sorry, that email address is not associated with any account. Please try again.";
 			}
 		} else {
 			try {
-				$forgetful_user = $mydb->get_user_from_name($_POST['email']);
+				$forgetfulUser = $mydb->get_user_from_name($_POST['email']);
 			}
 			catch(Exception $e) {
 				$error_string = "Sorry, that name is not associated with any account. Please try again.";
@@ -53,7 +53,7 @@ if (!$error_string && ($_POST['forgottenemailform'] == "yes")) {
 		}
 		
 		// function to save the reset token in the database & email the user
-		if ($forgetful_user) {
+		if ($forgetfulUser) {
 			try {
 				$resetPasswordTokenHandler = new ResetPasswordTokenHandler($mydb);
 				$resetPasswordTokenHandler->setUp($forgetfulUser);
@@ -87,13 +87,13 @@ if (!$error_string && ($_POST['forgottenemailnewpasswordform'] == "yes")) {
 			}
 			
 			// ALL VALID!
-			$forgetful_user = $mydb->get_user_from_password_reset_token($_POST['token']);
+			$forgetfulUser = $mydb->get_user_from_password_reset_token($_POST['token']);
 			
 			// remove the token
 			$mydb->use_password_reset_token($_POST['token']);
 			
 			// update the password
-			$mydb->set_user_password($forgetful_user->get_ID() , $_POST['password']);
+			$mydb->set_user_password($forgetfulUser->get_ID() , $_POST['password']);
 		}
 		catch(Exception $e) {
 			$error_string = $e->getMessage();
