@@ -1,11 +1,13 @@
 <?php
 include ("CookieTokenHandler");
 include ("Session");
+include ("RandomStringGenerator");
 
 function user_log_in($req_username, $req_password, $rememberMe = false) {
 	global $mydb;
 	$cookieTokenHandler = new CookieTokenHandler();
 	$session = new Session();
+	$randomStringGenerator = new RandomStringGenerator();
 	
 	// log the user in if everything is fine, setting up cookies, session vars and the like
 	set_global_user($mydb->get_user_from_name_and_password($req_username, $req_password));
@@ -23,13 +25,13 @@ function user_log_in($req_username, $req_password, $rememberMe = false) {
 	if ($rememberMe) {
 		
 		// generate token
-		$token_string = generateSalt(100);
+		$token = $randomStringGenerator->generate(100);
 		
 		// save it in the database
-		$mydb->add_token($token_string, get_global_user()->get_ID() , get_ip());
+		$mydb->add_token($token, get_global_user()->get_ID() , get_ip());
 		
 		// save it on the user's machine (last for a month)
-		$cookieTokenHandler->set($token_string);
+		$cookieTokenHandler->set($token);
 	}
 }
 
