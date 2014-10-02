@@ -1,7 +1,7 @@
 <?php
-include_once __DIR__ . "/../../app/library/classes/email/EmailResetTokenHandler.class.php";
+include_once __DIR__ . "/../../app/library/classes/account/ResetPasswordTokenHandler.class.php";
 
-class EmailResetTokenHandlerTest extends \PHPUnit_Framework_TestCase
+class ResetPasswordTokenHandlerTest extends \PHPUnit_Framework_TestCase
 {
 	
 	public function testSendResetTokenEmail() {
@@ -12,8 +12,8 @@ class EmailResetTokenHandlerTest extends \PHPUnit_Framework_TestCase
 		$siteURL = "http://test/";
 		$token_string = "3";
 
-		$emailResetTokenHandler = new EmailResetTokenHandler($fakeMydb, $siteURL, $fakeEmail);
-		$emailResetTokenHandler->sendPasswordResetToken($forgetfulUser, $token_string);
+		$resetPasswordTokenHandler = new ResetPasswordTokenHandler($fakeMydb, $siteURL, $fakeEmail);
+		$resetPasswordTokenHandler->sendPasswordResetToken($forgetfulUser, $token_string);
 		
 		// Assert that an email was sent, so we send in a stub of an email
 		$this->assertEquals($fakeEmail->sent, true);

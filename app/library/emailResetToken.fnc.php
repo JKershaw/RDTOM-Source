@@ -1,15 +1,15 @@
 <?php
-include ("EmailResetTokenHandler");
+include ("ResetPasswordTokenHandler");
 
 function set_up_reset_token($forgetfulUser) {
 
 	global $mydb;
 	$siteURL = get_site_URL();
 
-	$emailResetTokenHandler = new EmailResetTokenHandler($mydb, $siteURL);
+	$resetPasswordTokenHandler = new ResetPasswordTokenHandler($mydb, $siteURL);
 	
 	$token = generatealphaneumericSalt(50);
 
-	$emailResetTokenHandler->sendPasswordResetToken($forgetfulUser, $token);
+	$resetPasswordTokenHandler->sendPasswordResetToken($forgetfulUser, $token);
 	
 }

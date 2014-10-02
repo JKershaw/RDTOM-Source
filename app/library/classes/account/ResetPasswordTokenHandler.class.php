@@ -1,7 +1,7 @@
 <?php
-include_once (__DIR__ . "/Email.class.php");
+include_once (__DIR__ . "/../email/Email.class.php");
 
-class EmailResetTokenHandler
+class ResetPasswordTokenHandler
 {
 	private $email;
 	private $mydb;
