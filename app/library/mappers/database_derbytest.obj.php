@@ -717,13 +717,12 @@ class database_derbytest extends database
 	 */
 	
 	// save a password reset token
-	public function set_password_reset_token($req_Token, $req_User_ID, $req_Email, $req_IP)
+	public function set_password_reset_token($req_Token, $req_User_ID, $req_Email)
 	{
 		// clean the input
 		$req_Token = $this->mysql_res($req_Token);
 		settype($req_User_ID, "integer");
 		$req_Email = $this->mysql_res($req_Email);
-		$req_IP = $this->mysql_res($req_IP);
 		
 		$query = "
 			INSERT INTO 
@@ -732,7 +731,6 @@ class database_derbytest extends database
 				Email, 
 				Token, 
 				Timestamp, 
-				IP, 
 				Used
 				) 
 			VALUES 
@@ -741,7 +739,6 @@ class database_derbytest extends database
 				'$req_Email', 
 				'$req_Token', 
 				'" . gmmktime() . "', 
-				'$req_IP', 
 				'0');";
 		
 		$this->run_query($query);

@@ -11,10 +11,9 @@ class EmailResetTokenHandlerTest extends \PHPUnit_Framework_TestCase
 		$forgetfulUser = new fakeUser();
 		$siteURL = "http://test/";
 		$token_string = "3";
-		$fakeIP ="123.455.789";
 
 		$emailResetTokenHandler = new EmailResetTokenHandler($fakeMydb, $siteURL, $fakeEmail);
-		$emailResetTokenHandler->sendPasswordResetToken($forgetfulUser, $token_string, $fakeIP);
+		$emailResetTokenHandler->sendPasswordResetToken($forgetfulUser, $token_string);
 		
 		// Assert that an email was sent, so we send in a stub of an email
 		$this->assertEquals($fakeEmail->sent, true);
@@ -34,7 +33,6 @@ class EmailResetTokenHandlerTest extends \PHPUnit_Framework_TestCase
 		$this->assertEquals($fakeMydb->token_string, $token_string);
 		$this->assertEquals($fakeMydb->id, 10);
 		$this->assertEquals($fakeMydb->emailAddress, "testing@foo.bar");
-		$this->assertEquals($fakeMydb->ip, $fakeIP);
 
 
 	}
@@ -79,12 +77,10 @@ class fakeMydb {
 	public $token_string;
 	public $id;
 	public $emailAddress;
-	public $ip;
 
-	public function set_password_reset_token($token_string, $id , $emailAddress , $ip) {
+	public function set_password_reset_token($token_string, $id , $emailAddress) {
 		$this->token_string = $token_string;
 		$this->id = $id;
 		$this->emailAddress = $emailAddress;
-		$this->ip = $ip;
 	}
 }

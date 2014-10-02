@@ -17,10 +17,10 @@ class EmailResetTokenHandler
 		$this->siteURL = $siteURL;
 	}
 	
-	public function sendPasswordResetToken($forgetfulUser, $token, $ip) {
+	public function sendPasswordResetToken($forgetfulUser, $token) {
 
 		// update database
-		$this->mydb->set_password_reset_token($token, $forgetfulUser->get_ID() , $forgetfulUser->get_Email(), $ip);
+		$this->mydb->set_password_reset_token($token, $forgetfulUser->get_ID() , $forgetfulUser->get_Email());
 
 		// send email
 		$this->sendTokenResetEmail($token, $forgetfulUser);

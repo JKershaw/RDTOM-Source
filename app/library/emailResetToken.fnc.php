@@ -9,8 +9,7 @@ function set_up_reset_token($forgetfulUser) {
 	$emailResetTokenHandler = new EmailResetTokenHandler($mydb, $siteURL);
 	
 	$token = generatealphaneumericSalt(50);
-	$ip = get_ip();
 
-	$emailResetTokenHandler->sendPasswordResetToken($forgetfulUser, $token, $ip);
+	$emailResetTokenHandler->sendPasswordResetToken($forgetfulUser, $token);
 	
 }
