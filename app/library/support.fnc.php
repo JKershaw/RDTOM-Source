@@ -5,6 +5,7 @@
  * These are the functions which are essentially misc, and often not written by me
  */
 
+include("RandomStringGenerator");
 
 function get_average_of_array($tmp_raw_data, $float_width)
 {
@@ -88,24 +89,11 @@ function formatXmlString($xml) {
 }
 
 function generateSalt($max = 50) {
-	$characterList = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!£$%^&*()";
-	$i = 0;
-	$salt = "";
-	do {
-		$salt .= $characterList{mt_rand(0,strlen($characterList)-1)};
-		$i++;
-	} while ($i < $max);
-	return $salt;
+	return generatealphaneumericSalt($max);
 }
 
 function generatealphaneumericSalt($max = 50) {
-	$characterList = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-	$i = 0;
-	$salt = "";
-	do {
-		$salt .= $characterList{mt_rand(0,strlen($characterList)-1)};
-		$i++;
-	} while ($i < $max);
-	return $salt;
+	$randomStringGenerator = new RandomStringGenerator();
+	return $randomStringGenerator->generate($max);
 }
 ?>
