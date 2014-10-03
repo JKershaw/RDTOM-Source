@@ -2,6 +2,10 @@
 	if ($question){
 		$sectionHeader = "Edit question #" . $question->get_ID() . ":";
 		$formPostAction = get_site_URL() . "admin/edit/" . $question->get_ID();
+
+		$colourFromPercentageCalculator = new ColourFromPercentageCalculator();
+		$questionSuccessColour = $colourFromPercentageCalculator->calculate($question->get_SuccessRate());
+		
 	} else {
 		$sectionHeader = "Add question:";
 		$formPostAction = get_site_URL() . "admin/";
@@ -200,7 +204,7 @@
 				{?>
 				<tr>
 					<td>Success rate:</td>
-					<td><?php echo "<span style=\"color: " . get_colour_from_percentage($question->get_SuccessRate()) . "\">" . $question->get_SuccessRate() . "%</span> (" . number_format($question->get_ResponseCount()) . " responses)"; ?></td>
+					<td><?php echo "<span style=\"color: " . $questionSuccessColour . "\">" . $question->get_SuccessRate() . "%</span> (" . number_format($question->get_ResponseCount()) . " responses)"; ?></td>
 				</tr>
 				<?php  } ?>
 			</table>

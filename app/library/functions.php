@@ -35,11 +35,6 @@ function forget_remebered_questions() {
 	$session->forget("random_questions_asked");
 }
 
-function get_colour_from_percentage($perc_value) {
-	$ColourFromPercentageCalculator = new ColourFromPercentageCalculator();
-	return $ColourFromPercentageCalculator->calculate($perc_value);
-}
-
 function compare_questions($req_question1, $req_question2) {
 	return strnatcasecmp($req_question1->get_Section() , $req_question2->get_Section());
 }
