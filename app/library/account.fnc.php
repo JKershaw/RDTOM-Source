@@ -1,7 +1,4 @@
 <?php
-include ("CookieTokenHandler");
-include ("Session");
-include ("RandomStringGenerator");
 
 function user_log_in($req_username, $req_password, $rememberMe = false) {
 	global $mydb;
