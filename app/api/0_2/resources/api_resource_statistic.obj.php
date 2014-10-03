@@ -1,5 +1,4 @@
 <?php
-include_once("FileCache");
 
 class api_resource_statistic extends api_resource
 {

@@ -1,7 +1,4 @@
 <?php
-include ("ColourFromPercentageCalculator");
-include ("Session");
-
 function report_question() {
 	if (!$_POST) {
 		header('Location: ' . get_site_URL());

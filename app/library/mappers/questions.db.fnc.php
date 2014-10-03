@@ -1,6 +1,4 @@
 <?php
-include("Session");
-
 function get_question_from_array($req_array)
 {
 	return new question(

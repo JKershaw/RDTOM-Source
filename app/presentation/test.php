@@ -17,7 +17,6 @@
 
 // display the page
 include ("header.php");
-include ("RandomStringGenerator");
 
 if (!$url_array[1]) {
 	

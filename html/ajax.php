@@ -2,8 +2,6 @@
 
 // include needed files
 include ('../app/include.php');
-include_once ("FileCache");
-include_once ("Session");
 
 // process and return the ajax request
 try {

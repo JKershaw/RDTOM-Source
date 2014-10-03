@@ -1,6 +1,4 @@
 <?php
-include_once("FileCache");
-
 class api_resource_questions extends api_resource
 {
 	protected function build_XML($parameters)

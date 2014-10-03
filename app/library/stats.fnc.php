@@ -1,6 +1,4 @@
 <?php
-include_once ("FileCache");
-
 function return_stats_user_totals() {
 	//TODO this is a duplicate of the Remembered String
 	global $user, $mydb;

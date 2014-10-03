@@ -1,7 +1,4 @@
 <?php
-include_once ("RememberedStringGenerator");
-include ("Session");
-
 // presentation functions
 
 // True or False

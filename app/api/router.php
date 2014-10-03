@@ -19,8 +19,6 @@
  * Complex queries vias XML http://stackoverflow.com/questions/10049677/how-to-model-logical-boolean-expressions-in-xml-efficiently
 */
 
-include_once ("FileCache");
-
 $api_status_codes = array(
 	
 	// everything's OK

@@ -14,8 +14,6 @@
  * 4. /passwordreset/[code] $_POST['forgottenemailnewpasswordform']
  *
 */
-include ("ResetPasswordTokenHandler");
-
 if ($url_array[1]) {
 	
 	// is the token valid?

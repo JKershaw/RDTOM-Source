@@ -5,7 +5,6 @@
 
 // include needed files
 include ('../app/include.php');
-include_once ("FileCache");
 
 $cron_tasks = Array(
 	Array(
