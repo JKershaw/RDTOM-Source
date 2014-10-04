@@ -49,15 +49,6 @@ function createGlobalsFromIni($ini_array) {
 
 function setUpGlobalVariables() {
 	
-	// when getting random questions, how many does the site remeber to avoid dupes?
-	$GLOBALS['random_questions_to_remeber'] = 100;
-	
-	// how many times will the site use fancy code to try to find a unique new question before resourting to slow code?
-	$GLOBALS['random_question_find_attempts'] = 10;
-	
-	// do we remeber using the session?
-	$GLOBALS['remeber_in_session'] = true;
-	
 	// what date format do log files have with their name
 	$GLOBALS['log_file_date_format'] = "ym_F";
 	
@@ -79,6 +70,9 @@ function setUpGlobalVariables() {
 }
 
 function setUpDefinitions() {
+
+	define("NUMBER_OF_RECENTLY_ASKED_QUESTIONS_TO_REMEMBER", 100);
+	define("FANCY_CODE_MAXIMUM_ATTEMPT_COUNT", 10);
 	
 	// Report status
 	define("REPORT_OPEN", 0);
@@ -89,14 +83,8 @@ function setUpDefinitions() {
 	
 	// Question comment types
 	define("QUESTION_COMMENT", 0);
-	
-	// A comment left by a user on a Question
 	define("QUESTION_CHANGED", 1);
-	
-	// A change in the Question
 	define("QUESTION_DELETED", 2);
-	
-	// A Question was deleted
 	
 	// number of answers listed on the admin page
 	define("NUMBER_OF_ANSWERS", 10);

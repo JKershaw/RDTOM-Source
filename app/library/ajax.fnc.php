@@ -1,6 +1,6 @@
 <?php
 function ajax_save_response() {
-	global $mydb, $remeber_in_session, $random_questions_to_remeber;
+	global $mydb;
 	$fileCache = new FileCache();
 	$session = new Session();
 	
@@ -30,14 +30,12 @@ function ajax_save_response() {
 	// save the response
 	$mydb->set_response($response);
 	
-	// remeber what question was answered
-	if ($remeber_in_session) {
 		
 		$random_questions_asked = $session->get('random_questions_asked');
 		$random_questions_results = $session->get('random_questions_results');
 		
 		// if we know the last 100, forget one
-		if (count($random_questions_asked) >= $random_questions_to_remeber) {
+		if (count($random_questions_asked) >= NUMBER_OF_RECENTLY_ASKED_QUESTIONS_TO_REMEMBER) {
 			array_shift($random_questions_asked);
 		}
 		$random_questions_asked[] = $question_ID;
@@ -48,7 +46,7 @@ function ajax_save_response() {
 		// save to the session
 		$session->set('random_questions_asked', $random_questions_asked);
 		$session->set('random_questions_results', $random_questions_results);
-	}
+
 	
 	if ($_POST['return_remebered_questions_string']) {
 		return get_remebered_string();
