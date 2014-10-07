@@ -39,7 +39,7 @@ if (strtolower($url_array[0]) == "api") {
 	// do we want to perform some function or other, then show the default page?
 	switch ($url_array[0]) {
 		case "forget":
-			forget_remebered_questions();
+			forget_remembered_questions();
 			header('Location: ' . get_site_URL());
 			die();
 			break;

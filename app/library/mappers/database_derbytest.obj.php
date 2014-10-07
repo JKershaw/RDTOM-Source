@@ -646,7 +646,7 @@ class database_derbytest extends database
 		$req_token = $this->mysql_res($req_token);
 		$req_IP = $this->mysql_res($req_IP);
 
-		// No longer requires same IP to be remebered - account for people with changing IPs
+		// No longer requires same IP to be remembered - account for people with changing IPs
 		// however, the Ip is still recorded when Tokens generated
 		
 		//$query="SELECT User_ID FROM rdtom_usertokens WHERE Token = '" . $req_token . "' AND IP = '" . $req_IP . "'";

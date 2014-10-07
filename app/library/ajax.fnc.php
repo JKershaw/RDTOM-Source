@@ -40,7 +40,7 @@ function ajax_save_response() {
 		}
 		$random_questions_asked[] = $question_ID;
 		
-		// remeber the results
+		// remember the results
 		$random_questions_results[] = $response_is_correct;
 		
 		// save to the session
@@ -48,8 +48,8 @@ function ajax_save_response() {
 		$session->set('random_questions_results', $random_questions_results);
 
 	
-	if ($_POST['return_remebered_questions_string']) {
-		return get_remebered_string();
+	if ($_POST['return_remembered_questions_string']) {
+		return get_remembered_string();
 	} else {
 		if ($response_is_correct) {
 			return "CORRECT!";
@@ -100,14 +100,14 @@ function ajax_save_responses() {
 	}
 }
 
-function ajax_remebered_questions_count() {
+function ajax_remembered_questions_count() {
 	$session = new Session();
 	$result = count($session->get('random_questions_asked'));
 	settype($result, "integer");
 	return $result;
 }
 
-function ajax_remebered_questions_percentage() {
+function ajax_remembered_questions_percentage() {
 	$session = new Session();
 	$random_questions_results = $session->get('random_questions_results');
 	if (count($random_questions_results) > 0) {
@@ -126,8 +126,8 @@ function ajax_remebered_questions_percentage() {
 	return $result;
 }
 
-function ajax_remebered_questions_string() {
-	return get_remebered_string();
+function ajax_remembered_questions_string() {
+	return get_remembered_string();
 }
 
 function ajax_count_responses() {

@@ -29,7 +29,7 @@ function report_question() {
 	}
 }
 
-function forget_remebered_questions() {
+function forget_remembered_questions() {
 	$session = new Session();
 	$session->forget("random_questions_results");
 	$session->forget("random_questions_asked");

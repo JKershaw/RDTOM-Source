@@ -1,6 +1,6 @@
 <?php
 /*
- * This file is loaded every 5 minutes and must remeber which functions it has fired and when
+ * This file is loaded every 5 minutes and must remember which functions it has fired and when
 */
 
 // include needed files

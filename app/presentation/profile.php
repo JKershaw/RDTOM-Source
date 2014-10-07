@@ -5,7 +5,7 @@ if ($_POST['loginform'] == "yes")
 {
 	try 
 	{
-		user_log_in($_POST['name'], $_POST['password'], $_POST['remeber']=="Yes");
+		user_log_in($_POST['name'], $_POST['password'], $_POST['remember']=="Yes");
 	}
 	catch (Exception $e) 
 	{
@@ -238,7 +238,7 @@ else
 			<input class="input_text" type="password" id="password" name="password" />
 		</p>
 		<p class="small_p">	
-			<input type="checkbox" name="remeber" id="remeber" value="Yes" /> remember me (don't select this if you're on a public computer)
+			<input type="checkbox" name="remember" id="remember" value="Yes" /> remember me (don't select this if you're on a public computer)
 		</p>
 		<p>
 			<a class="button" onclick="document.formlogin.submit()">Login</a>

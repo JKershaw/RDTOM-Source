@@ -2,26 +2,23 @@
 
 function user_log_in($req_username, $req_password, $rememberMe = false) {
 	global $mydb;
-	$cookieTokenHandler = new CookieTokenHandler();
 	$session = new Session();
-	$randomStringGenerator = new RandomStringGenerator();
 	
-	// log the user in if everything is fine, setting up cookies, session vars and the like
-	set_global_user($mydb->get_user_from_name_and_password($req_username, $req_password));
+	$user = $mydb->get_user_from_name_and_password($req_username, $req_password);
 
-	$user = get_global_user();
-	
 	if (!$user) {
 		throw new exception("Name and password combination not found, please try again.");
 	}
-	
-	// logged in
+
+	set_global_user($user);
 	$session->set('rdtom_userID', $user->get_ID());
 	
-	// does the user want to be remebered?
+	// does the user want to be remembered?
 	if ($rememberMe) {
 		
-		// generate token
+		$randomStringGenerator = new RandomStringGenerator();
+		$cookieTokenHandler = new CookieTokenHandler();
+
 		$token = $randomStringGenerator->generate(100);
 		
 		// save it in the database
@@ -50,7 +47,7 @@ function user_log_out() {
 	
 	unset_global_user();
 	
-	forget_remebered_questions();
+	forget_remembered_questions();
 }
 
 function user_sign_up($req_username, $req_password, $req_email) {
@@ -166,15 +163,6 @@ function user_update_password($req_oldpassword, $req_newpassword) {
 	$mydb->set_user_password($user->get_ID() , $req_newpassword);
 }
 
-// to move to presentation file
-function is_logged_in() {
-	$user = get_global_user();
-	if ($user) {
-		return true;
-	}
-	
-	return false;
-}
 
 function set_up_logged_in_user() {
 	global $mydb;
@@ -191,7 +179,7 @@ function set_up_logged_in_user() {
 		$tmp_user = $mydb->get_user_from_token($_COOKIE["token"], get_ip());
 		if ($tmp_user) {
 			
-			// we have a valid token, so remeber the user
+			// we have a valid token, so remember the user
 			set_global_user($tmp_user);
 			$user = get_global_user();
 			$session->set('rdtom_userID', $user->get_ID());

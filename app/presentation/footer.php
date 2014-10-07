@@ -4,8 +4,8 @@
 				if (is_question()) 
 				{
 					?>
-					<p id="remebered_string_p">
-						<span id="remebered_string"><?php echo get_remebered_string(); ?></span>
+					<p id="remembered_string_p">
+						<span id="remembered_string"><?php echo get_remembered_string(); ?></span>
 					</p>
 					<?php 
 				} 

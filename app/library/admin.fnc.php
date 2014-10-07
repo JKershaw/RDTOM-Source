@@ -30,7 +30,7 @@ function get_open_report_count($reports_open = false) {
 		return $global_reports_open_count;
 	}
 	
-	// need to work it out and remeber it
+	// need to work it out and remember it
 	$reports_open = $mydb->get_reports(REPORT_OPEN);
 	
 	if ($reports_open && count($reports_open) > 0) {

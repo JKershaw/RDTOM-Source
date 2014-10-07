@@ -227,7 +227,7 @@ class question
 				} else {
 					
 					//echo "-";
-					// different answer, all is fine, remeber what this index is for next time
+					// different answer, all is fine, remember what this index is for next time
 					$last_correct_answer_index = $index;
 				}
 				

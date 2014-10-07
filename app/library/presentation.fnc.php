@@ -1,6 +1,15 @@
 <?php
 // presentation functions
 
+function is_logged_in() {
+	$user = get_global_user();
+	if ($user) {
+		return true;
+	}
+	
+	return false;
+}
+
 // True or False
 function is_question() {
 	global $is_question, $question;
@@ -55,7 +64,7 @@ function get_page_subtitle() {
 	}
 }
 
-function get_remebered_string() {
+function get_remembered_string() {
 	$session = new Session();
 	$siteUrl = get_site_URL();
 	$questionsAnsweredResults = $session->get('random_questions_results');

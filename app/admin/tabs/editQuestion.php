@@ -91,8 +91,8 @@
 							$value = htmlentities(stripslashes($answers[$i]->get_Text()));
 						}
 						
-						// if we're remebering
-						if ($_POST['remeberanswers'])
+						// if we're remembering
+						if ($_POST['rememberanswers'])
 						{
 							if ($_POST['correct'][$i] == 1)
 							{
@@ -197,7 +197,7 @@
 				</tr>
 				<tr>
 					<td>Remember answers:</td>
-					<td><input <?php if ($_POST['remeberanswers']) { echo " checked"; }?> type="checkbox" value="yes" name="remeberanswers"/></td>
+					<td><input <?php if ($_POST['rememberanswers']) { echo " checked"; }?> type="checkbox" value="yes" name="rememberanswers"/></td>
 				</tr>
 				<?php  if($question)
 				{?>

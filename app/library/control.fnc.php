@@ -23,7 +23,7 @@ function set_up_question($question_ID)
 	// get random answers
 	$answers = $question->get_Answers();
 	
-	// get the correct answer and remeber it
+	// get the correct answer and remember it
 	foreach ($answers as $answer)
 	{
 		if ($answer->is_correct())

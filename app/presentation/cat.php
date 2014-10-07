@@ -85,7 +85,7 @@ include("header.php");
 
 	function get_random_cat(cat_array)
 	{
-		// never remeber more than 5 recent cats
+		// never remember more than 5 recent cats
 		if (recent_cats.length > 5)
 		{
 			recent_cats.shift();

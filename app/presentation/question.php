@@ -102,12 +102,12 @@ if ($report_string)
 				call: "save_response", 
 				question_ID: "<?php echo $question->get_ID(); ?>",
 				response_ID: selected,
-				return_remebered_questions_string: true},
+				return_remembered_questions_string: true},
 				function(data) {
-					$("#remebered_string").hide();
-					$("#remebered_string").html(data);
-					$("#remebered_string").fadeIn();
-					$("#remebered_string_p").show();
+					$("#remembered_string").hide();
+					$("#remembered_string").html(data);
+					$("#remembered_string").fadeIn();
+					$("#remembered_string_p").show();
 				}
 			);
 		}

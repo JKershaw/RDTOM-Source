@@ -94,7 +94,7 @@ if ($message) {
 		function toggle_term_relationship(term_id, question_id)
 		{
 			// send AJAX request
-			// make it light grey and remeber what it was
+			// make it light grey and remember what it was
 			var tmp_colour = $("#term_" + term_id + "_" + question_id).css("color"); 
 			$("#term_" + term_id + "_" + question_id).css("color", "grey"); 
 

@@ -85,16 +85,16 @@ try {
 			$out = ajax_save_comment();
 			break;
 
-		case "remebered_questions_count":
-			$out = ajax_remebered_questions_count();
+		case "remembered_questions_count":
+			$out = ajax_remembered_questions_count();
 			break;
 
-		case "remebered_questions_percentage":
-			$out = ajax_remebered_questions_percentage();
+		case "remembered_questions_percentage":
+			$out = ajax_remembered_questions_percentage();
 			break;
 
-		case "remebered_questions_string":
-			$out = ajax_remebered_questions_string();
+		case "remembered_questions_string":
+			$out = ajax_remembered_questions_string();
 			break;
 
 		case "save_poll_results":

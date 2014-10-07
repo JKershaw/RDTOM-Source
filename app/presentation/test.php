@@ -411,7 +411,7 @@ if (!$url_array[1]) {
 				
 				if (answer.correct == "true")
 				{
-					//remeber if this answer is correct. We'll need this info later.
+					//remember if this answer is correct. We'll need this info later.
 					correct_answer_ids["" + answer.id] = true;
 					
 					if (correct_answers_count >= 1 || (check_chosen_answers && !answer.chosen))
