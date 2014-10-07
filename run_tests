@@ -17,7 +17,7 @@ sudo a2enmod rewrite
 sudo a2enmod headers
 
 sudo rm -rf /etc/apache2/sites-available/rdtom.conf
-sudo a2dissite rdtom
+sudo a2dissite rdtom || true
 
 sudo cp tests/config/rdtom.conf /etc/apache2/sites-available
 sudo a2ensite rdtom
