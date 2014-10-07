@@ -14,6 +14,6 @@ class UriPath
 		}
 
 		$segments = explode("/", $path);
-		return $segments[$number];
+		return strtolower($segments[$number]);
 	}
 }
