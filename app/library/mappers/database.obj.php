@@ -9,6 +9,8 @@ class database
 	protected $dbUserPw = "";
 	protected $dbName = "";
 	protected $dbHost = "";
+
+	private $saved_link;
 	
 	function __construct() {
 		$this->dbUser = DATABASE_USERNAME;
@@ -59,24 +61,14 @@ class database
 	
 	// run a query and return the results
 	public function run_query($req_query) {
-		global $saved_link;
 
-		list($usec, $sec) = explode(" ", microtime());
-		$query_timer_start = ((float)$usec + (float)$sec);
-		
-		if (!$saved_link) {
-			$saved_link = mysql_connect($this->dbHost, $this->dbUser, $this->dbUserPw) or die("Could not connect : " . mysql_error());
+		if (!$this->saved_link) {
+			$this->saved_link = mysql_connect($this->dbHost, $this->dbUser, $this->dbUserPw) or die("Could not connect : " . mysql_error());
 			
 			mysql_select_db($this->dbName) or die("Could not select database");
 		}
 		
 		$results = mysql_query($req_query) or die("Query error:<br />" . $req_query . "<br />" . mysql_error());
-		
-		list($usec, $sec) = explode(" ", microtime());
-		$query_timer_end = ((float)$usec + (float)$sec);
-		
-		// save the query
-		tracker_add_query($req_query, $query_timer_end - $query_timer_start);
 		
 		return $results;
 	}
