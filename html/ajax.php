@@ -65,11 +65,7 @@ try {
 	}
 	
 	// these functions reqire a logged in user
-	// start the session
-	session_start();
-	set_up_logged_in_user();
-	
-	//set_up_url_array();
+	set_up_user();
 	
 	// process and return the ajax request
 	switch ($_REQUEST['call']) {

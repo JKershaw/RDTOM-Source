@@ -7,17 +7,13 @@
  * Built to help Roller Derby players learn the rules
 */
 
-// include needed files
 include ('include.php');
 
 // start the output buffer
 ob_start();
 
-// create necessary objects & set up
 set_up_database();
-set_up_logged_in_user();
-
-// begin processing the request
+set_up_user();
 
 if (UriPath::part(0) == "api") {
 	// An API request

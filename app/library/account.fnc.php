@@ -1,5 +1,28 @@
 <?php
 
+function set_up_user() {
+	global $mydb;
+	
+	$cookieTokenHandler = new CookieTokenHandler();
+	$session = new Session();
+	
+	// do we have a session variable?
+	if ($session->get('rdtom_userID')) {
+		set_global_user($mydb->get_user_from_ID($session->get('rdtom_userID')));
+	} elseif ($cookieTokenHandler->get()) {
+		
+		// is it valid?
+		$tmp_user = $mydb->get_user_from_token($_COOKIE["token"], get_ip());
+		if ($tmp_user) {
+			
+			// we have a valid token, so remember the user
+			set_global_user($tmp_user);
+			$user = get_global_user();
+			$session->set('rdtom_userID', $user->get_ID());
+		}
+	}
+}
+
 function user_log_in($req_username, $req_password, $rememberMe = false) {
 	global $mydb;
 	$session = new Session();
@@ -164,28 +187,6 @@ function user_update_password($req_oldpassword, $req_newpassword) {
 }
 
 
-function set_up_logged_in_user() {
-	global $mydb;
-	
-	$cookieTokenHandler = new CookieTokenHandler();
-	$session = new Session();
-	
-	// do we have a session variable?
-	if ($session->get('rdtom_userID')) {
-		set_global_user($mydb->get_user_from_ID($session->get('rdtom_userID')));
-	} elseif ($cookieTokenHandler->get()) {
-		
-		// is it valid?
-		$tmp_user = $mydb->get_user_from_token($_COOKIE["token"], get_ip());
-		if ($tmp_user) {
-			
-			// we have a valid token, so remember the user
-			set_global_user($tmp_user);
-			$user = get_global_user();
-			$session->set('rdtom_userID', $user->get_ID());
-		}
-	}
-}
 
 function is_admin() {
 	$user = get_global_user();
