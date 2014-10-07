@@ -14,6 +14,10 @@ function setUpSiteURL($ini_array) {
 	global $site_URL;
 
 	$site_URL = $ini_array["site_URL"];
+
+	if (!$site_URL) {
+		$site_URL = "http://rdtom:8080/";
+	}
 }
 
 function setUpSMTP($ini_array) {
@@ -27,29 +31,30 @@ function setUpSMTP($ini_array) {
 }
 
 function setUpDatabase($ini_array) {
-	global $database_name, $database_host, $database_salt;
 	
 	$database_username = $ini_array["database_username"];
 	$database_userpassword = $ini_array["database_userpassword"];
 	$database_name = $ini_array["database_name"];
 	$database_host = $ini_array["database_host"];
 	
-	$database_salt = $ini_array["database_salt"];
-	
 	if (!$database_username) {
 		
-		//default params
-		
+		//default params used by CircleCI
 		$database_username = "ubuntu";
 		$database_userpassword = "";
 		$database_name = "circle_test";
 		$database_host = "127.0.0.1";
 		
-		$site_URL = "http://rdtom:8080/";
 	}
+
+	$database_salt = $ini_array["database_salt"];
 
 	define("DATABASE_USERNAME", $database_username);
 	define("DATABASE_PASSWORD", $database_userpassword);
+	define("DATABASE_NAME", $database_name);
+	define("DATABASE_HOST", $database_host);
+
+	define("DATABASE_SALT", $database_salt);
 }
 
 function setUpDefaultTermsArray() {	

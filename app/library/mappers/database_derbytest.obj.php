@@ -12,8 +12,8 @@ class database_derbytest extends database
 
 		$this->dbUser = DATABASE_USERNAME;
 		$this->dbUserPw = DATABASE_PASSWORD;
-		$this->dbName = $database_name;
-		$this->dbHost = $database_host;
+		$this->dbName = DATABASE_NAME;
+		$this->dbHost = DATABASE_HOST;
 	}
 
 	public function get_reports($status = false)
@@ -370,7 +370,7 @@ class database_derbytest extends database
 	public function get_user_password_hash_from_password($req_password, $req_user_salt)
 	{
 		global $database_salt;
-		$hash = hash("sha384", $req_password . $database_salt);
+		$hash = hash("sha384", $req_password . DATABASE_SALT);
 		$real_hash = hash("sha512", $hash . $req_user_salt);
 		
 		return $real_hash;

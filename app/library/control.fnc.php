@@ -46,17 +46,8 @@ function set_up_database()
 	
 	// set up the PDO object
 	global $myPDO;
-	global $database_name, $database_host;
-	
-	/* Connect to an ODBC database using driver invocation */
-	try 
-	{
-	    $myPDO = new LoggedPDO("mysql:dbname=$database_name;host=$database_host", DATABASE_USERNAME, DATABASE_PASSWORD);
-	} 
-	catch (PDOException $e) 
-	{
-	    die('PDO Connection failed: ' . $e->getMessage());
-	}
+	$myPDO = new LoggedPDO("mysql:dbname=" . DATABASE_NAME . ";host=" . DATABASE_HOST, DATABASE_USERNAME, DATABASE_PASSWORD);
+
 }
 
 function set_up_url_array()
