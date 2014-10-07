@@ -11,8 +11,6 @@ include ('library/exceptions.php');
 include ('config.php');
 
 // Library files
-include ('library/tracker.fnc.php');
-
 include ('library/presentation.fnc.php');
 include ('library/control.fnc.php');
 include ('library/account.fnc.php');
