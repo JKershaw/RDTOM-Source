@@ -2,20 +2,32 @@
 ini_set('display_errors', 'Off');
 error_reporting(E_ERROR);
 
-/*
- * Parse the ini file
-*/
-
 $ini_array = parse_ini_file("config.ini");
 
-createGlobalsFromIni($ini_array);
-setUpGlobalVariables();
+setUpSiteURL($ini_array);
+setUpSMTP($ini_array);
+setUpDatabase($ini_array);
+setUpDefaultTermsArray();
 setUpDefinitions();
 
-function createGlobalsFromIni($ini_array) {
-	global $database_username, $database_userpassword, $database_name, $database_host, $database_salt;
+function setUpSiteURL($ini_array) {
 	global $site_URL;
-	global $smtp_username, $smtp_userpassword, $smtp_host;
+
+	$site_URL = $ini_array["site_URL"];
+}
+
+function setUpSMTP($ini_array) {
+	global $smtp_username, $smtp_userpassword, $smtp_host, $smtp_from_name, $smtp_from_address;
+
+	$smtp_username = $ini_array["smtp_username"];
+	$smtp_userpassword = $ini_array["smtp_userpassword"];
+	$smtp_host = $ini_array["smtp_host"];
+	$smtp_from_name = "Roller Derby Test O'Matic";
+	$smtp_from_address = "auto@rollerderbytestomatic.com";
+}
+
+function setUpDatabase($ini_array) {
+	global $database_username, $database_userpassword, $database_name, $database_host, $database_salt;
 	
 	$database_username = $ini_array["database_username"];
 	$database_userpassword = $ini_array["database_userpassword"];
@@ -23,12 +35,6 @@ function createGlobalsFromIni($ini_array) {
 	$database_host = $ini_array["database_host"];
 	
 	$database_salt = $ini_array["database_salt"];
-	
-	$site_URL = $ini_array["site_URL"];
-	
-	$smtp_username = $ini_array["smtp_username"];
-	$smtp_userpassword = $ini_array["smtp_userpassword"];
-	$smtp_host = $ini_array["smtp_host"];
 	
 	if (!$database_username) {
 		
@@ -43,36 +49,17 @@ function createGlobalsFromIni($ini_array) {
 	}
 }
 
-/*
- * Other values which don't need to be kept as secure
-*/
-
-function setUpGlobalVariables() {
-	
-	// what date format do log files have with their name
-	$GLOBALS['log_file_date_format'] = "ym_F";
-	
-	// How many questions does a user need to answer before a section by section breakdown is shown?
-	$GLOBALS['responses_needed_for_section_breakdown'] = 50;
-	
-	// When requesting a password reset, how many seconds is the token valid for?
-	$GLOBALS['password_reset_token_expire'] = 86400;
-	
-	// when emailing, this is the from account
-	$GLOBALS['email_from_address'] = "auto@rollerderbytestomatic.com";
-	$GLOBALS['email_from_name'] = "Roller Derby Test O'Matic";
-	
-	/*
-	 * When fetching questions, this is the default search parameter
-	*/
-	
+function setUpDefaultTermsArray() {	
 	$GLOBALS['default_terms_array'] = array("rule-set" => "WFTDA7");
 }
 
 function setUpDefinitions() {
 
+	// Magic numbers of note
 	define("NUMBER_OF_RECENTLY_ASKED_QUESTIONS_TO_REMEMBER", 100);
 	define("FANCY_CODE_MAXIMUM_ATTEMPT_COUNT", 10);
+	define("RESPONSES_NEEDED_FOR_SECTION_BREAKDOWN", 50);
+	define("PASSWORD_RESET_TOKEN_TTL", 86400);
 	
 	// Report status
 	define("REPORT_OPEN", 0);

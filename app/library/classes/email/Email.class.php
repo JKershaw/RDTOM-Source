@@ -15,15 +15,15 @@ class Email
 			$phpMail = new PHPMailer();
 		}
 		
-		global $smtp_username, $smtp_userpassword, $smtp_host, $email_from_address, $email_from_name;
+		global $smtp_username, $smtp_userpassword, $smtp_host, $smtp_from_address, $smtp_from_name;
 		
 		$this->phpMail = $phpMail;
 		$this->host = $smtp_host;
 		$this->username = $smtp_username;
 		$this->userpassword = $smtp_userpassword;
 		
-		$this->from_address = $email_from_address;
-		$this->from_name = $email_from_name;
+		$this->from_address = $smtp_from_address;
+		$this->from_name = $smtp_from_name;
 	}
 	
 	public function send($to_email, $subject, $body) {

@@ -397,7 +397,6 @@ function ajax_latest_forum_thread() {
 }
 
 function ajax_stats_user_progress() {
-	global $responses_needed_for_section_breakdown;
 	
 	if (is_admin() && $_REQUEST['User_ID']) {
 		global $mydb;
@@ -407,7 +406,7 @@ function ajax_stats_user_progress() {
 		$user_responses = return_user_responses();
 	}
 	
-	if (!$user_responses || (count($user_responses) < $responses_needed_for_section_breakdown)) {
+	if (!$user_responses || (count($user_responses) < RESPONSES_NEEDED_FOR_SECTION_BREAKDOWN)) {
 		return "
 {
   \"cols\": [

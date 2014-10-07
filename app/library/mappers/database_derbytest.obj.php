@@ -748,10 +748,9 @@ class database_derbytest extends database
 	
 	public function is_valid_password_reset_token($req_Token)
 	{
-		global $password_reset_token_expire;
 		
 		$req_Token = $this->mysql_res($req_Token);
-		$time_ago = gmmktime() - $password_reset_token_expire;
+		$time_ago = gmmktime() - PASSWORD_RESET_TOKEN_TTL;
 		
 		$query = "SELECT count(*) FROM rdtom_passwordresettokens WHERE Token = '$req_Token' AND Timestamp >= '$time_ago' AND Used = '0'";
 	
@@ -770,10 +769,9 @@ class database_derbytest extends database
 	
 	public function get_user_from_password_reset_token($req_Token)
 	{
-		global $password_reset_token_expire;
 		
 		$req_Token = $this->mysql_res($req_Token);
-		$time_ago = gmmktime() - $password_reset_token_expire;
+		$time_ago = gmmktime() - PASSWORD_RESET_TOKEN_TTL;
 		
 		$query = "SELECT User_ID FROM rdtom_passwordresettokens WHERE Token = '$req_Token' AND Timestamp >= '$time_ago' AND Used = '0'";
 	
