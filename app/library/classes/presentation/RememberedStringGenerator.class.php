@@ -4,12 +4,10 @@ include_once (__DIR__ . "/ColourFromPercentageCalculator.class.php");
 class RememberedStringGenerator
 {
 	private $site_url;
-	private $ColourFromPercentageCalculator;
 	private $showStreakWhenStreakLength = 4;
 	
 	function __construct($site_url) {
 		$this->site_url = $site_url;
-		$this->ColourFromPercentageCalculator = new ColourFromPercentageCalculator();
 	}
 	
 	public function generate($questionsAnsweredResults) {
@@ -21,7 +19,7 @@ class RememberedStringGenerator
 		$questionsAnswered = count($questionsAnsweredResults);
 		$questionsAnsweredCorrectly = $this->calculateCorrectCount($questionsAnsweredResults);
 		$percentageCorrect = $this->calculatePercentage($questionsAnswered, $questionsAnsweredCorrectly);
-		$percentageColour = $this->ColourFromPercentageCalculator->calculate($percentageCorrect);
+		$percentageColour = ColourFromPercentageCalculator::calculate($percentageCorrect);
 		$currentStreak = $this->calculateStreak($questionsAnsweredResults);
 		
 		if ($questionsAnswered <= 0) {

@@ -1,8 +1,6 @@
 <?php
 function return_stats_user_totals() {
     
-    $colourFromPercentageCalculator = new ColourFromPercentageCalculator();
-    
     //TODO this is a duplicate of the Remembered String
     global $user, $mydb;
     
@@ -37,7 +35,7 @@ function return_stats_user_totals() {
         $perc_value = 0;
     }
     
-    $perc_colour = $colourFromPercentageCalculator->calculate($perc_value);
+    $perc_colour = ColourFromPercentageCalculator::calculate($perc_value);
     $out.= "<p>You have a current total success rate of <span style=\"font-weight:bold; color:" . $perc_colour . "\">" . $perc_value . "%</span> (" . number_format($all_time_correct_count) . " correct out of " . $total_response_count_string . ").</p>";
     
     // recent questions answered

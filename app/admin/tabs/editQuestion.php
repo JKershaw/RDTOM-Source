@@ -2,9 +2,8 @@
 	if ($question){
 		$sectionHeader = "Edit question #" . $question->get_ID() . ":";
 		$formPostAction = get_site_URL() . "admin/edit/" . $question->get_ID();
-
-		$colourFromPercentageCalculator = new ColourFromPercentageCalculator();
-		$questionSuccessColour = $colourFromPercentageCalculator->calculate($question->get_SuccessRate());
+		
+		$questionSuccessColour = ColourFromPercentageCalculator::calculate($question->get_SuccessRate());
 		
 	} else {
 		$sectionHeader = "Add question:";

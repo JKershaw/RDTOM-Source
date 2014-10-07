@@ -2,7 +2,7 @@
 class ColourFromPercentageCalculator
 {
     
-    public function calculate($perc_value) {
+    static function calculate($perc_value) {
         
         if ($perc_value >= 80) {
             $perc_colour = "#008000";
