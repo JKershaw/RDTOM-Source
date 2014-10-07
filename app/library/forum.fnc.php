@@ -17,7 +17,11 @@ function show_forum() {
 	if ($_POST) {
 		$forum->process_post();
 	}
-	$forum->show();
+	
+	$topicSlug = UriPath::part(1);
+	$threadSlug = UriPath::part(2);
+	
+	$forum->show($topicSlug, $threadSlug);
 }
 
 /*
@@ -26,11 +30,7 @@ function show_forum() {
 
 class forum
 {
-	public function show() {
-		global $url_array;
-		
-		$topicSlug = $url_array[1];
-		$threadSlug = $url_array[2];
+	public function show($topicSlug, $threadSlug) {
 		
 		if ($topicSlug) {
 			

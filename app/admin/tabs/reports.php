@@ -9,14 +9,14 @@
 		{
 			foreach ($reports_open as $report)
 			{
-				if (($_POST['question_id'] == $report->get_Question_ID()) || ($url_array[2] == $report->get_Question_ID()))
+				if (($_POST['question_id'] == $report->get_Question_ID()) || (UriPath::part(2) == $report->get_Question_ID()))
 				{
 					echo "<strong>";
 				}
 				
 				echo get_formatted_admin_report($report);
 				
-				if (($_POST['question_id'] == $report->get_Question_ID()) || ($url_array[2] == $report->get_Question_ID()))
+				if (($_POST['question_id'] == $report->get_Question_ID()) || (UriPath::part(2) == $report->get_Question_ID()))
 				{
 					echo "</strong>";
 				}

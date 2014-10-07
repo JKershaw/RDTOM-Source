@@ -82,7 +82,7 @@ $api_status_codes = array(
 	)
 );
 
-if ($url_array[1]) {
+if (UriPath::part(1)) {
 	
 	$fileCache = new FileCache();
 	
@@ -114,7 +114,7 @@ if ($url_array[1]) {
 	try {
 		
 		// get the target controller
-		$target = "../app/api/" . str_ireplace(".", "_", $url_array[1]) . "/" . str_ireplace(".", "_", $url_array[1]) . "_controller.obj.php";
+		$target = "../app/api/" . str_ireplace(".", "_", UriPath::part(1)) . "/" . str_ireplace(".", "_", UriPath::part(1)) . "_controller.obj.php";
 		
 		//get target
 		if (file_exists($target)) {
@@ -123,13 +123,15 @@ if ($url_array[1]) {
 			include_once ($target);
 			
 			$resource_array = Array();
+
+			set_up_url_array();
 			
 			for ($i = 3; $i < count($url_array); $i++) {
 				$resource_array[] = $url_array[$i];
 			}
 			
 			$request = Array(
-				"format" => $url_array[2],
+				"format" => UriPath::part(2),
 				"resource" => $resource_array,
 				"parameters" => $_GET
 			);
@@ -181,8 +183,21 @@ if ($url_array[1]) {
 }
 
 function api_resources_autoload($resource_name) {
-	global $url_array;
-	$target = "../app/api/" . str_ireplace(".", "_", $url_array[1]) . "/resources/" . $resource_name . ".obj.php";
+	$target = "../app/api/" . str_ireplace(".", "_", UriPath::part(1)) . "/resources/" . $resource_name . ".obj.php";
 	return $target;
 }
-?>
+
+
+function set_up_url_array()
+{
+	global $url_array;
+	
+	// get the URL components
+	foreach (explode("/", $_SERVER['REQUEST_URI']) as $segment)
+	{
+		if (trim($segment))
+		{
+			$url_array[] = strtolower($segment);
+		}
+	}
+}

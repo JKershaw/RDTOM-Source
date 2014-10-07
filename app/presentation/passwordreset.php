@@ -14,12 +14,12 @@
  * 4. /passwordreset/[code] $_POST['forgottenemailnewpasswordform']
  *
 */
-if ($url_array[1]) {
+if (UriPath::part(1)) {
 	
 	// is the token valid?
-	if (!$mydb->is_valid_password_reset_token($url_array[1])) {
+	if (!$mydb->is_valid_password_reset_token(UriPath::part(1))) {
 		$error_string = "The link you followed is not valid.";
-		$url_array[1] = false;
+		UriPath::part(1) = false;
 	}
 }
 
@@ -104,7 +104,7 @@ if (!$error_string && ($_POST['forgottenemailnewpasswordform'] == "yes")) {
 set_page_subtitle("Turn left and forget your password.");
 include ("header.php");
 
-if (!$url_array[1]) {
+if (!UriPath::part(1)) {
 	
 	// step 1 or 2
 	if (($_POST['forgottenemailform'] != "yes") || $error_string) {
@@ -146,7 +146,7 @@ if (!$url_array[1]) {
 	if (($_POST['forgottenemailnewpasswordform'] != "yes") || $error_string) {
 		
 		// step 3
-		// $url_array[1] is the password reset token
+		// UriPath::part(1) is the password reset token
 		
 		
 ?>
@@ -154,10 +154,10 @@ if (!$url_array[1]) {
 		
 		<form method="post" action="<?php
 		echo get_site_URL(); ?>passwordreset/<?php
-		echo $url_array[1]; ?>" name="formforgottenemailnewpassword">
+		echo UriPath::part(1); ?>" name="formforgottenemailnewpassword">
 			<input type="hidden" name="forgottenemailnewpasswordform" id="forgottenemailnewpasswordform" value="yes">
 			<input type="hidden" name="token" id="token" value="<?php
-		echo $url_array[1]; ?>">
+		echo UriPath::part(1); ?>">
 			<p>
 				Password:<br />
 				<input class="input_text" type="password" id="password" name ="password">

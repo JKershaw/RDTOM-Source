@@ -17,7 +17,6 @@ ob_start();
 set_up_presentation();
 set_up_database();
 set_up_logged_in_user();
-set_up_url_array();
 
 // begin processing the request
 
@@ -75,7 +74,7 @@ if (UriPath::part(0) == "api") {
 			break;
 
 		case "question":
-			set_up_question($url_array[1]);
+			set_up_question(UriPath::part(1));
 			include ("presentation/question.php");
 			break;
 

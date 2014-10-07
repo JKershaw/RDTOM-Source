@@ -64,8 +64,8 @@ if ($_GET['update_report']) {
 }
 
 // is a question being edited
-if (($url_array[1] == "edit") && !$question_deleted) {
-	$question = get_question_from_ID($url_array[2]);
+if ((UriPath::part(1) == "edit") && !$question_deleted) {
+	$question = get_question_from_ID(UriPath::part(2));
 	try {
 		$answers = $question->get_all_Answers();
 	}

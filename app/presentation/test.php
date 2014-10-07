@@ -18,7 +18,7 @@
 // display the page
 include ("header.php");
 
-if (!$url_array[1]) {
+if (!UriPath::part(1)) {
 	
 	// show the parameter selection form
 	
@@ -108,16 +108,16 @@ if (!$url_array[1]) {
 	
 	</div>
 	<?php
-} elseif ($url_array[1] == "builder") {
+} elseif (UriPath::part(1) == "builder") {
 	if (is_logged_in()) {
-		if ($url_array[2]) {
+		if (UriPath::part(2)) {
 			
 			$randomStringGenerator = new RandomStringGenerator();
 			$randomHash = $randomStringGenerator->generate(100);
 			
 			// editor
-			if ($url_array[2] != "new") {
-				$test = get_test_from_ID($url_array[2]);
+			if (UriPath::part(2) != "new") {
+				$test = get_test_from_ID(UriPath::part(2));
 				
 				// is the user the author?
 				if (($user->get_ID() != $test->get_Author_ID()) && !is_admin()) {
@@ -830,7 +830,7 @@ if (!$url_array[1]) {
 		<p>You must be logged in to build a test.</p>
 		<?php
 	}
-} elseif ($url_array[1] == "generate") {
+} elseif (UriPath::part(1) == "generate") {
 	if ($_REQUEST['n']) {
 		$parameters = Array(
 			'number_of_questions' => $_REQUEST['n'],
@@ -863,7 +863,7 @@ if (!$url_array[1]) {
 	
 	// get the test
 	try {
-		$test = get_test_from_ID($url_array[1]);
+		$test = get_test_from_ID(UriPath::part(1));
 		
 		// can it be viewed?
 		if ($test->get_Status() == "draft") {
@@ -881,7 +881,7 @@ if (!$url_array[1]) {
 			set_test($test);
 			
 			// use strlower as the URL is always converted to lower case
-			if ((is_logged_in() && ($user->get_ID() == $test->get_Author_ID())) || (strtolower($url_array[2]) == strtolower($test->get_link_hash()))) {
+			if ((is_logged_in() && ($user->get_ID() == $test->get_Author_ID())) || (strtolower(UriPath::part(2)) == strtolower($test->get_link_hash()))) {
 				
 				// display the test
 				echo $test->get_formatted_output($_REQUEST['o']);
