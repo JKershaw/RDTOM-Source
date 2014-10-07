@@ -5,27 +5,31 @@ function report_question() {
 		exit;
 	}
 	
-	global $report_string, $error_string, $url_array;
+	global $reportHasBeenFiled, $error_string;
+
+	$questionID = $_POST['report_question_ID'];
 	
-	if ($_POST['report_question_ID'] && (strtolower(trim($_POST['report_extra'])) == "derby")) {
-		$report_string = "Question #" . $_POST['report_question_ID'] . ": " . $_POST['report_text'];
-		save_log("report", $report_string, $_POST['report_question_ID']);
-		
+	if ($questionID && (strtolower(trim($_POST['report_extra'])) == "derby")) {
+
+		$report_string = "Question #" . $questionID . ": " . $_POST['report_text'];
+
+		save_log("report", $report_string, $questionID);
+
+		$report = new report(-1, get_ip() , gmmktime() , $questionID, 0, $report_string, REPORT_OPEN);
+		set_report($report);
+
 		// clear the input
 		$_POST['report_text'] = false;
-		$_POST['report_question_ID'] = false;
+		$questionID = false;
+
+		$reportHasBeenFiled = true;
 	} else {
 		
 		// Your code here to handle an error
 		if (!(strtolower(trim($_POST['report_extra'])) == "derby")) {
-			$error_string = "The anti-spam code wasn't entered correctly. Please try it again.";
+			$error_string = "The anti-spam code wasn't entered correctly. Please try it again. | " . $_POST['report_extra'];
 		} else {
 			$error_string = "Sorry, and error has occured. Please try again";
 		}
-		
-		// return to the question
-		$url_array[0] = "question";
-		$url_array[1] = $_POST['report_question_ID'];
 	}
 }
-

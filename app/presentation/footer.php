@@ -18,7 +18,7 @@
 				{
 					?>		
 					<p>
-						<a class="report_link" onclick="allow_keypress = false;$('#hidden_report_form').slideToggle();">Report this question</a> 
+						<a class="report_link" onclick="allow_keypress = false;$('#hidden_report_form').show();">Report this question</a> 
 					</p>
 					<?php 
 				} 

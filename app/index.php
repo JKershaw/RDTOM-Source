@@ -21,27 +21,23 @@ set_up_url_array();
 
 // begin processing the request
 
-if ($url_array[0] == "api") {
+if (UriPath::part(0) == "api") {
 	// An API request
 	include ('api/router.php');
 } else {
 	// A Web request
-	
-	// do we want to perform some function or other, then show the default page?
-	switch ($url_array[0]) {
+	switch (UriPath::part(0)) {
 		case "forget":
 			forget_remembered_questions();
 			header('Location: ' . get_site_URL());
 			die();
 			break;
-
 		case "report":
 			report_question();
+			set_up_question($_POST['report_question_ID']);
+			include ("presentation/question.php");
 			break;
-	}
-	
-	// show the page
-	switch (UriPath::part(0)) {
+
 		case "stats":
 			include ("presentation/stats.php");
 			break;

@@ -10,7 +10,7 @@ if (!is_random_question()) {
 
 $question_text = htmlentities(stripslashes($question->get_Text()));
 
-if ($report_string)
+if ($reportHasBeenFiled)
 {
 	echo "<h3 class=\"error_string\">Your report has been filed. Thanks very much for your help!</h3>";
 }
@@ -140,7 +140,7 @@ if ($report_string)
 	
 	<h3>Report this question:</h3>
 	<p>You should report a question if you think it's incorrect or if it's poorly written (including spelling mistakes or bad grammar). If you think the question is wrong be sure to double check the wording of the question <i>and</i> the specific rule it references, which in this case is <strong><?php if ($question) { echo htmlentities(stripslashes($question->get_Section())); } ?></strong>. Until the great robot uprising, we're only human so mistakes happen. Thanks for helping!</p>
-	<p>In the text box below please let me know what it is which made you report this question.</p>
+	<p>In the text box below please let me know what it is that made you report this question.</p>
 	
 	<form name="formreport" method="post" action="<?php echo get_site_URL(); ?>report">	
 	<p>

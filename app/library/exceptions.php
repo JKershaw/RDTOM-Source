@@ -1,6 +1,6 @@
 <?php
 function save_log($log_name, $request_string, $question_ID = null) {
-	global $mydb;
+
 
 	$logFileDateFormat = "ym_F";
 	
@@ -10,10 +10,6 @@ function save_log($log_name, $request_string, $question_ID = null) {
 	
 	@file_put_contents($filename, $stringData, FILE_APPEND);
 	
-	if ($log_name == "report") {
-		$report = new report(-1, get_ip() , gmmktime() , $question_ID, 0, $request_string, REPORT_OPEN);
-		set_report($report);
-	}
 }
 
 // get the current IP address
