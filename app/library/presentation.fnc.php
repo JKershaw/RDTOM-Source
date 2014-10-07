@@ -1,5 +1,4 @@
 <?php
-// presentation functions
 
 function is_logged_in() {
 	$user = get_global_user();
@@ -10,7 +9,6 @@ function is_logged_in() {
 	return false;
 }
 
-// True or False
 function is_question() {
 	global $is_question, $question;
 	return $is_question && $question;
@@ -21,13 +19,11 @@ function is_random_question() {
 	return $is_question && $question && $is_random_question;
 }
 
-// set functions
 function set_page_title($req_title) {
 	global $page_title;
 	$page_title = $req_title;
 }
 
-// get functions
 function get_page_title() {
 	global $page_title;
 	if ($page_title) {

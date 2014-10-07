@@ -6,16 +6,6 @@
 class database_derbytest extends database
 {
 
-	function __construct()
-	{
-		global $database_name, $database_host;
-
-		$this->dbUser = DATABASE_USERNAME;
-		$this->dbUserPw = DATABASE_PASSWORD;
-		$this->dbName = DATABASE_NAME;
-		$this->dbHost = DATABASE_HOST;
-	}
-
 	public function get_reports($status = false)
 	{
 		if ($status !== false)
