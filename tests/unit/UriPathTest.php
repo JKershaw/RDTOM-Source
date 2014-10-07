@@ -3,54 +3,63 @@ include_once __DIR__ . "/../../app/library/classes/misc/UriPath.class.php";
 
 class UriPathTest extends \PHPUnit_Framework_TestCase
 {
-	public function testUriPath() {
-
+	public function testEmptyUriPath() {
+		
+		$_SERVER['REQUEST_URI'] = "/";
+		$this->assertEquals("", UriPath::part(0));
+		
 		$_SERVER['REQUEST_URI'] = "";
 		$this->assertEquals("", UriPath::part(0));
-		$this->assertEquals("", UriPath::part());
-
-		$_SERVER['REQUEST_URI'] = "foo/";
+	}
+	
+	public function testBasicUriPaths() {
+		
+		$_SERVER['REQUEST_URI'] = "/foo/";
 		$this->assertEquals("foo", UriPath::part(0));
-		$this->assertEquals("foo", UriPath::part());
 		$this->assertEquals("", UriPath::part(1));
-
-		$_SERVER['REQUEST_URI'] = "foo";
+		
+		$_SERVER['REQUEST_URI'] = "/foo";
 		$this->assertEquals("foo", UriPath::part(0));
-		$this->assertEquals("foo", UriPath::part());
-
-		$_SERVER['REQUEST_URI'] = "foo/bar/choo";
-		$this->assertEquals("foo", UriPath::part());
+		
+		$_SERVER['REQUEST_URI'] = "/foo/bar/choo";
 		$this->assertEquals("foo", UriPath::part(0));
 		$this->assertEquals("bar", UriPath::part(1));
 		$this->assertEquals("choo", UriPath::part(2));
 	}
-
-	public function testUriPathWithKeys() {
-
-		$_SERVER['REQUEST_URI'] = "foo/?rawr=ohnoes";
+	
+	public function testUriPathswithNoLeadingSlash() {
+		
+		$_SERVER['REQUEST_URI'] = "foo";
 		$this->assertEquals("foo", UriPath::part(0));
-		$this->assertEquals("foo", UriPath::part());
-
-		$_SERVER['REQUEST_URI'] = "foo?rawr=ohnoes";
-		$this->assertEquals("foo", UriPath::part(0));
-		$this->assertEquals("foo", UriPath::part());
-
-		$_SERVER['REQUEST_URI'] = "foo/bar/?rawr=ohnoes";
-		$this->assertEquals("foo", UriPath::part(0));
-		$this->assertEquals("bar", UriPath::part(1));
-
-		$_SERVER['REQUEST_URI'] = "foo/bar?rawr=ohnoes";
+		
+		$_SERVER['REQUEST_URI'] = "foo/bar/choo";
 		$this->assertEquals("foo", UriPath::part(0));
 		$this->assertEquals("bar", UriPath::part(1));
 	}
-	public function testUriPathWithCapitals() {
-
-
-		$_SERVER['REQUEST_URI'] = "FOO/";
+	
+	public function testUriPathWithKeys() {
+		
+		$_SERVER['REQUEST_URI'] = "/foo/?rawr=ohnoes";
 		$this->assertEquals("foo", UriPath::part(0));
-		$this->assertEquals("foo", UriPath::part());
-
-		$_SERVER['REQUEST_URI'] = "foo/Bar/chOO";
+		
+		$_SERVER['REQUEST_URI'] = "/foo?rawr=ohnoes";
+		$this->assertEquals("foo", UriPath::part(0));
+		
+		$_SERVER['REQUEST_URI'] = "/foo/bar/?rawr=ohnoes";
+		$this->assertEquals("foo", UriPath::part(0));
+		$this->assertEquals("bar", UriPath::part(1));
+		
+		$_SERVER['REQUEST_URI'] = "/foo/bar?rawr=ohnoes";
+		$this->assertEquals("foo", UriPath::part(0));
+		$this->assertEquals("bar", UriPath::part(1));
+	}
+	
+	public function testUriPathWithCapitals() {
+		
+		$_SERVER['REQUEST_URI'] = "/FOO/";
+		$this->assertEquals("foo", UriPath::part(0));
+		
+		$_SERVER['REQUEST_URI'] = "/foo/Bar/chOO";
 		$this->assertEquals("foo", UriPath::part(0));
 		$this->assertEquals("bar", UriPath::part(1));
 		$this->assertEquals("choo", UriPath::part(2));

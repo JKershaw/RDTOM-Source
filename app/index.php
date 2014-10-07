@@ -21,7 +21,7 @@ set_up_url_array();
 
 // begin processing the request
 
-if (strtolower($url_array[0]) == "api") {
+if ($url_array[0] == "api") {
 	// An API request
 	include ('api/router.php');
 } else {
@@ -41,7 +41,7 @@ if (strtolower($url_array[0]) == "api") {
 	}
 	
 	// show the page
-	switch ($url_array[0]) {
+	switch (UriPath::part(0)) {
 		case "stats":
 			include ("presentation/stats.php");
 			break;
