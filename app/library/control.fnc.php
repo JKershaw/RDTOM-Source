@@ -31,11 +31,6 @@ function set_up_question($question_ID)
 			$correct_answer = $answer;
 		}
 	}
-	
-	if (!$correct_answer)
-	{
-		throw new exception("For some reason no correct answer could be found for question #" . $question->get_ID());
-	}
 }
 
 function set_up_database()
@@ -57,56 +52,9 @@ function set_up_url_array()
 	// get the URL components
 	foreach (explode("/", $_SERVER['REQUEST_URI']) as $segment)
 	{
-		//if (trim($segment) && (substr($segment, 0, 1) != "?"))
 		if (trim($segment))
 		{
-			//$url_array[] = preg_replace("/[^%a-zA-Z0-9-_']/", "", $segment);
 			$url_array[] = strtolower($segment);
 		}
 	}
-	
-	// Backwards compatability for URLs
-	// all the .php files; stats.php, poll.php, allquestions.php
-	// ?question=123
-	// allquestions.php?hard=yes
-	// allquestions.php?easy=yes
-	
-	if ($url_array[0] == "stats.php")
-	{
-		$url_array[0] = "stats";
-	}
-	elseif ($url_array[0] == "allquestions.php")
-	{
-		$url_array[0] = "questions";
-	}
-	elseif ($url_array[0] == "allquestions.php?hard=yes")
-	{
-		$url_array[0] = "questions";
-		$url_array[1] = "hard";
-	}
-	elseif ($url_array[0] == "allquestions.php?easy=yes")
-	{
-		$url_array[0] = "questions";
-		$url_array[1] = "easy";
-	}
-	elseif (strstr($url_array[0], "?question="))
-	{
-		$url_array[1] = str_replace("?question=", "", $url_array[0]);
-		$url_array[0] = "question";
-	}
-	
-	// if there is a request for a question, but no number is given, make the request for a random question
-	if ($url_array[0] == "question" && !($url_array[1] > 0))
-	{
-		$url_array[0] = "";
-	}
 }
-
-function set_up_presentation()
-{
-	global $is_question, $is_random_question;
-	// Global variables to help with the presentation
-	$is_question = false;
-	$is_random_question = false;
-}
-?>
