@@ -46,12 +46,12 @@ function set_up_database()
 	
 	// set up the PDO object
 	global $myPDO;
-	global $database_username, $database_userpassword, $database_name, $database_host;
+	global $database_name, $database_host;
 	
 	/* Connect to an ODBC database using driver invocation */
 	try 
 	{
-	    $myPDO = new LoggedPDO("mysql:dbname=$database_name;host=$database_host", $database_username, $database_userpassword);
+	    $myPDO = new LoggedPDO("mysql:dbname=$database_name;host=$database_host", DATABASE_USERNAME, DATABASE_PASSWORD);
 	} 
 	catch (PDOException $e) 
 	{

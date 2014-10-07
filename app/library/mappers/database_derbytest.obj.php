@@ -8,10 +8,10 @@ class database_derbytest extends database
 
 	function __construct()
 	{
-		global $database_username, $database_userpassword, $database_name, $database_host;
+		global $database_name, $database_host;
 
-		$this->dbUser = $database_username;
-		$this->dbUserPw = $database_userpassword;
+		$this->dbUser = DATABASE_USERNAME;
+		$this->dbUserPw = DATABASE_PASSWORD;
 		$this->dbName = $database_name;
 		$this->dbHost = $database_host;
 	}

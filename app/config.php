@@ -27,7 +27,7 @@ function setUpSMTP($ini_array) {
 }
 
 function setUpDatabase($ini_array) {
-	global $database_username, $database_userpassword, $database_name, $database_host, $database_salt;
+	global $database_name, $database_host, $database_salt;
 	
 	$database_username = $ini_array["database_username"];
 	$database_userpassword = $ini_array["database_userpassword"];
@@ -47,6 +47,9 @@ function setUpDatabase($ini_array) {
 		
 		$site_URL = "http://rdtom:8080/";
 	}
+
+	define("DATABASE_USERNAME", $database_username);
+	define("DATABASE_PASSWORD", $database_userpassword);
 }
 
 function setUpDefaultTermsArray() {	
