@@ -1,13 +1,5 @@
 <?php
 
-function set_up_presentation()
-{
-	global $is_question, $is_random_question;
-	// Global variables to help with the presentation
-	$is_question = false;
-	$is_random_question = false;
-}
-
 function is_logged_in() {
 	$user = get_global_user();
 	if ($user) {

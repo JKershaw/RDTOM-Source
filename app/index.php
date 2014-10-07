@@ -14,7 +14,6 @@ include ('include.php');
 ob_start();
 
 // create necessary objects & set up
-set_up_presentation();
 set_up_database();
 set_up_logged_in_user();
 
