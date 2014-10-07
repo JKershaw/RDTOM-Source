@@ -213,3 +213,9 @@ function get_global_user(){
 	return $user;
 }
 
+// Not sure where this should ideally go
+function forget_remembered_questions() {
+	$session = new Session();
+	$session->forget("random_questions_results");
+	$session->forget("random_questions_asked");
+}

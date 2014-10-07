@@ -499,4 +499,7 @@ function edit_question($req_ID, $req_text, $req_section, $req_notes) {
 	
 	
 }
-?>
+
+function compare_questions($req_question1, $req_question2) {
+	return strnatcasecmp($req_question1->get_Section() , $req_question2->get_Section());
+}

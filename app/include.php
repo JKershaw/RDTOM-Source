@@ -13,9 +13,7 @@ include ('config.php');
 // Library files
 include ('library/tracker.fnc.php');
 
-include ('library/functions.php');
 include ('library/presentation.fnc.php');
-include ('library/support.fnc.php');
 include ('library/control.fnc.php');
 include ('library/account.fnc.php');
 include ('library/stats.fnc.php');
@@ -23,6 +21,7 @@ include ('library/forum.fnc.php');
 include ('library/admin.fnc.php');
 include ('library/charts.fnc.php');
 include ('library/url.fnc.php');
+include ('library/report.fnc.php');
 
 include ('library/ajax.fnc.php');
 include ('library/cron.fnc.php');
@@ -36,8 +35,6 @@ include ('library/mappers/reports.db.fnc.php');
 include ('library/mappers/comments.db.fnc.php');
 include ('library/mappers/test.db.fnc.php');
 include ('library/mappers/test_ratings.db.fnc.php');
-
-// Model (object) files autoload, phpMailer is also Autoloaded as used rarely
 
 $classesDir = array(
 	__DIR__ . '/library/classes/presentation/',

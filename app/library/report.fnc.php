@@ -29,12 +29,3 @@ function report_question() {
 	}
 }
 
-function forget_remembered_questions() {
-	$session = new Session();
-	$session->forget("random_questions_results");
-	$session->forget("random_questions_asked");
-}
-
-function compare_questions($req_question1, $req_question2) {
-	return strnatcasecmp($req_question1->get_Section() , $req_question2->get_Section());
-}
