@@ -7,15 +7,8 @@
  * Built to help Roller Derby players learn the rules
 */
 
-// start the page speed tracker
-list($usec, $sec) = explode(" ", microtime());
-$page_timer_start = ((float)$usec + (float)$sec);
-
 // include needed files
 include ('include.php');
-
-//start the session
-session_start();
 
 // start the output buffer
 ob_start();
@@ -29,11 +22,9 @@ set_up_url_array();
 // begin processing the request
 
 if (strtolower($url_array[0]) == "api") {
-	
 	// An API request
 	include ('api/router.php');
 } else {
-	
 	// A Web request
 	
 	// do we want to perform some function or other, then show the default page?
@@ -101,4 +92,3 @@ if (strtolower($url_array[0]) == "api") {
 
 //Output the buffer
 while (@ob_end_flush());
-?>
