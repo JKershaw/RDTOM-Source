@@ -8,7 +8,12 @@ function set_up_user() {
 	
 	// do we have a session variable?
 	if ($session->get('rdtom_userID')) {
+		try{
+
 		set_global_user($mydb->get_user_from_ID($session->get('rdtom_userID')));
+		} catch (Exception $e){
+
+		}
 	} elseif ($cookieTokenHandler->get()) {
 		
 		// is it valid?

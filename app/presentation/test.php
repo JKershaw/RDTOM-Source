@@ -638,7 +638,7 @@ if (!UriPath::part(1)) {
 			// save it
 			console.debug("Saving " + qanda);
 			
-			$.post("ajax.php", {
+			$.post("/ajax.php", {
 					call: "save_test", 
 					id: test_id,
 					title: $('#test_title').val(),
