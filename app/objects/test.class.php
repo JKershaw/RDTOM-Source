@@ -613,7 +613,7 @@ class test
 				function() {
 					star_rating = $(".star_ratings li").index(this) + 1;
 					mouseover_star(star_rating);
-					$.post("ajax.php", { 
+					$.post("/ajax.php", { 
 											call: "save_test_rating", 
 											test_ID: ' . $this->ID . ',
 											rating: star_rating
@@ -835,7 +835,7 @@ class test
 			// parse the data array into something we can send
 			data_array[question_ID] = question_ID;
 			
-			$.post(\"ajax.php\", { 
+			$.post(\"/ajax.php\", { 
 						call: \"save_responses\", 
 						q_array: data_q_array,
 						a_array: data_a_array";

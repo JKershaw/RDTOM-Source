@@ -308,7 +308,7 @@
 					$('#question_comment_ajax_status').html("Saving...");
 					
 					// ajax save the response for stats tracking
-					$.post("ajax.php", { 
+					$.post("/ajax.php", { 
 						call: "save_comment", 
 						question_id: $('#question_comment_question_id').val(),
 						text: $('textarea#question_comment_text').val()},

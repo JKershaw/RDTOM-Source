@@ -98,7 +98,7 @@ if ($message) {
 			var tmp_colour = $("#term_" + term_id + "_" + question_id).css("color"); 
 			$("#term_" + term_id + "_" + question_id).css("color", "grey"); 
 
-			$.post("ajax.php", { 
+			$.post("/ajax.php", { 
 				call: "set_admin_relationship", 
 				termID: term_id,
 				questionID: question_id,

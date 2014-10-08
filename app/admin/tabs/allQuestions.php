@@ -23,7 +23,7 @@
 		{
 			$("#viewalllist").html("<p>Loading...</p>");
 
-			$.post("ajax.php", { 
+			$.post("/ajax.php", { 
 				call: "get_admin_questions_list" 
 				},
 				
@@ -40,7 +40,7 @@
 		{
 			$("#viewalllist").html("<p>Loading...</p>");
 
-			$.post("ajax.php", { 
+			$.post("/ajax.php", { 
 				call: "get_admin_questions_list", 
 				search: $("#questions_search").val()
 				},

@@ -98,7 +98,7 @@ if ($reportHasBeenFiled)
 			<?php } ?>
 
 			// ajax save the response for stats tracking
-			$.post("ajax.php", { 
+			$.post("/ajax.php", { 
 				call: "save_response", 
 				question_ID: "<?php echo $question->get_ID(); ?>",
 				response_ID: selected,

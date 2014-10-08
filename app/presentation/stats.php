@@ -125,7 +125,7 @@ include("header.php");
 					current_difference[req_field_name] = 0;
 				}
 					
-				$.post("ajax.php", { 
+				$.post("/ajax.php", { 
 					call: req_field_name},
 					function(data) {
 						

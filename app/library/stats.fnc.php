@@ -101,7 +101,7 @@ function return_stats_user_section_totals() {
     $drawChart_string = '
 
 	var jsonData_user_section_totals = $.ajax({
-            url: "ajax.php",
+            url: "/ajax.php",
             type: "POST",
             data: {call: "stats_user_section_totals" ' . $user_call_string . '},
             dataType:"json",
@@ -198,7 +198,7 @@ function return_stats_user_progress($user = false) {
 
 	
 	var jsonData_user_progress = $.ajax({
-            url: "ajax.php",
+            url: "/ajax.php",
             type: "POST",
             data: {call: "stats_user_progress" ' . $user_call_string . '},
             dataType:"json",
