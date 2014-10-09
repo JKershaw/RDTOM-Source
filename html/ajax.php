@@ -134,4 +134,6 @@ try {
 }
 catch(Exception $e) {
 	save_log("error_ajax", htmlentities(print_r($_POST, true)) . " " . $e->getMessage());
+	echo $e->getMessage();
+	echo "<pre>" . print_r($e->getTrace(), true) . "</pre>";
 }

@@ -124,7 +124,7 @@ if (UriPath::part(1)) {
 			
 			$resource_array = Array();
 
-			set_up_url_array();
+			$url_array = UriPath::pathArray();
 			
 			for ($i = 3; $i < count($url_array); $i++) {
 				$resource_array[] = $url_array[$i];
@@ -185,19 +185,4 @@ if (UriPath::part(1)) {
 function api_resources_autoload($resource_name) {
 	$target = "../app/api/" . str_ireplace(".", "_", UriPath::part(1)) . "/resources/" . $resource_name . ".obj.php";
 	return $target;
-}
-
-
-function set_up_url_array()
-{
-	global $url_array;
-	
-	// get the URL components
-	foreach (explode("/", $_SERVER['REQUEST_URI']) as $segment)
-	{
-		if (trim($segment))
-		{
-			$url_array[] = strtolower($segment);
-		}
-	}
 }

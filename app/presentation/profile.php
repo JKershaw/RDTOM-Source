@@ -6,6 +6,7 @@ if ($_POST['loginform'] == "yes")
 	try 
 	{
 		user_log_in($_POST['name'], $_POST['password'], $_POST['remember']=="Yes");
+		global $user;
 	}
 	catch (Exception $e) 
 	{
@@ -23,6 +24,7 @@ elseif ($_POST['signupform'] == "yes")
 	{
 		user_sign_up($_POST['name'], $_POST['password'], $_POST['email']);
 		user_log_in($_POST['name'], $_POST['password'], false);
+		global $user;
 		$profile_message = "Your account has been made, please log in now and experience the joy* of a Roller Derby Test O'Matic account (*joy not guaranteed).";
 	}
 	catch (Exception $e) 

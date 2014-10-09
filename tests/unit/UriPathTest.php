@@ -65,4 +65,10 @@ class UriPathTest extends \PHPUnit_Framework_TestCase
 		$this->assertEquals("bar", UriPath::part(1));
 		$this->assertEquals("choo", UriPath::part(2));
 	}
+
+	public function testUriPathCanReturnArray(){
+
+		$_SERVER['REQUEST_URI'] = "/this/is/a/test";
+		$this->assertEquals(array("this", "is", "a", "test"), UriPath::pathArray());
+	}
 }

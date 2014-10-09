@@ -44,4 +44,12 @@ class UriPath
 
 		return $segmentArray;
 	}
+
+	public static function pathArray() {
+		$uri = $_SERVER['REQUEST_URI'];
+		
+		$path = self::getPath($uri);
+		
+		return self::getSegmentArray($path);
+	}
 }
