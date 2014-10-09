@@ -13,6 +13,8 @@ $I->fillField('#signup_name', "TestingCustomTest");
 $I->fillField('#signup_password', "123password");
 $I->click('Sign up');
 
+
+// build test
 $I->see('Build your own Test');
 $I->click('Build your own Test');
 

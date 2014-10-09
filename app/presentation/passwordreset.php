@@ -19,7 +19,6 @@ if (UriPath::part(1)) {
 	// is the token valid?
 	if (!$mydb->is_valid_password_reset_token(UriPath::part(1))) {
 		$error_string = "The link you followed is not valid.";
-		UriPath::part(1) = false;
 	}
 }
 

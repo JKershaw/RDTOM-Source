@@ -6,9 +6,28 @@ if [ $# -gt 0  ]; then
 fi
 
 echo "======================================="
+echo "Running unit tests"
 
-# Run unit tests
 php codecept.phar run unit --steps
+
+echo "======================================="
+echo "Starting PhantomJS"
+
+
+if [[ $(lsof -i:4444 | grep phantomjs) != "" ]]
+then
+	echo "PhantomJS is already running"
+	lsof -i:4444 | grep phantomjs
+else 
+	echo "PhantomJS not currently running"
+	phantomjs --webdriver=4444 & 
+
+	while [[ $(lsof -i:4444 | grep phantomjs) == "" ]]
+	do
+	    sleep 1
+	    echo "."
+	done
+fi
 
 echo "======================================="
 echo "Setting up server"
@@ -25,7 +44,6 @@ sudo a2ensite rdtom
 sudo service apache2 restart
 sudo service mysql restart
 
-phantomjs --webdriver=4444 & 
 
 # clear the database
 echo "======================================="
