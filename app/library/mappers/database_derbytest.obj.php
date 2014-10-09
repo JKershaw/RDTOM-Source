@@ -533,7 +533,7 @@ class database_derbytest extends database
 				'" . gmmktime() . "'
 			);";
 		
-		$this->run_multi_query($query);
+		$this->run_query($query);
 	}
 	
 	public function set_user_password($req_user_ID, $req_password)
