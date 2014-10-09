@@ -1,19 +1,12 @@
 <?php
 
-/*
- * Roller Derby Test O'Matic
- * Created by John Kershaw (Skate name: Sausage Roller, GitHub user: JKershaw)
- *
- * Built to help Roller Derby players learn the rules
-*/
-
 include ('include.php');
-
-// start the output buffer
-ob_start();
 
 set_up_database();
 set_up_user();
+
+// start the output buffer
+ob_start();
 
 Router::route(__DIR__);
 
