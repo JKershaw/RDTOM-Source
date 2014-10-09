@@ -75,7 +75,7 @@ if (!$error_string && ($_POST['forgottenemailnewpasswordform'] == "yes")) {
 			}
 			
 			if (!$mydb->is_valid_password_reset_token($_POST['token'])) {
-				$error_string = "The link you followed is not valid.";
+				throw new exception("The link you followed is not valid.");
 			}
 			
 			// is the password valid

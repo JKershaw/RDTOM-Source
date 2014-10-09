@@ -1,5 +1,5 @@
 <?php
-include_once __DIR__ . "/../../app/library/classes/misc/UriPath.class.php";
+include_once __DIR__ . "/../../app/library/classes/routing/UriPath.class.php";
 
 class UriPathTest extends \PHPUnit_Framework_TestCase
 {
