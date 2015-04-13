@@ -250,11 +250,11 @@ class question
 				// get the first two values
 				$section_array = explode(".", $this->get_Section());
 				if (count($section_array) == 1) {
-					return "http://wftda.com/rules/20140301/section/" . $section_array[0];
+					return "http://wftda.com/rules/20141201/section/" . $section_array[0];
 				} elseif (count($section_array) <= 3) {
-					return "http://wftda.com/rules/20140301/section/" . $section_array[0] . "." . $section_array[1];
+					return "http://wftda.com/rules/20141201/section/" . $section_array[0] . "." . $section_array[1];
 				} else {
-					return "http://wftda.com/rules/20140301/section/" . $section_array[0] . "." . $section_array[1] . "." . $section_array[2];
+					return "http://wftda.com/rules/20141201/section/" . $section_array[0] . "." . $section_array[1] . "." . $section_array[2];
 				}
 			}
 		}
