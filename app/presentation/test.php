@@ -27,12 +27,12 @@ if (!UriPath::part(1)) {
 	<p>Click the button to randomly generate an online rules test with its difficulty balanced to be similar to the <a href="http://wftda.com/resources/wftda-rules-test.pdf" >WFTDA's sample test</a>.</p>
 	
 	<p>
-		<a class="button mobilebutton" href="<?php
+		<a id="generate_link" class="button mobilebutton" href="<?php
 	echo get_site_URL() ?>test/generate/?d=wftda&n=45&p=80&o=interactiveHTML" >Generate Rules Test</a>
 	</p>
 	
 	
-	<p id="test_customisation_link"><a onclick="$('#test_customisation_link').hide();$('#test_customisation').show()">Customise the test</a></p>
+	<p id="test_customisation_link"><a onclick="$('#generate_link').hide();$('#test_customisation_link').hide();$('#test_customisation').show()">Customise the test</a></p>
 	
 	<div id="test_customisation" style="display:none">
 		<form id="submittestparameters" name="submittestparameters" method="get" action="<?php
@@ -102,6 +102,10 @@ if (!UriPath::part(1)) {
 		<p>
 			<input type="radio" name="o" value="interactiveHTML" checked> Interactive (can be filled in online) </checkbox><br />
 			<input type="radio" name="o" value="HTML"> Non-interactive (can be printed, answers are at the bottom of the page)</checkbox><br />
+		</p>
+
+		<p>
+			<a class="button mobilebutton" href="#" onclick="$('#submittestparameters').submit();">Generate custom test</a>
 		</p>
 		
 		</form>
