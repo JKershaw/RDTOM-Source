@@ -28,7 +28,7 @@ class api_resource_questions extends api_resource
 			if (in_array($parameters['search'], Array("difficulty:beginner", "difficulty:intermediate", "difficulty:expert")))
 			{
 				// user wants a difficulty
-				$terms_array["rule-set"] = "WFTDA6";
+				$terms_array["rule-set"] = "WFTDA7";
 				$terms_array["tag"] = "Test Question";
 				
 				if ($parameters['search'] == "difficulty:beginner")
